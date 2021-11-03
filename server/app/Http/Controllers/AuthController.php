@@ -12,10 +12,12 @@ use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
+    public $successStatus = 200;
+
     public function __construct()
     {
         $this->client = new Client();
-        $this->middleware('auth:api', ['except' => ['login', 'login_google', 'login_facebook']]);
+        // $this->middleware('auth:api', ['except' => ['login', 'login_google', 'login_facebook']]);
     }
 
     public function login(AuthRequest $q) {

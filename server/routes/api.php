@@ -23,3 +23,4 @@ Route::post('login', 'AuthController@login');
 Route::post('login_google', 'AuthController@login_google');
 Route::post('login_facebook', 'AuthController@login_facebook');
 Route::get('me', 'AuthController@me')->middleware('auth:api');
+Route::get('new-password', 'UserController@new_password')->middleware('auth:api');
