@@ -566,8 +566,11 @@ class ComposerStaticInitd3fcde5a08a08b7d677b06addce855fc
     );
 
     public static $classMap = array (
+        'App\\Amenity_Type' => __DIR__ . '/../..' . '/app/Amenity_Type.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
+        'App\\Http\\Controllers\\Admin\\AmenityTypeController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/AmenityTypeController.php',
+        'App\\Http\\Controllers\\Admin\\RoleController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/RoleController.php',
         'App\\Http\\Controllers\\Admin\\SocialProviderController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SocialProviderController.php',
         'App\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AuthController.php',
         'App\\Http\\Controllers\\Auth\\ConfirmPasswordController' => __DIR__ . '/../..' . '/app/Http/Controllers/Auth/ConfirmPasswordController.php',
@@ -596,6 +599,7 @@ class ComposerStaticInitd3fcde5a08a08b7d677b06addce855fc
         'App\\Providers\\BroadcastServiceProvider' => __DIR__ . '/../..' . '/app/Providers/BroadcastServiceProvider.php',
         'App\\Providers\\EventServiceProvider' => __DIR__ . '/../..' . '/app/Providers/EventServiceProvider.php',
         'App\\Providers\\RouteServiceProvider' => __DIR__ . '/../..' . '/app/Providers/RouteServiceProvider.php',
+        'App\\Role' => __DIR__ . '/../..' . '/app/Role.php',
         'App\\Social_Provider' => __DIR__ . '/../..' . '/app/Social_Provider.php',
         'App\\User' => __DIR__ . '/../..' . '/app/User.php',
         'Asm89\\Stack\\Cors' => __DIR__ . '/..' . '/asm89/stack-cors/src/Cors.php',

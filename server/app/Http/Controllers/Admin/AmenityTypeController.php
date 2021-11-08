@@ -5,10 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Social_Provider;
-use App\Http\Requests\SocialProviderRequest;
+use App\Amenity_Type;
 
-class SocialProviderController extends Controller
+class AmenityTypeController extends Controller
 {
     //
     private $success_code = 200;
@@ -18,11 +17,11 @@ class SocialProviderController extends Controller
 
     public function index() {
         try {
-            $social_providers = Social_Provider::orderBy('id', 'desc')->get();
-            if($social_providers) {
+            $amenity_types = Amenity_Type::orderBy('id', 'desc')->get();
+            if($amenity_types) {
                 $this->response = [
                     'status' => 'success',
-                    'data' => $social_providers
+                    'data' => $amenity_types
                 ];
                 return response()->json($this->response, $this->success_code);
             }
@@ -38,14 +37,14 @@ class SocialProviderController extends Controller
             $validator = Validator::make(
                 $request->all(),
                 [
-                    "name" => "required|unique:social_providers",
+                    "name" => "required|unique:amenity_type",
                 ],
                 [
                     'required' => ':attribute không để trống',
                     'unique' => ':attribute không trùng nhau'
                 ],
                 [
-                    'name' => 'Tên mạng xã hội'
+                    'name' => 'Tên loại tiện ích'
                 ]
             );
 
@@ -54,7 +53,7 @@ class SocialProviderController extends Controller
                 return response()->json($this->response);
             }
 
-            if (Social_Provider::create($request->all())) {
+            if (Amenity_Type::create($request->all())) {
                 $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
             }
@@ -67,9 +66,9 @@ class SocialProviderController extends Controller
 
     public function delete($id) {
         try {
-            $social_provider = Social_Provider::find($id);
-            if ($social_provider) {
-                $social_provider->delete();
+            $amenity_type = Amenity_Type::find($id);
+            if ($amenity_type) {
+                $amenity_type->delete();
                 $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
             }
@@ -83,28 +82,27 @@ class SocialProviderController extends Controller
 
     public function edit(Request $request, $id) {
         try {
-            $social_provider = Social_Provider::find($id);
-            if ($social_provider) {
+            $amenity_type = Amenity_Type::find($id);
+            if ($amenity_type) {
                 $validator = Validator::make(
                     $request->all(),
                     [
-                        "name" => "required|unique:social_providers",
+                        "name" => "required|unique:amenity_type",
                     ],
                     [
                         'required' => ':attribute không để trống',
                         'unique' => ':attribute không trùng nhau'
                     ],
                     [
-                        'name' => 'Tên mạng xã hội'
+                        'name' => 'Tên loại tiện ích'
                     ]
                 );
-    
                 if ($validator->fails()) {
                     $this->response['errorMessage'] = $validator->errors();
                     return response()->json($this->response);
                 }
                 $data = $request->all();
-                $social_provider->update($data);
+                $amenity_type->update($data);
                 $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
             }

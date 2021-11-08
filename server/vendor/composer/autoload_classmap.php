@@ -6,8 +6,11 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Amenity_Type' => $baseDir . '/app/Amenity_Type.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
+    'App\\Http\\Controllers\\Admin\\AmenityTypeController' => $baseDir . '/app/Http/Controllers/Admin/AmenityTypeController.php',
+    'App\\Http\\Controllers\\Admin\\RoleController' => $baseDir . '/app/Http/Controllers/Admin/RoleController.php',
     'App\\Http\\Controllers\\Admin\\SocialProviderController' => $baseDir . '/app/Http/Controllers/Admin/SocialProviderController.php',
     'App\\Http\\Controllers\\AuthController' => $baseDir . '/app/Http/Controllers/AuthController.php',
     'App\\Http\\Controllers\\Auth\\ConfirmPasswordController' => $baseDir . '/app/Http/Controllers/Auth/ConfirmPasswordController.php',
@@ -36,6 +39,7 @@ return array(
     'App\\Providers\\BroadcastServiceProvider' => $baseDir . '/app/Providers/BroadcastServiceProvider.php',
     'App\\Providers\\EventServiceProvider' => $baseDir . '/app/Providers/EventServiceProvider.php',
     'App\\Providers\\RouteServiceProvider' => $baseDir . '/app/Providers/RouteServiceProvider.php',
+    'App\\Role' => $baseDir . '/app/Role.php',
     'App\\Social_Provider' => $baseDir . '/app/Social_Provider.php',
     'App\\User' => $baseDir . '/app/User.php',
     'Asm89\\Stack\\Cors' => $vendorDir . '/asm89/stack-cors/src/Cors.php',

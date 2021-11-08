@@ -66,10 +66,13 @@ class RoleController extends Controller
 
     public function delete($id) {
         try {
-            if (Role::findOrFail($id)->delete()) {
+            $role = Role::find($id);
+            if ($role) {
+                $role->delete();
                 $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
             }
+            $this->response['errorMessage'] = "Record có id = $id không tồn tại";
             return response()->json($this->response);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
@@ -79,31 +82,33 @@ class RoleController extends Controller
 
     public function edit(Request $request, $id) {
         try {
-            $validator = Validator::make(
-                $request->all(),
-                [
-                    "name" => "required|unique:role",
-                ],
-                [
-                    'required' => ':attribute không để trống',
-                    'unique' => ':attribute không trùng nhau'
-                ],
-                [
-                    'name' => 'Tên role'
-                ]
-            );
-
-            if ($validator->fails()) {
-                $this->response['errorMessage'] = $validator->errors();
-                return response()->json($this->response);
-            }
-            $data = $request->all();
-            if (Role::findOrFail($id)->update($data)) {
+            $role = Role::find($id);
+            if ($role) {
+                $validator = Validator::make(
+                    $request->all(),
+                    [
+                        "name" => "required|unique:role",
+                    ],
+                    [
+                        'required' => ':attribute không để trống',
+                        'unique' => ':attribute không trùng nhau'
+                    ],
+                    [
+                        'name' => 'Tên role'
+                    ]
+                );
+    
+                if ($validator->fails()) {
+                    $this->response['errorMessage'] = $validator->errors();
+                    return response()->json($this->response);
+                }
+                $data = $request->all();
+                $role->update($data);
                 $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
             }
-            $this->response['status'] = 'fail';
-                return response()->json($this->response);
+            $this->response['errorMessage'] = "Record có id = $id không tồn tại";
+            return response()->json($this->response);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($response);

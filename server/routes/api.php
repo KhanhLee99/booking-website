@@ -36,3 +36,9 @@ Route::post('role/add', 'Admin\RoleController@add');
 Route::get('role', 'Admin\RoleController@index');
 Route::delete('role/{id}', 'Admin\RoleController@delete');
 Route::put('role/{id}', 'Admin\RoleController@edit');
+
+// Amenity Type
+Route::post('amenity-type/add', 'Admin\AmenityTypeController@add');
+Route::get('amenity-type', 'Admin\AmenityTypeController@index');
+Route::delete('amenity-type/{id}', 'Admin\AmenityTypeController@delete');
+Route::put('amenity-type/{id}', 'Admin\AmenityTypeController@edit');
