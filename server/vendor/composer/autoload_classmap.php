@@ -6,9 +6,11 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'App\\Amenity' => $baseDir . '/app/Amenity.php',
     'App\\Amenity_Type' => $baseDir . '/app/Amenity_Type.php',
     'App\\Console\\Kernel' => $baseDir . '/app/Console/Kernel.php',
     'App\\Exceptions\\Handler' => $baseDir . '/app/Exceptions/Handler.php',
+    'App\\Http\\Controllers\\Admin\\AmenityController' => $baseDir . '/app/Http/Controllers/Admin/AmenityController.php',
     'App\\Http\\Controllers\\Admin\\AmenityTypeController' => $baseDir . '/app/Http/Controllers/Admin/AmenityTypeController.php',
     'App\\Http\\Controllers\\Admin\\RoleController' => $baseDir . '/app/Http/Controllers/Admin/RoleController.php',
     'App\\Http\\Controllers\\Admin\\SocialProviderController' => $baseDir . '/app/Http/Controllers/Admin/SocialProviderController.php',

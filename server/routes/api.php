@@ -25,6 +25,8 @@ Route::post('login_facebook', 'AuthController@login_facebook');
 Route::get('me', 'AuthController@me')->middleware('auth:api');
 Route::get('new-password', 'UserController@new_password')->middleware('auth:api');
 
+Route::middleware('auth:api')->group(function () {
+
 // Social Provider
 Route::post('social-provider/add', 'Admin\SocialProviderController@add');
 Route::get('social-provider', 'Admin\SocialProviderController@index');
@@ -42,3 +44,18 @@ Route::post('amenity-type/add', 'Admin\AmenityTypeController@add');
 Route::get('amenity-type', 'Admin\AmenityTypeController@index');
 Route::delete('amenity-type/{id}', 'Admin\AmenityTypeController@delete');
 Route::put('amenity-type/{id}', 'Admin\AmenityTypeController@edit');
+
+// Amenity
+Route::post('amenity/add', 'Admin\AmenityController@add');
+Route::get('amenity', 'Admin\AmenityController@index');
+Route::delete('amenity/{id}', 'Admin\AmenityController@delete');
+Route::put('amenity/{id}', 'Admin\AmenityController@edit');
+
+// Bed Type
+Route::post('bed-type/add', 'Admin\BedTypeController@add');
+Route::get('bed-type', 'Admin\BedTypeController@index');
+Route::delete('bed-type/{id}', 'Admin\BedTypeController@delete');
+Route::put('bed-type/{id}', 'Admin\BedTypeController@edit');
+});
+
+// Route::get('bed-type', 'Admin\BedTypeController@index');
