@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Amenity_Type;
+use Exception;
 
 class AmenityTypeController extends Controller
 {
@@ -76,7 +77,7 @@ class AmenityTypeController extends Controller
             return response()->json($this->response);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
-            return response()->json($response);
+            return response()->json($this->response);
         }
     }
 
@@ -110,7 +111,7 @@ class AmenityTypeController extends Controller
             return response()->json($this->response);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
-            return response()->json($response);
+            return response()->json($this->response);
         }
     }
 }

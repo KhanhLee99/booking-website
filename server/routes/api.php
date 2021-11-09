@@ -27,6 +27,10 @@ Route::get('new-password', 'UserController@new_password')->middleware('auth:api'
 
 Route::middleware('auth:api')->group(function () {
 
+// User upload_multiple_images
+Route::post('update-avatar', 'UserController@update_avatar');
+Route::post('upload-multiple-images', 'UserController@upload_multiple_images');
+
 // Social Provider
 Route::post('social-provider/add', 'Admin\SocialProviderController@add');
 Route::get('social-provider', 'Admin\SocialProviderController@index');

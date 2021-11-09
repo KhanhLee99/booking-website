@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Social_Provider;
 use App\Http\Requests\SocialProviderRequest;
+use Exception;
 
 class SocialProviderController extends Controller
 {
@@ -77,7 +78,7 @@ class SocialProviderController extends Controller
             return response()->json($this->response);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
-            return response()->json($response);
+            return response()->json($this->response);
         }
     }
 
@@ -112,7 +113,7 @@ class SocialProviderController extends Controller
             return response()->json($this->response);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
-            return response()->json($response);
+            return response()->json($this->response);
         }
     }
 }

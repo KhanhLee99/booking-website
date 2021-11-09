@@ -568,10 +568,12 @@ class ComposerStaticInitd3fcde5a08a08b7d677b06addce855fc
     public static $classMap = array (
         'App\\Amenity' => __DIR__ . '/../..' . '/app/Amenity.php',
         'App\\Amenity_Type' => __DIR__ . '/../..' . '/app/Amenity_Type.php',
+        'App\\Bed_Type' => __DIR__ . '/../..' . '/app/Bed_Type.php',
         'App\\Console\\Kernel' => __DIR__ . '/../..' . '/app/Console/Kernel.php',
         'App\\Exceptions\\Handler' => __DIR__ . '/../..' . '/app/Exceptions/Handler.php',
         'App\\Http\\Controllers\\Admin\\AmenityController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/AmenityController.php',
         'App\\Http\\Controllers\\Admin\\AmenityTypeController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/AmenityTypeController.php',
+        'App\\Http\\Controllers\\Admin\\BedTypeController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/BedTypeController.php',
         'App\\Http\\Controllers\\Admin\\RoleController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/RoleController.php',
         'App\\Http\\Controllers\\Admin\\SocialProviderController' => __DIR__ . '/../..' . '/app/Http/Controllers/Admin/SocialProviderController.php',
         'App\\Http\\Controllers\\AuthController' => __DIR__ . '/../..' . '/app/Http/Controllers/AuthController.php',
