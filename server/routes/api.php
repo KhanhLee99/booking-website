@@ -60,6 +60,14 @@ Route::post('bed-type/add', 'Admin\BedTypeController@add');
 Route::get('bed-type', 'Admin\BedTypeController@index');
 Route::delete('bed-type/{id}', 'Admin\BedTypeController@delete');
 Route::put('bed-type/{id}', 'Admin\BedTypeController@edit');
-});
 
-// Route::get('bed-type', 'Admin\BedTypeController@index');
+// Listing
+Route::post('listing/add', 'Host\ListingController@add');
+Route::get('listing', 'Host\ListingController@index');
+Route::delete('listing/{id}', 'Host\ListingController@delete');
+Route::put('listing/{id}', 'Host\ListingController@edit');
+Route::get('listing/user/{user_id}', 'Host\ListingController@getListingsByUserId');
+
+// Room 
+Route::put('listing/edit-bedroom/{id}', 'Host\ListingController@edit_bed_room');
+});
