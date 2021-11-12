@@ -13,4 +13,8 @@ class Room extends Model
     // function Listing() {
     //     return $this->belongsTo('App\Listing');
     // }
+
+    function Bed_Types() {
+        return $this->belongsToMany('App\Bed_Type', 'room_bed_type', 'room_id', 'bed_type_id');
+    }
 }

@@ -11,4 +11,8 @@ class Bed_Type extends Model
     protected $fillable = [
         'name', 'description'
     ];
+
+    function Rooms() {
+        return $this->belongsToMany('App\Room', 'room_bed_type', 'bed_type_id', 'room_id');
+    }
 }

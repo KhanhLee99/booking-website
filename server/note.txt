@@ -1,0 +1,5 @@
+PHP. array_diff — Computes the difference of arrays (sự khác biệt của các mảng)
+PHP. array_intersect — Computes the intersection of arrays (giao nhau của các mảng / các phần tử giống nhau của các mảng)
+explode - Split a string by a string
+
+LARAVEL. toArray()

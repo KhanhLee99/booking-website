@@ -12,4 +12,8 @@ class RoomBedTypeController extends Controller
     function add($data) {
         Room_Bed_Type::create($data);
     }
+
+    // function get_record_by_room_id($room_id) {
+    //     return Room_Bed_Type::where('room_id', $room_id)->get();
+    // }
 }
