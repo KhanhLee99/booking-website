@@ -167,7 +167,7 @@ class ListingController extends Controller
                             $this->add_room($bedroom_count, $id);
                             if ($rooms = $request->rooms) {
                                 $rooms_count = count($rooms);
-                                if ($rooms_count > 0) {
+                                if ($rooms_count > 0 && $rooms_count <= $bedroom_count) {
                                     $rooms_by_listing_id = $listing->Rooms;
                                     // return $rooms_by_listing_id;
                                     for ($i = 0; $i < $rooms_count; $i++) {
@@ -185,15 +185,41 @@ class ListingController extends Controller
                                 }
                             }
                         } else if ($rooms_listing_count == $bedroom_count) { // check bed room type, bed count per room
-                            dd('1');
+                            if ($rooms = $request->rooms) {
+                                $rooms_count = count($rooms);
+                                if ($rooms_count > 0 && $rooms_count <= $bedroom_count) {
+                                    for ($i = 0; $i < $rooms_count; $i++) {
+                                        $bed_type_arr = $rooms[$i]['bed_type'];
+                                        $this->edit_room_bed_type($rooms_by_listing_id[$i]['id'], $bed_type_arr);
+                                    }
+                                }
+                            }
                         } else if ($rooms_listing_count < $bedroom_count) {
-                            dd('1');
                             $this->add_room($bedroom_count - $rooms_listing_count, $id);
+                            if ($rooms = $request->rooms) {
+                                $rooms_count = count($rooms);
+                                if ($rooms_count > 0 && $rooms_count <= $bedroom_count) {
+                                    $rooms_by_listing_id = $listing->Rooms;
+                                    for ($i = 0; $i < $rooms_count; $i++) {
+                                        $bed_type_arr = $rooms[$i]['bed_type'];
+                                        $this->edit_room_bed_type($rooms_by_listing_id[$i]['id'], $bed_type_arr);
+                                    }
+                                }
+                            }
                         } else if ($rooms_listing_count > $bedroom_count) {
-                            dd('1');
                             $rooms_delete_length = $rooms_listing_count - $bedroom_count;
                             for ($i = $rooms_listing_count - 1; $i >= $rooms_listing_count - $rooms_delete_length; $i--) {
                                 $this->delete_room($rooms_by_listing_id[$i]['id']);
+                            }
+                            if ($rooms = $request->rooms) {
+                                $rooms_count = count($rooms);
+                                if ($rooms_count > 0 && $rooms_count <= $bedroom_count) {
+                                    $rooms_by_listing_id = $listing->Rooms;
+                                    for ($i = 0; $i < $rooms_count; $i++) {
+                                        $bed_type_arr = $rooms[$i]['bed_type'];
+                                        $this->edit_room_bed_type($rooms_by_listing_id[$i]['id'], $bed_type_arr);
+                                    }
+                                }
                             }
                         }
                     }
