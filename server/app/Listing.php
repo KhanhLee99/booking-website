@@ -17,4 +17,8 @@ class Listing extends Model
     function Rooms() {
         return $this->hasMany('App\Room');
     }
+
+    function Amenities() {
+        return $this->belongsToMany('App\Amenity', 'listing_amenities', 'listing_id', 'amenity_id');
+    }
 }

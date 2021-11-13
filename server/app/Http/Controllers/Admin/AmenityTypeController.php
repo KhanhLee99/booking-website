@@ -114,4 +114,8 @@ class AmenityTypeController extends Controller
             return response()->json($this->response);
         }
     }
+
+    public function get_by_id($id) {
+        return Amenity_Type::find($id);
+    }
 }

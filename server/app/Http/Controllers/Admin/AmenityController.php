@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Amenity;
 use App\Amenity_Type;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class AmenityController extends Controller
 {
@@ -118,5 +119,9 @@ class AmenityController extends Controller
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);
         }
+    }
+
+    public function get_by_array_id($array_id) {
+        return DB::table('amenities')->whereIn('id', $array_id)->select('name', 'icon_url')->get();
     }
 }

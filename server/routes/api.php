@@ -67,6 +67,8 @@ Route::get('listing', 'Host\ListingController@index');
 Route::delete('listing/{id}', 'Host\ListingController@delete');
 Route::put('listing/{id}', 'Host\ListingController@edit');
 Route::get('listing/user/{user_id}', 'Host\ListingController@getListingsByUserId');
+Route::post('listing/amenities/{id}', 'Host\ListingController@add_listing_amenities');
+Route::get('listing/{id}', 'Host\ListingController@get_listing_by_id');
 
 // Room 
 Route::put('listing/edit-bedroom/{id}', 'Host\ListingController@edit_bed_room');
