@@ -159,6 +159,7 @@ class ListingController extends Controller
     function edit_bed_room(Request $request, $id)
     {
         try {
+            
             $listing = Listing::find($id);
             if ($listing) {
                 // check input bedroom_count
@@ -178,13 +179,15 @@ class ListingController extends Controller
                                     // return $rooms_by_listing_id;
                                     for ($i = 0; $i < $rooms_count; $i++) {
                                         $bed_type_arr = $rooms[$i]['bed_type'];
+                                        $key = 'bed_count';
                                         $rooms_by_listing_id[$i]->update([
-                                            'bed_count' => count($bed_type_arr)
+                                            'bed_count' => array_sum(array_column($bed_type_arr, $key))
                                         ]);
                                         foreach ($bed_type_arr as $bed_type) {
                                             $this->room_bed_type_controller->add([
                                                 'room_id' => $rooms_by_listing_id[$i]['id'],
-                                                'bed_type_id' => $bed_type
+                                                'bed_type_id' => $bed_type['bed_type_id'],
+                                                'bed_count' => $bed_type['bed_count']
                                             ]);
                                         }
                                     }
@@ -253,18 +256,33 @@ class ListingController extends Controller
 
     public function edit_room_bed_type($room_id, $bed_types_array)
     {
-        $bed_types_by_room_id = Room::find($room_id)->Bed_Types;
-        $arr_bed_type_id = array();
-        foreach ($bed_types_by_room_id as $item) {
-            $arr_bed_type_id[] = $item['id'];
+        $bed_types_by_room_id = $this->room_bed_type_controller->get_by_room_id($room_id);
+        $bed_types_delete = array_udiff($bed_types_by_room_id->toArray(), $bed_types_array, function($obj_a, $obj_b) {
+            return $obj_a['bed_type_id'] - $obj_b['bed_type_id'];
+        });
+        $bed_types_add = array_udiff($bed_types_array, $bed_types_by_room_id->toArray(), function($obj_a, $obj_b) {
+            return $obj_a['bed_type_id'] - $obj_b['bed_type_id'];
+        });
+        $bed_types_edit= array_uintersect($bed_types_array, $bed_types_by_room_id->toArray(), function($obj_a, $obj_b) {
+            return ($obj_a['bed_type_id'] - $obj_b['bed_type_id']);
+        });
+
+        if (count($bed_types_edit) > 0) {
+            foreach ($bed_types_edit as $type) {
+                $key = array_search($type['bed_type_id'], array_column($bed_types_by_room_id->toArray(), 'bed_type_id'));
+                if ($type['bed_count'] != $bed_types_by_room_id[$key]['bed_count']) {
+                    $bed_types_by_room_id[$key]->update([
+                        'bed_count' => $type['bed_count']
+                    ]);
+                }
+            }
         }
-        $bed_types_delete = array_values(array_diff($arr_bed_type_id, $bed_types_array));
-        $bed_types_add = array_values(array_diff($bed_types_array, $arr_bed_type_id));
+
         if (count($bed_types_delete) > 0) {
             foreach ($bed_types_delete as $type) {
                 Room_Bed_Type::where([
                     ['room_id', '=', $room_id],
-                    ['bed_type_id', '=', $type]
+                    ['bed_type_id', '=', $type['bed_type_id']]
                 ])->delete();
             }
         }
@@ -273,7 +291,8 @@ class ListingController extends Controller
             foreach ($bed_types_add as $type) {
                 $this->room_bed_type_controller->add([
                     'room_id' => $room_id,
-                    'bed_type_id' => $type
+                    'bed_type_id' => $type['bed_type_id'],
+                    'bed_count' => $type['bed_count']
                 ]);
             }
         }
@@ -281,12 +300,7 @@ class ListingController extends Controller
 
     function test()
     {
-        $bed_types_by_room_id = Room::find(17)->Bed_Types;
-        $arr_bed_type_id = array();
-        foreach ($bed_types_by_room_id as $item) {
-            $arr_bed_type_id[] = $item['id'];
-        }
-        return $arr_bed_type_id;
+        return $this->room_bed_type_controller->get_by_room_id(1);
     }
 
     function add_listing_amenities(Request $request, $id)

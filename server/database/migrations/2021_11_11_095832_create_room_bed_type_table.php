@@ -19,6 +19,7 @@ class CreateRoomBedTypeTable extends Migration
             $table->foreign('room_id')->references('id')->on('room')->onDelete('cascade');
             $table->unsignedBigInteger('bed_type_id');
             $table->foreign('bed_type_id')->references('id')->on('bed_type')->onDelete('cascade');
+            $table->integer('bed_count')->default(1);
             $table->timestamps();
         });
     }

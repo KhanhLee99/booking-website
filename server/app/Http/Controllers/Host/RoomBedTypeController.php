@@ -13,7 +13,7 @@ class RoomBedTypeController extends Controller
         Room_Bed_Type::create($data);
     }
 
-    // function get_record_by_room_id($room_id) {
-    //     return Room_Bed_Type::where('room_id', $room_id)->get();
-    // }
+    function get_by_room_id($room_id) {
+        return Room_Bed_Type::where('room_id', $room_id)->select('id', 'bed_type_id', 'bed_count')->get();
+    }
 }
