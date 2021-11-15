@@ -5,10 +5,10 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\City;
+use App\Reservation_Status;
 use Exception;
 
-class CityController extends Controller
+class ReservationStatusController extends Controller
 {
     //
     private $success_code = 200;
@@ -18,11 +18,11 @@ class CityController extends Controller
 
     public function index() {
         try {
-            $cities = City::orderBy('id', 'desc')->get();
-            if($cities) {
+            $reservation_status = Reservation_Status::orderBy('id', 'desc')->get();
+            if($reservation_status) {
                 $this->response = [
                     'status' => 'success',
-                    'data' => $cities
+                    'data' => $reservation_status
                 ];
                 return response()->json($this->response, $this->success_code);
             }
@@ -38,14 +38,14 @@ class CityController extends Controller
             $validator = Validator::make(
                 $request->all(),
                 [
-                    "name" => "required|unique:city",
+                    "name" => "required|unique:reservation_status",
                 ],
                 [
                     'required' => ':attribute không để trống',
                     'unique' => ':attribute không trùng nhau'
                 ],
                 [
-                    'name' => 'Tên thành phố'
+                    'name' => 'Tên tình trạng đặt phòng'
                 ]
             );
 
@@ -54,7 +54,7 @@ class CityController extends Controller
                 return response()->json($this->response);
             }
 
-            if (City::create($request->all())) {
+            if (Reservation_Status::create($request->all())) {
                 $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
             }
@@ -67,9 +67,9 @@ class CityController extends Controller
 
     public function delete($id) {
         try {
-            $city = City::find($id);
-            if ($city) {
-                $city->delete();
+            $reservation_status = Reservation_Status::find($id);
+            if ($reservation_status) {
+                $reservation_status->delete();
                 $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
             }
@@ -83,19 +83,19 @@ class CityController extends Controller
 
     public function edit(Request $request, $id) {
         try {
-            $city = City::find($id);
-            if ($city) {
+            $reservation_status = Reservation_Status::find($id);
+            if ($reservation_status) {
                 $validator = Validator::make(
                     $request->all(),
                     [
-                        "name" => "required|unique:city",
+                        "name" => "required|unique:reservation_status",
                     ],
                     [
                         'required' => ':attribute không để trống',
                         'unique' => ':attribute không trùng nhau'
                     ],
                     [
-                        'name' => 'Tên thành phố'
+                        'name' => 'Tên tình trạng đặt phòng'
                     ]
                 );
     
@@ -104,7 +104,7 @@ class CityController extends Controller
                     return response()->json($this->response);
                 }
                 $data = $request->all();
-                $city->update($data);
+                $reservation_status->update($data);
                 $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
             }

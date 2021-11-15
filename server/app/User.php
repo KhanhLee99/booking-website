@@ -43,4 +43,8 @@ class User extends Authenticatable
     function Listings() {
         return $this->hasMany('App\Listing');
     }
+
+    function Favorite() {
+        return $this->belongsToMany('App\Listing', 'favorite', 'user_id', 'listing_id');
+    }
 }

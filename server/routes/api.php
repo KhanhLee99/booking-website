@@ -72,4 +72,34 @@ Route::get('listing/{id}', 'Host\ListingController@get_listing_by_id');
 
 // Room 
 Route::put('listing/edit-bedroom/{id}', 'Host\ListingController@edit_bed_room');
+
+// City
+Route::post('city/add', 'Admin\CityController@add');
+Route::get('city', 'Admin\CityController@index');
+Route::delete('city/{id}', 'Admin\CityController@delete');
+Route::put('city/{id}', 'Admin\CityController@edit');
+
+// Reservation Status
+Route::post('reservation-status/add', 'Admin\ReservationStatusController@add');
+Route::get('reservation-status', 'Admin\ReservationStatusController@index');
+Route::delete('reservation-status/{id}', 'Admin\ReservationStatusController@delete');
+Route::put('reservation-status/{id}', 'Admin\ReservationStatusController@edit');
+
+// Favorite
+Route::post('favorite/add', 'User\FavoriteController@add');
+Route::get('favorite', 'User\FavoriteController@index');
+Route::delete('favorite/{id}', 'User\FavoriteController@delete');
+
+// Price Special
+Route::get('price-special/{id}', 'Host\ListingPriceSpecialController@index');
+Route::post('price-special/add', 'Host\ListingPriceSpecialController@add');
+Route::put('price-special/{id}', 'Host\ListingPriceSpecialController@edit');
+
+// Photo Listing
+Route::post('photo-listing/upload/{id}', 'Host\PhotoListingController@upload');
+Route::delete('photo-listing/{id}', 'Host\PhotoListingController@delete');
+
+// Review Listing
+Route::post('review-listing/{id}', 'User\ReviewListingController@add');
+Route::get('review-listing/{id}', 'User\ReviewListingController@index');
 });

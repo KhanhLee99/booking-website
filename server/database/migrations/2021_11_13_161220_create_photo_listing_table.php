@@ -16,7 +16,7 @@ class CreatePhotoListingTable extends Migration
         Schema::create('photo_listing', function (Blueprint $table) {
             $table->id();
             $table->string('photo_url');
-            $table->string('description');
+            $table->string('description')->nullable();
             $table->unsignedBigInteger('listing_id');
             $table->foreign('listing_id')->references('id')->on('listing')->onDelete('cascade');
             $table->timestamps();
