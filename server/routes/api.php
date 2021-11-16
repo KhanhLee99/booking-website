@@ -69,6 +69,7 @@ Route::put('listing/{id}', 'Host\ListingController@edit');
 Route::get('listing/user/{user_id}', 'Host\ListingController@getListingsByUserId');
 Route::post('listing/amenities/{id}', 'Host\ListingController@add_listing_amenities');
 Route::get('listing/{id}', 'Host\ListingController@get_listing_by_id');
+Route::get('listing/city/{id}', 'Host\ListingController@get_listing_by_city_id');
 
 // Room 
 Route::put('listing/edit-bedroom/{id}', 'Host\ListingController@edit_bed_room');
@@ -102,4 +103,19 @@ Route::delete('photo-listing/{id}', 'Host\PhotoListingController@delete');
 // Review Listing
 Route::post('review-listing/{id}', 'User\ReviewListingController@add');
 Route::get('review-listing/{id}', 'User\ReviewListingController@index');
+
+// Block booking
+Route::post('block-booking/add', 'Host\BlockBookingController@add');
+Route::put('block-booking/{id}', 'Host\BlockBookingController@edit');
+Route::get('block-booking/{id}', 'Host\BlockBookingController@index');
+
+// Promo code
+Route::post('promo-code/add', 'PromoCodeController@add');
+Route::put('promo-code/{id}', 'PromoCodeController@edit');
+Route::get('promo-code/listing/{id}', 'PromoCodeController@index');
+Route::delete('promo-code/{id}', 'PromoCodeController@delete');
+
+// Reservation
+Route::post('reservation/add', 'Host\ReservationController@add');
+
 });

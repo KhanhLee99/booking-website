@@ -4,12 +4,11 @@ namespace App\Http\Controllers\Host;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use App\Listing_Price_Special;
+use App\Block_Booking;
 use Exception;
 use Illuminate\Support\Carbon;
 
-class ListingPriceSpecialController extends Controller
+class BlockBookingController extends Controller
 {
     //
     private $success_code = 200;
@@ -17,9 +16,22 @@ class ListingPriceSpecialController extends Controller
         'status' => 'fail'
     ];
 
+    function add (Request $request) {
+        try {
+            if (Block_Booking::create($request->all())) {
+                $this->response['status'] = 'success';
+                return response()->json($this->response, $this->success_code);
+            }
+            return response()->json($this->response);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
+    }
+
     function index($id) {
         try {
-            $result = Listing_Price_Special::where([
+            $result = Block_Booking::where([
                 ['listing_id', '=', $id],
                 ['end_date', '>', Carbon::today()]
             ])->get();
@@ -37,24 +49,11 @@ class ListingPriceSpecialController extends Controller
         }
     }
 
-    function add(Request $request) {
-        try {
-            if (Listing_Price_Special::create($request->all())) {
-                $this->response['status'] = 'success';
-                return response()->json($this->response, $this->success_code);
-            }
-            return response()->json($this->response);
-        } catch (Exception $e) {
-            $this->response['errorMessage'] = $e->getMessage();
-            return response()->json($this->response);
-        }
-    }
-
     function edit(Request $request, $id) {
         try {
-            $special_price = Listing_Price_Special::find($id);
-            if ($special_price) {
-                $special_price->update($request->all());
+            $block_booking = Block_Booking::find($id);
+            if ($block_booking) {
+                $block_booking->update($request->all());
                 $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
             }

@@ -30,6 +30,8 @@ class CreateListingTable extends Migration
             $table->boolean('is_public')->default(0);
             $table->unsignedBigInteger('listing_type_id')->nullable();
             $table->foreign('listing_type_id')->references('id')->on('listing_type');
+            $table->unsignedBigInteger('city_id');
+            $table->foreign('city_id')->references('id')->on('city');
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
