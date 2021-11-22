@@ -117,5 +117,7 @@ Route::delete('promo-code/{id}', 'PromoCodeController@delete');
 
 // Reservation
 Route::post('reservation/add', 'Host\ReservationController@add');
-
+Route::get('reservation/user/{id}', 'Host\ReservationController@get_reservation_by_user_id');
+Route::put('reservation/{id}', 'Host\ReservationController@edit');
+Route::delete('reservation/{id}', 'Host\ReservationController@delete');
 });

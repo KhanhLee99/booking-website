@@ -40,7 +40,7 @@ class BlockBookingController extends Controller
                     'status' => 'success',
                     'data' => $result
                 ];
-                return response()->json($this->response);
+                return response()->json($this->response, $this->success_code);
             }
             return response()->json($this->response);
         } catch (Exception $e) {
