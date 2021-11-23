@@ -1,14 +1,12 @@
-import React, { Component } from 'react'
+import React, { Suspense } from 'react'
 import GoogleLogin from 'react-google-login'
 import FacebookLogin from 'react-facebook-login'
 import axios from 'axios';
 import {
-  BrowserRouter as Router,
+  BrowserRouter,
   Switch,
   Route,
-  Link,
-  useRouteMatch,
-  useParams
+  Link
 } from "react-router-dom";
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -66,21 +64,29 @@ import Page2 from './features/Guest/pages/page2';
 
 // export default App
 
-export class App extends Component {
-  render() {
-    return (
-      <>
-        {/* <Loading/> */}
-        <Router>
+
+// Lazy load - Code splitting
+// const GuestFeauture = React.lazy(() => import('./features/Guest'));
+
+function App() {
+  return (
+    <>
+      <Suspense fallback={<div>Loading ...</div>}>
+        <BrowserRouter>
           <Switch>
-            <PrivateRoute path='/page1' component={Page1}/>
+            <Route path="/guest" component={GuestFeauture} />ƒ
             <Route path="/error" component={MainErrorPage} />
             <Route component={NotFoundPage} />
           </Switch>
+        </BrowserRouter>
+      </Suspense>
 
-        </Router>
-      </>
-    )
-  }
+      {/* <Router> */}
+
+
+      {/* </Router> */}
+    </>
+  )
 }
 export default App
+

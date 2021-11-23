@@ -8,19 +8,14 @@ import NotFoundPage from "../Error/NotFoundPage";
 function GuestFeauture(props) {
     const match = useRouteMatch();
     return (
-        <>
-            <Switch>
-                <Route
-                    path='/page1'
-                    component={Page1}
-                />
-                <Route
-                    path='/'
-                    exact
-                    component={Page2}
-                />
-            </Switch>
-        </>
+        <Switch>
+            <Route exact path={match.url} component={Page1} />
+
+            <Route path={`${match.url}/page2`} component={Page2} />
+            <Route path={`${match.url}/page3`} component={Page3} />
+
+            <Route component={NotFoundPage} />
+        </Switch>
     );
 }
 
