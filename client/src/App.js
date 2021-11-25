@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import GoogleLogin from 'react-google-login'
 import FacebookLogin from 'react-facebook-login'
 import axios from 'axios';
@@ -17,6 +17,9 @@ import GuestFeauture from './features/Guest';
 import { PrivateRoute } from './components/PrivateRoute';
 import Page1 from './features/Guest/pages/page1';
 import Page2 from './features/Guest/pages/page2';
+import Login from './features/Guest/pages';
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
 
 
 // export class App extends Component {
@@ -68,13 +71,35 @@ import Page2 from './features/Guest/pages/page2';
 // Lazy load - Code splitting
 // const GuestFeauture = React.lazy(() => import('./features/Guest'));
 
+// Configure Firebase.
+const config = {
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+};
+firebase.initializeApp(config);
+
 function App() {
+  useEffect(() => {
+    const unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => {
+      // setIsSignedIn(!!user);
+      if (!user) {
+        console.log('User is not login ');
+        return;
+      }
+
+      console.log('Logged in user: ', user.displayName);
+    });
+    return () => unregisterAuthObserver(); // Make sure we un-register Firebase observers when the component unmounts.
+  }, []);
+
   return (
     <>
       <Suspense fallback={<div>Loading ...</div>}>
         <BrowserRouter>
           <Switch>
-            <Route path="/guest" component={GuestFeauture} />ƒ
+            <Route path="/login" component={Login} />
+            {/* <Route path="/guest" component={GuestFeauture} /> */}
+            <PrivateRoute path='/guest' component={GuestFeauture} />
             <Route path="/error" component={MainErrorPage} />
             <Route component={NotFoundPage} />
           </Switch>

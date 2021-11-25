@@ -75,7 +75,7 @@ Route::get('listing/city/{id}', 'Host\ListingController@get_listing_by_city_id')
 Route::put('listing/edit-bedroom/{id}', 'Host\ListingController@edit_bed_room');
 
 // City
-Route::post('city/add', 'Admin\CityController@add');
+// Route::post('city/add', 'Admin\CityController@add');
 Route::get('city', 'Admin\CityController@index');
 Route::delete('city/{id}', 'Admin\CityController@delete');
 Route::put('city/{id}', 'Admin\CityController@edit');
@@ -121,3 +121,5 @@ Route::get('reservation/user/{id}', 'Host\ReservationController@get_reservation_
 Route::put('reservation/{id}', 'Host\ReservationController@edit');
 Route::delete('reservation/{id}', 'Host\ReservationController@delete');
 });
+
+Route::post('city/add', 'Admin\CityController@add');

@@ -1,22 +1,39 @@
-import React from "react";
+import React, { useEffect } from "react";
 import A from "../components/A";
 import B from "../components/B";
 import { useDispatch, useSelector } from "react-redux";
-import { addGuest } from "../guestSlice";
+import { logout } from "../guestSlice";
+import testApi from "../../../api/testApi";
 
 function Page1(props) {
-    const guests = useSelector(state => state.abc);
+    const guests = useSelector(state => state.abc.current);
     const dispatch = useDispatch();
 
-    const handleClick = () => {
-        const action = addGuest('1');
-        dispatch(action);
-        console.log(guests);
+    const handleLogout = () => {
+        // await dispatch(logout().then(() => {
+        //     console.log('current user after logout: ', guests);
+        // }));
+        dispatch(logout());
+        console.log('current user after logout haha: ', guests);
     }
+
+    useEffect(() => {
+        console.log('current user: ', guests);
+        const fetchData = async () => {
+            try {
+                const response = await testApi.getList();
+                console.log(response.data.data);
+            } catch (error) {
+                console.log('failed to fetch product list: ', error);
+            }
+        }
+
+        fetchData();
+    }, []);
 
     return (
         <>
-            <button onClick={() => handleClick()}>click</button>
+            <button onClick={() => handleLogout()}>logout</button>
             <A/>
             <B/>
         </>

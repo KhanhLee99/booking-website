@@ -20,7 +20,7 @@ class AuthController extends Controller
         // $this->middleware('auth:api', ['except' => ['login', 'login_google', 'login_facebook']]);
     }
 
-    public function login(AuthRequest $q) {
+    public function login(Request $q) {
         if(Auth::attempt([
             'email' => $q->email,
             'password' => $q->password
