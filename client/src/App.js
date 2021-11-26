@@ -6,7 +6,8 @@ import {
   BrowserRouter,
   Switch,
   Route,
-  Link
+  Link,
+  Redirect
 } from "react-router-dom";
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -46,13 +47,13 @@ import 'firebase/compat/auth';
 //   render() {
 //     return (
 //       <div>
-//         <GoogleLogin
-//           clientId="819926568297-pp20c9b9o4n0nt7gma8cvsjnnsapo9lk.apps.googleusercontent.com"
-//           buttonText="Login"
-//           onSuccess={this.responseGoogle}
-//           onFailure={this.responseGoogle}
-//           cookiePolicy={'single_host_origin'}
-//         />
+{/* <GoogleLogin
+  clientId="819926568297-pp20c9b9o4n0nt7gma8cvsjnnsapo9lk.apps.googleusercontent.com"
+  buttonText="Login"
+  onSuccess={this.responseGoogle}
+  onFailure={this.responseGoogle}
+  cookiePolicy={'single_host_origin'}
+/> */}
 
 // <FacebookLogin
 //     appId="412807013787269"
@@ -82,12 +83,16 @@ function App() {
   useEffect(() => {
     const unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => {
       // setIsSignedIn(!!user);
-      if (!user) {
-        console.log('User is not login ');
-        return;
-      }
+      // if (!user) {
+      //   console.log('User is not login ');
+      //   return;
+      // }
 
-      console.log('Logged in user: ', user.displayName);
+      // console.log('Logged in user: ', user.displayName);
+      user.getIdToken().then(function (accessToken) {
+        // I personally store this token using Vuex 
+        // so i can watch it and detect its change to act accordingly. 
+      })
     });
     return () => unregisterAuthObserver(); // Make sure we un-register Firebase observers when the component unmounts.
   }, []);
@@ -98,6 +103,7 @@ function App() {
         <BrowserRouter>
           <Switch>
             <Route path="/login" component={Login} />
+            <Redirect from='/' to='/login' />
             {/* <Route path="/guest" component={GuestFeauture} /> */}
             <PrivateRoute path='/guest' component={GuestFeauture} />
             <Route path="/error" component={MainErrorPage} />

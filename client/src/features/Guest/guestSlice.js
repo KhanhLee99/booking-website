@@ -6,14 +6,21 @@ export const login = createAsyncThunk('user/login', async (payload) => {
     return response;
 })
 
-// function handleLogout() {
-//     return new Promise(function (resolve) {
-//         localStorage.removeItem('access_token');
-//         localStorage.removeItem('user');
-//         localStorage.removeItem('role');
-//         resolve(true);
-//     })
-// }
+export const loginGoogle = createAsyncThunk('user/loginGoogle', async (payload) => {
+    const response = await testApi.loginGoogle(payload);
+    return response;
+})
+
+export const loginFacebook = createAsyncThunk('user/loginFacebook', async (payload) => {
+    const response = await testApi.loginFacebook(payload);
+    return response;
+})
+
+export const getMe = createAsyncThunk('user/getMe', async () => {
+    const response = await testApi.getMe();
+    return response;
+})
+
 export const logout = createAsyncThunk('user/logout', async () => {
     const handleLogout = () => {
         return new Promise(function (resolve, reject) {
@@ -44,15 +51,6 @@ const guestSlice = createSlice({
         addGuest: (state, action) => {
             state.push(action.payload)
         },
-
-        // logout: (state) => {
-        //     // clear local storage
-        //     localStorage.removeItem('access_token');
-        //     localStorage.removeItem('user');
-        //     localStorage.removeItem('role');
-        //     // reset current
-        //     state.current = {};
-        // }
     },
     // when thunk successfully, use extraReducer update data
     extraReducers: {
@@ -61,6 +59,15 @@ const guestSlice = createSlice({
         // 	},
         [logout.fulfilled]: (state) => {
             state.current = {};
+        },
+        [loginGoogle.fulfilled]: (state, action) => {
+            localStorage.setItem('access_token', action.payload.data.access_token);
+        },
+        [loginFacebook.fulfilled]: (state, action) => {
+            localStorage.setItem('access_token', action.payload.data.access_token);
+        },
+        [getMe.fulfilled]: (state, action) => {
+            state.current = action.payload;
         },
     }
 });

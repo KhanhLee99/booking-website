@@ -4,6 +4,7 @@ import B from "../components/B";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../guestSlice";
 import testApi from "../../../api/testApi";
+import Header from "../../../components/Header";
 
 function Page1(props) {
     const guests = useSelector(state => state.abc.current);
@@ -34,8 +35,7 @@ function Page1(props) {
     return (
         <>
             <button onClick={() => handleLogout()}>logout</button>
-            <A/>
-            <B/>
+            <Header/>
         </>
     );
 }
