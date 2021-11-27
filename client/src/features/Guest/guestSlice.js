@@ -67,8 +67,13 @@ const guestSlice = createSlice({
             localStorage.setItem('access_token', action.payload.data.access_token);
         },
         [getMe.fulfilled]: (state, action) => {
-            state.current = action.payload;
+            state.current = action.payload.data;
         },
+        [login.fulfilled]: (state, action) => {
+            state.current = action.payload.data
+            localStorage.setItem('access_token', action.payload.data.token);
+            localStorage.setItem('user', JSON.stringify(action.payload.data));
+        }   
     }
 });
 

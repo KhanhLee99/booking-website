@@ -1,6 +1,5 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-// import { useSelector } from 'react-redux';
 import { Redirect, Route } from 'react-router';
 
 export function PrivateRoute({ component: Component, ...rest }) {
@@ -13,7 +12,6 @@ export function PrivateRoute({ component: Component, ...rest }) {
 				{...rest}
 				render={(props) => {
 					return	isLoggedIn ? (
-						// <Redirect to='/recruiter' />
 						<Component {...props} />
 					) : (
 						<Redirect to='/login' />

@@ -25,7 +25,7 @@ class CreateUsersTable extends Migration
             $table->boolean('email_verified')->default(0);
             $table->unsignedBigInteger('role_id')->nullable();
             $table->foreign('role_id')->references('id')->on('role');
-            $table->string('firebaseUID');
+            $table->string('firebaseUID')->nullable();
             $table->string('signin_method')->nullable();
             // $table->unsignedBigInteger('social_provider_id')->nullable();
             // $table->foreign('social_provider_id')->references('id')->on('social_providers');
