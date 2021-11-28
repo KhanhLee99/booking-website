@@ -27,6 +27,7 @@ class CreateUsersTable extends Migration
             $table->foreign('role_id')->references('id')->on('role');
             $table->string('firebaseUID')->nullable();
             $table->string('signin_method')->nullable();
+            $table->string('device_token')->nullable();
             // $table->unsignedBigInteger('social_provider_id')->nullable();
             // $table->foreign('social_provider_id')->references('id')->on('social_providers');
             $table->rememberToken();

@@ -1,4 +1,4 @@
-import React, { Suspense, useEffect } from 'react'
+import React, { Suspense, useEffect, useState } from 'react'
 import axios from 'axios';
 import {
   BrowserRouter,
@@ -14,7 +14,8 @@ import Login from './features/Guest/pages';
 import firebase from 'firebase';
 import { getMe } from './features/Guest/guestSlice';
 import { useDispatch } from 'react-redux';
-import { messaging } from './init-fcm';
+import { messaging, onMessageListener } from './init-fcm';
+import ReactNotificationComponent from './components/Notification/ReactNotification';
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
 // const GuestFeauture = React.lazy(() => import('./features/Guest'));
@@ -22,6 +23,8 @@ import { messaging } from './init-fcm';
 
 function App() {
   const dispatch = useDispatch();
+  const [show, setShow] = useState(false);
+  const [notification, setNotification] = useState({ title: "", body: "" });
 
   useEffect(() => {
     const unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => { });
@@ -45,8 +48,27 @@ function App() {
     getFcmToken();
   }, []);
 
+  onMessageListener()
+    .then((payload) => {
+      setShow(true);
+      setNotification({
+        title: payload.notification.title,
+        body: payload.notification.body,
+      });
+      console.log(payload);
+    })
+    .catch((err) => console.log("failed: ", err));
+
   return (
     <>
+      {show ? (
+        <ReactNotificationComponent
+          title={notification.title}
+          body={notification.body}
+        />
+      ) : (
+        <></>
+      )}
       <Suspense fallback={<div>Loading ...</div>}>
         <BrowserRouter>
           <Switch>

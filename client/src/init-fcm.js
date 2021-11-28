@@ -4,12 +4,19 @@ const initializedFirebaseApp = firebase.initializeApp({
     // Project Settings => Add Firebase to your web app
     apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
     authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-    projectId: "client-330913",
-    storageBucket: "client-330913.appspot.com",
-    messagingSenderId: "819926568297",
-    appId: "1:819926568297:web:489257cd02a4dccc47c1f8",
-    measurementId: "G-RH4P1MDW10"
+    projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_FIREBASE_APP_ID,
+    measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID
 });
 const messaging = initializedFirebaseApp.messaging();
 
 export { messaging };
+
+export const onMessageListener = () =>
+  new Promise((resolve) => {
+    messaging.onMessage((payload) => {
+      resolve(payload);
+    });
+  });
