@@ -16,6 +16,7 @@ import { getMe } from './features/Guest/guestSlice';
 import { useDispatch } from 'react-redux';
 import { messaging, onMessageListener } from './init-fcm';
 import ReactNotificationComponent from './components/Notification/ReactNotification';
+import Messages from './features/Message';
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
 // const GuestFeauture = React.lazy(() => import('./features/Guest'));
@@ -60,27 +61,28 @@ function App() {
     .catch((err) => console.log("failed: ", err));
 
   return (
-    <>
-      {show ? (
-        <ReactNotificationComponent
-          title={notification.title}
-          body={notification.body}
-        />
-      ) : (
-        <></>
-      )}
-      <Suspense fallback={<div>Loading ...</div>}>
-        <BrowserRouter>
-          <Switch>
-            <Route path="/login" component={Login} />
-            <Redirect exact from='/' to='/login' />
-            <PrivateRoute path='/guest' component={GuestFeauture} />
-            <Route path="/error" component={MainErrorPage} />
-            <Route component={NotFoundPage} />
-          </Switch>
-        </BrowserRouter>
-      </Suspense>
-    </>
+    <Messages/>
+    // <>
+    //   {show ? (
+    //     <ReactNotificationComponent
+    //       title={notification.title}
+    //       body={notification.body}
+    //     />
+    //   ) : (
+    //     <></>
+    //   )}
+    //   <Suspense fallback={<div>Loading ...</div>}>
+    //     <BrowserRouter>
+    //       <Switch>
+    //         <Route path="/login" component={Login} />
+    //         <Redirect exact from='/' to='/login' />
+    //         <PrivateRoute path='/guest' component={GuestFeauture} />
+    //         <Route path="/error" component={MainErrorPage} />
+    //         <Route component={NotFoundPage} />
+    //       </Switch>
+    //     </BrowserRouter>
+    //   </Suspense>
+    // </>
   )
 }
 
