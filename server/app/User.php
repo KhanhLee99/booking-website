@@ -47,4 +47,12 @@ class User extends Authenticatable
     function Favorite() {
         return $this->belongsToMany('App\Listing', 'favorite', 'user_id', 'listing_id');
     }
+
+    function Messages() {
+        return $this->hasMany('App\Models\Message', 'sender_id');
+    }
+
+    function Conversations() {
+        return $this->belongsToMany('App\Models\Conversation', 'user_conversation', 'user_id', 'conversation_id');
+    }
 }

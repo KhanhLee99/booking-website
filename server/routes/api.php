@@ -24,7 +24,7 @@ Route::post('login_google', 'AuthController@login_google');
 Route::post('login_facebook', 'AuthController@login_facebook');
 Route::get('me', 'AuthController@me')->middleware('auth:api');
 Route::get('new-password', 'UserController@new_password')->middleware('auth:api');
-Route::post('chat', 'MessageController@chat');
+
 
 Route::middleware('auth:api')->group(function () {
 
@@ -79,7 +79,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('listing/edit-bedroom/{id}', 'Host\ListingController@edit_bed_room');
 
     // City
-    // Route::post('city/add', 'Admin\CityController@add');
+    Route::post('city/add', 'Admin\CityController@add');
     Route::get('city', 'Admin\CityController@index');
     Route::delete('city/{id}', 'Admin\CityController@delete');
     Route::put('city/{id}', 'Admin\CityController@edit');
@@ -124,6 +124,11 @@ Route::middleware('auth:api')->group(function () {
     Route::get('reservation/user/{id}', 'Host\ReservationController@get_reservation_by_user_id');
     Route::put('reservation/{id}', 'Host\ReservationController@edit');
     Route::delete('reservation/{id}', 'Host\ReservationController@delete');
-});
 
-Route::post('city/add', 'Admin\CityController@add');
+    // Conversation
+    Route::post('conversation/add', 'Common\ConversationController@create_conversation');
+    Route::get('conversation', 'Common\ConversationController@get_conversations');
+
+    // Messages
+    Route::post('send-message', 'Common\MessageController@send_message');
+});

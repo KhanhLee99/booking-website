@@ -10,6 +10,7 @@
     "axios": "^0.21.1",
     "firebase": "^8.7.0",
     "formik": "^2.2.9",
+    "laravel-echo": "^1.11.3",
     "node-sass": "^6.0.1",
     "pusher-js": "^7.0.3",
     "query-string": "^7.0.1",
