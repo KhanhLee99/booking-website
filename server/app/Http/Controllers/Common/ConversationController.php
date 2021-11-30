@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Common;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Conversation;
+use App\Models\Message;
 use Exception;
 use Illuminate\Support\Facades\DB;
 
@@ -51,23 +52,40 @@ class ConversationController extends Controller
 
     public function get_conversations(Request $request) {
         try {
-            $user = $request->user('api')->id;
-            $friends = Conversation::with(["Users" => function ($query) use ($user) {
-                // Removes user data object from the users array that 
-                // matches the id in $sender 
-                $query->where("user_id", "!=", $user); 
-            }])->whereHas('Users', function ($q) use ($user) {
-                // Only returns the channels that $sender has participated in
-                $q->where('user_id', $user);
-            })->get();
+            $user = $request->user('api');
+            
+            $conversations = Conversation::with(["users" => function ($query) use ($user) {
+                $query->where("user_id", "!=", $user->id); 
+            }])
+            ->whereHas('users', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            })
+            ->get();
 
-            return $friends;
-    
-            // return DB::table('user_conversation')
-            // ->where('user_id', $user->id)
-            // ->join('users', 'users.id', '=', 'user_conversation.user_id')
-            // ->select('users.name')
-            // ->get();
+            
+
+            $data = array();
+
+            foreach ($conversations as $conversation) {
+                $last_message = Message::orderBy('id', 'desc')->where('conversation_id', $conversation->id)->first();
+                
+                $data[] = [
+                    'conversation_id' => $conversation->id,
+                    'receiver' => [
+                        'name' => $conversation->users[0]->name,
+                        'avatar' => $conversation->users[0]->avatar_url
+                    ],
+                    'message' => $last_message['message'],
+                    'time' => $last_message['created_at'],
+                    'is_read' => $last_message['sender_id'] === $user->id ? 0 : $last_message['is_read']
+                ];
+            }
+            if ($data) {
+                $this->response['status'] = 'success';
+                $this->response['data'] = $data;
+                return response()->json($this->response, $this->success_code);
+            }
+            return response()->json($this->response);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);

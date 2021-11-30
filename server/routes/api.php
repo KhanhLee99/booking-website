@@ -128,7 +128,12 @@ Route::middleware('auth:api')->group(function () {
     // Conversation
     Route::post('conversation/add', 'Common\ConversationController@create_conversation');
     Route::get('conversation', 'Common\ConversationController@get_conversations');
+    
 
     // Messages
     Route::post('send-message', 'Common\MessageController@send_message');
+    Route::put('seen-message', 'Common\MessageController@seen_message');
+    Route::get('messages/{conversation_id}', 'Common\MessageController@get_messages');
 });
+
+Route::get('send-mail-auth', 'Mails\MailAuthController@send_mail');
