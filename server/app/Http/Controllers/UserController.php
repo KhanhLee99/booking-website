@@ -29,6 +29,8 @@ class UserController extends Controller
         $user->fill($q->all());
         $user->password = Hash::make($q->password);
         $user->save();
+        $user->sendEmailVerificationNotification();
+        
         return response()->json($user);
     }
 

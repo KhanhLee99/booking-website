@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,6 +18,11 @@ use Illuminate\Support\Facades\Route;
 // Route::middleware('auth:api')->get('/user', function (Request $request) {
 //     return $request->user();
 // });
+
+Auth::routes(['verify' => true]);
+
+Route::get('email/verify/{id}', 'VerificationController@verify')->name('verification.verify'); // Make sure to keep this as your route name
+// Route::get('email/resend', 'VerificationController@resend')->name('verification.resend');
 
 Route::post('register', 'UserController@register');
 Route::post('login', 'AuthController@login');
@@ -128,7 +134,7 @@ Route::middleware('auth:api')->group(function () {
     // Conversation
     Route::post('conversation/add', 'Common\ConversationController@create_conversation');
     Route::get('conversation', 'Common\ConversationController@get_conversations');
-    
+
 
     // Messages
     Route::post('send-message', 'Common\MessageController@send_message');

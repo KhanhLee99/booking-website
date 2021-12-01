@@ -17,6 +17,9 @@ import { useDispatch } from 'react-redux';
 import { messaging, onMessageListener } from './init-fcm';
 import ReactNotificationComponent from './components/Notification/ReactNotification';
 import Messages from './features/Message';
+import TestFormik from './components/Test/TestFormik';
+import TestYup from './components/Test/TestYup';
+import TestFormik2 from './components/Test/TestFormik2';
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
 // const GuestFeauture = React.lazy(() => import('./features/Guest'));
@@ -61,28 +64,35 @@ function App() {
     .catch((err) => console.log("failed: ", err));
 
   return (
-    // <Messages/>
     <>
-      {show ? (
-        <ReactNotificationComponent
-          title={notification.title}
-          body={notification.body}
-        />
-      ) : (
-        <></>
-      )}
-      <Suspense fallback={<div>Loading ...</div>}>
-        <BrowserRouter>
-          <Switch>
-            <Route path="/login" component={Login} />
-            <Redirect exact from='/' to='/login' />
-            <PrivateRoute path='/guest' component={GuestFeauture} />
-            <Route path="/error" component={MainErrorPage} />
-            <Route component={NotFoundPage} />
-          </Switch>
-        </BrowserRouter>
-      </Suspense>
+      <TestFormik />
+      <TestYup />
+      <TestFormik2 />
     </>
+
+
+    // <Messages/>
+    // <>
+    //   {show ? (
+    //     <ReactNotificationComponent
+    //       title={notification.title}
+    //       body={notification.body}
+    //     />
+    //   ) : (
+    //     <></>
+    //   )}
+    //   <Suspense fallback={<div>Loading ...</div>}>
+    //     <BrowserRouter>
+    //       <Switch>
+    //         <Route path="/login" component={Login} />
+    //         <Redirect exact from='/' to='/login' />
+    //         <PrivateRoute path='/guest' component={GuestFeauture} />
+    //         <Route path="/error" component={MainErrorPage} />
+    //         <Route component={NotFoundPage} />
+    //       </Switch>
+    //     </BrowserRouter>
+    //   </Suspense>
+    // </>
   )
 }
 
