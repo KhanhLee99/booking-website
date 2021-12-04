@@ -20,6 +20,9 @@ import Messages from './features/Message';
 import TestFormik from './components/Test/TestFormik';
 import TestYup from './components/Test/TestYup';
 import TestFormik2 from './components/Test/TestFormik2';
+import PostPaginate from './components/Test/PostPaginate';
+import Header from './components/Header';
+import Home from './features/Home/pages';
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
 // const GuestFeauture = React.lazy(() => import('./features/Guest'));
@@ -65,13 +68,10 @@ function App() {
 
   return (
     <>
-      <TestFormik />
-      <TestYup />
-      <TestFormik2 />
+      <Home />
+      {/* <Login /> */}
     </>
 
-
-    // <Messages/>
     // <>
     //   {show ? (
     //     <ReactNotificationComponent

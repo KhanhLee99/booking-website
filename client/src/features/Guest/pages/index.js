@@ -8,6 +8,10 @@ import Page2 from "./page2";
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase';
 import axios from "axios";
+// import * as firebaseui from 'firebaseui'
+// import 'firebaseui/dist/firebaseui.css'
+import './style.css'; // This uses CSS modules.
+import './firebaseui-styling.global.css'; // Import globally.
 
 Login.propTypes = {}
 

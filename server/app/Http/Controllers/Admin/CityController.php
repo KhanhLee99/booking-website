@@ -16,9 +16,9 @@ class CityController extends Controller
         'status' => 'fail'
     ];
 
-    public function index() {
+    public function index(Request $request) {
         try {
-            $cities = City::orderBy('id', 'desc')->get();
+            $cities = City::orderBy('id', 'asc')->select('id', 'name')->paginate($request->limit);
             if($cities) {
                 $this->response = [
                     'status' => 'success',
