@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import testApi from "../../api/testApi";
+import listingApi from "../../api/listingApi";
+
 
 export const login = createAsyncThunk('user/login', async (payload) => {
     const response = await testApi.login(payload);
@@ -41,11 +43,17 @@ export const logout = createAsyncThunk('user/logout', async () => {
         })
 })
 
+export const getListings = createAsyncThunk('listingsLocation', async () => {
+    const response = await listingApi.getListingsLocation();
+    return response;
+})
+
 
 const guestSlice = createSlice({
     name: 'guests',
     initialState: {
-        current: JSON.parse(localStorage.getItem('user')) || {}
+        current: JSON.parse(localStorage.getItem('user')) || {},
+        listings: [1, 2],
     },
     reducers: {
         addGuest: (state, action) => {
@@ -73,7 +81,10 @@ const guestSlice = createSlice({
             state.current = action.payload.data
             localStorage.setItem('access_token', action.payload.data.token);
             localStorage.setItem('user', JSON.stringify(action.payload.data));
-        }   
+        },
+        [getListings.fulfilled]: (state, action) => {
+            state.listings = action.payload.data.data
+        }
     }
 });
 

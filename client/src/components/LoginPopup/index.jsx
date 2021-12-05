@@ -15,8 +15,8 @@ function LoginPopup(props) {
         signInFlow: 'popup',
         signInSuccessUrl: '/guest/page1',
         signInOptions: [
+            firebase.auth.FacebookAuthProvider.PROVIDER_ID,
             firebase.auth.GoogleAuthProvider.PROVIDER_ID,
-            firebase.auth.FacebookAuthProvider.PROVIDER_ID
         ],
         callbacks: {
             signInSuccessWithAuthResult: (authResult) => {
@@ -38,7 +38,7 @@ function LoginPopup(props) {
             </div>
             <form>
                 <div className="sign-in-wrapper">
-                    <StyledFirebaseAuth className="firebaseui_container" uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+                    <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
                     {/* <a href="#0" className="social_bt facebook">Login with Facebook</a>
                     <a href="#0" className="social_bt google">Login with Google</a> */}
                     <div className="divider"><span>Or</span></div>

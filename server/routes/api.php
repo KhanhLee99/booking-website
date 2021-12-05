@@ -86,7 +86,6 @@ Route::middleware('auth:api')->group(function () {
 
     // City
     Route::post('city/add', 'Admin\CityController@add');
-    Route::get('city', 'Admin\CityController@index');
     Route::delete('city/{id}', 'Admin\CityController@delete');
     Route::put('city/{id}', 'Admin\CityController@edit');
 
@@ -140,6 +139,13 @@ Route::middleware('auth:api')->group(function () {
     Route::post('send-message', 'Common\MessageController@send_message');
     Route::put('seen-message', 'Common\MessageController@seen_message');
     Route::get('messages/{conversation_id}', 'Common\MessageController@get_messages');
+
+    // Listing Type
+    Route::post('listing-type/add', 'Admin\ListingTypeController@add');
 });
 
 Route::get('send-mail-auth', 'Mails\MailAuthController@send_mail');
+
+// Detail Listing
+Route::get('listing-detail', 'Common\DetailListingController@get_litings_location');
+Route::get('city', 'Admin\CityController@index');

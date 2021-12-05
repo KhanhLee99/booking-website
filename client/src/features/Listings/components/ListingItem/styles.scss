@@ -1,0 +1,53 @@
+.img-fluid {
+    // width: 800px;
+    // height: 533px;
+    // border-radius: 30px;
+}
+
+.k-price-star {
+    // background-color: wheat;
+    display: inline-block;
+    width: 100%;
+
+    & > .cat_star {
+        float: right;
+    }
+
+    & > .k-price {
+        float: left;
+        font-weight: 600;
+    }
+
+    & > .cat_star .k-rates-count {
+        color: rgb(118, 118, 118);
+        font-size: 14px;
+        font-weight: 300;
+    }
+
+    & > .cat_star .k-rates {
+        font-size: 14px;
+        font-weight: 500;
+    }
+}
+
+.wrapper {
+    padding: 5px 7px !important;
+
+    & > h3 {
+        // background-color: blue;
+        padding: 5px 0 0 0 !important;
+        // margin: 0 !important;
+    }
+
+    & > h3 a {
+        color: rgb(72, 72, 72);
+        font-weight: 400;
+        font-size: 20px;
+    }
+}
+
+.k-homestay-type {
+    color: rgb(118, 118, 118);
+    font-size: 14px;
+    font-weight: 300;
+}

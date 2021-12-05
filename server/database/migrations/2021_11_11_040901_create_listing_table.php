@@ -25,6 +25,7 @@ class CreateListingTable extends Migration
             $table->integer('bedroom_count')->default(0);
             $table->integer('bahtroom_count')->default(0);
             $table->integer('bed_count')->default(0);
+            $table->float('price_per_night_base')->default(0);
             $table->string('avatar_url')->nullable();
             $table->float('rating')->default(0);
             $table->boolean('is_public')->default(0);

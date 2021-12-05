@@ -1,19 +1,29 @@
 .firebaseui_container {
-    background-color: green;
+    // background-color: green;
 }
 
 .firebaseui-container {
-    background-color: blue !important;
+    // background-color: blue !important;
     // max-width: 100%;
 }
 .firebaseui-card-content {
     padding: 0 !important;
-    background-color: yellow !important;
+    // background-color: yellow !important;
 }
 .firebaseui-card-content form {
-    background-color: pink !important;
+    // background-color: pink !important;
 }
 
 .firebaseui-idp-button {
     max-width: 100% !important;
+}
+
+.firebaseui-idp-list {
+    margin: 0 !important;
+}
+
+.firebaseui-idp-text.firebaseui-idp-text-long {
+    display: block !important;
+    text-align: center !important;
+    margin-top: -18px !important;
 }

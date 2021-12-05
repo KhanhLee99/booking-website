@@ -22,10 +22,10 @@ class MessageController extends Controller
     public function get_messages($conversation_id)
     {
         return DB::table('messages')
-        ->where('conversation_id', $conversation_id)
-        ->join('users', 'users.id', '=', 'messages.sender_id')
-        ->select('users.name', 'users.avatar_url as avatar', 'messages.message', 'messages.created_at as time')
-        ->get();
+            ->where('conversation_id', $conversation_id)
+            ->join('users', 'users.id', '=', 'messages.sender_id')
+            ->select('users.name', 'users.avatar_url as avatar', 'messages.message', 'messages.created_at as time')
+            ->get();
     }
 
     public function send_message(Request $request)
