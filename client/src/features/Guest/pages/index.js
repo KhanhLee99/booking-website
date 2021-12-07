@@ -50,7 +50,6 @@ function Login(props) {
     const handleSubmit = async (values) => {
         console.log('value', values);
         try {
-
             const params = {
                 email: values.email,
                 password: values.password

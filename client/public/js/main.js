@@ -12,13 +12,13 @@
 	});
 	
 	// Sticky nav
-	$(window).on('scroll', function () {
-		if ($(this).scrollTop() > 1) {
-			$('.header').addClass("sticky");
-		} else {
-			$('.header').removeClass("sticky");
-		}
-	});
+	// $(window).on('scroll', function () {
+	// 	if ($(this).scrollTop() > 1) {
+	// 		$('.header').addClass("sticky");
+	// 	} else {
+	// 		$('.header').removeClass("sticky");
+	// 	}
+	// });
 	
 	// Sticky sidebar
 	$('#sidebar').theiaStickySidebar({

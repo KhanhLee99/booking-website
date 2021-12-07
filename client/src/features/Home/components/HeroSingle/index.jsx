@@ -19,19 +19,19 @@ function HeroSingle(props) {
     const handleDec = (type, value) => {
         if (value > 0) {
             type == 'adults' ? setAdults(value - 1) : setChildrens(value - 1);
-            setAnimateRotate(true);
-            setTimeout(() => {
-                setAnimateRotate(false);
-            }, 300);
+            // setAnimateRotate(true);
+            // setTimeout(() => {
+            //     setAnimateRotate(false);
+            // }, 300);
         }
     }
 
     const handleInc = (type, value) => {
         type == 'adults' ? setAdults(value + 1) : setChildrens(value + 1);
-        setAnimateRotate(true);
-        setTimeout(() => {
-            setAnimateRotate(false);
-        }, 300);
+        // setAnimateRotate(true);
+        // setTimeout(() => {
+        //     setAnimateRotate(false);
+        // }, 300);
     }
 
     return (
@@ -75,7 +75,7 @@ function HeroSingle(props) {
                                 </div>
                             </div>
                             <div className="col-lg-2">
-                                <input type="submit" className="btn_search" defaultValue="Search" />
+                                <input type="submit" className="btn_search" defaultValue="Search" value="Search"/>
                             </div>
                         </div>
                         {/* /row */}

@@ -1,9 +1,9 @@
 import axiosClient from "../utils/axiosClient";
 
 const listingApi = {
-    getListingsLocation: () => {
+    getListingsLocation: (params) => {
         const url = '/listing-detail'
-        return axiosClient.get(url);
+        return axiosClient.get(url, { params });
     }
 }
 

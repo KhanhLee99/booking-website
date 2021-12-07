@@ -7,8 +7,12 @@ ListListingsLocation.propTypes = {
 };
 
 function ListListingsLocation(props) {
-    const { listings } = props;
-    console.log('listings', listings);
+    const { listings, loading } = props;
+
+    if (loading) {
+        return <h2>Loading...</h2>;
+    }
+
     return (
         <div className="isotope-wrapper">
             <div className="row">

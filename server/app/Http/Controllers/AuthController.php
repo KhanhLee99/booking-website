@@ -56,7 +56,6 @@ class AuthController extends Controller
         try {
             $verifiedIdToken = $this->auth->verifyIdToken($social_token);
             $uid = $verifiedIdToken->getClaim('sub');
-
             return $this->check_user_UID($uid);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 401);
@@ -74,19 +73,11 @@ class AuthController extends Controller
         }
     }
 
-    private function is_exists_email($email)
-    {
-        $user = User::where('email', $email)->first();
-        if ($user) return true;
-        return false;
-    }
-
     private function check_user_UID($uid)
     {
-        $user = User::where('firebaseUID',$uid)->first();
+        $user = User::where('firebaseUID', $uid)->first();
         if (!$user) {
             $user_information = $this->auth->getUser($uid);
-            // return $user_information;
             if (!$this->is_exists_email($user_information->email)) {
                 $user = User::create([
                     'name' => $user_information->displayName,
@@ -96,13 +87,21 @@ class AuthController extends Controller
                     'firebaseUID' => $user_information->uid
                 ]);
             } else {
-                return response()->json(['message' => 'Email already exists'],401);
+                return response()->json(['message' => 'Email already exists'], 401);
             }
         }
-        $user->token = $user->createToken('Personal Access Client')->accessToken;
+        $token = $user->createToken('Personal Access Client')->accessToken;
         return response()->json([
-            'access_token' => $user->token,
+            'user' => $user,
+            'access_token' => $token,
             'token_type' => 'Bearer'
         ]);
+    }
+
+    private function is_exists_email($email)
+    {
+        $user = User::where('email', $email)->first();
+        if ($user) return true;
+        return false;
     }
 }

@@ -15,13 +15,15 @@ class DetailListingController extends Controller
         'status' => 'fail'
     ];
 
-    public function get_litings_location()
+    public function get_litings_location(Request $request)
     {
         try {
             $data = DB::table('listing')
+            ->where('city_id', $request->city_id)
             ->join('listing_type', 'listing.listing_type_id', '=', 'listing_type.id')
             ->select('listing.id as listing_id', 'listing.name', 'listing.avatar_url as listing_img', 'listing.bedroom_count', 'listing.price_per_night_base as price_per_night', 'listing.rating' ,'listing_type.name as listing_type')
-            ->get();
+            ->paginate($request->limit);
+            // ->get();
             $this->response = [
                 'status' => 'success',
                 'data' => $data

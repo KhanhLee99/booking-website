@@ -69,13 +69,6 @@ function App() {
     .catch((err) => console.log("failed: ", err));
 
   return (
-    <>
-      <ListingsLocation />
-      {/* <ListingItem /> */}
-      {/* <Home /> */}
-      {/* <Login /> */}
-    </>
-
     // <>
     //   {show ? (
     //     <ReactNotificationComponent
@@ -85,18 +78,19 @@ function App() {
     //   ) : (
     //     <></>
     //   )}
-    //   <Suspense fallback={<div>Loading ...</div>}>
-    //     <BrowserRouter>
-    //       <Switch>
-    //         <Route path="/login" component={Login} />
-    //         <Redirect exact from='/' to='/login' />
-    //         <PrivateRoute path='/guest' component={GuestFeauture} />
-    //         <Route path="/error" component={MainErrorPage} />
-    //         <Route component={NotFoundPage} />
-    //       </Switch>
-    //     </BrowserRouter>
-    //   </Suspense>
-    // </>
+    <Suspense fallback={<div>Loading ...</div>}>
+      <BrowserRouter>
+        <Switch>
+          <Route path="/" exact component={Home} />
+          <Route path="/:id" component={ListingsLocation} />
+          <Route path="/login" component={Login} />
+          {/* <Redirect exact from='/' to='/login' /> */}
+          <PrivateRoute path='/guest' component={GuestFeauture} />
+          <Route path="/error" component={MainErrorPage} />
+          <Route component={NotFoundPage} />
+        </Switch>
+      </BrowserRouter>
+    </Suspense>
   )
 }
 
