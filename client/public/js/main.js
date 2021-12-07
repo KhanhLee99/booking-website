@@ -273,18 +273,18 @@
 	});
 
 	// Sticky filters
-	$(window).bind('load resize', function () {
-		var width = $(window).width();
-		if (width <= 991) {
-			$('.sticky_horizontal').stick_in_parent({
-				offset_top: 50
-			});
-		} else {
-			$('.sticky_horizontal').stick_in_parent({
-				offset_top: 67
-			});
-		}
-	});
+	// $(window).bind('load resize', function () {
+	// 	var width = $(window).width();
+	// 	if (width <= 991) {
+	// 		$('.sticky_horizontal').stick_in_parent({
+	// 			offset_top: 50
+	// 		});
+	// 	} else {
+	// 		$('.sticky_horizontal').stick_in_parent({
+	// 			offset_top: 67
+	// 		});
+	// 	}
+	// });
 
 	// Opacity mask
 	$('.opacity-mask').each(function(){

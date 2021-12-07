@@ -85,6 +85,7 @@ Route::middleware('auth:api')->group(function () {
     Route::put('listing/edit-bedroom/{id}', 'Host\ListingController@edit_bed_room');
 
     // City
+    Route::get('city', 'Admin\CityController@index');
     Route::post('city/add', 'Admin\CityController@add');
     Route::delete('city/{id}', 'Admin\CityController@delete');
     Route::put('city/{id}', 'Admin\CityController@edit');
@@ -148,4 +149,3 @@ Route::get('send-mail-auth', 'Mails\MailAuthController@send_mail');
 
 // Detail Listing
 Route::get('listing-detail', 'Common\DetailListingController@get_litings_location');
-Route::get('city', 'Admin\CityController@index');

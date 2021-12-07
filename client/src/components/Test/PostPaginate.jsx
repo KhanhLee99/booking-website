@@ -18,10 +18,11 @@ function PostPaginate(props) {
 
     useEffect(() => {
         const fetchData = async () => {
+            const token = localStorage.getItem('access_token');
             const params = {
                 headers: {
                     'Content-Type': 'application/json',
-                    Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiODIzYTg1NjVjYWU2MjkwMzcyNWJjZjFiYmJhYmI5NmZlYzZkZTcwMjQ0YjhhMzBkNDQ0MjBjM2NjYzY3MmJiYmRkYzA1NjllY2E2OWU5YmYiLCJpYXQiOjE2Mzg0MjExMDMsIm5iZiI6MTYzODQyMTEwMywiZXhwIjoxNjY5OTU3MTAzLCJzdWIiOiI0Iiwic2NvcGVzIjpbXX0.mxaFE8Djb0B1DPO3e_Gw3n64470PnSS24He09sodlqczaiK3_EpHLJ0Co3OL_yocJaaik12bjPKk0jLeGqF0xSxq1CCi82XMqiBwsL87cendy9cUMOoT_bzoReVhmj1DERnJgGxn1EwqXk7t0mPcLsWIIZFpsVIPa7Avjf340gz88yeWq0o_0XLDBdh-Fl-NM2DTLHE2VHvSa12599fET9hAmlDwyVlrW_AtHyq54k6IHZWgZ5tuBfgFYGvtLHuvSJpw2YOWIT93fbeT-T1-bj1ku9n1vVwmRwvbfU4ASO0vbpAI7pqSmPg0qQyndWO1x0xtILe5VlHsiOYLzH9JET9UM3u-HNbYJvRMDEptY2xMDKI8su-8lGStvrQqbQeorqClAul1yU2lsT-YAZUDXry954F2u776dL9dbLZA59etIXH_D4kcJxcdjOHHY63sN3KKpC48zUPxtxW3DZZY-7jD_wJzij8-RKshEUzqkrEh9sZHwDUtxW_Ma9f8LkkSkiikrWhTmnG9dlR1CaGjzDD7wKx4ghs4okLV6jkyLgKxeq4960scDCwQnviJNXd-9clTOM-Byxe6D7KJ5iksI2l9veof-MP1WnbCq7dAcKcWJY1OS-5b8VlNHgkr7oXoUqzibQCfxCM8D41GaOecDneJXBws7vGu6EtZzWmjYAo',
+                    Authorization: `Bearer ${token}`,
                 },
                 params: {
                     limit: postsPerPage,

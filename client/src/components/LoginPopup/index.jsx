@@ -7,10 +7,10 @@ import './styles.scss';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch } from 'react-redux';
-import { useSelector } from 'react-redux';
 import { login, loginFacebook, loginGoogle } from '../../app/reducer/userSlice';
 import PulseLoading from '../Loading/PulseLoading';
 import { unwrapResult } from '@reduxjs/toolkit';
+import { useHistory } from 'react-router';
 
 LoginPopup.propTypes = {
 
@@ -20,6 +20,7 @@ function LoginPopup(props) {
     // const user = useSelector(state => state.userSlice.current);
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
+    const history = useHistory();
 
     const uiConfig = {
         signInFlow: 'popup',
@@ -50,7 +51,7 @@ function LoginPopup(props) {
             const currentUser = unwrapResult(actionResult);
             console.log(currentUser.data);
             setTriggerPopup(false);
-
+            history.push('/posts');
         } catch (err) {
             console.log(err);
             setLoading(false);
@@ -68,7 +69,7 @@ function LoginPopup(props) {
             setLoading(false);
             setTriggerPopup(false);
             resetForm();
-            // history.push('/guest/page1');
+            history.push('/posts');
         } catch (err) {
             console.log(err.message)
             setLoading(false);
@@ -106,7 +107,7 @@ function LoginPopup(props) {
                             <>
                                 <div className="small-dialog-header">
                                     <h3>Sign In</h3>
-                                    <button onClick={handleClosePopup.bind(null, formik.resetForm)} title="%title%" type="button" class="mfp-close"></button>
+                                    <button onClick={handleClosePopup.bind(null, formik.resetForm)} title="%title%" type="button" className="mfp-close"></button>
                                 </div>
 
                                 <form onSubmit={formik.handleSubmit}>

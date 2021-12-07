@@ -59,26 +59,28 @@
           cancelLabel: 'Clear'
         }
       });
-      $('input[name="dates"]').on('apply.daterangepicker', function (ev, picker) {
-        $(this).val(picker.startDate.format('MM-DD-YY') + ' > ' + picker.endDate.format('MM-DD-YY'));
-      });
-      $('input[name="dates"]').on('cancel.daterangepicker', function (ev, picker) {
-        $(this).val('');
-      });
-
-      // $('#sign-in').magnificPopup({
-      //   type: 'inline',
-      //   fixedContentPos: true,
-      //   fixedBgPos: true,
-      //   overflowY: 'auto',
-      //   closeBtnInside: true,
-      //   preloader: false,
-      //   midClick: true,
-      //   removalDelay: 300,
-      //   closeMarkup: '<button title="%title%" type="button" class="mfp-close"></button>',
-      //   mainClass: 'my-mfp-zoom-in'
+      // $('input[name="dates"]').on('apply.daterangepicker', function (ev, picker) {
+      //   $(this).val(picker.startDate.format('MM-DD-YY') + ' > ' + picker.endDate.format('MM-DD-YY'));
+      // });
+      // $('input[name="dates"]').on('cancel.daterangepicker', function (ev, picker) {
+      //   $(this).val('');
       // });
     });
+
+    (function ($) {
+      $(window).bind('load resize', function () {
+        var width = $(window).width();
+        if (width <= 991) {
+          $('.sticky_horizontal').stick_in_parent({
+            offset_top: 50
+          });
+        } else {
+          $('.sticky_horizontal').stick_in_parent({
+            offset_top: 67
+          });
+        }
+      });
+    })(window.jQuery);
   </script>
 
   <!-- INPUT QUANTITY  -->

@@ -1,42 +1,31 @@
-import { unwrapResult } from '@reduxjs/toolkit';
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux';
 import { logout } from '../../app/reducer/userSlice';
-import { getMe } from '../../features/Guest/guestSlice';
-
 import './styles.css';
 
 function Header(props) {
-    // const loggedInUser = useSelector((state) => state.userSlice.current);
-    // const isLoggedIn = !!loggedInUser.id;
 
     const dispatch = useDispatch();
 
-    useEffect(() => {
-        // const fetchData = async () => {
-        //     const actionResult = await dispatch(getMe);
-        //     const currentUser = unwrapResult(actionResult);
-        //     console.log(currentUser);
-        // }
-        // fetchData();
-    }, []);
-
-    const { loggedInUser, isLoggedIn, setTriggerPopup } = props;
-
-    const handleShowPopup = () => {
+    const handleShowPopup = (e) => {
+        e.preventDefault();
         setTriggerPopup(true)
     }
 
-    const handleLogout = () => {
+    const handleLogout = (e) => {
+        e.preventDefault();
         const action = logout();
         dispatch(action);
     }
 
+    const { loggedInUser, isLoggedIn, setTriggerPopup } = props;
+
+
     return (
         <header className="header menu_fixed sticky">
-            <div id="preloader">
+            {/* <div id="preloader">
                 <div data-loader="circle-side" />
-            </div>{/* /Preload */}
+            </div> */}
             <div id="logo">
                 <a href="index.html">
                     <img src="img/logo.png" width={150} height={36} data-retina="true" alt="" className="logo_normal" />
@@ -44,7 +33,6 @@ function Header(props) {
                 </a>
             </div>
             <ul id="top_menu">
-                {/* <li><a href="#sign-in-dialog" id="sign-in" className="login" title="Sign In">Sign In</a></li> */}
                 <li><a href="wishlist.html" className="wishlist_bt_top" title="Your wishlist">Your wishlist</a></li>
             </ul>
             {/* /top_menu */}
@@ -61,7 +49,7 @@ function Header(props) {
                     {!isLoggedIn ? (
                         <>
                             <li><span><a href="#0">Đăng ký</a></span></li>
-                            <li><span><a onClick={handleShowPopup} href="#sign-in-dialog" id="sign-in" className="login" title="Sign In">Đăng nhập</a></span></li>
+                            <li><span><a onClick={(handleShowPopup)} href="#sign-in-dialog" id="sign-in" className="login" title="Sign In">Đăng nhập</a></span></li>
                         </>
                     ) : (
                         <>

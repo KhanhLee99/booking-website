@@ -48,9 +48,9 @@ function ListingsLocation(props) {
         <div id="page">
             <Header />
             <main>
-                <div class="container margin_60_35">
-                    <div class="isotope-wrapper">
-                        <div class="row">
+                <div className="container margin_60_35">
+                    <div className="isotope-wrapper">
+                        <div className="row">
                             <ListListingsLocation
                                 listings={listings}
                                 loading={loading}

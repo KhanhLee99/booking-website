@@ -25,6 +25,7 @@ import Header from './components/Header';
 import Home from './features/Home/pages';
 import ListingItem from './features/Listings/components/ListingItem';
 import ListingsLocation from './features/Listings/pages';
+import ListingDetail from './features/Listings/pages/ListingDetail';
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
 // const GuestFeauture = React.lazy(() => import('./features/Guest'));
@@ -82,6 +83,8 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route path="/" exact component={Home} />
+          <Route path="/posts" exact component={PostPaginate} />
+          <Route path="/listing-detail" exact component={ListingDetail} />
           <Route path="/:id" component={ListingsLocation} />
           <Route path="/login" component={Login} />
           {/* <Redirect exact from='/' to='/login' /> */}
