@@ -69,7 +69,7 @@ function LoginPopup(props) {
             setLoading(false);
             setTriggerPopup(false);
             resetForm();
-            history.push('/posts');
+            // history.push('/posts');
         } catch (err) {
             console.log(err.message)
             setLoading(false);
@@ -155,7 +155,7 @@ function LoginPopup(props) {
                                         <div className="text-center">
                                             Don’t have an account?<a href="register.html">Sign up</a>
                                         </div>
-                                        <div id="forgot_pw">
+                                        {/* <div id="forgot_pw">
                                             <div className="form-group">
                                                 <label>Please confirm login email below</label>
                                                 <input type="email" className="form-control" name="email_forgot" id="email_forgot" />
@@ -163,7 +163,7 @@ function LoginPopup(props) {
                                             </div>
                                             <p>You will receive an email containing a link allowing you to reset your password to a new preferred one.</p>
                                             <div className="text-center"><input type="submit" defaultValue="Reset Password" className="btn_1" /></div>
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </form>
                             </>

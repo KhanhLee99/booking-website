@@ -5,6 +5,12 @@ import ListListingsLocation from '../components/ListListingsLocation';
 import { useParams } from 'react-router';
 import Paginate from '../components/Paginate';
 import Header from '../../../components/Header';
+import { useSelector } from 'react-redux';
+import LoginPopup from '../../../components/LoginPopup';
+import MapListing from '../components/Map';
+import Header2 from '../../../components/Header/Header2/Header2';
+import FilterListing from '../components/FilterListing';
+import ListingItem from '../components/ListingItem';
 
 
 ListingsLocation.propTypes = {
@@ -12,8 +18,13 @@ ListingsLocation.propTypes = {
 };
 
 function ListingsLocation(props) {
+
+    const [triggerPopup, setTriggerPopup] = useState(false);
+    const loggedInUser = useSelector((state) => state.userSlice.current);
+    const isLoggedIn = !!loggedInUser.id;
+
     const [loading, setLoading] = useState(false);
-    const [currentPage, setCurrentPage] = useState(2);
+    const [currentPage, setCurrentPage] = useState(1);
     const [postsPerPage] = useState(10);
     const [totalPages, setTotalPages] = useState(1);
 
@@ -45,25 +56,64 @@ function ListingsLocation(props) {
     const paginate = pageNumber => setCurrentPage(pageNumber);
 
     return (
-        <div id="page">
-            <Header />
-            <main>
-                <div className="container margin_60_35">
-                    <div className="isotope-wrapper">
-                        <div className="row">
-                            <ListListingsLocation
-                                listings={listings}
-                                loading={loading}
-                            />
-                            <Paginate
-                                paginate={paginate}
-                                totalPages={totalPages}
-                            />
+        <>
+            {/* <div id="page">
+                <Header
+                    loggedInUser={loggedInUser}
+                    isLoggedIn={isLoggedIn}
+                    setTriggerPopup={setTriggerPopup}
+                />
+                <main>
+                    <div className="container margin_60_35">
+                        <div className="isotope-wrapper">
+                            <div className="row">
+                                <ListListingsLocation
+                                    listings={listings}
+                                    loading={loading}
+                                    loggedInUser={loggedInUser}
+                                    setTriggerPopup={setTriggerPopup}
+                                />
+                                <Paginate
+                                    paginate={paginate}
+                                    totalPages={totalPages}
+                                />
+                            </div>
                         </div>
                     </div>
+                </main>
+            </div> */}
+            <div id="wrapper">
+                <Header2 />
+                <div className="clearfix" />
+                <div className="fs-container">
+                    <div className="fs-inner-container content">
+                        <div className="fs-content">
+                            <FilterListing />
+                            <section className="listings-container margin-top-30">
+                                <div className="row fs-switcher">
+                                    <div className="col-md-6">
+                                        <p className="showing-results">14 Results Found </p>
+                                    </div>
+                                </div>
+                                <div className="row fs-listings">
+                                    <ListingItem />
+                                    <ListingItem />
+                                    <ListingItem />
+                                </div>
+                                <Paginate
+                                />
+                            </section>
+                        </div>
+                    </div>
+                    <MapListing />
                 </div>
-            </main>
-        </div>
+            </div>
+            <LoginPopup
+                trigger={triggerPopup}
+                setTriggerPopup={setTriggerPopup}
+            />
+        </>
+
     );
 }
 

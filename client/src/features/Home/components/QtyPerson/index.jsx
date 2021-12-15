@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import listingApi from '../../../../api/listingApi';
 
 QtyPerson.propTypes = {
 
@@ -19,21 +20,28 @@ function QtyPerson(props) {
 
     const handleDec = (type, value) => {
         if (value > 0) {
-            type == 'adults' ? setAdults(value - 1) : setChildrens(value - 1);
-            // setAnimateRotate(true);
-            // setTimeout(() => {
-            //     setAnimateRotate(false);
-            // }, 300);
+            if (type == 'adults') {
+                if (value == 1) return;
+                setAdults(value - 1);
+            } else {
+                setChildrens(value - 1);
+            }
         }
     }
 
     const handleInc = (type, value) => {
-        type == 'adults' ? setAdults(value + 1) : setChildrens(value + 1);
+        const total = adults + childrens;
+        if (total < listingDetail.max_guest_count) {
+            type == 'adults' ? setAdults(value + 1) : setChildrens(value + 1);
+        }
         // setAnimateRotate(true);
         // setTimeout(() => {
         //     setAnimateRotate(false);
         // }, 300);
     }
+
+    const { listingDetail } = props;
+
     return (
         <div className={active ? "panel-dropdown active" : "panel-dropdown"}>
             <a onClick={handlClickPanelDropdown} href="#">Guests <span className={animateRotate ? 'qtyTotal rotate-x' : 'qtyTotal'}>{adults + childrens}</span></a>

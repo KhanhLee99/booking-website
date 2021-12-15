@@ -4,6 +4,7 @@ import Header from '../../../components/Header';
 import HeroSingle from '../components/HeroSingle';
 import LoginPopup from '../../../components/LoginPopup';
 import { useSelector } from 'react-redux';
+import Header2 from '../../../components/Header/Header2/Header2';
 
 Home.propTypes = {
 
@@ -17,14 +18,14 @@ function Home(props) {
     return (
         <>
             <div id="page">
-                <Header
+                <Header2
                     loggedInUser={loggedInUser}
                     isLoggedIn={isLoggedIn}
                     setTriggerPopup={setTriggerPopup}
                 />
             </div>
             <main>
-                <HeroSingle />
+                {/* <HeroSingle /> */}
             </main>
             <LoginPopup
                 trigger={triggerPopup}

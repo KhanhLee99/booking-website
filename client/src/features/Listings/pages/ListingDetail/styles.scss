@@ -1,0 +1,26 @@
+._npr0qi {
+    border-top-width: 1px !important;
+    border-top-style: solid !important;
+    margin-top: 30px;
+}
+
+.k-icon {
+    display: inline-block;
+    width: 19px;
+    height: 19px;
+    position: relative;
+    /* content: "\f00c"; */
+    font-family: "FontAwesome";
+    font-size: 18px;
+    color: black;
+    text-align: center;
+    line-height: 15px;
+    // background-color: #66676b;
+    border: 2px solid transparent;
+    transition: border-color 0s;
+    border-radius: 4px;
+    position: absolute;
+    left: 0;
+    top: 3px;
+    // font-weight: bolder;
+}

@@ -7,7 +7,7 @@ ListListingsLocation.propTypes = {
 };
 
 function ListListingsLocation(props) {
-    const { listings, loading } = props;
+    const { listings, loading, loggedInUser, setTriggerPopup } = props;
 
     if (loading) {
         return <h2>Loading...</h2>;
@@ -19,9 +19,12 @@ function ListListingsLocation(props) {
                 {listings.map((item) => (
                     <ListingItem
                         key={item.listing_id}
+                        listing_id={item.listing_id}
                         listing_type={item.listing_type}
                         name={item.name}
                         price_per_night={item.price_per_night}
+                        loggedInUser={loggedInUser}
+                        setTriggerPopup={setTriggerPopup}
                     />
                 )
                 )}

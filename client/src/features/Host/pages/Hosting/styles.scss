@@ -1,0 +1,52 @@
+.k-content {
+    padding: 30px;
+}
+
+.k-content .k-listing-info {
+    vertical-align: middle !important;
+    padding-bottom: 70px;
+}
+
+.k-content .k-listing-info .k-listing-count {
+    float: left;
+
+    & > h3 {
+        font-size: 23px;
+    }
+}
+
+.k-content .k-listing-info .k-add-listing {
+    float: right;
+}
+
+.table {
+    overflow: scroll !important; /* Scrollbar are always visible */
+    overflow: auto; /* Scrollbar is displayed as it's needed */
+}
+
+.k-image-thumbnail-td {
+    width: 100px;
+    height: 60px;
+    border-radius: 5px;
+    margin-right: 10px;
+}
+
+.k-listing-name-td {
+    font-weight: bold;
+}
+
+table thead tr th {
+    color: #717171;
+    font-family: "Open Sans", sans-serif;
+}
+
+table thead tr th.k-title-name-th {
+    color: black;
+    font-family: "Open Sans", sans-serif;
+}
+
+table tbody tr td,
+table tbody tr th {
+    vertical-align: middle !important;
+    font-family: "Open Sans", sans-serif;
+}

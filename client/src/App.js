@@ -26,6 +26,21 @@ import Home from './features/Home/pages';
 import ListingItem from './features/Listings/components/ListingItem';
 import ListingsLocation from './features/Listings/pages';
 import ListingDetail from './features/Listings/pages/ListingDetail';
+import TestDateRange from './components/Test/TestDateRange';
+import ScrollDemo from './components/Test/TestScroll';
+import Map from './components/Test/TestMap';
+import HeaderHost from './features/Host/components/HeaderHost';
+import Main from './features/Admin/pages/Main';
+import Header2 from './components/Header/Header2/Header2';
+import FilterListing from './features/Listings/components/FilterListing';
+import Paginate from './features/Listings/components/Paginate';
+import MapListing from './features/Listings/components/Map';
+import TestSlice from './components/Test/TestSlice';
+import TestModal from './components/Test/TestModal';
+import { Button } from 'reactstrap';
+import Booking from './features/Listings/components/Booking';
+import Hosting from './features/Host/pages/Hosting';
+import MessageHost from './features/Host/pages/Message';
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
 // const GuestFeauture = React.lazy(() => import('./features/Guest'));
@@ -42,10 +57,6 @@ function App() {
   }, []);
 
   useEffect(() => {
-    //   const fetchData = async () => {
-    //     await dispatch(getMe());
-    //   }
-    //   fetchData();
     const getFcmToken = async () => {
       let token = '';
       try {
@@ -69,7 +80,10 @@ function App() {
     })
     .catch((err) => console.log("failed: ", err));
 
+  const [modalShow, setModalShow] = useState(false);
+
   return (
+
     // <>
     //   {show ? (
     //     <ReactNotificationComponent
@@ -83,14 +97,19 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route path="/" exact component={Home} />
-          <Route path="/posts" exact component={PostPaginate} />
-          <Route path="/listing-detail" exact component={ListingDetail} />
-          <Route path="/:id" component={ListingsLocation} />
-          <Route path="/login" component={Login} />
+          <Route path="/listing/:id" component={ListingDetail} />
+          <Route path="/book/stays" component={Booking} />
+          <Route path="/hosting"  component={MessageHost} />
+          {/* <Route path="/hosting/inbox" component={MessageHost} /> */}
+          <Route path="/:id" exact component={ListingsLocation} />
+
+
+
+          {/* <Route path="/login" component={Login} /> */}
           {/* <Redirect exact from='/' to='/login' /> */}
-          <PrivateRoute path='/guest' component={GuestFeauture} />
+          {/* <PrivateRoute path='/guest' component={GuestFeauture} />
           <Route path="/error" component={MainErrorPage} />
-          <Route component={NotFoundPage} />
+          <Route component={NotFoundPage} /> */}
         </Switch>
       </BrowserRouter>
     </Suspense>

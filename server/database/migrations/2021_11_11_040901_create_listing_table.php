@@ -19,13 +19,16 @@ class CreateListingTable extends Migration
             $table->string('street_address')->nullable();
             $table->integer('standard_guest_count')->nullable();
             $table->integer('max_guest_count')->nullable();
-            $table->integer('max_infant_count')->nullable();
+            $table->integer('standard_child_count')->nullable();
             $table->integer('min_nights_count')->nullable();
             $table->integer('max_nights_count')->nullable();
             $table->integer('bedroom_count')->default(0);
             $table->integer('bahtroom_count')->default(0);
             $table->integer('bed_count')->default(0);
             $table->float('price_per_night_base')->default(0);
+            $table->float('price_per_night_weekend')->default(0);
+            $table->float('extra_per_adult')->default(0);
+            $table->float('extra_per_child')->default(0);
             $table->string('avatar_url')->nullable();
             $table->float('rating')->default(0);
             $table->boolean('is_public')->default(0);

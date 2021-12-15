@@ -78,7 +78,6 @@ Route::middleware('auth:api')->group(function () {
     Route::put('listing/{id}', 'Host\ListingController@edit');
     Route::get('listing/user/{user_id}', 'Host\ListingController@getListingsByUserId');
     Route::post('listing/amenities/{id}', 'Host\ListingController@add_listing_amenities');
-    Route::get('listing/{id}', 'Host\ListingController@get_listing_by_id');
     Route::get('listing/city/{id}', 'Host\ListingController@get_listing_by_city_id');
 
     // Room 
@@ -149,3 +148,5 @@ Route::get('send-mail-auth', 'Mails\MailAuthController@send_mail');
 
 // Detail Listing
 Route::get('listing-detail', 'Common\DetailListingController@get_litings_location');
+
+Route::get('listing/{id}', 'Host\ListingController@get_listing_by_id');

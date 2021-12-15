@@ -3664,7 +3664,7 @@ img.mfp-img {
 }
 .mfp-bg,
 .mfp-wrap {
-    z-index: 999999999999;
+    z-index: 999999;
     position: fixed;
     left: 0;
 }

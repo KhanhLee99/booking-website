@@ -9,6 +9,8 @@ BoxBooking.propTypes = {
 
 function BoxBooking(props) {
 
+    const { listingDetail } = props;
+
     return (
         <aside className="col-lg-4" id="sidebar">
             <div className="box_detail booking">
@@ -22,16 +24,12 @@ function BoxBooking(props) {
                 </div>
                 <QtyPerson
                     class={props.class}
+                    listingDetail={listingDetail}
                 />
                 <a href="cart-1.html" className=" add_top_30 btn_1 full-width purchase">Purchase</a>
                 <a href="wishlist.html" className="btn_1 full-width outline wishlist"><i className="icon_heart" /> Add to wishlist</a>
                 <div className="text-center"><small>No money charged in this step</small></div>
             </div>
-            <ul className="share-buttons">
-                <li><a className="fb-share" href="#0"><i className="social_facebook" /> Share</a></li>
-                <li><a className="twitter-share" href="#0"><i className="social_twitter" /> Tweet</a></li>
-                <li><a className="gplus-share" href="#0"><i className="social_googleplus" /> Share</a></li>
-            </ul>
         </aside>
 
     );

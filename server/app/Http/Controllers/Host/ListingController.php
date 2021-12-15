@@ -364,6 +364,7 @@ class ListingController extends Controller
                     $tmp[$amenity['amenity_type_id']][] = $amenity['id'];
                 }
                 $output = array();
+                $output['listing'] = $listing;
                 foreach ($tmp as $amenity_type_id => $ids) {
                     $output[] = array(
                         'amenity_type' => $this->amenity_type_controller->get_by_id($amenity_type_id)->name,
