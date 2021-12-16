@@ -41,6 +41,8 @@ import { Button } from 'reactstrap';
 import Booking from './features/Listings/components/Booking';
 import Hosting from './features/Host/pages/Hosting';
 import MessageHost from './features/Host/pages/Message';
+import BasicInfomation from './features/Host/pages/BasicInfomation';
+import Location from './features/Host/pages/Location';
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
 // const GuestFeauture = React.lazy(() => import('./features/Guest'));
@@ -83,7 +85,7 @@ function App() {
   const [modalShow, setModalShow] = useState(false);
 
   return (
-
+    <Location />
     // <>
     //   {show ? (
     //     <ReactNotificationComponent
@@ -93,26 +95,26 @@ function App() {
     //   ) : (
     //     <></>
     //   )}
-    <Suspense fallback={<div>Loading ...</div>}>
-      <BrowserRouter>
-        <Switch>
-          <Route path="/" exact component={Home} />
-          <Route path="/listing/:id" component={ListingDetail} />
-          <Route path="/book/stays" component={Booking} />
-          <Route path="/hosting"  component={MessageHost} />
-          {/* <Route path="/hosting/inbox" component={MessageHost} /> */}
-          <Route path="/:id" exact component={ListingsLocation} />
+    // <Suspense fallback={<div>Loading ...</div>}>
+    //   <BrowserRouter>
+    //     <Switch>
+    //       <Route path="/" exact component={Home} />
+    //       <Route path="/listing/:id" component={ListingDetail} />
+    //       <Route path="/book/stays" component={Booking} />
+    //       <Route path="/hosting"  component={MessageHost} />
+    //       {/* <Route path="/hosting/inbox" component={MessageHost} /> */}
+    //       <Route path="/:id" exact component={ListingsLocation} />
 
 
 
-          {/* <Route path="/login" component={Login} /> */}
-          {/* <Redirect exact from='/' to='/login' /> */}
-          {/* <PrivateRoute path='/guest' component={GuestFeauture} />
-          <Route path="/error" component={MainErrorPage} />
-          <Route component={NotFoundPage} /> */}
-        </Switch>
-      </BrowserRouter>
-    </Suspense>
+    //       {/* <Route path="/login" component={Login} /> */}
+    //       {/* <Redirect exact from='/' to='/login' /> */}
+    //       {/* <PrivateRoute path='/guest' component={GuestFeauture} />
+    //       <Route path="/error" component={MainErrorPage} />
+    //       <Route component={NotFoundPage} /> */}
+    //     </Switch>
+    //   </BrowserRouter>
+    // </Suspense>
   )
 }
 
