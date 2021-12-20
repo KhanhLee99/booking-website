@@ -21,9 +21,10 @@ class PhotoListingController extends Controller
         $this->upload_controller = new UploadController;
     }
 
-    function index($id) {
+    function index($id)
+    {
         try {
-            
+
             $photos = Photo_Listing::where('listing_id', '=', $id)->get();
             $this->response = [
                 'status' => 'success',
@@ -36,17 +37,18 @@ class PhotoListingController extends Controller
         }
     }
 
-    function upload(Request $request, $id) {
+    function upload(Request $request, $id)
+    {
         try {
             $images = $request->file('image');
-            $descriptions = $request->descriptions;
-            if (count($images) == count($descriptions)) {
+            // $descriptions = $request->descriptions;
+            if (count($images) > 0) {
                 foreach ($images as $index => $image) {
                     $file_name = $image->getClientOriginalName();
                     if ($re_file_name = $this->upload_controller->upload_image($image, $file_name)) {
                         $data = [
                             'photo_url' => $re_file_name,
-                            'description' => $descriptions[$index],
+                            // 'description' => $descriptions[$index],
                             'listing_id' => $id
                         ];
                         $this->add($data);
@@ -62,7 +64,8 @@ class PhotoListingController extends Controller
         }
     }
 
-    function delete($id) {
+    function delete($id)
+    {
         try {
             $photo = Photo_Listing::find($id);
             if ($photo) {
@@ -78,7 +81,8 @@ class PhotoListingController extends Controller
         }
     }
 
-    private function add($data) {
+    private function add($data)
+    {
         Photo_Listing::create($data);
     }
 }

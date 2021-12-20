@@ -1,12 +1,89 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './styles.scss'
+import hostApi from '../../../../api/hostApi';
+import { Fade } from 'reactstrap';
+import PulseLoading from '../../../../components/Loading/PulseLoading';
+import ListingTypeItem from '../../components/ListingTypeItem';
+import RentalFormItem from '../../components/RentalFormItem';
+import { useHistory } from 'react-router-dom';
 
 BasicInfomation.propTypes = {
 
 };
 
 function BasicInfomation(props) {
+    const history = useHistory();
+    const [loading, setLoading] = useState(false);
+    const [listingTypes, setListTypes] = useState([]);
+    const [idActive, setIdActive] = useState(null);
+    const [rentalFormSelect, setRentalFormSelect] = useState(null);
+    const rentalForms = [
+        {
+            id: 'entire_place',
+            name: 'Toàn bộ nhà'
+        },
+        {
+            id: 'private_room',
+            name: 'Phòng riêng'
+        },
+        {
+            id: 'shared_room',
+            name: 'Phòng chung'
+        }
+    ];
+
+    const addListing = async () => {
+        try {
+            const param = {
+                listing_type_id: idActive,
+                rental_form: rentalFormSelect
+            }
+            setLoading(true);
+            await hostApi.addListing(param);
+        } catch (err) {
+            console.log(err.message);
+            setLoading(false);
+        }
+    }
+
+    const getNewestListing = async () => {
+        try {
+            const res = await hostApi.getNewestListing();
+            if (res.data.data) {
+                history.push(`/host/${res.data.data.id}/location`);
+                setLoading(false);
+            }
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
+    const getListingTypes = async () => {
+        try {
+            const res = await hostApi.getListingType();
+            setListTypes(res.data.data);
+            console.log(res.data.data);
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    const handleNext = (e) => {
+        e.preventDefault();
+        console.log(idActive, rentalFormSelect);
+        addListing().then(() => {
+            getNewestListing();
+        })
+    }
+
+    useEffect(() => {
+        getListingTypes();
+    }, []);
+
+    const selectListingType = listingId => setIdActive(listingId);
+    const selectRentalForm = rentalFormId => setRentalFormSelect(rentalFormId);
+
     return (
         <div className='k-wrap'>
             <div className='k-header'></div>
@@ -24,26 +101,18 @@ function BasicInfomation(props) {
                                     {/* Title */}
                                     <div className='k-property-type'>
                                         <h5>CHỖ NGHỈ CỦA BẠN LÀ:</h5>
-                                        <div className='k-list-property-type'>
-                                            <div className='k-property-type-item'>
-                                                <p>Khong gian doc dao</p>
-                                                <img className='' src='/images/blog-compact-post-01.jpg' />
-                                            </div>
-                                        </div>
+                                        {listingTypes.length > 0 ? listingTypes.map((type, index) => {
+                                            return (
+                                                <ListingTypeItem
+                                                    key={index}
+                                                    id={type.id}
+                                                    name={type.name}
+                                                    selectListingType={selectListingType}
+                                                    idActive={idActive}
+                                                />
+                                            )
+                                        }) : <PulseLoading colorLoading='#000000' />}
 
-                                        <div className='k-list-property-type'>
-                                            <div className='k-property-type-item'>
-                                                <p>dhasgjfg</p>
-                                                <img className='' src='/images/blog-compact-post-01.jpg' />
-                                            </div>
-                                        </div>
-
-                                        <div className='k-list-property-type'>
-                                            <div className='k-property-type-item'>
-                                                <p>dhasgjfg</p>
-                                                <img className='' src='/images/blog-compact-post-01.jpg' />
-                                            </div>
-                                        </div>
                                     </div>
 
                                     <div className="row with-forms">
@@ -52,23 +121,17 @@ function BasicInfomation(props) {
                                             <h5>HÌNH THỨC CHO THUÊ ?</h5>
 
                                             <div className='k-property-type'>
-                                                <div className='k-list-property-type'>
-                                                    <div className='k-property-type-item'>
-                                                        <p>Toàn bộ nhà</p>
-                                                    </div>
-                                                </div>
-
-                                                <div className='k-list-property-type'>
-                                                    <div className='k-property-type-item'>
-                                                        <p>Phòng riêng</p>
-                                                    </div>
-                                                </div>
-
-                                                <div className='k-list-property-type'>
-                                                    <div className='k-property-type-item'>
-                                                        <p>Phòng chung</p>
-                                                    </div>
-                                                </div>
+                                                {rentalForms.map((item, index) => {
+                                                    return (
+                                                        <RentalFormItem
+                                                            key={index}
+                                                            name={item.name}
+                                                            id={item.id}
+                                                            selectRentalForm={selectRentalForm}
+                                                            rentalFormSelect={rentalFormSelect}
+                                                        />
+                                                    )
+                                                })}
                                             </div>
                                         </div>
                                     </div>
@@ -97,6 +160,18 @@ function BasicInfomation(props) {
                         </div>
                     </div>
 
+                </div>
+            </div>
+            <div className='k-footer'>
+                <div className='container'>
+                    <div className='row'>
+                        <div className='col-6 k-back-div'>
+                            <a href='#' className='k-back'>Quay lại</a>
+                        </div>
+                        <div className='col-6 k-next-div'>
+                            <button className={loading ? 'k-next disable' : 'k-next'} onClick={(e) => handleNext(e)} disabled={loading ? true : false}>{loading ? <PulseLoading /> : "Tiếp theo"}</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

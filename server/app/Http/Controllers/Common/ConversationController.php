@@ -61,9 +61,7 @@ class ConversationController extends Controller
                 $q->where('user_id', $user->id);
             })
             ->get();
-
             
-
             $data = array();
 
             foreach ($conversations as $conversation) {

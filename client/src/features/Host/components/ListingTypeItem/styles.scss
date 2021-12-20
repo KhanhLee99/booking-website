@@ -1,0 +1,33 @@
+.k-property-type-item {
+    padding: 0 16px;
+    border: 1px solid #888;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    margin: 10px 0;
+    height: 80px;
+
+    & img {
+        width: 70px;
+        height: 60px;
+        border-radius: 5px;
+        float: right;
+        margin-left: auto;
+        order: 2;
+    }
+
+    & p {
+        font-size: 18px;
+        font-weight: 400;
+        color: #333;
+        // margin-top: 6px;
+    }
+
+    &:hover {
+        border: 2px solid black;
+    }
+
+    &.active {
+        border: 2px solid black;
+    }
+}

@@ -1,6 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import './styles.scss';
 
 Location.propTypes = {
 
@@ -13,102 +12,56 @@ function Location(props) {
             <div className='k-content'>
                 <div className='container'>
                     <div className='row'>
-                        <div className='col-8 k-left-side'>
+                        <div className='col-7 k-left-side'>
                             <div id="add-listing">
-                                {/* Section */}
-                                <div className="add-listing-section">
+                                <div className="add-listing-section margin-top-45">
                                     {/* Headline */}
                                     <div className="add-listing-headline">
-                                        <h3><i className="sl sl-icon-doc" />Amenities</h3>
+                                        <h3><i className="sl sl-icon-location" /> Location</h3>
                                     </div>
-                                    {/* Title */}
+                                    <div className="submit-section">
+                                        {/* Row */}
+                                        <div className="row with-forms">
+                                            {/* Country */}
+                                            <div className="col-md-12">
+                                                <h5>Country/ Region</h5>
+                                                <select className="">
+                                                    <option>Vietnam</option>
+                                                    <option>USA</option>
+                                                </select>
+                                            </div>
 
-                                    <h5 class="margin-top-30 margin-bottom-10">Amenities</h5>
-                                    <div className="checkboxes in-row margin-bottom-20">
-                                        <input id="check-a" type="checkbox" name="check" />
-                                        <label htmlFor="check-a">Elevator in building</label>
-                                        <input id="check-b" type="checkbox" name="check" />
-                                        <label htmlFor="check-b">Friendly workspace</label>
-                                        <input id="check-c" type="checkbox" name="check" />
-                                        <label htmlFor="check-c">Instant Book</label>
-                                        <input id="check-d" type="checkbox" name="check" />
-                                        <label htmlFor="check-d">Wireless Internet</label>
-                                        <input id="check-e" type="checkbox" name="check" />
-                                        <label htmlFor="check-e">Free parking on premises</label>
-                                        <input id="check-f" type="checkbox" name="check" />
-                                        <label htmlFor="check-f">Free parking on street</label>
-                                        <input id="check-g" type="checkbox" name="check" />
-                                        <label htmlFor="check-g">Smoking allowed</label>
-                                        <input id="check-h" type="checkbox" name="check" />
-                                        <label htmlFor="check-h">Events</label>
+                                            {/* Address */}
+                                            <div className="col-md-12">
+                                                <h5>Street Address</h5>
+                                                <input type="text" placeholder="e.g. 964 School Street" />
+                                            </div>
+
+                                            {/* City */}
+                                            <div className="col-md-6">
+                                                <h5>City</h5>
+                                                <input type="text" placeholder="Da Nang" />
+                                            </div>
+
+                                            {/* City */}
+                                            <div className="col-md-6">
+                                                <h5>State</h5>
+                                                <input type="text" />
+                                            </div>
+                                            {/* Zip-Code */}
+                                            <div className="col-md-6">
+                                                <h5>Zip-Code</h5>
+                                                <input type="text" />
+                                            </div>
+                                        </div>
+                                        {/* Row / End */}
                                     </div>
-
-                                    <h5 class="margin-top-30 margin-bottom-10">Amenities</h5>
-                                    <div className="checkboxes in-row margin-bottom-20">
-                                        <input id="check-a" type="checkbox" name="check" />
-                                        <label htmlFor="check-a">Elevator in building</label>
-                                        <input id="check-b" type="checkbox" name="check" />
-                                        <label htmlFor="check-b">Friendly workspace</label>
-                                        <input id="check-c" type="checkbox" name="check" />
-                                        <label htmlFor="check-c">Instant Book</label>
-                                        <input id="check-d" type="checkbox" name="check" />
-                                        <label htmlFor="check-d">Wireless Internet</label>
-                                        <input id="check-e" type="checkbox" name="check" />
-                                        <label htmlFor="check-e">Free parking on premises</label>
-                                        <input id="check-f" type="checkbox" name="check" />
-                                        <label htmlFor="check-f">Free parking on street</label>
-                                        <input id="check-g" type="checkbox" name="check" />
-                                        <label htmlFor="check-g">Smoking allowed</label>
-                                        <input id="check-h" type="checkbox" name="check" />
-                                        <label htmlFor="check-h">Events</label>
-                                    </div>
-
-                                    <h5 class="margin-top-30 margin-bottom-10">Amenities</h5>
-                                    <div className="checkboxes in-row margin-bottom-20">
-                                        <input id="check-a" type="checkbox" name="check" />
-                                        <label htmlFor="check-a">Elevator in building</label>
-                                        <input id="check-b" type="checkbox" name="check" />
-                                        <label htmlFor="check-b">Friendly workspace</label>
-                                        <input id="check-c" type="checkbox" name="check" />
-                                        <label htmlFor="check-c">Instant Book</label>
-                                        <input id="check-d" type="checkbox" name="check" />
-                                        <label htmlFor="check-d">Wireless Internet</label>
-                                        <input id="check-e" type="checkbox" name="check" />
-                                        <label htmlFor="check-e">Free parking on premises</label>
-                                        <input id="check-f" type="checkbox" name="check" />
-                                        <label htmlFor="check-f">Free parking on street</label>
-                                        <input id="check-g" type="checkbox" name="check" />
-                                        <label htmlFor="check-g">Smoking allowed</label>
-                                        <input id="check-h" type="checkbox" name="check" />
-                                        <label htmlFor="check-h">Events</label>
-                                    </div>
-
-                                    <h5 class="margin-top-30 margin-bottom-10">Amenities</h5>
-                                    <div className="checkboxes in-row margin-bottom-20">
-                                        <input id="check-a" type="checkbox" name="check" />
-                                        <label htmlFor="check-a">Elevator in building</label>
-                                        <input id="check-b" type="checkbox" name="check" />
-                                        <label htmlFor="check-b">Friendly workspace</label>
-                                        <input id="check-c" type="checkbox" name="check" />
-                                        <label htmlFor="check-c">Instant Book</label>
-                                        <input id="check-d" type="checkbox" name="check" />
-                                        <label htmlFor="check-d">Wireless Internet</label>
-                                        <input id="check-e" type="checkbox" name="check" />
-                                        <label htmlFor="check-e">Free parking on premises</label>
-                                        <input id="check-f" type="checkbox" name="check" />
-                                        <label htmlFor="check-f">Free parking on street</label>
-                                        <input id="check-g" type="checkbox" name="check" />
-                                        <label htmlFor="check-g">Smoking allowed</label>
-                                        <input id="check-h" type="checkbox" name="check" />
-                                        <label htmlFor="check-h">Events</label>
-                                    </div>
-
-                                    {/* Row / End */}
                                 </div>
-                            </div>
+                                {/* Section / End */}
 
+                            </div>
                         </div>
-                        <div className='col-4 k-right-side'>
+                        <div className='col-5 k-right-side'>
                             <div className='k-property-description'>
                                 <div className='k-property-content'>
                                     <h5>Chung cu</h5>
@@ -120,7 +73,7 @@ function Location(props) {
 
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
 

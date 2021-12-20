@@ -27,4 +27,19 @@ class ListingTypeController extends Controller
             return response()->json($this->response);
         }
     }
+
+    public function index() {
+        try {
+            $listing_types = Listing_Type::get();
+            if ($listing_types) {
+                $this->response['status'] = 'success';
+                $this->response['data'] = $listing_types;
+                return response()->json($this->response, $this->success_code);
+            }
+            return response()->json($this->response);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
+    }
 }

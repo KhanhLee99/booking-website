@@ -7,8 +7,9 @@ PulseLoading.propTypes = {
 };
 
 function PulseLoading(props) {
+    const { colorLoading } = props;
     return (
-        <PulseLoader color="#fff" loading={true} size={10} margin={2} />
+        <PulseLoader color={colorLoading ? colorLoading : "#fff"} loading={true} size={10} margin={2} />
     );
 }
 

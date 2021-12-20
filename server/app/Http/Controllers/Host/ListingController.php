@@ -55,22 +55,22 @@ class ListingController extends Controller
     public function add(Request $request)
     {
         try {
-            $validator = Validator::make(
-                $request->all(),
-                [
-                    "name" => "required",
-                ],
-                [
-                    'required' => ':attribute không để trống'
-                ],
-                [
-                    'name' => 'Tên listing'
-                ]
-            );
-            if ($validator->fails()) {
-                $this->response['errorMessage'] = $validator->errors();
-                return response()->json($this->response);
-            }
+            // $validator = Validator::make(
+            //     $request->all(),
+            //     [
+            //         "name" => "required",
+            //     ],
+            //     [
+            //         'required' => ':attribute không để trống'
+            //     ],
+            //     [
+            //         'name' => 'Tên listing'
+            //     ]
+            // );
+            // if ($validator->fails()) {
+            //     $this->response['errorMessage'] = $validator->errors();
+            //     return response()->json($this->response);
+            // }
             $data = $request->all();
             $data['user_id'] = $request->user('api')->id;
             if (Listing::create($data)) {
@@ -159,7 +159,7 @@ class ListingController extends Controller
     function edit_bed_room(Request $request, $id)
     {
         try {
-            
+
             $listing = Listing::find($id);
             if ($listing) {
                 // check input bedroom_count
@@ -257,13 +257,13 @@ class ListingController extends Controller
     public function edit_room_bed_type($room_id, $bed_types_array)
     {
         $bed_types_by_room_id = $this->room_bed_type_controller->get_by_room_id($room_id);
-        $bed_types_delete = array_udiff($bed_types_by_room_id->toArray(), $bed_types_array, function($obj_a, $obj_b) {
+        $bed_types_delete = array_udiff($bed_types_by_room_id->toArray(), $bed_types_array, function ($obj_a, $obj_b) {
             return $obj_a['bed_type_id'] - $obj_b['bed_type_id'];
         });
-        $bed_types_add = array_udiff($bed_types_array, $bed_types_by_room_id->toArray(), function($obj_a, $obj_b) {
+        $bed_types_add = array_udiff($bed_types_array, $bed_types_by_room_id->toArray(), function ($obj_a, $obj_b) {
             return $obj_a['bed_type_id'] - $obj_b['bed_type_id'];
         });
-        $bed_types_edit= array_uintersect($bed_types_array, $bed_types_by_room_id->toArray(), function($obj_a, $obj_b) {
+        $bed_types_edit = array_uintersect($bed_types_array, $bed_types_by_room_id->toArray(), function ($obj_a, $obj_b) {
             return ($obj_a['bed_type_id'] - $obj_b['bed_type_id']);
         });
 
@@ -381,13 +381,33 @@ class ListingController extends Controller
         }
     }
 
-    function get_listing_by_city_id($id) {
+    function get_listing_by_city_id($id)
+    {
         try {
             $result = Listing::where('city_id', '=', $id)->get();
             if ($result) {
                 $this->response = [
                     'status' => 'success',
                     'data' => $result
+                ];
+                return response()->json($this->response, $this->success_code);
+            }
+            return response()->json($this->response);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
+    }
+
+    public function get_last_listing(Request $request)
+    {
+        try {
+            $user_id = $request->user('api')->id;
+            $last_listing = Listing::where('user_id', $user_id)->orderBy('id', 'desc')->first();
+            if ($last_listing) {
+                $this->response = [
+                    'status' => 'success',
+                    'data' => $last_listing
                 ];
                 return response()->json($this->response, $this->success_code);
             }
