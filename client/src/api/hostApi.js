@@ -10,6 +10,14 @@ const hostApi = {
             });
     },
 
+    updateListing: (params, id) => {
+        const url = `/listing/${id}`;
+        return axiosClient.put(url, params)
+            .catch(function (error) {
+                console.log(error);
+            });
+    },
+
     getListingType: () => {
         const url = '/listing-type';
         return axiosClient.get(url)
@@ -24,6 +32,14 @@ const hostApi = {
             .catch(function (err) {
                 console.log(err.message);
             })
+    },
+
+    editBedRoom: (params, id) => {
+        const url = `/listing/edit-bedroom/${id}`;
+        return axiosClient.put(url, params)
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 };
 

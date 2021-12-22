@@ -7,6 +7,7 @@ import PulseLoading from '../../../../components/Loading/PulseLoading';
 import ListingTypeItem from '../../components/ListingTypeItem';
 import RentalFormItem from '../../components/RentalFormItem';
 import { useHistory } from 'react-router-dom';
+import FooterHost from '../../components/FooterHost';
 
 BasicInfomation.propTypes = {
 
@@ -18,6 +19,7 @@ function BasicInfomation(props) {
     const [listingTypes, setListTypes] = useState([]);
     const [idActive, setIdActive] = useState(null);
     const [rentalFormSelect, setRentalFormSelect] = useState(null);
+    const [reservationForm, setReservationForm] = useState('quick');
     const rentalForms = [
         {
             id: 'entire_place',
@@ -35,12 +37,22 @@ function BasicInfomation(props) {
 
     const addListing = async () => {
         try {
-            const param = {
-                listing_type_id: idActive,
-                rental_form: rentalFormSelect
+            if (idActive, rentalFormSelect) {
+                const param = {
+                    listing_type_id: idActive,
+                    rental_form: rentalFormSelect,
+                    // reservation_form: reservationForm
+                }
+                setLoading(true);
+                await hostApi.addListing(param).then(res => {
+                    if (res.data.status == 'fail') {
+                        setLoading(false);
+                        return;
+                    }
+                });
+            } else {
+                console.log('sai')
             }
-            setLoading(true);
-            await hostApi.addListing(param);
         } catch (err) {
             console.log(err.message);
             setLoading(false);
@@ -77,8 +89,20 @@ function BasicInfomation(props) {
         })
     }
 
+    const handleBack = (e) => {
+        e.preventDefault();
+        console.log(reservationForm);
+    }
+
+    const handleChange = e => {
+        setReservationForm(e.target.value);
+    }
+
     useEffect(() => {
         getListingTypes();
+        return () => {
+            setListTypes([]); // This worked for me
+        };
     }, []);
 
     const selectListingType = listingId => setIdActive(listingId);
@@ -139,9 +163,9 @@ function BasicInfomation(props) {
                                     <div className="row with-forms">
                                         <div className="col-md-12">
                                             <h5>LOẠI ĐẶT CHỖ ?</h5>
-                                            <select className="k-dropdown">
-                                                <option>Đặt phòng nhanh</option>
-                                                <option>Yêu cầu xác nhận</option>
+                                            <select className="k-dropdown" value={reservationForm} onChange={handleChange} >
+                                                <option value="quick">Đặt phòng nhanh</option>
+                                                <option value="request">Yêu cầu xác nhận</option>
                                             </select>
                                         </div>
                                     </div>
@@ -162,18 +186,13 @@ function BasicInfomation(props) {
 
                 </div>
             </div>
-            <div className='k-footer'>
-                <div className='container'>
-                    <div className='row'>
-                        <div className='col-6 k-back-div'>
-                            <a href='#' className='k-back'>Quay lại</a>
-                        </div>
-                        <div className='col-6 k-next-div'>
-                            <button className={loading ? 'k-next disable' : 'k-next'} onClick={(e) => handleNext(e)} disabled={loading ? true : false}>{loading ? <PulseLoading /> : "Tiếp theo"}</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <FooterHost
+                loading={loading}
+                handleBack={handleBack}
+                handleNext={handleNext}
+                hiddenBackButton={true}
+                isHandleClick={true}
+            />
         </div>
     );
 }

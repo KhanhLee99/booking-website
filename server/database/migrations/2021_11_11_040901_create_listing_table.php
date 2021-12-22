@@ -32,6 +32,7 @@ class CreateListingTable extends Migration
             $table->string('avatar_url')->nullable();
             $table->float('rating')->default(0);
             $table->enum('rental_form', ['entire_place', 'private_room', 'shared_room'])->nullable();
+            $table->enum('reservation_form', ['quick', 'request'])->nullable();
             $table->boolean('is_public')->default(0);
 
             $table->unsignedBigInteger('listing_type_id')->nullable();
@@ -42,7 +43,7 @@ class CreateListingTable extends Migration
 
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            
+
             $table->timestamps();
         });
     }

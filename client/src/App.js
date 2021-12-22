@@ -49,6 +49,7 @@ import AddPhotos from './features/Host/pages/AddPhotos';
 import TestDropzone from './components/Test/TestDropzone';
 import AddPrice from './features/Host/pages/AddPrice';
 import AddName from './features/Host/pages/AddName';
+import Photos from './features/Listings/components/Photos';
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
 // const GuestFeauture = React.lazy(() => import('./features/Guest'));
@@ -113,6 +114,10 @@ function App() {
 
           <Route path="/host/basic-infomation" component={BasicInfomation} />
           <Route path="/host/:id/location" component={Location} />
+          <Route path="/host/:id/floor-plan" component={Rooms} />
+          <Route path="/host/:id/amenities" component={Amenity} />
+          <Route path="/host/:id/photos" component={TestDropzone} />
+
 
 
 

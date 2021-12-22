@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AmenitySeeder::class);
         $this->call(CitySeeder::class);
         $this->call(ListingTypeSeeder::class);
+        $this->call(BedTypeSeeder::class);
         Model::reguard();
     }
 }

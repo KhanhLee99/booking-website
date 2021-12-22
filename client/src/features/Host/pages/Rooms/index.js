@@ -1,19 +1,115 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './styles.scss';
+import IncDecFormQty from '../../components/IncDecFormQty';
+import FooterHost from '../../components/FooterHost';
+import AddBeds from '../../components/AddBeds';
+import bedApi from '../../../../api/bedApi';
+import hostApi from '../../../../api/hostApi';
+import { useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 Rooms.propTypes = {
 
 };
 
 function Rooms(props) {
-
+    const { id } = useParams();
+    const [loading, setLoading] = useState(false);
+    const [qtyGuests, setQtyGuests] = useState(1);
+    const [qtyBedrooms, setQtyBedrooms] = useState(0);
+    const [qtyBeds, setQtyBeds] = useState(0);
+    const [qtyBathrooms, setQtyBathrooms] = useState(0);
     const [isHidden, setIsHidden] = useState(false);
+    const [bedroomArr, setBedroomArr] = useState([]);
+    // const [bedTypes, setBedTypes] = useState([]);
+    const bedTypes = useSelector(state => state.hostSlice.bedTypes);
+    const detailRooms = useSelector(state => state.hostSlice.detailRooms);
+
 
     const handleAddBeds = (e) => {
         e.preventDefault();
         setIsHidden(!isHidden);
     }
+
+    const handleDec = (type, value) => {
+        //     if (value > 0) {
+        //         if (type == 'adults') {
+        //             if (value == 1) return;
+        //             setAdults(value - 1);
+        //         } else {
+        //             setChildrens(value - 1);
+        //         }
+        //     }
+        if (type === 'guests') setQtyGuests(qtyGuests - 1);
+        else if (type === 'bedrooms') {
+            setQtyBedrooms(qtyBedrooms - 1);
+            var tmp = bedroomArr;
+            tmp.pop();
+            setBedroomArr(tmp);
+        }
+        else if (type === 'beds') setQtyBeds(qtyBeds - 1);
+        else if (type === 'bathrooms') setQtyBathrooms(qtyBathrooms - 1);
+    }
+
+    const handleInc = (type, value) => {
+        // const total = adults + childrens;
+        // if (total < listingDetail.max_guest_count) {
+        //     type == 'adults' ? setAdults(value + 1) : setChildrens(value + 1);
+        // }
+        if (type === 'guests') setQtyGuests(qtyGuests + 1);
+        else if (type === 'bedrooms') {
+            setQtyBedrooms(qtyBedrooms + 1);
+            var tmp = bedroomArr;
+            tmp.push(qtyBedrooms);
+            setBedroomArr(tmp);
+        }
+        else if (type === 'beds') setQtyBeds(qtyBeds + 1);
+        else if (type === 'bathrooms') setQtyBathrooms(qtyBathrooms + 1);
+    }
+
+    // get list bed type
+    // const getBedTypes = async () => {
+    //     try {
+    //         await bedApi.getListBedType().then(res => {
+    //             console.log('res', res);
+    //             setBedTypes(res.data.data);
+    //         });
+    //     } catch (err) {
+    //         console.log(err.message);
+    //     }
+    // }
+
+    const handleNext = async () => {
+        try {
+            const params = {
+                bedroom_count: qtyBedrooms,
+                bed_count: qtyBeds,
+                rooms: detailRooms
+            }
+            setLoading(true);
+            await hostApi.editBedRoom(params, id).then(res => {
+                setLoading(false);
+                console.log(res);
+            })
+        } catch (err) {
+            console.log(err);
+            setLoading(false);
+        }
+
+    }
+
+    const handleBack = () => {
+
+    }
+
+    useEffect(() => {
+        // console.log(bedTypes);
+        // getBedTypes();
+        return () => {
+            // setBedTypes([]);
+        }
+    }, [])
 
     return (
         <div className='k-wrap'>
@@ -34,93 +130,58 @@ function Rooms(props) {
 
                                     <div className="row with-forms">
                                         <div className="col-md-12">
-
-                                            {/* <select className="k-dropdown">
-                                                <option>Đặt phòng nhanh</option>
-                                                <option>Yêu cầu xác nhận</option>
-                                            </select> */}
                                             <div className='col-md-8'>
                                                 <div className="panel-dropdown-content">
                                                     {/* Quantity Buttons */}
                                                     <h5>Bạn muốn chào đón bao nhiêu khách ?</h5>
-                                                    <div className="qtyButtons">
-                                                        <div className="qtyTitle">Khách</div>
-                                                        <div className="qtyDec"></div>
-                                                        <input type="text" name="qtyInput" defaultValue={1} />
-                                                        <div className="qtyInc"></div>
-                                                    </div>
+                                                    <IncDecFormQty
+                                                        title='Khách'
+                                                        type='guests'
+                                                        qty={qtyGuests}
+                                                        handleInc={handleInc}
+                                                        handleDec={handleDec}
+                                                    />
                                                     <h5>How many bedrooms can guest use ?</h5>
 
-                                                    <div className="qtyButtons">
-                                                        <div className="qtyTitle">Phòng ngủ</div>
-                                                        <div className="qtyDec"></div>
-                                                        <input type="text" name="qtyInput" defaultValue={0} />
-                                                        <div className="qtyInc"></div>
-                                                    </div>
+                                                    <IncDecFormQty
+                                                        title='Phòng ngủ'
+                                                        type='bedrooms'
+                                                        qty={qtyBedrooms}
+                                                        handleInc={handleInc}
+                                                        handleDec={handleDec}
+                                                    />
 
                                                     <h5>How many beds can guest use ?</h5>
-                                                    <div className="qtyButtons">
-                                                        <div className="qtyTitle">Giường</div>
-                                                        <div className="qtyDec"></div>
-                                                        <input type="text" name="qtyInput" defaultValue={0} />
-                                                        <div className="qtyInc"></div>
-                                                    </div>
+                                                    <IncDecFormQty
+                                                        title='Giường'
+                                                        type='beds'
+                                                        qty={qtyBeds}
+                                                        handleInc={handleInc}
+                                                        handleDec={handleDec}
+                                                    />
 
-                                                    <div className='add-bed-type'>
-                                                        <div className='bed-info'>
-                                                            <p className='bed-name'>Bed room 1</p>
-                                                            <p className='bed-count'>0 beds</p>
-                                                        </div>
-                                                        <div className='add-bed-button'>
-                                                            <a href='#' onClick={(e) => handleAddBeds(e)}>{isHidden ? 'Add beds' : 'Done'}</a>
-                                                        </div>
-                                                    </div>
-                                                    {
-                                                        isHidden ? (<div className='bed-types hidden-bed-types' >
-                                                            <div className="qtyButtons">
-                                                                <div className="qtyTitle">Double</div>
-                                                                <div className="qtyDec"></div>
-                                                                <input type="text" name="qtyInput" defaultValue={0} />
-                                                                <div className="qtyInc"></div>
-                                                            </div>
+                                                    {bedroomArr.map((item, index) => {
+                                                        return (
+                                                            <AddBeds
+                                                                key={index}
+                                                                number={index + 1}
+                                                                bedTypes={bedTypes}
+                                                                detailRooms={detailRooms}
+                                                            />
+                                                        )
+                                                    })}
 
-                                                            <div className="qtyButtons">
-                                                                <div className="qtyTitle">Queen</div>
-                                                                <div className="qtyDec"></div>
-                                                                <input type="text" name="qtyInput" defaultValue={0} />
-                                                                <div className="qtyInc"></div>
-                                                            </div>
-
-                                                            <div className="qtyButtons">
-                                                                <div className="qtyTitle">Single</div>
-                                                                <div className="qtyDec"></div>
-                                                                <input type="text" name="qtyInput" defaultValue={0} />
-                                                                <div className="qtyInc"></div>
-                                                            </div>
-
-                                                            <div className="qtyButtons">
-                                                                <div className="qtyTitle">Sofa bed</div>
-                                                                <div className="qtyDec"></div>
-                                                                <input type="text" name="qtyInput" defaultValue={0} />
-                                                                <div className="qtyInc"></div>
-                                                            </div>
-                                                        </div>) : null}
-
-
-                                                    <div className="qtyButtons">
-                                                        <div className="qtyTitle">Phòng tắm</div>
-                                                        <div className="qtyDec"></div>
-                                                        <input type="text" name="qtyInput" defaultValue={0} />
-                                                        <div className="qtyInc"></div>
-                                                    </div>
+                                                    <IncDecFormQty
+                                                        title='Phòng tắm'
+                                                        type='bathrooms'
+                                                        qty={qtyBathrooms}
+                                                        handleInc={handleInc}
+                                                        handleDec={handleDec}
+                                                    />
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-
-
-
-
                                     {/* Row / End */}
                                 </div>
                             </div>
@@ -134,9 +195,15 @@ function Rooms(props) {
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
+            <FooterHost
+                loading={loading}
+                handleBack={handleBack}
+                handleNext={handleNext}
+                hiddenBackButton={false}
+                isHandleClick={true}
+            />
         </div >
     );
 }

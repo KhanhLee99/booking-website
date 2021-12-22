@@ -106,22 +106,22 @@ class ListingController extends Controller
         try {
             $listing = Listing::find($id);
             if ($listing) {
-                $validator = Validator::make(
-                    $request->all(),
-                    [
-                        "name" => "required",
-                    ],
-                    [
-                        'required' => ':attribute không để trống'
-                    ],
-                    [
-                        'name' => 'Tên listing'
-                    ]
-                );
-                if ($validator->fails()) {
-                    $this->response['errorMessage'] = $validator->errors();
-                    return response()->json($this->response);
-                }
+                // $validator = Validator::make(
+                //     $request->all(),
+                //     [
+                //         "name" => "required",
+                //     ],
+                //     [
+                //         'required' => ':attribute không để trống'
+                //     ],
+                //     [
+                //         'name' => 'Tên listing'
+                //     ]
+                // );
+                // if ($validator->fails()) {
+                //     $this->response['errorMessage'] = $validator->errors();
+                //     return response()->json($this->response);
+                // }
 
                 $data = $request->all();
                 $listing->update($data);

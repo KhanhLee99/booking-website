@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { useDropzone } from 'react-dropzone'
 import uploadApi from '../../api/uploadApi';
 import { param } from 'jquery';
+import { useParams } from 'react-router-dom';
 
 
 
@@ -24,8 +25,8 @@ const thumb = {
     border: '1px solid #eaeaea',
     marginBottom: 8,
     marginRight: 8,
-    width: 100,
-    height: 100,
+    // width: 100,
+    // height: 100,
     padding: 4,
     boxSizing: 'border-box'
 };
@@ -38,12 +39,14 @@ const thumbInner = {
 
 const img = {
     display: 'block',
-    width: 'auto',
+    // width: 'auto',
+    width: 500,
     height: '100%'
 };
 
 
 function TestDropzone(props) {
+    const { id } = useParams();
     const [files, setFiles] = useState([]);
     const [params, setParams] = useState(new FormData());
 
@@ -86,7 +89,7 @@ function TestDropzone(props) {
         await files.map(file => {
             setParams(params.append("image[]", file))
         })
-        const res = await uploadApi.uploadPhotosListing(params);
+        const res = await uploadApi.uploadPhotosListing(params, id);
         console.log(res);
     }
 
