@@ -25,8 +25,8 @@ const thumb = {
     border: '1px solid #eaeaea',
     marginBottom: 8,
     marginRight: 8,
-    // width: 100,
-    // height: 100,
+    width: 100,
+    height: 100,
     padding: 4,
     boxSizing: 'border-box'
 };
@@ -39,8 +39,8 @@ const thumbInner = {
 
 const img = {
     display: 'block',
-    // width: 'auto',
-    width: 500,
+    width: 'auto',
+    // width: 500,
     height: '100%'
 };
 
@@ -53,12 +53,6 @@ function TestDropzone(props) {
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*',
         onDrop: acceptedFiles => {
-
-            // const uploaders = acceptedFiles.map(file =>
-            //     Object.assign(file, {
-            //         preview: URL.createObjectURL(file)
-            //     })
-            // )
 
             const uploaders = acceptedFiles.map(file =>
                 Object.assign(file, {
@@ -98,7 +92,7 @@ function TestDropzone(props) {
             <div {...getRootProps({ className: 'dropzone' })}>
                 <input {...getInputProps()} />
                 {
-                    (files.length == 0) ? <><i class='sl sl-icon-plus'></i> Click here or drop files to upload</> : null
+                    (files.length == 0) ? <><i className='sl sl-icon-plus'></i> Click here or drop files to upload</> : null
                 }
 
                 <aside style={thumbsContainer}>

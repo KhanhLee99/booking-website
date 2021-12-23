@@ -24,12 +24,10 @@ function Location(props) {
             }
             setLoading(true);
             await hostApi.updateListing(params, id).then(res => {
-                console.log(res);
-                if (res.data.status == 'fail') {
-                    setLoading(false);
-                    return;
-                }
                 setLoading(false);
+                if (res.data.status == 'success') {
+                    history.push(`/host/${id}/floor-plan`);
+                }
             });
         } catch (err) {
             console.log(err.message);
@@ -54,11 +52,6 @@ function Location(props) {
                     .required('Required'),
             })}
             onSubmit={(values, { setSubmitting }) => {
-                // setLoading(true);
-                // setTimeout(() => {
-                //     alert(JSON.stringify(values, null, 2));
-                //     setSubmitting(false);
-                // }, 400);
                 handleNext(values);
             }}
         >
@@ -134,7 +127,6 @@ function Location(props) {
                                 </div>
                             </div>
                         </div>
-                        {/* <button type="submit" className="btn_1 full-width">{loading ? <PulseLoading /> : "Log In"}</button> */}
                         <FooterHost
                             loading={loading}
                             handleBack={handleBack}

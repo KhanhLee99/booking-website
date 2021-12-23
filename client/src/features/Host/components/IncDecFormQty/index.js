@@ -13,7 +13,7 @@ function IncDecFormQty(props) {
         <div className="qtyButtons">
             <div className="qtyTitle">{title}</div>
             <div className="qtyDec" onClick={() => handleDec(type, qty)}></div>
-            <input type="text" name="qtyInput" defaultValue={qty} value={qty} />
+            <input type="text" name="qtyInput" placeholder={qty} />
             <div className="qtyInc" onClick={() => handleInc(type, qty)}></div>
         </div>
     );

@@ -20,7 +20,7 @@ class AmenityController extends Controller
 
     public function index() {
         try {
-            $amenities = Amenity::orderBy('id', 'desc')->get();
+            $amenities = Amenity::get();
             if($amenities) {
                 $this->response = [
                     'status' => 'success',

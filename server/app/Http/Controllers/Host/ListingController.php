@@ -124,9 +124,11 @@ class ListingController extends Controller
                 // }
 
                 $data = $request->all();
-                $listing->update($data);
-                $this->response['status'] = 'success';
-                return response()->json($this->response, $this->success_code);
+                if ($listing->update($data)) {
+                    $this->response['status'] = 'success';
+                    return response()->json($this->response, $this->success_code);
+                }
+                return response()->json($this->response);
             }
             $this->response['errorMessage'] = "Record có id = $id không tồn tại";
             return response()->json($this->response);
@@ -159,7 +161,6 @@ class ListingController extends Controller
     function edit_bed_room(Request $request, $id)
     {
         try {
-
             $listing = Listing::find($id);
             if ($listing) {
                 // check input bedroom_count
@@ -320,6 +321,7 @@ class ListingController extends Controller
                                 ]);
                             }
                         } else {
+                            // edit
                             $arr_listing_amenities_id = array();
                             foreach ($listing_amenities as $item) {
                                 $arr_listing_amenities_id[] = $item['id'];
@@ -345,6 +347,8 @@ class ListingController extends Controller
                             }
                         }
                     }
+                    $this->response['status'] = 'success';
+                    return response()->json($this->response, 200);
                 }
             }
         } catch (Exception $e) {

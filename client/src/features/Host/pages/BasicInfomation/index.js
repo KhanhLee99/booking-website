@@ -41,7 +41,7 @@ function BasicInfomation(props) {
                 const param = {
                     listing_type_id: idActive,
                     rental_form: rentalFormSelect,
-                    // reservation_form: reservationForm
+                    reservation_form: reservationForm
                 }
                 setLoading(true);
                 await hostApi.addListing(param).then(res => {
@@ -81,9 +81,7 @@ function BasicInfomation(props) {
         }
     }
 
-    const handleNext = (e) => {
-        e.preventDefault();
-        console.log(idActive, rentalFormSelect);
+    const handleNext = () => {
         addListing().then(() => {
             getNewestListing();
         })

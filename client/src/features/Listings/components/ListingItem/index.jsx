@@ -62,7 +62,7 @@ function ListingItem(props) {
                             <span>964 School Street, New York</span>
                             <div className="star-rating" data-rating="3.5">
                                 <div className="rating-counter">(12 reviews)</div>
-                                <span class="star"></span>
+                                <span className="star"></span>
                             </div>
                         </div>
                         <span className="like-icon" />

@@ -23,7 +23,7 @@ function BoxBooking(props) {
                     <i className="icon_calendar" />
                 </div>
                 <QtyPerson
-                    class={props.class}
+                    className={props.class}
                     listingDetail={listingDetail}
                 />
                 <a href="cart-1.html" className=" add_top_30 btn_1 full-width purchase">Purchase</a>

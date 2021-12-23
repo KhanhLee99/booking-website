@@ -41,7 +41,7 @@ function ListingDetail(props) {
 
         //                     </div>
         //                     <BoxBooking
-        //                         class='right'
+        //                         className='right'
         //                         listingDetail={listingDetail}
         //                     />
         //                 </div>
@@ -184,7 +184,7 @@ function ListingDetail(props) {
                             {/* Reviews */}
                             <div id="listing-reviews" className="listing-section">
                                 <div className="star-rating" data-rating="3.5">
-                                    <h3 className="listing-desc-headline margin-top-75 margin-bottom-20"><span class="star"></span>4,89 <span>(12 đánh giá)</span></h3>
+                                    <h3 className="listing-desc-headline margin-top-75 margin-bottom-20"><span className="star"></span>4,89 <span>(12 đánh giá)</span></h3>
                                 </div>
 
                                 {/* Rating Overview */}

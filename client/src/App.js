@@ -116,7 +116,10 @@ function App() {
           <Route path="/host/:id/location" component={Location} />
           <Route path="/host/:id/floor-plan" component={Rooms} />
           <Route path="/host/:id/amenities" component={Amenity} />
-          <Route path="/host/:id/photos" component={TestDropzone} />
+          <Route path="/host/:id/photos" component={AddPhotos} />
+          <Route path="/host/:id/title" component={AddName} />
+          <Route path="/host/:id/price" component={AddPrice} />
+
 
 
 

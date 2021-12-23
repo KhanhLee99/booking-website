@@ -54,9 +54,9 @@ function Header2(props) {
                             </div>
                             <a href="dashboard-add-listing.html" className="button border with-icon">Add Listing <i className="sl sl-icon-plus" /></a>
                         </div> */}
-                        <div class="header-widget">
-                            <a href="#sign-in-dialog" onClick={(handleShowPopup)} class="sign-in popup-with-zoom-anim"><i class="sl sl-icon-login"></i> Sign In</a>
-                            <a href="dashboard-add-listing.html" class="button border with-icon">Add Listing <i class="sl sl-icon-plus"></i></a>
+                        <div className="header-widget">
+                            <a href="#sign-in-dialog" onClick={(handleShowPopup)} className="sign-in popup-with-zoom-anim"><i className="sl sl-icon-login"></i> Sign In</a>
+                            <a href="dashboard-add-listing.html" className="button border with-icon">Add Listing <i className="sl sl-icon-plus"></i></a>
                         </div>
                         {/* Header Widget / End */}
                     </div>

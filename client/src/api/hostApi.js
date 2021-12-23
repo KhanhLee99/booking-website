@@ -40,6 +40,14 @@ const hostApi = {
             .catch(function (error) {
                 console.log(error);
             });
+    },
+
+    addListingAmenities: (params, id) => {
+        const url = `/listing/amenities/${id}`;
+        return axiosClient.post(url, params)
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 };
 

@@ -6,7 +6,7 @@ import FooterHost from '../../components/FooterHost';
 import AddBeds from '../../components/AddBeds';
 import bedApi from '../../../../api/bedApi';
 import hostApi from '../../../../api/hostApi';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 Rooms.propTypes = {
@@ -14,6 +14,7 @@ Rooms.propTypes = {
 };
 
 function Rooms(props) {
+    const history = useHistory();
     const { id } = useParams();
     const [loading, setLoading] = useState(false);
     const [qtyGuests, setQtyGuests] = useState(1);
@@ -26,13 +27,7 @@ function Rooms(props) {
     const bedTypes = useSelector(state => state.hostSlice.bedTypes);
     const detailRooms = useSelector(state => state.hostSlice.detailRooms);
 
-
-    const handleAddBeds = (e) => {
-        e.preventDefault();
-        setIsHidden(!isHidden);
-    }
-
-    const handleDec = (type, value) => {
+    const handleDec = (type) => {
         //     if (value > 0) {
         //         if (type == 'adults') {
         //             if (value == 1) return;
@@ -52,7 +47,7 @@ function Rooms(props) {
         else if (type === 'bathrooms') setQtyBathrooms(qtyBathrooms - 1);
     }
 
-    const handleInc = (type, value) => {
+    const handleInc = (type) => {
         // const total = adults + childrens;
         // if (total < listingDetail.max_guest_count) {
         //     type == 'adults' ? setAdults(value + 1) : setChildrens(value + 1);
@@ -88,9 +83,15 @@ function Rooms(props) {
                 rooms: detailRooms
             }
             setLoading(true);
-            await hostApi.editBedRoom(params, id).then(res => {
+            await hostApi.editBedRoom(params, id)
+            await hostApi.updateListing({
+                standard_guest_count: qtyGuests,
+                bahtroom_count: qtyBathrooms
+            }, id).then(res => {
+                if (res.data.status == 'success') {
+                    history.push(`/host/${id}/amenities`);
+                }
                 setLoading(false);
-                console.log(res);
             })
         } catch (err) {
             console.log(err);

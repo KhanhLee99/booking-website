@@ -18,7 +18,7 @@ class AmenityTypeController extends Controller
 
     public function index() {
         try {
-            $amenity_types = Amenity_Type::orderBy('id', 'desc')->get();
+            $amenity_types = Amenity_Type::get();
             if($amenity_types) {
                 $this->response = [
                     'status' => 'success',

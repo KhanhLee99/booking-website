@@ -16,6 +16,7 @@ class CreateListingTable extends Migration
         Schema::create('listing', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
+            $table->string('description')->nullable();
             $table->string('street_address')->nullable();
             $table->integer('standard_guest_count')->nullable();
             $table->integer('max_guest_count')->nullable();
@@ -23,10 +24,12 @@ class CreateListingTable extends Migration
             $table->integer('min_nights_count')->nullable();
             $table->integer('max_nights_count')->nullable();
             $table->integer('bedroom_count')->default(0);
-            $table->integer('bahtroom_count')->default(0);
+            $table->integer('bathroom_count')->default(0);
             $table->integer('bed_count')->default(0);
             $table->float('price_per_night_base')->default(0);
             $table->float('price_per_night_weekend')->default(0);
+            $table->float('discount_weekly')->default(0);
+            $table->float('discount_monthly')->default(0);
             $table->float('extra_per_adult')->default(0);
             $table->float('extra_per_child')->default(0);
             $table->string('avatar_url')->nullable();

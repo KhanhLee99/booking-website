@@ -18,11 +18,11 @@ function Hosting(props) {
                         <h3>2 nha/phong cho thue</h3>
                     </div>
                     <div className='k-add-listing'>
-                        <a href="dashboard-add-listing.html" class="button border with-icon">Add Listing <i class="sl sl-icon-plus"></i></a>
+                        <a href="dashboard-add-listing.html" className="button border with-icon">Add Listing <i className="sl sl-icon-plus"></i></a>
                     </div>
                 </div>
 
-                <table class="table">
+                <table className="table">
                     <thead>
                         <tr>
                             <th scope="col">#</th>
