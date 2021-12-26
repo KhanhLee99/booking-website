@@ -6,7 +6,7 @@ const token = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIxIiwianRpIjoiODcy
 
 
 const axiosClient = axios.create({
-	baseURL: process.env.REACT_APP_API_URL_LIVE,
+	baseURL: process.env.REACT_APP_API_URL_LIVE_API,
 	headers: {
 		'Content-Type': 'application/json',
 		Authorization: `Bearer ${token}`,

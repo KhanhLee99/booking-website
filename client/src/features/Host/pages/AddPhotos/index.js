@@ -91,6 +91,7 @@ function AddPhotos(props) {
                     history.push(`/host/${id}/title`)
                 }
             });
+
         } catch (err) {
             console.log(err.message)
             setLoading(false)

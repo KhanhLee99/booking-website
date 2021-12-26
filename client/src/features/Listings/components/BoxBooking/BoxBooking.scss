@@ -1,0 +1,96 @@
+.boxed-widget {
+    background-color: white;
+    border: 1px solid rgb(221, 221, 221);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: rgb(0 0 0 / 12%) 0px 6px 16px;
+}
+
+::placeholder {
+    color: #888;
+}
+
+.a {
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0 1px 6px 0px rgba(0, 0, 0, 0.1);
+    font-size: 16px;
+    font-weight: 600;
+    height: auto;
+    padding: 10px 16px;
+    line-height: 30px;
+    margin: 0 0 15px 0;
+    position: relative;
+    background-color: #fff;
+    text-align: left;
+    color: black;
+    transition: color 0.3s !important;
+}
+
+.ant-picker-input > input::placeholder {
+    color: black !important;
+}
+
+.ant-picker-input > input {
+    box-shadow: none !important;
+}
+
+.mb--12 {
+    margin-bottom: 12px !important;
+}
+
+.checkup__price {
+    transition: all 0.3s;
+    position: relative;
+}
+
+.fadeIn {
+    -webkit-animation: fadeIn 0.4s ease-in-out;
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+.between-xs {
+    justify-content: space-between;
+    -ms-justify-content: space-between;
+    -ms-flex-pack: distribute;
+    -webkit-justify-content: space-between;
+}
+
+.middle-xs {
+    align-items: center;
+}
+
+.is-flex {
+    box-sizing: border-box;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.is-flex.align-center {
+    align-items: center;
+}
+
+.pr--6,
+.px--6 {
+    padding-right: 6px !important;
+}
+
+.my--18 {
+    margin-top: 18px;
+    margin-bottom: 18px !important;
+}
+
+hr {
+    border: 0;
+    height: 1px;
+    overflow: visible;
+}
+
+.checkup__price div + div {
+    padding-top: 1.25rem;
+}
+
+.is-relative {
+    position: relative;
+}

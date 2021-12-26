@@ -6645,11 +6645,11 @@ a.mfp-gallery {
 	position: relative;
 	background-color: #fff;
 	text-align: left;
-	color: #888;
+	color: black;
 	display: block;
 	width: 100%;
-
 	transition: color 0.3s;
+	/* border: 1px solid #888888; */
 }
 
 .booking-widget .panel-dropdown a:hover {
@@ -7417,8 +7417,9 @@ input#date-picker {
 	position: relative;
 	background-color: #fff;
 	text-align: left;
-	color: #888;
+	color: black;
 	transition: color 0.3s !important;
+	/* border: 1px solid #888888; */
 }
 
 input#date-picker:hover {
@@ -8565,7 +8566,7 @@ a.send-message-to-owner.button {
 	color: #fff;
 	text-align: center;
 	line-height: 15px;
-	background-color: #66676b;
+	/* background-color: #66676b; */
 	border: 2px solid transparent;
 	transition: border-color 0s;
 	border-radius: 4px;

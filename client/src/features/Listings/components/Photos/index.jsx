@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import './styles.scss';
 import Slider from "react-slick";
+import ImageItem from './ImageItem';
 
 Photos.propTypes = {
 
@@ -17,13 +18,13 @@ const settings = {
 
 function Photos(props) {
 
-    const [images, setImages] = useState(['/images/single-listing-05b.jpg', '/images/single-listing-05a.jpg', '/images/single-listing-05c.jpg', '/images/single-listing-05d.jpg', '/images/single-listing-05b.jpg', '/images/single-listing-05a.jpg', '/images/single-listing-05c.jpg', '/images/single-listing-05d.jpg']);
+    const { photos } = props;
 
     return (
         <div>
             <Slider {...settings}>
-                {images.map(image => (
-                    <img src={image} className='height-img' />
+                {photos.map(image => (
+                    <ImageItem image={image} />
 
                 ))}
             </Slider>

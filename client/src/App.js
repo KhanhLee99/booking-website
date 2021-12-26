@@ -50,6 +50,8 @@ import TestDropzone from './components/Test/TestDropzone';
 import AddPrice from './features/Host/pages/AddPrice';
 import AddName from './features/Host/pages/AddName';
 import Photos from './features/Listings/components/Photos';
+import TestDraft from './components/Test/TestDraft';
+import TestSkeleton from './components/Test/TestSkeleton';
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
 // const GuestFeauture = React.lazy(() => import('./features/Guest'));
@@ -92,6 +94,7 @@ function App() {
   const [modalShow, setModalShow] = useState(false);
 
   return (
+    // <TestSkeleton />
     // <BasicInfomation />
     // <>
     //   {show ? (

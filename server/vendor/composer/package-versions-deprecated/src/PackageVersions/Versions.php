@@ -35,6 +35,8 @@ final class Versions
     const VERSIONS          = array (
   'asm89/stack-cors' => 'v2.0.3@9cb795bf30988e8c96dd3c40623c48a877bc6714',
   'brick/math' => '0.9.3@ca57d18f028f84f777b2168cd1911b0dee2343ae',
+  'cloudinary-labs/cloudinary-laravel' => '1.0.4@7543449243848eb936e4c492b82ec64512e67da0',
+  'cloudinary/cloudinary_php' => '2.5.1@7d5d5eeb56df7cda1acd5a6310285ad6e55b9f82',
   'composer/package-versions-deprecated' => '1.11.99.4@b174585d1fe49ceed21928a945138948cb394600',
   'defuse/php-encryption' => 'v2.3.1@77880488b9954b7884c25555c2a0ea9e7053f9d2',
   'doctrine/inflector' => '2.0.4@8b7ff3e4b7de6b2c84da85637b59fd2880ecaa89',
@@ -97,6 +99,7 @@ final class Versions
   'ramsey/uuid' => '4.2.3@fc9bb7fb5388691fd7373cd44dcb4d63bbcf24df',
   'riverline/multipart-parser' => '2.0.9@ebba10245b5a6e03a673ff52c547d05029caedab',
   'rize/uri-template' => '0.3.4@2a874863c48d643b9e2e254ab288ec203060a0b8',
+  'shrikeh/teapot' => 'v2.3.1@2fea5720963f22eedb920ee65b9d643bfa3e8daf',
   'swiftmailer/swiftmailer' => 'v6.3.0@8a5d5072dca8f48460fce2f4131fcc495eec654c',
   'symfony/console' => 'v5.4.1@9130e1a0fc93cb0faadca4ee917171bd2ca9e5f4',
   'symfony/css-selector' => 'v5.4.0@44b933f98bb4b5220d10bed9ce5662f8c2d13dcc',
@@ -126,6 +129,7 @@ final class Versions
   'symfony/translation' => 'v5.4.1@8c82cd35ed861236138d5ae1c78c0c7ebcd62107',
   'symfony/translation-contracts' => 'v2.5.0@d28150f0f44ce854e942b671fc2620a98aae1b1e',
   'symfony/var-dumper' => 'v5.4.1@2366ac8d8abe0c077844613c1a4f0c0a9f522dcc',
+  'teapot/status-code' => 'v1.1.2@7aaba4364645ebb9d3a36267c9b3a32206d3042b',
   'tijsverkoyen/css-to-inline-styles' => '2.2.4@da444caae6aca7a19c0c140f68c6182e337d5b1c',
   'vlucas/phpdotenv' => 'v4.2.2@77e974614d2ead521f18069dccc571696f52b8dc',
   'voku/portable-ascii' => '1.5.6@80953678b19901e5165c56752d087fc11526017c',
@@ -171,7 +175,7 @@ final class Versions
   'sebastian/version' => '3.0.2@c6c1022351a901512170118436c764e473f6de8c',
   'theseer/tokenizer' => '1.2.1@34a41e998c2183e22995f158c581e7b5e755ab9e',
   'webmozart/assert' => '1.10.0@6964c76c7804814a842473e0c8fd15bab0f18e25',
-  'laravel/laravel' => 'dev-main@55dc61ab6265605301f79063aceaf00636e665e0',
+  'laravel/laravel' => 'dev-main@82e619d5b71a7c83083ab6a23b9a0e04788b13d1',
 );
 
     private function __construct()

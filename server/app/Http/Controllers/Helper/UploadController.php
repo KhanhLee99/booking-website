@@ -16,6 +16,7 @@ class UploadController extends Controller
             $re_file_name = time().'-'.$re_file_name;
         }
         $file->move($this->dir, $re_file_name);
+        // $response = cloudinary()->upload($request->file('file')->getRealPath())->getSecurePath();
         return $re_file_name;
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Photo_Listing;
 use Exception;
 use App\Http\Controllers\Helper\UploadController;
+use App\Listing;
 
 class PhotoListingController extends Controller
 {
@@ -39,19 +40,29 @@ class PhotoListingController extends Controller
 
     function upload(Request $request, $id)
     {
+        // $response = cloudinary()->upload($request->file('file')->getRealPath())->getSecurePath();
         try {
             $images = $request->file('image');
             // $descriptions = $request->descriptions;
             if (count($images) > 0) {
                 foreach ($images as $index => $image) {
-                    $file_name = $image->getClientOriginalName();
-                    if ($re_file_name = $this->upload_controller->upload_image($image, $file_name)) {
+                    // $file_name = $image->getClientOriginalName();
+                    // if ($re_file_name = $this->upload_controller->upload_image($image, $file_name)) {
+                    if ($response = cloudinary()->upload($image->getRealPath())->getSecurePath()) {
                         $data = [
-                            'photo_url' => $re_file_name,
+                            'photo_url' => $response,
                             // 'description' => $descriptions[$index],
                             'listing_id' => $id
                         ];
                         $this->add($data);
+                        if ($index == 0) {
+                            $listing = Listing::find($id);
+                            if ($listing) {
+                                $listing->avatar_url = $response;
+                                if ($listing->save()) {
+                                }
+                            }
+                        }
                     }
                 }
                 $this->response['status'] = 'success';
@@ -79,6 +90,11 @@ class PhotoListingController extends Controller
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);
         }
+    }
+
+    function delete_all_photo_listing($id)
+    {
+        Photo_Listing::where('listing_id', $id)->delete();
     }
 
     private function add($data)

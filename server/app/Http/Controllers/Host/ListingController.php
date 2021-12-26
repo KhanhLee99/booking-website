@@ -15,6 +15,7 @@ use App\Room_Bed_Type;
 use App\Http\Controllers\Host\RoomController;
 use App\Http\Controllers\Host\RoomBedTypeController;
 use App\Listing_Amenities;
+use App\Photo_Listing;
 use Exception;
 
 class ListingController extends Controller
@@ -24,6 +25,7 @@ class ListingController extends Controller
     private $response = [
         'status' => 'fail'
     ];
+    private $dir = 'images/';
 
     public function __construct()
     {
@@ -369,12 +371,20 @@ class ListingController extends Controller
                 }
                 $output = array();
                 $output['listing'] = $listing;
+                ksort($tmp);
                 foreach ($tmp as $amenity_type_id => $ids) {
-                    $output[] = array(
+                    $output['amenities'][] = array(
                         'amenity_type' => $this->amenity_type_controller->get_by_id($amenity_type_id)->name,
                         'amenities' => $this->amenity_controller->get_by_array_id($ids)
                     );
                 }
+                $output['photos'] = Photo_Listing::where('listing_id', '=', $id)->get();
+                $output['reviews'] = DB::table('review_listing')
+                    ->where('listing_id', '=', $id)
+                    ->join('users', 'users.id', '=', 'review_listing.guest_id')
+                    ->orderBy('review_listing.id', 'DESC')
+                    ->select('review_listing.id', 'review_listing.note', 'review_listing.rating', 'review_listing.created_at', 'users.name', 'users.avatar_url')
+                    ->get();
                 return $output;
             }
             $this->response['status'] = 'fail';
