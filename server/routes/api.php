@@ -82,6 +82,7 @@ Route::get('listing/user/{user_id}', 'Host\ListingController@getListingsByUserId
 Route::post('listing/amenities/{id}', 'Host\ListingController@add_listing_amenities');
 Route::get('listing/city/{id}', 'Host\ListingController@get_listing_by_city_id');
 Route::get('listing/newest', 'Host\ListingController@get_last_listing');
+Route::get('listing/{id}/base-infomation', 'Host\ListingController@get_base_infomation_listing');
 
 // Room 
 Route::put('listing/edit-bedroom/{id}', 'Host\ListingController@edit_bed_room');

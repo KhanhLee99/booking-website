@@ -5,6 +5,8 @@ import QtyPerson from '../../../Home/components/QtyPerson';
 import Skeleton from 'react-loading-skeleton';
 import 'antd/dist/antd.css';
 import { DatePicker, Space } from 'antd';
+import { useHistory } from 'react-router-dom';
+import { useEffect } from 'react';
 
 BoxBooking.propTypes = {
 
@@ -12,14 +14,33 @@ BoxBooking.propTypes = {
 
 const { RangePicker } = DatePicker;
 
+const disableClick = {
+    cursor: "not-allowed",
+    border: "1px solid #ced4da",
+    backgroundColor: "#f5f7fa",
+    opacity: ".4"
+};
+
+const enableClick = {
+    cursor: "pointer",
+    backgroundColor: "#f2f2f2",
+    border: "1px solid #ced4da"
+}
+
 
 function BoxBooking(props) {
-
+    const history = useHistory();
     const [active, setActive] = useState(false);
     const [adults, setAdults] = useState(1);
     const [childrens, setChildrens] = useState(0);
     const [nights, setNights] = useState(1);
     const [calculating, setCalculating] = useState(false);
+    const [checkin, setCheckin] = useState('');
+    const [checkout, setCheckout] = useState('');
+    const [isDisableIncAdult, setIsDisableIncAdult] = useState(false);
+    const [isDisableIncChildren, setIsDisableIncChildren] = useState(false);
+    const [isDisableDecAdult, setIsDisableDecAdult] = useState(true);
+    const [isDisableDecChildren, setIsDisableDecChildren] = useState(true);
 
     const { loadingListingDetail, listingDetail } = props;
 
@@ -47,14 +68,15 @@ function BoxBooking(props) {
     }
 
     const handleChangeDebut = range => {
-        const checkin = range[0].format("DD/MM/YYYY");
-        const checkout = range[1].format("DD/MM/YYYY");
-        setNights(datediff(parseDate(checkin), parseDate(checkout)))
+        const startDate = range[0].format("DD/MM/YYYY");
+        const endDate = range[1].format("DD/MM/YYYY");
+        setCheckin(startDate);
+        setCheckout(endDate);
+        // setNights(datediff(parseDate(checkin), parseDate(checkout)))
 
-        console.log(datediff(parseDate(checkin), parseDate(checkout)));
-
-        console.log('start date', checkin);
-        console.log("end date", checkout);
+        // console.log(datediff(parseDate(checkin), parseDate(checkout)));
+        // console.log('start date', checkin1.replaceAll('/', '-'));
+        // console.log("end date", checkout);
     }
 
     const parseDate = (str) => {
@@ -67,6 +89,55 @@ function BoxBooking(props) {
         // Round to nearest whole number to deal with DST.
         return Math.round((second - first) / (1000 * 60 * 60 * 24));
     }
+
+    const handleBooking = (e) => {
+        e.preventDefault();
+        history.push(`/checkout/${listingDetail.id}/${checkin.replaceAll('/', '-')}/${checkout.replaceAll('/', '-')}/${adults + childrens}`);
+    }
+
+    useEffect(() => {
+        if (adults === 1 && childrens === 0) {
+            setIsDisableDecAdult(true);
+            setIsDisableDecChildren(true);
+
+            setIsDisableIncAdult(false);
+            setIsDisableIncChildren(false);
+        } else if (adults === listingDetail.standard_guest_count) {
+            setIsDisableDecAdult(false);
+            setIsDisableDecChildren(true);
+
+            setIsDisableIncAdult(true);
+            setIsDisableIncChildren(true);
+        } else if (childrens === listingDetail.standard_guest_count - 1) {
+            setIsDisableDecAdult(true);
+            setIsDisableDecChildren(false);
+
+            setIsDisableIncAdult(true);
+            setIsDisableIncChildren(true);
+        } else if (adults + childrens === listingDetail.standard_guest_count) {
+            setIsDisableDecAdult(false);
+            setIsDisableDecChildren(false);
+
+            setIsDisableIncAdult(true);
+            setIsDisableIncChildren(true);
+        } else {
+            if (adults === 1) {
+                setIsDisableDecAdult(true);
+                setIsDisableIncAdult(false);
+            } else {
+                setIsDisableDecAdult(false);
+                setIsDisableIncAdult(false);
+            }
+
+            if (childrens === 0) {
+                setIsDisableDecChildren(true);
+                setIsDisableIncChildren(false);
+            } else {
+                setIsDisableDecChildren(false);
+                setIsDisableIncChildren(false);
+            }
+        }
+    }, [adults, childrens]);
 
     return (
         < div className="col-lg-4 col-md-4 margin-top-75 sticky" >
@@ -118,15 +189,15 @@ function BoxBooking(props) {
                                     <div className="panel-dropdown-content" style={{ width: "100%" }}>
                                         <div className="qtyButtons">
                                             <div className="qtyTitle">Adults</div>
-                                            <div onClick={() => handleDec('adults', adults)} className="qtyDec"></div>
+                                            <div onClick={() => handleDec('adults', adults)} className="qtyDec" style={isDisableDecAdult ? disableClick : enableClick} />
                                             <input type="text" name="qtyInput" defaultValue={adults} value={adults} />
-                                            <div onClick={() => handleInc('adults', adults)} className="qtyInc"></div>
+                                            <div onClick={() => handleInc('adults', adults)} className="qtyInc" style={isDisableIncAdult ? disableClick : enableClick} />
                                         </div>
                                         <div className="qtyButtons">
                                             <div className="qtyTitle">Childrens</div>
-                                            <div onClick={() => handleDec('childrens', childrens)} className="qtyDec"></div>
+                                            <div onClick={() => handleDec('childrens', childrens)} className="qtyDec" style={isDisableDecChildren ? disableClick : enableClick} />
                                             <input type="text" name="qtyInput" defaultValue={childrens} value={childrens} />
-                                            <div onClick={() => handleInc('childrens', childrens)} className="qtyInc"></div>
+                                            <div onClick={() => handleInc('childrens', childrens)} className="qtyInc" style={isDisableIncChildren ? disableClick : enableClick} />
                                         </div>
                                     </div>
                                 </div>
@@ -156,7 +227,7 @@ function BoxBooking(props) {
                             </div>
                             <div className="my--12" />
                         </div>
-                        <a href="pages-booking.html" className="button book-now fullwidth margin-top-5" style={{ borderRadius: "8px", padding: "14px 24px" }}>Kiểm tra tình trạng còn phòng</a>
+                        <a onClick={handleBooking} href="#" className="button book-now fullwidth margin-top-5" style={{ borderRadius: "8px", padding: "14px 24px" }}>Kiểm tra tình trạng còn phòng</a>
                     </div>
             }
         </div >

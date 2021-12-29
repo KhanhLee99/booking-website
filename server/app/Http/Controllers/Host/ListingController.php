@@ -431,4 +431,21 @@ class ListingController extends Controller
             return response()->json($this->response);
         }
     }
+
+    public function get_base_infomation_listing($id)
+    {
+        try {
+            if ($result = Listing::find($id)) {
+                $this->response = [
+                    'status' => 'success',
+                    'data' => $result
+                ];
+                return response()->json($this->response, $this->success_code);
+            }
+            return response()->json($this->response);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
+    }
 }

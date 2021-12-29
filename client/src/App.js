@@ -52,6 +52,8 @@ import AddName from './features/Host/pages/AddName';
 import Photos from './features/Listings/components/Photos';
 import TestDraft from './components/Test/TestDraft';
 import TestSkeleton from './components/Test/TestSkeleton';
+import TestPaypal from './components/Test/TestPaypal';
+import Dashboard from './features/Admin/components/Dashboard';
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
 // const GuestFeauture = React.lazy(() => import('./features/Guest'));
@@ -94,8 +96,7 @@ function App() {
   const [modalShow, setModalShow] = useState(false);
 
   return (
-    // <TestSkeleton />
-    // <BasicInfomation />
+    // <Dashboard />
     // <>
     //   {show ? (
     //     <ReactNotificationComponent
@@ -109,8 +110,11 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route path="/" exact component={Home} />
+
+          <Route path="/admin" component={Dashboard} />
+
           <Route path="/listing/:id" component={ListingDetail} />
-          <Route path="/book/stays" component={Booking} />
+          <Route path="/checkout/:id/:checkin/:checkout/:guests" component={Booking} />
           <Route path="/hosting" component={MessageHost} />
           {/* <Route path="/hosting/inbox" component={MessageHost} /> */}
           <Route path="/:id" exact component={ListingsLocation} />
@@ -122,9 +126,6 @@ function App() {
           <Route path="/host/:id/photos" component={AddPhotos} />
           <Route path="/host/:id/title" component={AddName} />
           <Route path="/host/:id/price" component={AddPrice} />
-
-
-
 
 
           {/* <Route path="/login" component={Login} /> */}

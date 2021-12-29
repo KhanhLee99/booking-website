@@ -14,6 +14,11 @@ const listingApi = {
     favoriteListing: (params) => {
         const url = 'favorite/add';
         return axiosClient.post(url, params);
+    },
+
+    getBaseInfoListing: (id) => {
+        const url = `listing/${id}/base-infomation`;
+        return axiosClient.get(url);
     }
 }
 

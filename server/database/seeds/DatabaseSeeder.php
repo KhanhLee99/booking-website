@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(CitySeeder::class);
         $this->call(ListingTypeSeeder::class);
         $this->call(BedTypeSeeder::class);
+        $this->call(ReservationStatusSeeder::class);
         Model::reguard();
     }
 }
