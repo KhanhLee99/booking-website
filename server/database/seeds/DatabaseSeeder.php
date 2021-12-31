@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(UserSeeder::class);
         Model::unguard();
+        $this->call(RoleSeeder::class);
         $this->call(UsersTableSeeder::class);
         $this->call(AmenityTypeSeeder::class);
         $this->call(AmenitySeeder::class);
@@ -21,6 +22,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ListingTypeSeeder::class);
         $this->call(BedTypeSeeder::class);
         $this->call(ReservationStatusSeeder::class);
+        $this->call(NotificationTypeSeeder::class);
         Model::reguard();
     }
 }

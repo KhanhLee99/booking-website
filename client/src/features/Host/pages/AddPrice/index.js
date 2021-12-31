@@ -22,7 +22,8 @@ function AddPrice(props) {
                 price_per_night_base: values.price_base,
                 price_per_night_weekend: values.price_weekend,
                 discount_weekly: values.discount_week,
-                discount_monthly: values.discount_month
+                discount_monthly: values.discount_month,
+                is_public: 0
             }
             setLoading(true);
             await hostApi.updateListing(params, id);

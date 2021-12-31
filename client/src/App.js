@@ -9,10 +9,10 @@ import {
 import NotFoundPage from './features/Error/NotFoundPage';
 import MainErrorPage from './features/Error/MainErrorPage';
 import GuestFeauture from './features/Guest';
-import { PrivateRoute } from './components/PrivateRoute';
+import { PrivateRoute, PrivateRouteAdmin } from './components/PrivateRoute';
 import Login from './features/Guest/pages';
 import firebase from 'firebase';
-import { getMe } from './features/Guest/guestSlice';
+import { getMe } from './app/reducer/guestSlice';
 import { useDispatch } from 'react-redux';
 import { messaging, onMessageListener } from './init-fcm';
 import ReactNotificationComponent from './components/Notification/ReactNotification';
@@ -54,6 +54,11 @@ import TestDraft from './components/Test/TestDraft';
 import TestSkeleton from './components/Test/TestSkeleton';
 import TestPaypal from './components/Test/TestPaypal';
 import Dashboard from './features/Admin/components/Dashboard';
+import AdminListingPending from './features/Admin/pages/AdminListingPending/AdminListingPending';
+import AdminListingActive from './features/Admin/pages/AdminListingActive/AdminListingActive';
+import CommonAdmin from './components/CommonAdmin/CommonAdmin';
+import AdminLogin from './features/Admin/pages/AdminLogin/AdminLogin';
+import AdminFeature from './features/Admin';
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
 // const GuestFeauture = React.lazy(() => import('./features/Guest'));
@@ -110,14 +115,18 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route path="/" exact component={Home} />
+          <Route path="/admin/login" component={AdminLogin} />
 
-          <Route path="/admin" component={Dashboard} />
+          <PrivateRouteAdmin path="/admin" component={AdminFeature} layout={CommonAdmin} />
+
+          {/* <Route path="/admin/listing/pending" component={AdminListingPending} />
+          <Route path="/admin/listing/active" component={AdminListingActive} /> */}
 
           <Route path="/listing/:id" component={ListingDetail} />
           <Route path="/checkout/:id/:checkin/:checkout/:guests" component={Booking} />
           <Route path="/hosting" component={MessageHost} />
           {/* <Route path="/hosting/inbox" component={MessageHost} /> */}
-          <Route path="/:id" exact component={ListingsLocation} />
+          {/* <Route path="/:id" exact component={ListingsLocation} /> */}
 
           <Route path="/host/basic-infomation" component={BasicInfomation} />
           <Route path="/host/:id/location" component={Location} />

@@ -25,10 +25,29 @@ class UsersTableSeeder extends Seeder
         //         'phone_number' => $faker->phoneNumber,
         //     ]);
         // }
-        DB::table('users')->insert([
-            'name' => 'khanh',
-            'email' => 'khanh@gmail.com',
-            'password' => Hash::make('khanh')
-        ]);
+
+        $list_user = [
+            [
+                'name' => 'khanh',
+                'email' => 'khanh@gmail.com',
+                'password' => Hash::make('khanh'),
+                'role_id' => 2
+            ],
+
+            [
+                'name' => 'admin',
+                'email' => 'admin@gmail.com',
+                'password' => Hash::make('admin'),
+                'role_id' => 1
+            ],
+        ];
+        foreach ($list_user as $user) {
+            DB::table('users')->insert([
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'password' => $user['password'],
+                'role_id' => $user['role_id'],
+            ]);
+        }
     }
 }

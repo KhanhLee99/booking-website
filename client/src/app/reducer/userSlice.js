@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import adminAuthApi from "../../api/adminAuthApi";
 import userApi from "../../api/userApi";
 
 export const login = createAsyncThunk('user/login', async (payload) => {
@@ -13,6 +14,11 @@ export const loginGoogle = createAsyncThunk('user/loginGoogle', async (payload) 
 
 export const loginFacebook = createAsyncThunk('user/loginFacebook', async (payload) => {
     const response = await userApi.loginFacebook(payload);
+    return response;
+})
+
+export const adminLogin = createAsyncThunk('admin/login', async (payload) => {
+    const response = await adminAuthApi.login(payload);
     return response;
 })
 
@@ -46,6 +52,11 @@ const userSlice = createSlice({
             state.current = action.payload.data.user;
             localStorage.setItem('access_token', action.payload.data.access_token);
             localStorage.setItem('user', JSON.stringify(action.payload.data.user));
+        },
+        [adminLogin.fulfilled]: (state, action) => {
+            state.current = action.payload.data
+            localStorage.setItem('access_token', action.payload.data.token);
+            localStorage.setItem('user', JSON.stringify(action.payload.data));
         },
     }
 });

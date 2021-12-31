@@ -6,6 +6,10 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import hostApi from '../../../../api/hostApi';
 import { useHistory, useParams } from 'react-router-dom';
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
 
 AddName.propTypes = {
 
@@ -16,6 +20,7 @@ const disable_resize = {
 }
 
 function AddName(props) {
+    const [des, setDes] = useState('');
     const history = useHistory();
     const { id } = useParams();
     const [loading, setLoading] = useState(false);
@@ -25,7 +30,7 @@ function AddName(props) {
             console.log(values);
             const params = {
                 name: values.title,
-                description: values.description
+                description: des
             }
             setLoading(true);
             await hostApi.updateListing(params, id).then(res => {
@@ -52,8 +57,8 @@ function AddName(props) {
                     // .max(15, 'Must be 15 characters or less')
                     .required('Required'),
 
-                description: Yup.string()
-                    .required('Required'),
+                // description: Yup.string()
+                //     .required('Required'),
             })}
             onSubmit={(values, { setSubmitting }) => {
                 handleNext(values);
@@ -90,11 +95,65 @@ function AddName(props) {
                                                     <div className="col-md-12">
                                                         <h5>Mô tả</h5>
                                                         <p>Chia sẻ với khách hàng một vài thông tin ngắn gọn và nổi bật về chỗ nghỉ này của bạn.</p>
-                                                        <textarea
+                                                        {/* <textarea
                                                             placeholder='Description'
                                                             style={disable_resize}
                                                             {...formik.getFieldProps('description')}
+                                                            value={des}
+                                                        /> */}
+
+                                                        <CKEditor
+
+                                                            editor={ClassicEditor}
+                                                            // data="<p>Hello from CKEditor 5!</p>"
+                                                            onReady={editor => {
+                                                                // You can store the "editor" and use when it is needed.
+                                                                console.log('Editor is ready to use!', editor);
+                                                            }}
+                                                            onChange={(event, editor) => {
+                                                                const data = editor.getData();
+                                                                setDes(data);
+                                                                console.log({ event, editor, data });
+                                                            }}
+                                                            onBlur={(event, editor) => {
+                                                                console.log('Blur.', editor);
+                                                            }}
+                                                            onFocus={(event, editor) => {
+                                                                console.log('Focus.', editor);
+                                                            }}
                                                         />
+
+
+
+                                                        {/* <Popup trigger={<button> Trigger</button>}
+                                                            position="center"
+                                                            modal
+                                                            nested
+                                                            closeOnDocumentClick
+                                                            className='popup-content'
+                                                        >
+                                                            <div><CKEditor
+
+                                                                editor={ClassicEditor}
+                                                                // data="<p>Hello from CKEditor 5!</p>"
+                                                                onReady={editor => {
+                                                                    // You can store the "editor" and use when it is needed.
+                                                                    console.log('Editor is ready to use!', editor);
+                                                                }}
+                                                                onChange={(event, editor) => {
+                                                                    const data = editor.getData();
+                                                                    setDes(data);
+                                                                    console.log({ event, editor, data });
+                                                                }}
+                                                                onBlur={(event, editor) => {
+                                                                    console.log('Blur.', editor);
+                                                                }}
+                                                                onFocus={(event, editor) => {
+                                                                    console.log('Focus.', editor);
+                                                                }}
+                                                            />
+                                                            </div>
+                                                        </Popup> */}
                                                     </div>
                                                 </div>
 
@@ -108,6 +167,7 @@ function AddName(props) {
 
                             </div>
                         </div>
+
                         <FooterHost
                             loading={loading}
                             handleBack={handleBack}
@@ -115,9 +175,12 @@ function AddName(props) {
                             hiddenBackButton={false}
                             isHandleClick={false}
                         />
+
                     </div>
                 </form>
             )}
+
+
         </Formik>
     );
 }

@@ -108,9 +108,7 @@ function ListingDetail(props) {
                                     <div id="listing-overview" className="listing-section">
                                         {/* Description */}
                                         <h3 className="listing-desc-headline">Overview</h3>
-                                        <p>
-                                            {listingDetail.description}
-                                        </p>
+                                        <p dangerouslySetInnerHTML={{ __html: listingDetail.description }} />
                                         {/* Listing Contacts */}
 
                                         <div className="clearfix" />

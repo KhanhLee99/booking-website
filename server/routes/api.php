@@ -164,3 +164,16 @@ Route::get('/greeting', function () {
 
 
 Route::post('/upload-file', 'FileUploadController@upload');
+
+// Admin Listing
+Route::get('admin/listing/pending', 'Admin\AdminListingController@get_listing_pending');
+Route::get('admin/listing/active', 'Admin\AdminListingController@get_listing_active');
+Route::put('admin/listing/{id}/active', 'Admin\AdminListingController@active_listing');
+Route::put('admin/listing/{id}/lock', 'Admin\AdminListingController@lock_listing');
+
+
+// Notification
+Route::post('notification/add', 'Admin\AdminNotificationController@add');
+
+// Auth Admin
+Route::post('admin/login', 'Admin\AdminAuthController@login');

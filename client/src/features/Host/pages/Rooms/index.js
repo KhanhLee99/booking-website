@@ -86,7 +86,7 @@ function Rooms(props) {
             await hostApi.editBedRoom(params, id)
             await hostApi.updateListing({
                 standard_guest_count: qtyGuests,
-                bahtroom_count: qtyBathrooms
+                bathroom_count: qtyBathrooms
             }, id).then(res => {
                 if (res.data.status == 'success') {
                     history.push(`/host/${id}/amenities`);

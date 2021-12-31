@@ -3,7 +3,7 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router";
 import testApi from "../../../api/testApi";
-import { login, loginFacebook, loginGoogle } from "../guestSlice";
+import { login, loginFacebook, loginGoogle } from "../../../app/reducer/guestSlice";
 import Page2 from "./page2";
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase';

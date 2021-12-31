@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import A from "../components/A";
 import B from "../components/B";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../guestSlice";
+import { logout } from "../../../app/reducer/guestSlice";
 import testApi from "../../../api/testApi";
 import Header from "../../../components/Header";
 

@@ -15,8 +15,8 @@ class CreateListingTable extends Migration
     {
         Schema::create('listing', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->nullable();
-            $table->string('description')->nullable();
+            $table->longText('name')->nullable();
+            $table->longText('description')->nullable();
             $table->string('street_address')->nullable();
             $table->integer('standard_guest_count')->nullable();
             $table->integer('max_guest_count')->nullable();
@@ -32,11 +32,11 @@ class CreateListingTable extends Migration
             $table->float('discount_monthly')->default(0);
             $table->float('extra_per_adult')->default(0);
             $table->float('extra_per_child')->default(0);
-            $table->string('avatar_url')->nullable();
+            $table->longText('avatar_url')->nullable();
             $table->float('rating')->default(0);
             $table->enum('rental_form', ['entire_place', 'private_room', 'shared_room'])->nullable();
             $table->enum('reservation_form', ['quick', 'request'])->nullable();
-            $table->boolean('is_public')->default(0);
+            $table->boolean('is_public')->nullable();
 
             $table->unsignedBigInteger('listing_type_id')->nullable();
             $table->foreign('listing_type_id')->references('id')->on('listing_type');
