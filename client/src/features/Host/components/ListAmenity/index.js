@@ -9,7 +9,7 @@ ListAmenity.propTypes = {
 
 function ListAmenity(props) {
 
-    const { amenities, type, handleCheckboxChange } = props;
+    const { amenities, type, handleCheckboxChange, listAmenityChecked } = props;
     return (
         <div className="checkboxes in-row margin-bottom-20">
             {amenities.length ? amenities.filter(amenity => amenity.amenity_type_id === type.id).map((amenity, index) => (
@@ -18,6 +18,7 @@ function ListAmenity(props) {
                     id={amenity.id}
                     name={amenity.name}
                     handleCheckboxChange={handleCheckboxChange}
+                    listAmenityChecked={listAmenityChecked}
                 />
             )) : <PulseLoading colorLoading='#000000' />}
         </div>

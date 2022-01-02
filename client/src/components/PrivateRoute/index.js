@@ -22,6 +22,31 @@ export function PrivateRoute({ component: Component, ...rest }) {
 	);
 }
 
+export function PrivateRouteHost({ component: Component, ...rest }) {
+	const loggedInUser = useSelector((state) => state.userSlice.current);
+	const isLoggedIn = !!loggedInUser.id;
+
+	return (
+		<Route
+			{...rest}
+			render={(props) => {
+				return (
+					<Component {...props} />
+				)
+				// return isLoggedIn ? loggedInUser.role_id == 2 ? (
+				// 	<Layout {...props}>
+				// 		<Component {...props} />
+				// 	</Layout>
+				// ) : (
+				// 	<Redirect to='/host/login' />
+				// ) : (
+				// 	<Redirect to='/host/login' />
+				// );
+			}}
+		/>
+	)
+}
+
 export function PrivateRouteAdmin({ component: Component, layout: Layout, ...rest }) {
 	const loggedInUser = useSelector((state) => state.userSlice.current);
 	const isLoggedIn = !!loggedInUser.id;

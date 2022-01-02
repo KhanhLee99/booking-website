@@ -40,27 +40,6 @@ function ListingDetail(props) {
     }, []);
 
     return (
-        // <div id="page" className="theia-exception">
-        //     <Header />
-        //     <main>
-        //         <Photos />
-        //         <div className="bg_color_1">
-        //             <TabHorizontal />
-        //             <div className="container margin_60_35">
-        //                 <div className="row">
-        //                     <div className="col-lg-8">
-        //                         {/* /section */}
-
-        //                     </div>
-        //                     <BoxBooking
-        //                         className='right'
-        //                         listingDetail={listingDetail}
-        //                     />
-        //                 </div>
-        //             </div>
-        //         </div>
-        //     </main>
-        // </div>
         <>
             <div id="wrapper">
                 {/* <Header2 /> */}
@@ -91,7 +70,7 @@ function ListingDetail(props) {
                                                     <i className="fa fa-map-marker" />{listingDetail.street_address}
                                                 </a>
                                             </span>
-                                            <p>Phòng riêng · 1 Phòng tắm · 1 giường · 1 phòng ngủ · 2 khách (tối đa 3 khách)</p>
+                                            <p>{listingDetail.rental_form === 'shared_room' ? 'Phòng chung' : listingDetail.rental_form === 'private_room' ? 'Phòng riêng' : 'Toàn bộ nhà'} · {listingDetail.bathroom_count} Phòng tắm · {listingDetail.bed_count} giường · {listingDetail.bedroom_count} phòng ngủ · {listingDetail.standard_guest_count} khách</p>
                                         </div>
                                     </div>
                                     {/* Listing Nav */}

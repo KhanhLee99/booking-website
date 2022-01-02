@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
         $this->call(BedTypeSeeder::class);
         $this->call(ReservationStatusSeeder::class);
         $this->call(NotificationTypeSeeder::class);
+        $this->call(ListingSeeder::class);
         Model::reguard();
     }
 }

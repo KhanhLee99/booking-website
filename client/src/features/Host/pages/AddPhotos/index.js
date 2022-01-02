@@ -6,6 +6,7 @@ import { useDropzone } from 'react-dropzone'
 import './styles.scss';
 import uploadApi from '../../../../api/uploadApi';
 import FooterHost from '../../components/FooterHost';
+import listingApi from '../../../../api/listingApi';
 
 AddPhotos.propTypes = {
 
@@ -49,6 +50,7 @@ function AddPhotos(props) {
     const { id } = useParams();
     const [files, setFiles] = useState([]);
     const [params, setParams] = useState(new FormData());
+    const [photos, setPhotos] = useState([]);
 
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*',
@@ -74,10 +76,34 @@ function AddPhotos(props) {
         </div>
     ));
 
+    const defaultThumbs = photos.map(photo => (
+        <div style={thumb} key={photo.id}>
+            <div style={thumbInner}>
+                <img
+                    src={photo.photo_url}
+                    style={img}
+                />
+            </div>
+        </div>
+    ))
+
+
+
     useEffect(() => {
         // Make sure to revoke the data uris to avoid memory leaks
         files.forEach(file => URL.revokeObjectURL(file.preview));
     }, [files]);
+
+    useEffect(() => {
+        const fetchListingDetail = async () => {
+            // setLoadingListingDetail(true)
+            await listingApi.getListingById(id).then(res => {
+                setPhotos(res.data.photos);
+            });
+        }
+
+        fetchListingDetail();
+    }, []);
 
     const handleNext = async () => {
         try {
@@ -125,6 +151,7 @@ function AddPhotos(props) {
                                             }
 
                                             <aside style={thumbsContainer}>
+                                                {defaultThumbs}
                                                 {thumbs}
                                             </aside>
                                         </div>

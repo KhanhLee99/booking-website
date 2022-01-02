@@ -9,6 +9,7 @@ import ListAmenity from '../../components/ListAmenity';
 import FooterHost from '../../components/FooterHost';
 import hostApi from '../../../../api/hostApi';
 import { useHistory, useParams } from 'react-router-dom';
+import listingApi from '../../../../api/listingApi';
 
 Amenity.propTypes = {
 
@@ -20,7 +21,8 @@ function Amenity(props) {
     const [loading, setLoading] = useState(false);
     const [amenityTypes, setAmenityTypes] = useState([]);
     const [amenities, setAmenities] = useState([]);
-    const [listAmenity, setListAmenity] = useState([]);
+    const [listAmenityChecked, setListAmenityChecked] = useState([]);
+    const [validateErr, setValidateErr] = useState('');
 
 
     const getAmenity = async () => {
@@ -38,27 +40,36 @@ function Amenity(props) {
 
     const handleCheckboxChange = (e) => {
         if (e.target.checked) {
-            setListAmenity([...listAmenity, parseInt(e.target.id)]);
+            setListAmenityChecked([...listAmenityChecked, parseInt(e.target.id)]);
         } else {
-            setListAmenity(listAmenity.filter((id) => id !== parseInt(e.target.id)));
+            setListAmenityChecked(listAmenityChecked.filter((id) => id !== parseInt(e.target.id)));
         }
     }
 
     const handleNext = async () => {
-        try {
-            const params = {
-                amenities: listAmenity
-            }
+        if (listAmenityChecked.length < 5) {
             setLoading(true);
-            await hostApi.addListingAmenities(params, id).then(res => {
+            setTimeout(() => {
+                setValidateErr('Vui lòng chọn ít nhất 5 tiện ích');
                 setLoading(false);
-                if (res.data.status == 'success') {
-                    history.push(`/host/${id}/photos`)
+                window.scrollTo(0, 0)
+            }, 2000);
+        } else {
+            try {
+                const params = {
+                    amenities: listAmenityChecked
                 }
-            });
-        } catch (err) {
-            console.log(err.message);
-            setLoading(false);
+                setLoading(true);
+                await hostApi.addListingAmenities(params, id).then(res => {
+                    setLoading(false);
+                    if (res.data.status == 'success') {
+                        history.push(`/host/${id}/photos`)
+                    }
+                });
+            } catch (err) {
+                console.log(err.message);
+                setLoading(false);
+            }
         }
     }
 
@@ -73,7 +84,23 @@ function Amenity(props) {
             setAmenities([]);
             setAmenityTypes([]);
         }
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        const fetchListingAmenitiesChecked = async () => {
+            // setLoadingListingDetail(true)
+            await hostApi.getListingAmenitiesId(id).then(res => {
+                setListAmenityChecked(res.data.data);
+            });
+        }
+
+        fetchListingAmenitiesChecked();
+
+        return () => {
+            setListAmenityChecked([]);
+        }
+    }, [amenities]);
+
     return (
         <div className='k-wrap'>
             <div className='k-header'></div>
@@ -89,6 +116,11 @@ function Amenity(props) {
                                         <h3><i className="sl sl-icon-doc" />Amenities</h3>
                                     </div>
                                     {/* Title */}
+                                    {
+                                        validateErr.length > 0 ? (
+                                            <p style={{ color: "red" }}>{validateErr}</p>
+                                        ) : null
+                                    }
                                     {amenityTypes.length ? amenityTypes.map((type, index) => {
                                         return (
                                             <div key={index}>
@@ -100,6 +132,7 @@ function Amenity(props) {
                                                     amenities={amenities}
                                                     type={type}
                                                     handleCheckboxChange={handleCheckboxChange}
+                                                    listAmenityChecked={listAmenityChecked}
                                                 />
                                             </div>
                                         )
@@ -107,10 +140,8 @@ function Amenity(props) {
                                     {/* Row / End */}
                                 </div>
                             </div>
-
                         </div>
                     </div>
-
                 </div>
             </div>
             <FooterHost

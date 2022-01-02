@@ -1,6 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 // import './styles.scss';
+import Popup from 'reactjs-popup';
+import LoginPopup from '../../LoginPopup';
+import TestUiLogin from '../../Test/TestUiLogin';
+import {
+    BrowserRouter,
+    Switch,
+    Route,
+    Redirect,
+    Link
+} from "react-router-dom";
 
 Header2.propTypes = {
 
@@ -10,7 +20,7 @@ function Header2(props) {
 
     const handleShowPopup = (e) => {
         e.preventDefault();
-        setTriggerPopup(true)
+        // setTriggerPopup(true)
     }
 
     const { loggedInUser, isLoggedIn, setTriggerPopup } = props;
@@ -55,16 +65,24 @@ function Header2(props) {
                             <a href="dashboard-add-listing.html" className="button border with-icon">Add Listing <i className="sl sl-icon-plus" /></a>
                         </div> */}
                         <div className="header-widget">
-                            <a href="#sign-in-dialog" onClick={(handleShowPopup)} className="sign-in popup-with-zoom-anim"><i className="sl sl-icon-login"></i> Sign In</a>
-                            <a href="dashboard-add-listing.html" className="button border with-icon">Add Listing <i className="sl sl-icon-plus"></i></a>
+                            <Popup trigger={
+                                <a href="#" onClick={(handleShowPopup)} className="sign-in popup-with-zoom-anim"><i className="sl sl-icon-login"></i> Sign In</a>
+                            }
+                                position="center"
+                                modal
+                                nested
+                                closeOnDocumentClick
+                                className='popup-content'
+                            >
+                                <TestUiLogin />
+                            </Popup>
+
+                            <Link to="/host/login" className="button border with-icon">Become a host<i className="sl sl-icon-plus"></i></Link>
                         </div>
-                        {/* Header Widget / End */}
                     </div>
-                    {/* Right Side Content / End */}
 
                 </div>
             </div>
-            {/* Header / End */}
         </header>
 
 

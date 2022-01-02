@@ -48,6 +48,22 @@ const hostApi = {
             .catch(function (error) {
                 console.log(error);
             });
+    },
+
+    getListingAmenitiesId: (id) => {
+        const url = `/listing/${id}/amenities`;
+        return axiosClient.get(url)
+            .catch(function (error) {
+                console.log(error);
+            });
+    },
+
+    getListingsByUserId: (id) => {
+        const url = `/listing/user/${id}`;
+        return axiosClient.get(url)
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 };
 

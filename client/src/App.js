@@ -9,7 +9,7 @@ import {
 import NotFoundPage from './features/Error/NotFoundPage';
 import MainErrorPage from './features/Error/MainErrorPage';
 import GuestFeauture from './features/Guest';
-import { PrivateRoute, PrivateRouteAdmin } from './components/PrivateRoute';
+import { PrivateRoute, PrivateRouteAdmin, PrivateRouteHost } from './components/PrivateRoute';
 import Login from './features/Guest/pages';
 import firebase from 'firebase';
 import { getMe } from './app/reducer/guestSlice';
@@ -41,17 +41,8 @@ import { Button } from 'reactstrap';
 import Booking from './features/Listings/components/Booking';
 import Hosting from './features/Host/pages/Hosting';
 import MessageHost from './features/Host/pages/Message';
-import BasicInfomation from './features/Host/pages/BasicInfomation';
-import Amenity from './features/Host/pages/Amenity';
-import Rooms from './features/Host/pages/Rooms';
-import Location from './features/Host/pages/Location';
-import AddPhotos from './features/Host/pages/AddPhotos';
-import TestDropzone from './components/Test/TestDropzone';
-import AddPrice from './features/Host/pages/AddPrice';
-import AddName from './features/Host/pages/AddName';
-import Photos from './features/Listings/components/Photos';
-import TestDraft from './components/Test/TestDraft';
-import TestSkeleton from './components/Test/TestSkeleton';
+
+
 import TestPaypal from './components/Test/TestPaypal';
 import Dashboard from './features/Admin/components/Dashboard';
 import AdminListingPending from './features/Admin/pages/AdminListingPending/AdminListingPending';
@@ -59,6 +50,8 @@ import AdminListingActive from './features/Admin/pages/AdminListingActive/AdminL
 import CommonAdmin from './components/CommonAdmin/CommonAdmin';
 import AdminLogin from './features/Admin/pages/AdminLogin/AdminLogin';
 import AdminFeature from './features/Admin';
+import HostFeature from './features/Host';
+import HostLogin from './features/Host/pages/HostLogin/HostLogin';
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
 // const GuestFeauture = React.lazy(() => import('./features/Guest'));
@@ -116,7 +109,10 @@ function App() {
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/admin/login" component={AdminLogin} />
+          <Route path="/host/login" component={HostLogin} />
+          <Route path="/host/listings" component={Hosting} />
 
+          <PrivateRouteHost path="/host" component={HostFeature} />
           <PrivateRouteAdmin path="/admin" component={AdminFeature} layout={CommonAdmin} />
 
           {/* <Route path="/admin/listing/pending" component={AdminListingPending} />
@@ -127,15 +123,6 @@ function App() {
           <Route path="/hosting" component={MessageHost} />
           {/* <Route path="/hosting/inbox" component={MessageHost} /> */}
           {/* <Route path="/:id" exact component={ListingsLocation} /> */}
-
-          <Route path="/host/basic-infomation" component={BasicInfomation} />
-          <Route path="/host/:id/location" component={Location} />
-          <Route path="/host/:id/floor-plan" component={Rooms} />
-          <Route path="/host/:id/amenities" component={Amenity} />
-          <Route path="/host/:id/photos" component={AddPhotos} />
-          <Route path="/host/:id/title" component={AddName} />
-          <Route path="/host/:id/price" component={AddPrice} />
-
 
           {/* <Route path="/login" component={Login} /> */}
           {/* <Redirect exact from='/' to='/login' /> */}

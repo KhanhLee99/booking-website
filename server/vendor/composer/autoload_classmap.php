@@ -3670,6 +3670,7 @@ return array(
     'League\\OAuth2\\Server\\ResponseTypes\\BearerTokenResponse' => $vendorDir . '/league/oauth2-server/src/ResponseTypes/BearerTokenResponse.php',
     'League\\OAuth2\\Server\\ResponseTypes\\RedirectResponse' => $vendorDir . '/league/oauth2-server/src/ResponseTypes/RedirectResponse.php',
     'League\\OAuth2\\Server\\ResponseTypes\\ResponseTypeInterface' => $vendorDir . '/league/oauth2-server/src/ResponseTypes/ResponseTypeInterface.php',
+    'ListingSeeder' => $baseDir . '/database/seeds/ListingSeeder.php',
     'ListingTypeSeeder' => $baseDir . '/database/seeds/ListingTypeSeeder.php',
     'Mockery' => $vendorDir . '/mockery/mockery/library/Mockery.php',
     'Mockery\\Adapter\\Phpunit\\MockeryPHPUnitIntegration' => $vendorDir . '/mockery/mockery/library/Mockery/Adapter/Phpunit/MockeryPHPUnitIntegration.php',

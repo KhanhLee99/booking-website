@@ -18,6 +18,14 @@ const userApi = {
         const url = '/login_facebook';
         return axiosClient.post(url, params);
     },
+
+    hostLogin: (params) => {
+        const url = '/host/login';
+        return axiosClient.post(url, params)
+            .catch(function (error) {
+                console.log(error);
+            });
+    },
 }
 
 export default userApi;

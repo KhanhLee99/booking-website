@@ -5,6 +5,7 @@ import HeroSingle from '../components/HeroSingle';
 import LoginPopup from '../../../components/LoginPopup';
 import { useSelector } from 'react-redux';
 import Header2 from '../../../components/Header/Header2/Header2';
+import BestCity from '../components/BestCity/BestCity';
 
 Home.propTypes = {
 
@@ -25,7 +26,7 @@ function Home(props) {
                 />
             </div>
             <main>
-                {/* <HeroSingle /> */}
+                <BestCity />
             </main>
             <LoginPopup
                 trigger={triggerPopup}

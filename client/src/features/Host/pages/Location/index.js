@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router-dom';
 import { Formik } from 'formik';
@@ -6,6 +6,7 @@ import * as Yup from 'yup';
 import hostApi from '../../../../api/hostApi';
 import FooterHost from '../../components/FooterHost';
 import PulseLoading from '../../../../components/Loading/PulseLoading';
+import listingApi from '../../../../api/listingApi';
 
 Location.propTypes = {
 
@@ -15,6 +16,7 @@ function Location(props) {
     const history = useHistory()
     const { id } = useParams();
     const [loading, setLoading] = useState(false);
+    const [streetAddresss, setStreetAddress] = useState('');
 
 
     const handleAddLocation = async (values) => {
@@ -43,9 +45,20 @@ function Location(props) {
         history.goBack();
     }
 
+    useEffect(() => {
+        const fetchListingDetail = async () => {
+            await listingApi.getListingById(id).then(res => {
+                setStreetAddress(res.data.listing.street_address);
+            });
+        }
+
+        fetchListingDetail();
+    }, []);
+
     return (
         <Formik
-            initialValues={{ streetAddress: '' }}
+            enableReinitialize
+            initialValues={{ streetAddress: streetAddresss }}
             validationSchema={Yup.object({
                 streetAddress: Yup.string()
                     // .max(15, 'Must be 15 characters or less')
@@ -116,14 +129,14 @@ function Location(props) {
 
                                         </div>
                                     </div>
-                                    <div className='col-5 k-right-side'>
+                                    {/* <div className='col-5 k-right-side'>
                                         <div className='k-property-description'>
                                             <div className='k-property-content'>
                                                 <h5>Chung cu</h5>
                                                 <p>Can ho khep kin, cung tap trung tren mot mat san trong mot toa nha lon</p>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         </div>

@@ -31,7 +31,9 @@ Route::post('login_google', 'AuthController@login_google');
 Route::post('login_facebook', 'AuthController@login_facebook');
 Route::get('me', 'AuthController@me')->middleware('auth:api');
 Route::get('new-password', 'UserController@new_password')->middleware('auth:api');
-
+// Auth Admin
+Route::post('admin/login', 'AuthController@admin_login');
+Route::post('host/login', 'AuthController@host_login');
 
 // Route::middleware('auth:api')->group(function () {
 
@@ -175,5 +177,7 @@ Route::put('admin/listing/{id}/lock', 'Admin\AdminListingController@lock_listing
 // Notification
 Route::post('notification/add', 'Admin\AdminNotificationController@add');
 
-// Auth Admin
-Route::post('admin/login', 'Admin\AdminAuthController@login');
+
+
+// Listing Amenities
+Route::get('listing/{id}/amenities', 'Host\ListingAmenitiesController@get_listing_amenities_id');

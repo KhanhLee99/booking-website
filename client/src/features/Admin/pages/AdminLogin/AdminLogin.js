@@ -42,29 +42,31 @@ function AdminLogin(props) {
     }, []);
 
     return (
-        <Formik
-            initialValues={{ email: '', password: '' }}
-            onSubmit={(values, { setSubmitting }) => {
-                handleLogin(values);
-            }}
-        >
-            {formik => (
-                <form onSubmit={formik.handleSubmit}>
-                    <input
-                        type='text'
-                        placeholder='email'
-                        {...formik.getFieldProps('email')}
-                    />
-                    <input
-                        type='password'
-                        placeholder='password'
-                        {...formik.getFieldProps('password')}
-                    />
-                    <button type='submit'>Login</button>
-                </form>
-            )}
-        </Formik>
-
+        <div>
+            <h2>ADMIN LOGIN</h2>
+            <Formik
+                initialValues={{ email: '', password: '' }}
+                onSubmit={(values, { setSubmitting }) => {
+                    handleLogin(values);
+                }}
+            >
+                {formik => (
+                    <form onSubmit={formik.handleSubmit}>
+                        <input
+                            type='text'
+                            placeholder='email'
+                            {...formik.getFieldProps('email')}
+                        />
+                        <input
+                            type='password'
+                            placeholder='password'
+                            {...formik.getFieldProps('password')}
+                        />
+                        <button type='submit'>Login</button>
+                    </form>
+                )}
+            </Formik>
+        </div>
     );
 }
 

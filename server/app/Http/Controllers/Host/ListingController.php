@@ -146,12 +146,13 @@ class ListingController extends Controller
             $listings = User::find($user_id)->Listings;
             $listings->makeHidden(['user_id']);
             $user = User::find($user_id);
-            foreach ($listings as $listing) {
-                $listing['user'] = $user;
-            }
+            // foreach ($listings as $listing) {
+            //     $listing['user'] = $user;
+            // }
             $this->response = [
                 'status' => 'success',
-                'data' => $listings
+                'data' => $listings,
+                'user' => $user
             ];
             return response()->json($this->response);
         } catch (Exception $e) {

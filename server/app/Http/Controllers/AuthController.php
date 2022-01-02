@@ -104,4 +104,37 @@ class AuthController extends Controller
         if ($user) return true;
         return false;
     }
+
+    public function admin_login(Request $request)
+    {
+        if (Auth::attempt([
+            'email' => $request->email,
+            'password' => $request->password,
+        ])) {
+            $user = User::whereEmail($request->email)->first();
+            if ($user->role_id == 1) {
+                $user->token = $user->createToken('Admin Personal Access Token')->accessToken;
+                return response()->json($user, 200);
+            }
+            return response()->json(['message' => 'Unauthenticated'], 401);
+        }
+        return response()->json(['message' => 'Unauthenticated'], 401);
+    }
+
+    public function host_login(Request $request)
+    {
+        if (Auth::attempt([
+            'email' => $request->email,
+            'password' => $request->password,
+        ])) {
+            $user = User::whereEmail($request->email)->first();
+            if ($user->role_id == 3) {
+                $user->role_id = 2;
+                $user->save();
+            }
+            $user->token = $user->createToken('Admin Personal Access Token')->accessToken;
+            return response()->json($user, 200);
+        }
+        return response()->json(['message' => 'Unauthenticated'], 401);
+    }
 }

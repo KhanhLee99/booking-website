@@ -22,10 +22,16 @@ export const adminLogin = createAsyncThunk('admin/login', async (payload) => {
     return response;
 })
 
+export const hostLogin = createAsyncThunk('host/login', async (payload) => {
+    const response = await userApi.hostLogin(payload);
+    return response;
+})
+
 const userSlice = createSlice({
     name: 'userSlice',
     initialState: {
         current: JSON.parse(localStorage.getItem('user')) || {},
+        host: JSON.parse(localStorage.getItem('host')) || {},
     },
     reducers: {
         logout(state) {
@@ -42,6 +48,11 @@ const userSlice = createSlice({
             state.current = action.payload.data
             localStorage.setItem('access_token', action.payload.data.token);
             localStorage.setItem('user', JSON.stringify(action.payload.data));
+        },
+        [hostLogin.fulfilled]: (state, action) => {
+            state.current = action.payload.data
+            localStorage.setItem('host_access_token', action.payload.data.token);
+            localStorage.setItem('host', JSON.stringify(action.payload.data));
         },
         [loginGoogle.fulfilled]: (state, action) => {
             state.current = action.payload.data.user;

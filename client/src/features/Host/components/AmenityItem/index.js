@@ -6,15 +6,35 @@ AmenityItem.propTypes = {
 };
 
 function AmenityItem(props) {
-    const { id, name, handleCheckboxChange } = props;
+
+    const isChecked = (id, listAmenityChecked) => {
+        const index = listAmenityChecked.findIndex(item => item === id);
+        if (index != -1) {
+            return true;
+        }
+        return false;
+    }
+
+    const { id, name, handleCheckboxChange, listAmenityChecked } = props;
+
     return (
         <>
-            <input
+            {isChecked(id, listAmenityChecked) ? (<input
                 id={id}
                 type="checkbox"
                 name="check"
                 onChange={handleCheckboxChange}
-            />
+                checked
+            />) : (
+                <input
+                    id={id}
+                    type="checkbox"
+                    name="check"
+                    onChange={handleCheckboxChange}
+
+                />
+            )}
+
             <label htmlFor={id}>{name}</label>
         </>
     );

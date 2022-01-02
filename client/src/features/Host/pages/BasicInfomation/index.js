@@ -6,14 +6,16 @@ import { Fade } from 'reactstrap';
 import PulseLoading from '../../../../components/Loading/PulseLoading';
 import ListingTypeItem from '../../components/ListingTypeItem';
 import RentalFormItem from '../../components/RentalFormItem';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import FooterHost from '../../components/FooterHost';
+import listingApi from '../../../../api/listingApi';
 
 BasicInfomation.propTypes = {
 
 };
 
 function BasicInfomation(props) {
+    const { id } = useParams();
     const history = useHistory();
     const [loading, setLoading] = useState(false);
     const [listingTypes, setListTypes] = useState([]);
@@ -81,10 +83,30 @@ function BasicInfomation(props) {
         }
     }
 
-    const handleNext = () => {
-        addListing().then(() => {
-            getNewestListing();
-        })
+    const handleNext = async () => {
+        if (id) {
+            try {
+                const params = {
+                    listing_type_id: idActive,
+                    rental_form: rentalFormSelect,
+                    reservation_form: reservationForm
+                }
+                setLoading(true);
+                await hostApi.updateListing(params, id).then(res => {
+                    setLoading(false);
+                    if (res.data.status == 'success') {
+                        history.push(`/host/${id}/location`);
+                    }
+                });
+            } catch (err) {
+                console.log(err.message);
+                setLoading(false)
+            }
+        } else {
+            addListing().then(() => {
+                getNewestListing();
+            })
+        }
     }
 
     const handleBack = (e) => {
@@ -101,6 +123,19 @@ function BasicInfomation(props) {
         return () => {
             setListTypes([]); // This worked for me
         };
+    }, []);
+
+    useEffect(() => {
+        const fetchListingDetail = async () => {
+            // setLoadingListingDetail(true)
+            await listingApi.getListingById(id).then(res => {
+                setIdActive(res.data.listing.listing_type_id);
+                setRentalFormSelect(res.data.listing.rental_form);
+                setReservationForm(res.data.listing.reservation_form);
+            });
+        }
+
+        fetchListingDetail();
     }, []);
 
     const selectListingType = listingId => setIdActive(listingId);
@@ -162,8 +197,19 @@ function BasicInfomation(props) {
                                         <div className="col-md-12">
                                             <h5>LOẠI ĐẶT CHỖ ?</h5>
                                             <select className="k-dropdown" value={reservationForm} onChange={handleChange} >
-                                                <option value="quick">Đặt phòng nhanh</option>
-                                                <option value="request">Yêu cầu xác nhận</option>
+                                                {
+                                                    reservationForm === 'quick' ? (
+                                                        <>
+                                                            <option value="quick" selected>Đặt phòng nhanh</option>
+                                                            <option value="request">Yêu cầu xác nhận</option>
+                                                        </>
+                                                    ) : (
+                                                        <>
+                                                            <option value="quick" >Đặt phòng nhanh</option>
+                                                            <option value="request" selected>Yêu cầu xác nhận</option>
+                                                        </>
+                                                    )
+                                                }
                                             </select>
                                         </div>
                                     </div>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './styles.scss';
 import FooterHost from '../../components/FooterHost';
@@ -10,6 +10,7 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
+import listingApi from '../../../../api/listingApi';
 
 AddName.propTypes = {
 
@@ -20,17 +21,18 @@ const disable_resize = {
 }
 
 function AddName(props) {
-    const [des, setDes] = useState('');
     const history = useHistory();
     const { id } = useParams();
     const [loading, setLoading] = useState(false);
+    const [name, setName] = useState('');
+    const [description, setDescription] = useState('');
 
     const handleNext = async (values) => {
         try {
             console.log(values);
             const params = {
                 name: values.title,
-                description: des
+                description: description
             }
             setLoading(true);
             await hostApi.updateListing(params, id).then(res => {
@@ -49,9 +51,21 @@ function AddName(props) {
 
     }
 
+    useEffect(() => {
+        const fetchListingDetail = async () => {
+            await listingApi.getListingById(id).then(res => {
+                setName(res.data.listing.name);
+                setDescription(res.data.listing.description);
+            });
+        }
+
+        fetchListingDetail();
+    }, []);
+
     return (
         <Formik
-            initialValues={{ title: '', description: '' }}
+            enableReinitialize
+            initialValues={{ title: name, description: description }}
             validationSchema={Yup.object({
                 title: Yup.string()
                     // .max(15, 'Must be 15 characters or less')
@@ -105,14 +119,14 @@ function AddName(props) {
                                                         <CKEditor
 
                                                             editor={ClassicEditor}
-                                                            // data="<p>Hello from CKEditor 5!</p>"
+                                                            data={`${description}`}
                                                             onReady={editor => {
                                                                 // You can store the "editor" and use when it is needed.
                                                                 console.log('Editor is ready to use!', editor);
                                                             }}
                                                             onChange={(event, editor) => {
                                                                 const data = editor.getData();
-                                                                setDes(data);
+                                                                setDescription(data);
                                                                 console.log({ event, editor, data });
                                                             }}
                                                             onBlur={(event, editor) => {
@@ -122,41 +136,8 @@ function AddName(props) {
                                                                 console.log('Focus.', editor);
                                                             }}
                                                         />
-
-
-
-                                                        {/* <Popup trigger={<button> Trigger</button>}
-                                                            position="center"
-                                                            modal
-                                                            nested
-                                                            closeOnDocumentClick
-                                                            className='popup-content'
-                                                        >
-                                                            <div><CKEditor
-
-                                                                editor={ClassicEditor}
-                                                                // data="<p>Hello from CKEditor 5!</p>"
-                                                                onReady={editor => {
-                                                                    // You can store the "editor" and use when it is needed.
-                                                                    console.log('Editor is ready to use!', editor);
-                                                                }}
-                                                                onChange={(event, editor) => {
-                                                                    const data = editor.getData();
-                                                                    setDes(data);
-                                                                    console.log({ event, editor, data });
-                                                                }}
-                                                                onBlur={(event, editor) => {
-                                                                    console.log('Blur.', editor);
-                                                                }}
-                                                                onFocus={(event, editor) => {
-                                                                    console.log('Focus.', editor);
-                                                                }}
-                                                            />
-                                                            </div>
-                                                        </Popup> */}
                                                     </div>
                                                 </div>
-
 
 
                                                 {/* Row / End */}

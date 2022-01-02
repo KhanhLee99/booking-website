@@ -122,6 +122,6 @@ class AmenityController extends Controller
     }
 
     public function get_by_array_id($array_id) {
-        return DB::table('amenities')->whereIn('id', $array_id)->select('name', 'icon_url')->get();
+        return DB::table('amenities')->whereIn('id', $array_id)->select('id', 'name', 'icon_url')->get();
     }
 }
