@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 class UserController extends Controller
 {
     public $success_code = 200;
-    private $response = [
+    public $response = [
         'status' => 'fail'
     ];
     private $dir = 'images/';
@@ -30,7 +30,7 @@ class UserController extends Controller
         $user->password = Hash::make($q->password);
         $user->save();
         $user->sendEmailVerificationNotification();
-        
+
         return response()->json($user);
     }
 
@@ -120,11 +120,12 @@ class UserController extends Controller
     {
         try {
             $current_user = $request->user('api');
+            // return $current_user;
             if ($current_user->update(['device_token' => $request->device_token])) {
                 $this->response['status'] = 'success';
-                return $this->response()->json($this->response, $this->success_code);
+                return response()->json($this->response, $this->success_code);
             }
-            return $this->response()->json($this->response);
+            return response()->json($this->response);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);
@@ -134,7 +135,7 @@ class UserController extends Controller
     public function send_notification(Request $request)
     {
         // $deviceToken = User::whereNotNull('device_key')->pluck('device_key')->all();
-        $deviceToken = User::whereNotNull('device_token')->pluck('device_token')->all();
+        $deviceToken = User::where('id', $request->user_id)->whereNotNull('device_token')->pluck('device_token');
 
         $dataEndCode = json_encode([
             "registration_ids" => $deviceToken,
@@ -169,5 +170,20 @@ class UserController extends Controller
         curl_close($ch);
 
         return response()->json($output);
+    }
+
+    public function edit(Request $request)
+    {
+        try {
+            $user_login = $request->user('api');
+            if ($user_login) {
+
+                return response()->json(['message' => 'success'], $this->success_code);
+            }
+            return response()->json(['error' => 'Unauthorized'], 401);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
     }
 }

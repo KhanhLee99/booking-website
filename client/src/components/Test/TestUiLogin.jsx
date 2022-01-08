@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { login } from '../../app/reducer/userSlice';
+import userApi from '../../api/userApi';
+import { unwrapResult } from '@reduxjs/toolkit';
 
 TestUiLogin.propTypes = {
 
@@ -13,6 +15,8 @@ function TestUiLogin(props) {
 
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
+    const deviceToken = useSelector(state => state.userSlice.deviceToken);
+
 
 
     const handleLogin = async (values, resetForm) => {
@@ -22,10 +26,14 @@ function TestUiLogin(props) {
                 password: values.password
             }
             setLoading(true);
-            await dispatch(login(params));
-            setLoading(false);
-            // setTriggerPopup(false);
-            resetForm();
+            await dispatch(login(params)).then(res => {
+                const access_token = unwrapResult(res).data.token;
+                userApi.updateDeviceToken({ device_token: deviceToken }, access_token);
+            });
+            // await userApi.updateDeviceToken({ device_token: deviceToken });
+            // setLoading(false);
+            // resetForm();
+            // console.log('deviceToken', deviceToken);
         } catch (err) {
             console.log(err.message)
             setLoading(false);

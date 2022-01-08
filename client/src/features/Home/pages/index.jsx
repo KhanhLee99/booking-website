@@ -12,7 +12,7 @@ Home.propTypes = {
 };
 
 function Home(props) {
-    const [triggerPopup, setTriggerPopup] = useState(false);
+    // const [triggerPopup, setTriggerPopup] = useState(false);
     const loggedInUser = useSelector((state) => state.userSlice.current);
     const isLoggedIn = !!loggedInUser.id;
 
@@ -22,16 +22,16 @@ function Home(props) {
                 <Header2
                     loggedInUser={loggedInUser}
                     isLoggedIn={isLoggedIn}
-                    setTriggerPopup={setTriggerPopup}
+                    // setTriggerPopup={setTriggerPopup}
                 />
             </div>
             <main>
                 <BestCity />
             </main>
-            <LoginPopup
+            {/* <LoginPopup
                 trigger={triggerPopup}
                 setTriggerPopup={setTriggerPopup}
-            />
+            /> */}
         </>
     );
 }

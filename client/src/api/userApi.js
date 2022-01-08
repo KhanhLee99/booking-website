@@ -26,6 +26,13 @@ const userApi = {
                 console.log(error);
             });
     },
+
+    updateDeviceToken: (params, token) => {
+        const url = '/update-device-token';
+        return axiosClient.put(url, params, {
+            headers: { Authorization: `Bearer ${token}` },
+        });
+    }
 }
 
 export default userApi;

@@ -27,11 +27,17 @@ export const hostLogin = createAsyncThunk('host/login', async (payload) => {
     return response;
 })
 
+// export const updateDeviceToken = createAsyncThunk('update/device-token', async (payload) => {
+//     const response = await userApi.updateDeviceToken(payload);
+//     return response;
+// })
+
 const userSlice = createSlice({
     name: 'userSlice',
     initialState: {
         current: JSON.parse(localStorage.getItem('user')) || {},
         host: JSON.parse(localStorage.getItem('host')) || {},
+        deviceToken: ''
     },
     reducers: {
         logout(state) {
@@ -42,6 +48,10 @@ const userSlice = createSlice({
             // reset current
             state.current = {};
         },
+
+        saveDeviceToken(state, action) {
+            state.deviceToken = action.payload;
+        }
     },
     extraReducers: {
         [login.fulfilled]: (state, action) => {
@@ -73,6 +83,6 @@ const userSlice = createSlice({
 });
 
 const { reducer, actions } = userSlice;
-export const { logout } = actions;
+export const { logout, saveDeviceToken } = actions;
 export default reducer;
 

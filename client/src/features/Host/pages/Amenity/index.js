@@ -102,48 +102,37 @@ function Amenity(props) {
     }, [amenities]);
 
     return (
-        <div className='k-wrap'>
-            <div className='k-header'></div>
-            <div className='k-content'>
-                <div className='container'>
-                    <div className='row'>
-                        <div className='col-8 k-left-side'>
-                            <div id="add-listing">
-                                {/* Section */}
-                                <div className="add-listing-section">
-                                    {/* Headline */}
-                                    <div className="add-listing-headline">
-                                        <h3><i className="sl sl-icon-doc" />Amenities</h3>
-                                    </div>
-                                    {/* Title */}
-                                    {
-                                        validateErr.length > 0 ? (
-                                            <p style={{ color: "red" }}>{validateErr}</p>
-                                        ) : null
-                                    }
-                                    {amenityTypes.length ? amenityTypes.map((type, index) => {
-                                        return (
-                                            <div key={index}>
-                                                <AmenityTypeItem
-                                                    name={type.name}
-                                                />
+        <>
 
-                                                <ListAmenity
-                                                    amenities={amenities}
-                                                    type={type}
-                                                    handleCheckboxChange={handleCheckboxChange}
-                                                    listAmenityChecked={listAmenityChecked}
-                                                />
-                                            </div>
-                                        )
-                                    }) : <PulseLoading colorLoading='#000000' />}
-                                    {/* Row / End */}
-                                </div>
+            <div id="add-listing">
+                <h3 className='h3_title'>Amenities</h3>
+
+                <div className="add-listing-section">
+                    {
+                        validateErr.length > 0 ? (
+                            <p style={{ color: "red" }}>{validateErr}</p>
+                        ) : null
+                    }
+                    {amenityTypes.length ? amenityTypes.map((type, index) => {
+                        return (
+                            <div key={index}>
+                                <AmenityTypeItem
+                                    name={type.name}
+                                />
+
+                                <ListAmenity
+                                    amenities={amenities}
+                                    type={type}
+                                    handleCheckboxChange={handleCheckboxChange}
+                                    listAmenityChecked={listAmenityChecked}
+                                />
                             </div>
-                        </div>
-                    </div>
+                        )
+                    }) : <PulseLoading colorLoading='#000000' />}
+                    {/* Row / End */}
                 </div>
             </div>
+
             <FooterHost
                 loading={loading}
                 handleBack={handleBack}
@@ -151,7 +140,7 @@ function Amenity(props) {
                 hiddenBackButton={false}
                 isHandleClick={true}
             />
-        </div>
+        </>
     );
 }
 

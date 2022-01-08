@@ -14,6 +14,8 @@ import Amenity from './pages/Amenity';
 import AddPhotos from './pages/AddPhotos';
 import AddName from './pages/AddName';
 import AddPrice from './pages/AddPrice';
+import DnDCalendarr from '../../components/Test/calendar/DnDCalendar';
+import Reservation from './pages/Reservation/Reservation';
 
 HostFeature.propTypes = {
 
@@ -24,7 +26,7 @@ function HostFeature(props) {
     return (
         <>
             <Switch>
-                <Route
+                {/* <Route
                     path={`${match.url}/basic-infomation`}
                     exact
                     component={BasicInfomation}
@@ -70,7 +72,21 @@ function HostFeature(props) {
                     path={`${match.url}/:id/price`}
                     exact
                     component={AddPrice}
+                /> */}
+
+                <Route
+                    path={`${match.url}/calendar/listing/:id`}
+                    exact
+                    component={DnDCalendarr}
                 />
+
+                <Route
+                    path={`${match.url}/booking`}
+                    exact
+                    component={Reservation}
+                />
+
+
 
             </Switch>
         </>

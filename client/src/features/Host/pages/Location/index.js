@@ -7,10 +7,26 @@ import hostApi from '../../../../api/hostApi';
 import FooterHost from '../../components/FooterHost';
 import PulseLoading from '../../../../components/Loading/PulseLoading';
 import listingApi from '../../../../api/listingApi';
+import './styles.scss';
 
 Location.propTypes = {
 
 };
+
+const custom_form_input = {
+    float: 'left',
+    border: '1px solid #e5e7f2',
+    background: '#f9f9f9',
+    width: '100%',
+    padding: '15px 20px 15px 20px',
+    borderRadius: '4px',
+    color: '#7d93b2',
+    fontSize: '12px',
+    outline: 'none',
+    overflow: 'hidden',
+    zIndex: 1,
+    boxShadow: 'none',
+}
 
 function Location(props) {
     const history = useHistory()
@@ -70,84 +86,69 @@ function Location(props) {
         >
             {formik => (
                 <form onSubmit={formik.handleSubmit}>
-                    <div className='k-wrap'>
-                        <div className='k-header'></div>
-                        <div className='k-content'>
-                            <div className='container'>
-                                <div className='row'>
-                                    <div className='col-7 k-left-side'>
-                                        <div id="add-listing">
-                                            <div className="add-listing-section margin-top-45">
-                                                {/* Headline */}
-                                                <div className="add-listing-headline">
-                                                    <h3><i className="sl sl-icon-location" /> Location</h3>
-                                                </div>
-                                                <div className="submit-section">
-                                                    {/* Row */}
-                                                    <div className="row with-forms">
-                                                        {/* Country */}
-                                                        <div className="col-md-12">
-                                                            <h5>Country/ Region</h5>
-                                                            <select className="">
-                                                                <option>Vietnam</option>
-                                                                <option>USA</option>
-                                                            </select>
-                                                        </div>
 
-                                                        {/* Address */}
-                                                        <div className="col-md-12">
-                                                            <h5>Street Address</h5>
-                                                            <input
-                                                                id="streetAddress"
-                                                                type="text"
-                                                                placeholder="e.g. 964 School Street"
-                                                                {...formik.getFieldProps('streetAddress')}
-                                                            />
-                                                        </div>
+                    <div id="add-listing">
+                        <h3 className='h3_title'>Location</h3>
+                        <div className="add-listing-section margin-top-45">
+                            <div className="submit-section">
+                                <div className="row with-forms">
 
-                                                        {/* City */}
-                                                        <div className="col-md-6">
-                                                            <h5>City</h5>
-                                                            <input type="text" placeholder="Da Nang" />
-                                                        </div>
-
-                                                        {/* City */}
-                                                        <div className="col-md-6">
-                                                            <h5>State</h5>
-                                                            <input type="text" />
-                                                        </div>
-                                                        {/* Zip-Code */}
-                                                        <div className="col-md-6">
-                                                            <h5>Zip-Code</h5>
-                                                            <input type="text" />
-                                                        </div>
-                                                    </div>
-                                                    {/* Row / End */}
-                                                </div>
-                                            </div>
-                                            {/* Section / End */}
-
-                                        </div>
+                                    <div className="col-md-12">
+                                        <h5>Country/ Region</h5>
+                                        <select className="">
+                                            <option>Vietnam</option>
+                                            <option>USA</option>
+                                        </select>
                                     </div>
-                                    {/* <div className='col-5 k-right-side'>
-                                        <div className='k-property-description'>
-                                            <div className='k-property-content'>
-                                                <h5>Chung cu</h5>
-                                                <p>Can ho khep kin, cung tap trung tren mot mat san trong mot toa nha lon</p>
-                                            </div>
-                                        </div>
-                                    </div> */}
+
+                                    <div className="col-md-12">
+                                        <h5>Street Address</h5>
+                                        <input
+                                            id="streetAddress"
+                                            type="text"
+                                            placeholder="e.g. 964 School Street"
+                                            {...formik.getFieldProps('streetAddress')}
+                                            style={custom_form_input}
+                                        />
+                                    </div>
+
+                                    <div className="col-md-6">
+                                        <h5>City</h5>
+                                        <input
+                                            type="text"
+                                            placeholder="Da Nang"
+                                            style={custom_form_input}
+                                        />
+                                    </div>
+
+                                    <div className="col-md-6">
+                                        <h5>State</h5>
+                                        <input
+                                            type="text"
+                                            style={custom_form_input}
+                                        />
+                                    </div>
+
+                                    <div className="col-md-6">
+                                        <h5>Zip-Code</h5>
+                                        <input
+                                            type="text"
+                                            style={custom_form_input}
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <FooterHost
-                            loading={loading}
-                            handleBack={handleBack}
-                            handleNext={handleNext}
-                            hiddenBackButton={false}
-                            isHandleClick={false}
-                        />
-                    </div >
+
+                    </div>
+
+                    <FooterHost
+                        loading={loading}
+                        handleBack={handleBack}
+                        handleNext={handleNext}
+                        hiddenBackButton={false}
+                        isHandleClick={false}
+                    />
                 </form>
             )}
         </Formik>

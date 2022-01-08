@@ -9,7 +9,7 @@ import {
 import NotFoundPage from './features/Error/NotFoundPage';
 import MainErrorPage from './features/Error/MainErrorPage';
 import GuestFeauture from './features/Guest';
-import { PrivateRoute, PrivateRouteAdmin, PrivateRouteHost } from './components/PrivateRoute';
+import { PrivateRoute, PrivateRouteAddListing, PrivateRouteAdmin, PrivateRouteHost } from './components/PrivateRoute';
 import Login from './features/Guest/pages';
 import firebase from 'firebase';
 import { getMe } from './app/reducer/guestSlice';
@@ -52,6 +52,13 @@ import AdminLogin from './features/Admin/pages/AdminLogin/AdminLogin';
 import AdminFeature from './features/Admin';
 import HostFeature from './features/Host';
 import HostLogin from './features/Host/pages/HostLogin/HostLogin';
+import TestBigCalendar from './components/Test/calendar/TestBigCalendar';
+import DnDCalendarr from './components/Test/calendar/DnDCalendar';
+import { saveDeviceToken } from './app/reducer/userSlice';
+import { unwrapResult } from '@reduxjs/toolkit';
+import LoginPopup from './components/LoginPopup';
+import AddListingFeature from './features/Host/AddListingFeature';
+import CommonAddListing from './components/CommonAddListing/CommonAddListing';
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
 // const GuestFeauture = React.lazy(() => import('./features/Guest'));
@@ -75,6 +82,7 @@ function App() {
       } catch (err) {
         console.log(err);
       }
+      dispatch(saveDeviceToken(token));
       console.log('token: ', token);
     }
     getFcmToken();
@@ -91,47 +99,46 @@ function App() {
     })
     .catch((err) => console.log("failed: ", err));
 
-  const [modalShow, setModalShow] = useState(false);
 
   return (
-    // <Dashboard />
-    // <>
-    //   {show ? (
-    //     <ReactNotificationComponent
-    //       title={notification.title}
-    //       body={notification.body}
-    //     />
-    //   ) : (
-    //     <></>
-    //   )}
-    <Suspense fallback={<div>Loading ...</div>}>
-      <BrowserRouter>
-        <Switch>
-          <Route path="/" exact component={Home} />
-          <Route path="/admin/login" component={AdminLogin} />
-          <Route path="/host/login" component={HostLogin} />
-          <Route path="/host/listings" component={Hosting} />
+    // <LoginPopup />
+    <>
+      {show ? (
+        <ReactNotificationComponent
+          title={notification.title}
+          body={notification.body}
+        />
+      ) : (
+        <></>
+      )}
+      <Suspense fallback={<div>Loading ...</div>}>
+        <BrowserRouter>
+          <Switch>
+            <Route path="/" exact component={Home} />
+            <Route path="/admin/login" component={AdminLogin} />
+            <Route path="/host/login" component={HostLogin} />
+            <Route path="/host/listings" component={Hosting} />
 
-          <PrivateRouteHost path="/host" component={HostFeature} />
-          <PrivateRouteAdmin path="/admin" component={AdminFeature} layout={CommonAdmin} />
+            {/* <PrivateRouteHost path="/host" component={HostFeature} /> */}
+            <PrivateRouteAddListing path="/host" component={AddListingFeature} layout={CommonAddListing} />
+            <PrivateRouteAdmin path="/admin" component={AdminFeature} layout={CommonAdmin} />
 
-          {/* <Route path="/admin/listing/pending" component={AdminListingPending} />
-          <Route path="/admin/listing/active" component={AdminListingActive} /> */}
+            <Route path="/listing/:id" component={ListingDetail} />
+            <Route path="/checkout/:id/:checkin/:checkout/:guests" component={Booking} />
+            <Route path="/hosting" component={MessageHost} />
+            {/* <Route path="/hosting/inbox" component={MessageHost} /> */}
+            <Route path="/location/:id" exact component={ListingsLocation} />
 
-          <Route path="/listing/:id" component={ListingDetail} />
-          <Route path="/checkout/:id/:checkin/:checkout/:guests" component={Booking} />
-          <Route path="/hosting" component={MessageHost} />
-          {/* <Route path="/hosting/inbox" component={MessageHost} /> */}
-          {/* <Route path="/:id" exact component={ListingsLocation} /> */}
-
-          {/* <Route path="/login" component={Login} /> */}
-          {/* <Redirect exact from='/' to='/login' /> */}
-          {/* <PrivateRoute path='/guest' component={GuestFeauture} />
+            {/* <Route path="/login" component={Login} /> */}
+            {/* <Redirect exact from='/' to='/login' /> */}
+            {/* <PrivateRoute path='/guest' component={GuestFeauture} />
           <Route path="/error" component={MainErrorPage} />
           <Route component={NotFoundPage} /> */}
-        </Switch>
-      </BrowserRouter>
-    </Suspense>
+          </Switch>
+        </BrowserRouter>
+      </Suspense>
+    </>
+
   )
 }
 

@@ -21,7 +21,7 @@ function Photos(props) {
     const { photos } = props;
 
     return (
-        <div>
+        <div style={{ marginTop: '80px' }}>
             <Slider {...settings}>
                 {photos.map(image => (
                     <ImageItem image={image} />

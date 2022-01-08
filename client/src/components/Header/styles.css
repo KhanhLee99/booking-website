@@ -1,0 +1,31 @@
+.k-header-search_btn span:before {
+    content: "";
+    position: absolute;
+    left: -15px;
+    top: 50%;
+    height: 10px;
+    margin-top: -5px;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.31);
+}
+
+.k-show-reg-form:before {
+    content: "";
+    position: absolute;
+    left: -25px;
+    top: 50%;
+    height: 20px;
+    margin-top: -10px;
+    width: 1px;
+    background: rgba(255, 255, 255, 0.31);
+}
+
+.k-header-search_container:before {
+    font-family: Font awesome\5 Pro;
+    content: "\f689";
+    position: absolute;
+    left: 30px;
+    top: 30px;
+    color: rgba(255, 255, 255, 0.11);
+    font-size: 54px;
+}

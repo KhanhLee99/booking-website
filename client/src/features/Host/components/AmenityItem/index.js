@@ -5,6 +5,12 @@ AmenityItem.propTypes = {
 
 };
 
+const labelCheckbox = {
+    fontWeight: 600,
+    color: '#888da0',
+    fontSize: '13px',
+}
+
 function AmenityItem(props) {
 
     const isChecked = (id, listAmenityChecked) => {
@@ -18,7 +24,7 @@ function AmenityItem(props) {
     const { id, name, handleCheckboxChange, listAmenityChecked } = props;
 
     return (
-        <>
+        <li>
             {isChecked(id, listAmenityChecked) ? (<input
                 id={id}
                 type="checkbox"
@@ -35,8 +41,8 @@ function AmenityItem(props) {
                 />
             )}
 
-            <label htmlFor={id}>{name}</label>
-        </>
+            <label htmlFor={id} style={labelCheckbox}>{name}</label>
+        </li>
     );
 }
 

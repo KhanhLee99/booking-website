@@ -19,6 +19,11 @@ const adminListing = {
     lockListing: (id) => {
         const url = `/admin/listing/${id}/lock`;
         return axiosClient.put(url);
+    },
+
+    getHostBooking: (host_id) => {
+        const url = `/reservation/host/${host_id}`;
+        return axiosClient.get(url);
     }
 }
 

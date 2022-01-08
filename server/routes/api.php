@@ -41,7 +41,7 @@ Route::post('host/login', 'AuthController@host_login');
 Route::post('update-avatar', 'UserController@update_avatar');
 Route::post('upload-multiple-images', 'UserController@upload_multiple_images');
 
-Route::post('update-device-token', 'UserController@add_device_token');
+Route::put('update-device-token', 'UserController@add_device_token');
 Route::post('send-notifications', 'UserController@send_notification');
 
 // Social Provider
@@ -124,6 +124,7 @@ Route::get('review-listing/{id}', 'User\ReviewListingController@index');
 Route::post('block-booking/add', 'Host\BlockBookingController@add');
 Route::put('block-booking/{id}', 'Host\BlockBookingController@edit');
 Route::get('block-booking/{id}', 'Host\BlockBookingController@index');
+Route::get('block-booking/{id}/month', 'Host\BlockBookingController@get_block_date_in_month');
 
 // Promo code
 Route::post('promo-code/add', 'PromoCodeController@add');
@@ -134,6 +135,8 @@ Route::delete('promo-code/{id}', 'PromoCodeController@delete');
 // Reservation
 Route::post('reservation/add', 'Host\ReservationController@add');
 Route::get('reservation/user/{id}', 'Host\ReservationController@get_reservation_by_user_id');
+Route::get('reservation/listing/{id}/month', 'Host\ReservationController@get_reservation_listing_in_month');
+Route::get('reservation/host/{host_id}', 'Host\ReservationController@get_host_booking');
 Route::put('reservation/{id}', 'Host\ReservationController@edit');
 Route::delete('reservation/{id}', 'Host\ReservationController@delete');
 

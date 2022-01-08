@@ -14,6 +14,27 @@ BasicInfomation.propTypes = {
 
 };
 
+const h3_title = {
+    // textAlign: 'left',
+    // fontWeight: 600,
+    // fontSize: '21px',
+    // color: '#566985',
+    // marginBottom: '30px',
+}
+
+const custom_form_label = {
+    // float: 'left',
+    // position: 'relative',
+    // width: '100%',
+    // textAlign: 'left',
+    // fontWeight: 500,
+    // color: '#666',
+    // color: '#878c9f',
+    // fontSize: '13px',
+    // fontWeight: 500,
+    // marginBottom: '10px'
+}
+
 function BasicInfomation(props) {
     const { id } = useParams();
     const history = useHistory();
@@ -134,102 +155,79 @@ function BasicInfomation(props) {
                 setReservationForm(res.data.listing.reservation_form);
             });
         }
-
-        fetchListingDetail();
+        if (id) {
+            fetchListingDetail();
+        }
     }, []);
 
     const selectListingType = listingId => setIdActive(listingId);
     const selectRentalForm = rentalFormId => setRentalFormSelect(rentalFormId);
 
     return (
-        <div className='k-wrap'>
-            <div className='k-header'></div>
-            <div className='k-content'>
-                <div className='container'>
-                    <div className='row'>
-                        <div className='col-7 k-left-side'>
-                            <div id="add-listing">
-                                {/* Section */}
-                                <div className="add-listing-section">
-                                    {/* Headline */}
-                                    <div className="add-listing-headline">
-                                        <h3><i className="sl sl-icon-doc" /> Basic Informations</h3>
-                                    </div>
-                                    {/* Title */}
-                                    <div className='k-property-type'>
-                                        <h5>CHỖ NGHỈ CỦA BẠN LÀ:</h5>
-                                        {listingTypes.length > 0 ? listingTypes.map((type, index) => {
-                                            return (
-                                                <ListingTypeItem
-                                                    key={index}
-                                                    id={type.id}
-                                                    name={type.name}
-                                                    selectListingType={selectListingType}
-                                                    idActive={idActive}
-                                                />
-                                            )
-                                        }) : <PulseLoading colorLoading='#000000' />}
 
-                                    </div>
+        <div id="add-listing">
+            <h3 className='h3_title' style={h3_title}>Basic Informations</h3>
 
-                                    <div className="row with-forms">
-                                        {/* Status */}
-                                        <div className="col-md-12">
-                                            <h5>HÌNH THỨC CHO THUÊ ?</h5>
-
-                                            <div className='k-property-type'>
-                                                {rentalForms.map((item, index) => {
-                                                    return (
-                                                        <RentalFormItem
-                                                            key={index}
-                                                            name={item.name}
-                                                            id={item.id}
-                                                            selectRentalForm={selectRentalForm}
-                                                            rentalFormSelect={rentalFormSelect}
-                                                        />
-                                                    )
-                                                })}
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="row with-forms">
-                                        <div className="col-md-12">
-                                            <h5>LOẠI ĐẶT CHỖ ?</h5>
-                                            <select className="k-dropdown" value={reservationForm} onChange={handleChange} >
-                                                {
-                                                    reservationForm === 'quick' ? (
-                                                        <>
-                                                            <option value="quick" selected>Đặt phòng nhanh</option>
-                                                            <option value="request">Yêu cầu xác nhận</option>
-                                                        </>
-                                                    ) : (
-                                                        <>
-                                                            <option value="quick" >Đặt phòng nhanh</option>
-                                                            <option value="request" selected>Yêu cầu xác nhận</option>
-                                                        </>
-                                                    )
-                                                }
-                                            </select>
-                                        </div>
-                                    </div>
-                                    {/* Row / End */}
-                                </div>
-                            </div>
-
-                        </div>
-                        <div className='col-5 k-right-side'>
-                            <div className='k-property-description'>
-                                <div className='k-property-content'>
-                                    <h5>Chung cu</h5>
-                                    <p>Can ho khep kin, cung tap trung tren mot mat san trong mot toa nha lon</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div className="add-listing-section">
+                <div className='k-property-type'>
+                    <label className='custom_form_label' style={custom_form_label}>CHỖ NGHỈ CỦA BẠN LÀ:</label>
+                    {listingTypes.length > 0 ? listingTypes.map((type, index) => {
+                        return (
+                            <ListingTypeItem
+                                key={index}
+                                id={type.id}
+                                name={type.name}
+                                selectListingType={selectListingType}
+                                idActive={idActive}
+                            />
+                        )
+                    }) : <PulseLoading colorLoading='#000000' />}
 
                 </div>
+
+                <div className="row with-forms">
+                    <div className="col-md-12">
+                        <label className='custom_form_label' style={custom_form_label}>HÌNH THỨC CHO THUÊ ?</label>
+
+                        <div className='k-property-type'>
+                            {rentalForms.map((item, index) => {
+                                return (
+                                    <RentalFormItem
+                                        key={index}
+                                        name={item.name}
+                                        id={item.id}
+                                        selectRentalForm={selectRentalForm}
+                                        rentalFormSelect={rentalFormSelect}
+                                    />
+                                )
+                            })}
+                        </div>
+                    </div>
+                </div>
+
+                <div className="row with-forms">
+                    <div className="col-md-12">
+                        <label className='custom_form_label' style={custom_form_label}>LOẠI ĐẶT CHỖ ?</label>
+                        <select className="k-dropdown nice-select chosen-select no-search-select" value={reservationForm} onChange={handleChange} >
+                            {
+                                reservationForm === 'quick' ? (
+                                    <>
+                                        <option value="quick" selected>Đặt phòng nhanh</option>
+                                        <option value="request">Yêu cầu xác nhận</option>
+                                    </>
+                                ) : (
+                                    <>
+                                        <option value="quick" >Đặt phòng nhanh</option>
+                                        <option value="request" selected>Yêu cầu xác nhận</option>
+                                    </>
+                                )
+                            }
+                        </select>
+                    </div>
+                </div>
+                {/* Row / End */}
             </div>
+
             <FooterHost
                 loading={loading}
                 handleBack={handleBack}

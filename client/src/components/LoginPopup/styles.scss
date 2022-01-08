@@ -277,3 +277,31 @@ a,
 button {
     outline: none !important;
 }
+
+// townhub
+.k-main-register-holder .tabs-menu:before {
+    content: "";
+    position: absolute;
+    left: 30px;
+    right: 30px;
+    height: 1px;
+    bottom: 1px;
+    background: #e5e5e5;
+}
+
+.k-log-separator:before,
+.k-log-separator:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 50%;
+    height: 1px;
+    background: #eee;
+    z-index: 1;
+}
+
+.k-log-separator:after {
+    left: inherit;
+    right: 0;
+}

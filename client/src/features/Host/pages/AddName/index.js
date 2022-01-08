@@ -20,6 +20,21 @@ const disable_resize = {
     resize: 'none'
 }
 
+const custom_form_input = {
+    float: 'left',
+    border: '1px solid #e5e7f2',
+    background: '#f9f9f9',
+    width: '100%',
+    padding: '15px 20px 15px 20px',
+    borderRadius: '4px',
+    color: '#7d93b2',
+    fontSize: '12px',
+    outline: 'none',
+    overflow: 'hidden',
+    zIndex: 1,
+    boxShadow: 'none',
+}
+
 function AddName(props) {
     const history = useHistory();
     const { id } = useParams();
@@ -48,7 +63,7 @@ function AddName(props) {
     }
 
     const handleBack = () => {
-
+        history.push(`/host/${id}/photos`);
     }
 
     useEffect(() => {
@@ -80,84 +95,68 @@ function AddName(props) {
         >
             {formik => (
                 <form onSubmit={formik.handleSubmit}>
-                    <div className='k-wrap'>
-                        <div className='k-header'></div>
-                        <div className='k-content'>
-                            <div className='container'>
-                                <div className='row'>
-                                    <div className='col-8 k-left-side'>
-                                        <div id="add-listing">
-                                            {/* Section */}
-                                            <div className="add-listing-section">
-                                                {/* Headline */}
-                                                <div className="add-listing-headline">
-                                                    <h3><i className="sl sl-icon-doc" />Tiêu đề và mô tả</h3>
-                                                </div>
-                                                {/* Title */}
+                    <div id="add-listing">
+                        <h3 className='h3_title'>Tiêu đề và mô tả</h3>
+                        <div className="add-listing-section">
+                            <div className="row with-forms">
+                                <div className="col-md-12">
+                                    <label className='custom_form_label'>Tên chỗ nghỉ của bạn là:</label>
+                                    <p>Hãy thu hút khách hàng bằng cách đặt tiêu đề chỗ nghỉ của bạn trở nên đặc biệt.</p>
+                                    <input
+                                        type="text"
+                                        placeholder="Listing title"
+                                        {...formik.getFieldProps('title')}
+                                    // style={custom_form_input}
+                                    />
+                                </div>
 
-                                                <div className="row with-forms">
-                                                    <div className="col-md-12">
-                                                        <h5>Tên chỗ nghỉ của bạn là:</h5>
-                                                        <p>Hãy thu hút khách hàng bằng cách đặt tiêu đề chỗ nghỉ của bạn trở nên đặc biệt.</p>
-                                                        <input
-                                                            type="text"
-                                                            placeholder="Listing title"
-                                                            {...formik.getFieldProps('title')}
-                                                        />
-                                                    </div>
-
-                                                    <div className="col-md-12">
-                                                        <h5>Mô tả</h5>
-                                                        <p>Chia sẻ với khách hàng một vài thông tin ngắn gọn và nổi bật về chỗ nghỉ này của bạn.</p>
-                                                        {/* <textarea
+                                <div className="col-md-12">
+                                    <label className='custom_form_label'>Mô tả:</label>
+                                    <p>Chia sẻ với khách hàng một vài thông tin ngắn gọn và nổi bật về chỗ nghỉ này của bạn.</p>
+                                    {/* <textarea
                                                             placeholder='Description'
                                                             style={disable_resize}
                                                             {...formik.getFieldProps('description')}
                                                             value={des}
                                                         /> */}
 
-                                                        <CKEditor
+                                    <CKEditor
 
-                                                            editor={ClassicEditor}
-                                                            data={`${description}`}
-                                                            onReady={editor => {
-                                                                // You can store the "editor" and use when it is needed.
-                                                                console.log('Editor is ready to use!', editor);
-                                                            }}
-                                                            onChange={(event, editor) => {
-                                                                const data = editor.getData();
-                                                                setDescription(data);
-                                                                console.log({ event, editor, data });
-                                                            }}
-                                                            onBlur={(event, editor) => {
-                                                                console.log('Blur.', editor);
-                                                            }}
-                                                            onFocus={(event, editor) => {
-                                                                console.log('Focus.', editor);
-                                                            }}
-                                                        />
-                                                    </div>
-                                                </div>
-
-
-                                                {/* Row / End */}
-                                            </div>
-                                        </div>
-                                    </div>
+                                        editor={ClassicEditor}
+                                        data={`${description}`}
+                                        onReady={editor => {
+                                            // You can store the "editor" and use when it is needed.
+                                            console.log('Editor is ready to use!', editor);
+                                        }}
+                                        onChange={(event, editor) => {
+                                            const data = editor.getData();
+                                            setDescription(data);
+                                            console.log({ event, editor, data });
+                                        }}
+                                        onBlur={(event, editor) => {
+                                            console.log('Blur.', editor);
+                                        }}
+                                        onFocus={(event, editor) => {
+                                            console.log('Focus.', editor);
+                                        }}
+                                    />
                                 </div>
-
                             </div>
+
+
+                            {/* Row / End */}
                         </div>
-
-                        <FooterHost
-                            loading={loading}
-                            handleBack={handleBack}
-                            handleNext={handleNext}
-                            hiddenBackButton={false}
-                            isHandleClick={false}
-                        />
-
                     </div>
+
+
+                    <FooterHost
+                        loading={loading}
+                        handleBack={handleBack}
+                        handleNext={handleNext}
+                        hiddenBackButton={false}
+                        isHandleClick={false}
+                    />
+
                 </form>
             )}
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-// import './styles.scss';
+import './styles.scss';
 import Popup from 'reactjs-popup';
 import LoginPopup from '../../LoginPopup';
 import TestUiLogin from '../../Test/TestUiLogin';
@@ -74,7 +74,8 @@ function Header2(props) {
                                 closeOnDocumentClick
                                 className='popup-content'
                             >
-                                <TestUiLogin />
+                                {/* <TestUiLogin /> */}
+                                <LoginPopup />
                             </Popup>
 
                             <Link to="/host/login" className="button border with-icon">Become a host<i className="sl sl-icon-plus"></i></Link>

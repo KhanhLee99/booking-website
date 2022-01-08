@@ -113,91 +113,71 @@ function Rooms(props) {
     }, [])
 
     return (
-        <div className='k-wrap'>
-            <div className='k-header'></div>
-            <div className='k-content'>
-                <div className='container'>
-                    <div className='row'>
-                        <div className='col-7 k-left-side'>
-                            <div id="add-listing">
-                                {/* Section */}
-                                <div className="add-listing-section">
-                                    {/* Headline */}
-                                    <div className="add-listing-headline">
-                                        <h3><i className="sl sl-icon-doc" /> Basic Informations</h3>
-                                    </div>
-                                    {/* Title */}
+        <>
 
+            <div id="add-listing">
+                {/* Section */}
+                <h3 className='h3_title'>Chính sách giá</h3>
+                <div className="add-listing-section">
 
-                                    <div className="row with-forms">
-                                        <div className="col-md-12">
-                                            <div className='col-md-8'>
-                                                <div className="panel-dropdown-content">
-                                                    {/* Quantity Buttons */}
-                                                    <h5>Bạn muốn chào đón bao nhiêu khách ?</h5>
-                                                    <IncDecFormQty
-                                                        title='Khách'
-                                                        type='guests'
-                                                        qty={qtyGuests}
-                                                        handleInc={handleInc}
-                                                        handleDec={handleDec}
-                                                    />
-                                                    <h5>How many bedrooms can guest use ?</h5>
+                    <div className="row with-forms">
+                        <div className="col-md-12">
+                            <div className='col-md-10'>
+                                <div className="panel-dropdown-content">
+                                    {/* Quantity Buttons */}
+                                    <h5 style={{ fontSize: '15px', color: '#666' }}>Bạn muốn chào đón bao nhiêu khách ?</h5>
+                                    <IncDecFormQty
+                                        title='Khách'
+                                        type='guests'
+                                        qty={qtyGuests}
+                                        handleInc={handleInc}
+                                        handleDec={handleDec}
+                                    />
+                                    <h5 style={{ fontSize: '15px', color: '#666' }}>How many bedrooms can guest use ?</h5>
 
-                                                    <IncDecFormQty
-                                                        title='Phòng ngủ'
-                                                        type='bedrooms'
-                                                        qty={qtyBedrooms}
-                                                        handleInc={handleInc}
-                                                        handleDec={handleDec}
-                                                    />
+                                    <IncDecFormQty
+                                        title='Phòng ngủ'
+                                        type='bedrooms'
+                                        qty={qtyBedrooms}
+                                        handleInc={handleInc}
+                                        handleDec={handleDec}
+                                    />
 
-                                                    <h5>How many beds can guest use ?</h5>
-                                                    <IncDecFormQty
-                                                        title='Giường'
-                                                        type='beds'
-                                                        qty={qtyBeds}
-                                                        handleInc={handleInc}
-                                                        handleDec={handleDec}
-                                                    />
+                                    <h5 style={{ fontSize: '15px', color: '#666' }}>How many beds can guest use ?</h5>
+                                    <IncDecFormQty
+                                        title='Giường'
+                                        type='beds'
+                                        qty={qtyBeds}
+                                        handleInc={handleInc}
+                                        handleDec={handleDec}
+                                    />
 
-                                                    {bedroomArr.map((item, index) => {
-                                                        return (
-                                                            <AddBeds
-                                                                key={index}
-                                                                number={index + 1}
-                                                                bedTypes={bedTypes}
-                                                                detailRooms={detailRooms}
-                                                            />
-                                                        )
-                                                    })}
+                                    {bedroomArr.map((item, index) => {
+                                        return (
+                                            <AddBeds
+                                                key={index}
+                                                number={index + 1}
+                                                bedTypes={bedTypes}
+                                                detailRooms={detailRooms}
+                                            />
+                                        )
+                                    })}
 
-                                                    <IncDecFormQty
-                                                        title='Phòng tắm'
-                                                        type='bathrooms'
-                                                        qty={qtyBathrooms}
-                                                        handleInc={handleInc}
-                                                        handleDec={handleDec}
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* Row / End */}
-                                </div>
-                            </div>
-                        </div>
-                        <div className='col-5 k-right-side'>
-                            <div className='k-property-description'>
-                                <div className='k-property-content'>
-                                    <h5>Chung cu</h5>
-                                    <p>Can ho khep kin, cung tap trung tren mot mat san trong mot toa nha lon</p>
+                                    <IncDecFormQty
+                                        title='Phòng tắm'
+                                        type='bathrooms'
+                                        qty={qtyBathrooms}
+                                        handleInc={handleInc}
+                                        handleDec={handleDec}
+                                    />
                                 </div>
                             </div>
                         </div>
                     </div>
+                    {/* Row / End */}
                 </div>
             </div>
+
             <FooterHost
                 loading={loading}
                 handleBack={handleBack}
@@ -205,7 +185,7 @@ function Rooms(props) {
                 hiddenBackButton={false}
                 isHandleClick={true}
             />
-        </div >
+        </ >
     );
 }
 

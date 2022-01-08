@@ -14,17 +14,11 @@ class UsersTableSeeder extends Seeder
     public function run()
     {
         //
-        // $faker = Faker\Factory::create();
+        $faker = Faker\Factory::create();
 
-        // $limit = 10;
+        $limit = 10;
 
-        // for ($i = 0; $i < $limit; $i++) {
-        //     DB::table('users')->insert([
-        //         'name' => $faker->name,
-        //         'email' => $faker->unique()->email,
-        //         'phone_number' => $faker->phoneNumber,
-        //     ]);
-        // }
+
 
         $list_user = [
             [
@@ -41,12 +35,22 @@ class UsersTableSeeder extends Seeder
                 'role_id' => 1
             ],
         ];
-        foreach ($list_user as $user) {
+        // foreach ($list_user as $user) {
+        //     DB::table('users')->insert([
+        //         'name' => $user['name'],
+        //         'email' => $user['email'],
+        //         'password' => $user['password'],
+        //         'role_id' => $user['role_id'],
+        //     ]);
+        // }
+
+        for ($i = 0; $i < $limit; $i++) {
             DB::table('users')->insert([
-                'name' => $user['name'],
-                'email' => $user['email'],
-                'password' => $user['password'],
-                'role_id' => $user['role_id'],
+                'name' => $faker->name,
+                'email' => $faker->unique()->email,
+                'phone_number' => $faker->phoneNumber,
+                'password' => Hash::make('khanh'),
+                'role_id' => 1,
             ]);
         }
     }

@@ -68,3 +68,26 @@ export function PrivateRouteAdmin({ component: Component, layout: Layout, ...res
 		/>
 	)
 }
+
+export function PrivateRouteAddListing({ component: Component, layout: Layout, ...rest }) {
+	const loggedInUser = useSelector((state) => state.userSlice.host);
+	const isLoggedIn = !!loggedInUser.id;
+
+	return (
+		<Route
+			{...rest}
+			render={(props) => {
+				return isLoggedIn ? loggedInUser.role_id == 2 ? (
+					<Layout {...props}>
+						<Component {...props} />
+					</Layout>
+				) : (
+					<Redirect to='/host/login' />
+				) : (
+					<Redirect to='/host/login' />
+				);
+			}}
+		/>
+	)
+}
+

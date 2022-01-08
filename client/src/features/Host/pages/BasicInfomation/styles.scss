@@ -1,6 +1,7 @@
 .k-wrap {
     width: 100%;
     height: auto;
+    background-color: #f6f6f6;
 }
 
 .k-header {
@@ -31,7 +32,7 @@
 
 .k-property-type {
     padding-bottom: 20px;
-    width: 90%;
+    width: 100%;
 
     & h5 {
         font-size: 15px;
@@ -39,9 +40,29 @@
 }
 
 .k-dropdown {
-    width: 90%;
+    width: 100%;
+    box-shadow: none;
 }
 
 .k-next.disable {
     background-color: #c5c5c5;
+}
+
+.h3_title {
+    text-align: left;
+    font-weight: 600;
+    font-size: 21px;
+    color: #566985;
+    margin-bottom: 30px;
+}
+
+.custom_form_label {
+    float: left;
+    position: relative;
+    width: 100%;
+    text-align: left;
+    color: #666;
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
 }

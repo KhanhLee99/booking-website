@@ -17,6 +17,18 @@ ListingsLocation.propTypes = {
 
 };
 
+const main = {
+    height: '100%',
+    width: '100%',
+    // position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 2,
+    // opacity: 0,
+}
+
+
+
 function ListingsLocation(props) {
 
     const [triggerPopup, setTriggerPopup] = useState(false);
@@ -56,64 +68,17 @@ function ListingsLocation(props) {
     const paginate = pageNumber => setCurrentPage(pageNumber);
 
     return (
-        <>
-            {/* <div id="page">
-                <Header
-                    loggedInUser={loggedInUser}
-                    isLoggedIn={isLoggedIn}
-                    setTriggerPopup={setTriggerPopup}
-                />
-                <main>
-                    <div className="container margin_60_35">
-                        <div className="isotope-wrapper">
-                            <div className="row">
-                                <ListListingsLocation
-                                    listings={listings}
-                                    loading={loading}
-                                    loggedInUser={loggedInUser}
-                                    setTriggerPopup={setTriggerPopup}
-                                />
-                                <Paginate
-                                    paginate={paginate}
-                                    totalPages={totalPages}
-                                />
-                            </div>
-                        </div>
+        <div className="k-main" style={main}>
+            <Header />
+            <div className="container">
+                <div className="row">
+                    <div className="col-md-4"></div>
+                    <div className="col-md-8">
+                        <ListListingsLocation />
                     </div>
-                </main>
-            </div> */}
-            <div id="wrapper">
-                <Header2 />
-                <div className="clearfix" />
-                <div className="fs-container">
-                    <div className="fs-inner-container content">
-                        <div className="fs-content">
-                            <FilterListing />
-                            <section className="listings-container margin-top-30">
-                                <div className="row fs-switcher">
-                                    <div className="col-md-6">
-                                        <p className="showing-results">14 Results Found </p>
-                                    </div>
-                                </div>
-                                <div className="row fs-listings">
-                                    <ListingItem />
-                                    <ListingItem />
-                                    <ListingItem />
-                                </div>
-                                <Paginate
-                                />
-                            </section>
-                        </div>
-                    </div>
-                    <MapListing />
                 </div>
             </div>
-            <LoginPopup
-                trigger={triggerPopup}
-                setTriggerPopup={setTriggerPopup}
-            />
-        </>
-
+        </div>
     );
 }
 
