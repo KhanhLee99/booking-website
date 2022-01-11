@@ -30,7 +30,8 @@ Route::post('login', 'AuthController@login');
 Route::post('login_google', 'AuthController@login_google');
 Route::post('login_facebook', 'AuthController@login_facebook');
 Route::get('me', 'AuthController@me')->middleware('auth:api');
-Route::get('new-password', 'UserController@new_password')->middleware('auth:api');
+Route::put('new-password', 'UserController@new_password')->middleware('auth:api');
+Route::put('user/edit-profile', 'UserController@edit')->middleware('auth:api');
 // Auth Admin
 Route::post('admin/login', 'AuthController@admin_login');
 Route::post('host/login', 'AuthController@host_login');
@@ -159,7 +160,7 @@ Route::get('listing-type', 'Admin\ListingTypeController@index');
 Route::get('send-mail-auth', 'Mails\MailAuthController@send_mail');
 
 // Detail Listing
-Route::get('listing-detail', 'Common\DetailListingController@get_litings_location');
+Route::get('listing-location', 'Common\DetailListingController@get_litings_location');
 
 Route::get('listing/{id}', 'Host\ListingController@get_listing_by_id');
 

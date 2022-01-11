@@ -36,14 +36,36 @@ class UserController extends Controller
 
     public function new_password(Request $q)
     {
-        // $user_login = Auth::guard()->user();
+        $input = $q->all();
         $user_login = $q->user('api');
-        if ($user_login) {
-            $user_login->password = Hash::make($q->password);
-            $user_login->save();
-            return response()->json(['message' => 'Success'], $this->success_code);
+        $rules = array(
+            'old_password' => 'required',
+            'new_password' => 'required|min:6',
+            'confirm_password' => 'required|same:new_password',
+        );
+        $validator = Validator::make($input, $rules);
+        if ($validator->fails()) {
+            $arr = array("status" => 400, "message" => $validator->errors()->first(), "data" => array());
+        } else {
+            try {
+                if ((Hash::check(request('old_password'), $user_login->password)) == false) {
+                    $arr = array("status" => 400, "message" => "Check your old password.", "data" => array());
+                } else if ((Hash::check(request('new_password'), $user_login->password)) == true) {
+                    $arr = array("status" => 400, "message" => "Please enter a password which is not similar then current password.", "data" => array());
+                } else {
+                    User::where('id', $user_login->id)->update(['password' => Hash::make($input['new_password'])]);
+                    $arr = array("status" => 200, "message" => "Password updated successfully.", "data" => array());
+                }
+            } catch (\Exception $ex) {
+                if (isset($ex->errorInfo[2])) {
+                    $msg = $ex->errorInfo[2];
+                } else {
+                    $msg = $ex->getMessage();
+                }
+                $arr = array("status" => 400, "message" => $msg, "data" => array());
+            }
         }
-        return response()->json(['error' => 'Unauthorized'], 401);
+        return response()->json($arr);
     }
 
     public function update_avatar(Request $request)
@@ -59,25 +81,27 @@ class UserController extends Controller
             if ($validator->fails()) {
                 return response()->json(['error' => $validator->errors()], 401);
             }
-            if ($file = $request->file('file')) {
+
+            if ($response = cloudinary()->upload($request->file('file')->getRealPath())->getSecurePath()) {
                 // re file name if exists and upload file
-                $file_name = $file->getClientOriginalName();
-                $re_file_name = $this->upload_image($file, $file_name);
+                // $file_name = $file->getClientOriginalName();
+                // $re_file_name = $this->upload_image($file, $file_name);
 
                 // update user avatar image
                 $user = $request->user('api');
-                $avatar_url = $user->avatar_url;
-                $user->avatar_url = $re_file_name;
-                if ($user->save()) {
-                    if (file_exists($this->dir . $avatar_url)) {
-                        // delete old avatar image
-                        $this->delete_image($this->dir . $avatar_url);
-                    }
+                // $avatar_url = $user->avatar_url;
+                if ($user->update(['avatar_url' => $response])) {
+                    // if (file_exists($this->dir . $avatar_url)) {
+                    //     // delete old avatar image
+                    //     $this->delete_image($this->dir . $avatar_url);
+                    // }
                     return response()->json([
                         "success" => true,
-                        "message" => "File successfully uploaded"
+                        "message" => "File successfully uploaded",
+                        "data" => $user
                     ]);
                 }
+                return response()->json($this->response, 400);
             }
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
@@ -177,8 +201,14 @@ class UserController extends Controller
         try {
             $user_login = $request->user('api');
             if ($user_login) {
-
-                return response()->json(['message' => 'success'], $this->success_code);
+                if ($user_login->update($request->all())) {
+                    $this->response = [
+                        'status' => 'success',
+                        'data' => $user_login
+                    ];
+                    return response()->json($this->response, $this->success_code);
+                }
+                return response()->json($this->response, 400);
             }
             return response()->json(['error' => 'Unauthorized'], 401);
         } catch (Exception $e) {

@@ -11,6 +11,7 @@ import MapListing from '../components/Map';
 import Header2 from '../../../components/Header/Header2/Header2';
 import FilterListing from '../components/FilterListing';
 import ListingItem from '../components/ListingItem';
+import useQuery from '../../../@use/useQuery';
 
 
 ListingsLocation.propTypes = {
@@ -30,8 +31,7 @@ const main = {
 
 
 function ListingsLocation(props) {
-
-    const [triggerPopup, setTriggerPopup] = useState(false);
+    const query = useQuery();
     const loggedInUser = useSelector((state) => state.userSlice.current);
     const isLoggedIn = !!loggedInUser.id;
 
@@ -44,21 +44,33 @@ function ListingsLocation(props) {
     const [listings, setListings] = useState([]);
 
     useEffect(() => {
+
         fetchListings();
-    }, [currentPage]);
+
+        return () => {
+            setListings([]);
+        }
+    }, []);
+
+    // useEffect(() => {
+    //     fetchListings();
+    // }, [currentPage]);
 
     const fetchListings = async () => {
         try {
             const params = {
                 city_id: id,
                 limit: postsPerPage,
-                page: currentPage
+                // page: currentPage,
+                page: query.get('page') || currentPage,
             }
             setLoading(true);
-            const response = await listingApi.getListingsLocation(params);
-            setLoading(false);
-            setListings(response.data.data.data);
-            setTotalPages(response.data.data.last_page);
+            await listingApi.getListingsLocation(params).then(response => {
+                setLoading(false);
+                setListings(response.data.data.data);
+                setTotalPages(response.data.data.last_page);
+            });
+
         } catch (error) {
             console.log(error.message);
         }
@@ -70,11 +82,16 @@ function ListingsLocation(props) {
     return (
         <div className="k-main" style={main}>
             <Header />
-            <div className="container">
+            <div className="container" style={{ marginTop: '80px' }}>
                 <div className="row">
                     <div className="col-md-4"></div>
                     <div className="col-md-8">
-                        <ListListingsLocation />
+                        <ListListingsLocation
+                            loggedInUser={loggedInUser}
+                            isLoggedIn={isLoggedIn}
+                            listings={listings}
+                            loading={loading}
+                        />
                     </div>
                 </div>
             </div>

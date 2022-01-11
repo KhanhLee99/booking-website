@@ -11,18 +11,56 @@ import './styles.scss';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import ListReview from '../../components/ListReview';
+import reviewApi from '../../../../api/reviewApi';
+import { useSelector } from 'react-redux';
 
 ListingDetail.propTypes = {
 
 };
 
+
+
 function ListingDetail(props) {
+    const loggedInUser = useSelector((state) => state.userSlice.current);
+    const isLoggedIn = !!loggedInUser.id;
     const [loadingListingDetail, setLoadingListingDetail] = useState(false);
     const { id } = useParams();
     const [listingDetail, setListingDetail] = useState({});
     const [amenities, setAmenities] = useState([])
     const [photos, setPhotos] = useState([]);
     const [reviews, setReviews] = useState([]);
+    const [loadingAddReview, setLoadingAddReview] = useState(false);
+
+    const handleAddReview = async () => {
+        try {
+            const params = {
+                note: 'abc',
+                // name: loggedInUser.name,
+                // avatar_url: loggedInUser.avatar_url,
+                rating: 5,
+            }
+            setLoadingAddReview(true);
+            await reviewApi.addReviewListing(params, id).then(res => {
+                if (res.data.status = 'success') {
+                    setLoadingAddReview(false);
+                    const tmp = reviews.concat(params);
+                    setReviews(tmp);
+                }
+            })
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
+    const handleSave = async () => {
+        if (isLoggedIn) {
+            const params = {
+                listing_id: id,
+                user_id: loggedInUser.id
+            }
+            await listingApi.favoriteListing(params);
+        }
+    }
 
     useEffect(() => {
         const fetchListingDetail = async () => {
@@ -39,17 +77,27 @@ function ListingDetail(props) {
         fetchListingDetail();
     }, []);
 
+    useEffect(() => {
+        window.scrollTo(0, 0)
+    }, [])
+
     return (
-        <div id="wrapper">
+        <div id="wrapper" style={{ backgroundColor: '#fff', maxWidth: '100%', overflowX: 'hidden' }}>
             <Header />
+
             <div className="clearfix" />
             {
                 loadingListingDetail ? <Skeleton height={400} style={{ marginTop: '80px' }} /> :
                     <Photos photos={photos} />
             }
 
+            <TabHorizontal
+                isLoggedIn={isLoggedIn}
+                handleSave={handleSave}
+            />
 
             <div className="container">
+
                 <div className="row sticky-wrapper">
                     <div className="col-lg-8 col-md-8 padding-right-30">
                         {
@@ -72,16 +120,7 @@ function ListingDetail(props) {
                                         <p>{listingDetail.rental_form === 'shared_room' ? 'Phòng chung' : listingDetail.rental_form === 'private_room' ? 'Phòng riêng' : 'Toàn bộ nhà'} · {listingDetail.bathroom_count} Phòng tắm · {listingDetail.bed_count} giường · {listingDetail.bedroom_count} phòng ngủ · {listingDetail.standard_guest_count} khách</p>
                                     </div>
                                 </div>
-                                {/* Listing Nav */}
-                                <div id="listing-nav" className="listing-nav-container">
-                                    <ul className="listing-nav">
-                                        <li><a href="#listing-overview" className="active">Tổng quan</a></li>
-                                        <li><a href="#listing-pricing-list">Tiện nghi</a></li>
-                                        <li><a href="#listing-location">Giá phòng</a></li>
-                                        <li><a href="#listing-reviews">Đánh giá</a></li>
-                                        <li><a href="#add-review">Vị trí</a></li>
-                                    </ul>
-                                </div>
+
                                 {/* Overview */}
                                 <div id="listing-overview" className="listing-section">
                                     {/* Description */}
@@ -119,7 +158,7 @@ function ListingDetail(props) {
 
                                 {/* Food Menu */}
                                 <div id="listing-pricing-list" className="listing-section">
-                                    <h3 className="listing-desc-headline margin-top-70 margin-bottom-30">Pricing</h3>
+                                    <h3 className="listing-desc-headline">Pricing</h3>
                                     <p>Giá có thể tăng vào cuối tuần hoặc ngày lễ</p>
                                     <div className="pricing-list-container">
                                         {/* Food List */}
@@ -157,7 +196,7 @@ function ListingDetail(props) {
 
                                 {/* Location */}
                                 <div id="listing-location" className="listing-section">
-                                    <h3 className="listing-desc-headline margin-top-60 margin-bottom-30">Location</h3>
+                                    <h3 className="listing-desc-headline">Location</h3>
                                     <div id="singleListingMap-container">
                                         <div id="singleListingMap" data-latitude="40.70437865245596" data-longitude="-73.98674011230469" data-map-icon="im im-icon-Hamburger" />
                                         <a href="#" id="streetView">Street View</a>
@@ -167,10 +206,17 @@ function ListingDetail(props) {
                                 <div className="_npr0qi" style={{ borderTopColor: 'rgb(221, 221, 221)' }} />
 
                                 {/* Reviews */}
-                                <ListReview reviews={reviews} />
+                                <ListReview
+                                    reviews={reviews}
+                                    handleAddReview={handleAddReview}
+                                    loadingAddReview={loadingAddReview}
+                                    isLoggedIn={isLoggedIn}
+                                />
+
                             </>
                         }
                     </div>
+
                     <BoxBooking
                         loadingListingDetail={loadingListingDetail}
                         listingDetail={listingDetail}

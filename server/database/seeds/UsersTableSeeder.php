@@ -51,6 +51,7 @@ class UsersTableSeeder extends Seeder
                 'phone_number' => $faker->phoneNumber,
                 'password' => Hash::make('khanh'),
                 'role_id' => 1,
+                'avatar_url' => "https://picsum.photos/id/" . rand(1, 1000) . "/400/300",
             ]);
         }
     }

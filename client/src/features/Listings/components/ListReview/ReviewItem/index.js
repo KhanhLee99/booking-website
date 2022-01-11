@@ -2,16 +2,26 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './styles.scss';
 import { toCssValue } from 'jss';
+import AvatarPlaceholder from '../../../../../components/Placeholder/AvatarPlaceholder/AvatarPlaceholder';
 
 ReviewItem.propTypes = {
 
 };
 
+const listing_review_item = {
+    paddingBottom: '20px',
+    marginTop: '20px',
+}
+
 function ReviewItem(props) {
     const { review } = props;
     return (
-        <li>
-            <div className="avatar"><img src="http://www.gravatar.com/avatar/00000000000000000000000000000000?d=mm&s=70" alt="" /> </div>
+        <li style={listing_review_item}>
+            <div className="avatar">
+                <AvatarPlaceholder
+                    avatar_url={review.avatar_url}
+                />
+            </div>
             <div className="comment-content">
                 <div className="arrow-comment" />
                 <div className="comment-by">{review.name}<span className="date">May 2019</span>

@@ -2,8 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './styles.scss';
 import { useHistory } from 'react-router';
-import { NavLink } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import listingApi from '../../../../api/listingApi';
+import ListingItemImage from './ListingItemImage/ListingItemImage';
+import LoginModal from '../../../../components/LoginModal/LoginModal';
 
 ListingItem.propTypes = {
 
@@ -38,6 +40,7 @@ const geodir_js_favorite_btn = {
     zIndex: '20',
     cursor: 'pointer',
     color: '#fff',
+    textAlign: 'center'
 }
 
 const geodir_js_favorite_btn_i = {
@@ -80,7 +83,7 @@ const geodir_category_img_wrap_img = {
     transform: 'translateZ(0)',
     transition: 'all 2000ms cubic-bezier(0.19, 1, 0.22, 1) 0ms',
     width: '100%',
-    height: 'auto',
+    height: '250px',
 }
 
 const listing_avatar = {
@@ -216,16 +219,17 @@ const geodir_category_location_a = {
     float: 'left',
     color: '#7d93b2',
     textAlign: 'left',
-    fontSize: '12px',
+    fontSize: '13px',
 }
 
 const geodir_category_content_p = {
     textAlign: 'left',
-    fontSize: '12px',
+    fontSize: '13px',
     color: '#999',
     fontWeight: '500',
-    paddingBottom: '10px',
-    lineHeight: '24px',
+    // paddingBottom: '10px',
+    // lineHeight: '24px',
+    marginBottom: 0,
 }
 
 const facilities_list_title = {
@@ -244,12 +248,12 @@ const facilities_list_li = {
 
 const geodir_category_footer = {
     margin: '4px 0 0 0',
-    padding: '10px 20px',
+    padding: '0px 20px 15px 10px',
     borderTop: '1px solid #eee',
 }
 
 const listing_item_category = {
-    width: '36px',
+    width: 'auto',
     height: '36px',
     lineHeight: '36px',
     color: '#fff',
@@ -381,25 +385,23 @@ const listing_item_category_wrap_span = {
     position: 'relative',
     top: '10px',
     color: '#7d93b2',
+    fontWeight: '600',
 }
 
 function ListingItem(props) {
 
-    const { listing_type, name, price_per_night, listing_id, loggedInUser, setTriggerPopup } = props;
+    const { listing, loggedInUser, isLoggedIn } = props;
 
     const history = useHistory();
 
-    const handleFavorite = async (e, listing_id) => {
+    const handleSave = async (e) => {
         e.preventDefault();
-        if (!!loggedInUser.id) {
+        if (isLoggedIn) {
             const params = {
-                listing_id: listing_id,
+                listing_id: listing.listing_id,
                 user_id: loggedInUser.id
             }
-            const res = await listingApi.favoriteListing(params);
-            console.log(res.data);
-        } else {
-            setTriggerPopup(true);
+            await listingApi.favoriteListing(params);
         }
     }
 
@@ -407,14 +409,23 @@ function ListingItem(props) {
         <div className="k-listing-item" style={listingItem}>
             <article className="k-geodir-category-listing fl-wrap" style={geodirCategoryListing}>
                 <div className="k-geodir-category-img" style={geodirCategoryImg}>
-                    <div className="k-geodir-js-favorite_btn" style={geodir_js_favorite_btn}><i className="fal fa-heart" style={geodir_js_favorite_btn_i} /><span style={geodir_js_favorite_btn_span}>Save</span></div>
+                    {!isLoggedIn ?
+                        <LoginModal>
+                            <a className="k-geodir-js-favorite_btn" style={geodir_js_favorite_btn}><i className="fal fa-heart" style={geodir_js_favorite_btn_i} /><span style={geodir_js_favorite_btn_span}>Save</span></a>
+                        </LoginModal>
+                        :
+                        <a onClick={(e) => handleSave(e)} className="k-geodir-js-favorite_btn" style={geodir_js_favorite_btn}><i className="fal fa-heart" style={geodir_js_favorite_btn_i} /><span style={geodir_js_favorite_btn_span}>Save</span></a>
+                    }
+                    {/* <div className="k-geodir-js-favorite_btn" style={geodir_js_favorite_btn}><i className="fal fa-heart" style={geodir_js_favorite_btn_i} /><span style={geodir_js_favorite_btn_span}>Save</span></div> */}
                     <a href="listing-single.html" className="k-geodir-category-img-wrap fl-wrap" style={geodir_category_img_wrap}>
-                        <img src="https://cdn.luxstay.com/admins/12/2TR6G7u6ua140zR2NI4yUJdG.png" alt="" style={geodir_category_img_wrap_img} />
+                        {/* <img src={listing.listing_img} alt="" style={geodir_category_img_wrap_img} /> */}
+                        <ListingItemImage
+                            listing_img={listing.listing_img}
+                        />
                     </a>
-                    <div className="k-listing-avatar" style={listing_avatar}><a href="author-single.html"><img src="https://cdn.luxstay.com/users/329302/X2Ht56Nlx5GBsHV4oUmeE1w-.jpg" alt="" style={listing_avatar_img} /></a>
+                    {/* <div className="k-listing-avatar" style={listing_avatar}><a href="author-single.html"><img src="https://cdn.luxstay.com/users/329302/X2Ht56Nlx5GBsHV4oUmeE1w-.jpg" alt="" style={listing_avatar_img} /></a>
                         <span className="k-avatar-tooltip" style={avatar_tooltip}>Added By  <strong>Alisa Noory</strong></span>
-                    </div>
-                    <div className="k-eodir_status_date k-gsd_open" style={geodir_status_date}><i className="fal fa-lock-open" style={{ color: '#fff', marginRight: '10px' }} />Open Now</div>
+                    </div> */}
                     <div className="k-geodir-category-opt" style={geodir_category_opt}>
                         <div className="k-listing-rating-count-wrap">
                             <div className="k-review-score" style={review_score}>4.8</div>
@@ -427,12 +438,14 @@ function ListingItem(props) {
                 <div className="k-geodir-category-content fl-wrap" style={{ zIndex: 2 }}>
                     <div className="k-geodir-category-content-title fl-wrap" style={geodir_category_content_title}>
                         <div className="geodir-category-content-title-item" style={geodir_category_content_title_item}>
-                            <h3 className="title-sin_map" style={geodir_category_content_h3}><a href="listing-single.html" style={{ color: '#566985' }}>Luxary Resaturant</a><span className="k-verified-badge" style={verified_badge}><i className="fal fa-check" /></span></h3>
-                            <div className="k-geodir-category-location fl-wrap"><a href="#1" className="map-item" style={geodir_category_location_a}><i className="fas fa-map-marker-alt" style={{ color: '#4DB7FE', paddingRight: '6px' }} /> 27th Brooklyn New York, USA</a></div>
+                            <p className="k-small-text" style={geodir_category_content_p}>{listing.listing_type} - {listing.bedroom_count} phòng ngủ</p>
+
+                            <h3 className="title-sin_map" style={geodir_category_content_h3}><Link to={`/listing/${listing.listing_id}`} style={{ color: '#566985' }}>{listing.name}</Link></h3>
+                            <div className="k-geodir-category-location fl-wrap"><a href="#1" className="map-item" style={geodir_category_location_a}><i className="fas fa-map-marker-alt" style={{ color: '#4DB7FE', paddingRight: '6px' }} />{listing.street_address}</a></div>
                         </div>
                     </div>
                     <div className="k-geodir-category-text fl-wrap" style={{ padding: '0 20px' }}>
-                        <p className="k-small-text" style={geodir_category_content_p}>Sed interdum metus at nisi tempor laoreet. Integer gravida orci a justo sodales.</p>
+                        {/* <p className="k-small-text" style={geodir_category_content_p}>{listing.listing_type} - {listing.bedroom_count} phòng ngủ</p> */}
                         <div className="k-facilities-list fl-wrap" style={{ margin: '10px 0' }}>
                             <div className="k-facilities-list-title" style={facilities_list_title}>Facilities : </div>
                             <ul style={{ listStyle: 'none' }}>
@@ -445,8 +458,8 @@ function ListingItem(props) {
                     </div>
                     <div className="k-geodir-category-footer fl-wrap" style={geodir_category_footer}>
                         <a className="listing-item-category-wrap" style={{ float: 'left', position: 'relative' }}>
-                            <div className="k-listing-item-category red-bg" style={listing_item_category}><i className="fal fa-cheeseburger" /></div>
-                            <span style={listing_item_category_wrap_span}>Restaurants</span>
+                            {/* <div className="k-listing-item-category" style={listing_item_category}></div> */}
+                            <span style={listing_item_category_wrap_span}>{parseInt(listing.price_per_night).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} /đêm</span>
                         </a>
                         <div className="k-geodir-opt-list" style={geodir_opt_list}>
                             <ul style={{ listStyle: 'none' }}>
@@ -457,7 +470,7 @@ function ListingItem(props) {
                                 </li>
                             </ul>
                         </div>
-                        <div className="price-level geodir-category_price" style={geodir_category_price}>
+                        {/* <div className="price-level geodir-category_price" style={geodir_category_price}>
                             <span className="price-level-item" data-pricerating={3} />
                             <span className="price-name-tooltip" style={price_name_tooltip}>Pricey</span>
                         </div>
@@ -467,7 +480,7 @@ function ListingItem(props) {
                                 <li style={geodir_category_contacts_li}><span style={geodir_category_contacts_li_span}><i className="fal fa-phone" style={{ marginRight: '6px' }} /> Call : </span><a href="#" style={geodir_category_contacts_li_a}>+38099231212</a></li>
                                 <li style={geodir_category_contacts_li}><span style={geodir_category_contacts_li_span}><i className="fal fa-envelope" style={{ marginRight: '6px' }} /> Write : </span><a href="#" style={geodir_category_contacts_li_a}>yourmail@domain.com</a></li>
                             </ul>
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </article >

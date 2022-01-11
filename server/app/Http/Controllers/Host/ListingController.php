@@ -383,7 +383,7 @@ class ListingController extends Controller
                 $output['reviews'] = DB::table('review_listing')
                     ->where('listing_id', '=', $id)
                     ->join('users', 'users.id', '=', 'review_listing.guest_id')
-                    ->orderBy('review_listing.id', 'DESC')
+                    // ->orderBy('review_listing.id', 'DESC')
                     ->select('review_listing.id', 'review_listing.note', 'review_listing.rating', 'review_listing.created_at', 'users.name', 'users.avatar_url')
                     ->get();
                 return $output;

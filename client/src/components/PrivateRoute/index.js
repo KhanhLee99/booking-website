@@ -91,3 +91,23 @@ export function PrivateRouteAddListing({ component: Component, layout: Layout, .
 	)
 }
 
+export function PrivateRouteMe({ component: Component, layout: Layout, ...rest }) {
+	const loggedInUser = useSelector((state) => state.userSlice.current);
+	const isLoggedIn = !!loggedInUser.id;
+
+	return (
+		<Route
+			{...rest}
+			render={(props) => {
+				return isLoggedIn ?
+					<Layout {...props}>
+						<Component {...props} />
+					</Layout>
+					: (
+						<Redirect to='/' />
+					);
+			}}
+		/>
+	)
+}
+

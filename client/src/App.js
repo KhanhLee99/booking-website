@@ -9,7 +9,7 @@ import {
 import NotFoundPage from './features/Error/NotFoundPage';
 import MainErrorPage from './features/Error/MainErrorPage';
 import GuestFeauture from './features/Guest';
-import { PrivateRoute, PrivateRouteAddListing, PrivateRouteAdmin, PrivateRouteHost } from './components/PrivateRoute';
+import { PrivateRoute, PrivateRouteAddListing, PrivateRouteAdmin, PrivateRouteHost, PrivateRouteMe } from './components/PrivateRoute';
 import Login from './features/Guest/pages';
 import firebase from 'firebase';
 import { getMe } from './app/reducer/guestSlice';
@@ -59,6 +59,9 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import LoginPopup from './components/LoginPopup';
 import AddListingFeature from './features/Host/AddListingFeature';
 import CommonAddListing from './components/CommonAddListing/CommonAddListing';
+import CommonUserProfile from './components/CommonUserProfile/CommonUserProfile';
+import UserProfileFeature from './features/UserProfile';
+import ListingItemSkeleton from './features/Listings/components/ListingItem/ListingItemSkeleton/ListingItemSkeleton';
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
 // const GuestFeauture = React.lazy(() => import('./features/Guest'));
@@ -101,7 +104,7 @@ function App() {
 
 
   return (
-    // <LoginPopup />
+    // <ListingItemSkeleton />
     <>
       {show ? (
         <ReactNotificationComponent
@@ -122,6 +125,7 @@ function App() {
             {/* <PrivateRouteHost path="/host" component={HostFeature} /> */}
             <PrivateRouteAddListing path="/host" component={AddListingFeature} layout={CommonAddListing} />
             <PrivateRouteAdmin path="/admin" component={AdminFeature} layout={CommonAdmin} />
+            <PrivateRouteMe path="/me" component={UserProfileFeature} layout={CommonUserProfile} />
 
             <Route path="/listing/:id" component={ListingDetail} />
             <Route path="/checkout/:id/:checkin/:checkout/:guests" component={Booking} />

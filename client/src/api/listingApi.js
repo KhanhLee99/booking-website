@@ -2,7 +2,7 @@ import axiosClient from "../utils/axiosClient";
 
 const listingApi = {
     getListingsLocation: (params) => {
-        const url = '/listing-detail';
+        const url = '/listing-location';
         return axiosClient.get(url, { params });
     },
 
@@ -10,6 +10,11 @@ const listingApi = {
         const url = `listing/${id}`;
         return axiosClient.get(url);
     },
+
+    // getListingByCityId: (id) => {
+    //     const url = `listing/city/${id}`;
+    //     return axiosClient.get(url);
+    // },
 
     favoriteListing: (params) => {
         const url = 'favorite/add';

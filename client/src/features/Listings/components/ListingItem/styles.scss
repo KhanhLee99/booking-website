@@ -1,11 +1,21 @@
-.k-geodir-category-img:before {
+// .k-geodir-category-img:before {
+//     content: "";
+//     position: absolute;
+//     bottom: 0;
+//     left: 0;
+//     right: 0;
+//     height: 20px;
+//     border-radius: 15px 15px 0 0;
+//     background: #fff;
+//     z-index: 3;
+// }
+
+.k-geodir-opt-list:before {
     content: "";
     position: absolute;
-    bottom: 0;
     left: 0;
-    right: 0;
-    height: 20px;
-    border-radius: 15px 15px 0 0;
-    background: #fff;
-    z-index: 3;
+    top: -9px;
+    bottom: -8px;
+    width: 1px;
+    background: #eee;
 }

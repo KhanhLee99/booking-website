@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Favorite;
 use App\User;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class FavoriteController extends Controller
 {
@@ -17,12 +18,21 @@ class FavoriteController extends Controller
         'status' => 'fail'
     ];
 
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         try {
-            $result = $request->user('api')->Favorite;
+            $user_id = $request->user('api')->id;
+            $data = DB::table('favorite')
+                ->where('favorite.user_id', '=', $user_id)
+                ->join('listing', 'favorite.listing_id', '=', 'listing.id')
+                ->join('listing_type', 'listing.listing_type_id', '=', 'listing_type.id')
+                ->select('listing.id as listing_id', 'listing.name', 'listing.street_address', 'listing.avatar_url as listing_img', 'listing.bedroom_count', 'listing.price_per_night_base as price_per_night', 'listing.rating', 'listing_type.name as listing_type')
+                // ->paginate($request->limit);
+                ->get();
+            // $result = $request->user('api')->Favorite;
             $this->response = [
                 'status' => 'success',
-                'data' => $result
+                'data' => $data
             ];
             return response()->json($this->response);
         } catch (Exception $e) {
@@ -31,7 +41,8 @@ class FavoriteController extends Controller
         }
     }
 
-    public function add(Request $request) {
+    public function add(Request $request)
+    {
         try {
             $validator = Validator::make(
                 $request->all(),
@@ -63,7 +74,8 @@ class FavoriteController extends Controller
         }
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         try {
             $favorite = Favorite::find($id);
             if ($favorite) {

@@ -45,9 +45,6 @@ function TestUiLogin(props) {
             <h2>USER LOGIN</h2>
             <Formik
                 initialValues={{ email: '', password: '' }}
-                onSubmit={(values, { setSubmitting }) => {
-                    handleLogin(values);
-                }}
                 validationSchema={
                     Yup.object({
                         email: Yup.string().email('Invalid email address').required('Required'),

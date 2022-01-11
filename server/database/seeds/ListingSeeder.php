@@ -63,6 +63,15 @@ class ListingSeeder extends Seeder
                     'photo_url' => "https://picsum.photos/id/" . rand(1, 1000) . "/400/400"
                 ]);
             }
+
+            for ($v = 0; $v < 5; $v++) {
+                DB::table('review_listing')->insert([
+                    'note' => $faker->text($maxNbChars = 100),
+                    'rating' => rand(1,5),
+                    'guest_id' => rand(3,10),
+                    'listing_id' => $last_listing->id
+                ]);
+            }
         }
     }
 }

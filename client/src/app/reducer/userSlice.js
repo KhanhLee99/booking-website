@@ -51,6 +51,11 @@ const userSlice = createSlice({
 
         saveDeviceToken(state, action) {
             state.deviceToken = action.payload;
+        },
+
+        updateProfile(state, action) {
+            localStorage.setItem('user', JSON.stringify(action.payload));
+            state.current = action.payload;
         }
     },
     extraReducers: {
@@ -83,6 +88,6 @@ const userSlice = createSlice({
 });
 
 const { reducer, actions } = userSlice;
-export const { logout, saveDeviceToken } = actions;
+export const { logout, saveDeviceToken, updateProfile } = actions;
 export default reducer;
 

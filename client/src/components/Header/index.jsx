@@ -1,7 +1,14 @@
 import React from 'react';
-import { useDispatch } from 'react-redux';
+import { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { logout } from '../../app/reducer/userSlice';
 import './styles.css';
+import Popup from 'reactjs-popup';
+import LoginPopup from '../LoginPopup';
+import AvatarPlaceholder from '../Placeholder/AvatarPlaceholder/AvatarPlaceholder';
+import LoginModal from '../LoginModal/LoginModal';
+
 
 const main_header = {
     position: 'fixed',
@@ -10,7 +17,7 @@ const main_header = {
     top: 0,
     height: '80px',
     background: '#2e3f6e',
-    zIndex: 9999999,
+    zIndex: 999,
     padding: '0 40px',
 }
 
@@ -136,73 +143,129 @@ const header_search_selectinpt = {
     padding: '0 4px',
 }
 
+const header_user_menu = {
+    float: 'right',
+    position: 'relative',
+    top: '20px',
+    marginLeft: '50px',
+    marginRight: '40px',
+}
+
+const header_user_name = {
+    position: 'relative',
+    float: 'left',
+    cursor: 'pointer',
+    color: '#fff',
+    transition: '0.2s',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    paddingTop: '10px',
+    fontWeight: 600,
+}
+
+const header_user_name_span = {
+    position: 'absolute',
+    width: '38px',
+    height: '38px',
+    borderRadius: '100%',
+    overflow: 'hidden',
+    top: 0,
+    left: '-50px',
+    fontWeight: 400,
+}
+
+const header_user_name_span_img = {
+    width: '100%',
+    height: '100%',
+}
+
+const header_user_menu_ul = {
+    margin: '10px 0 0 0',
+    opacity: 0,
+    listStyle: 'none',
+    visibility: 'hidden',
+    position: 'absolute',
+    minWidth: '150px',
+    top: '60px',
+    left: '-50px',
+    zIndex: 1,
+    padding: '10px 0',
+    background: '#fff',
+    borderRadius: '6px',
+    border: '1px solid #eee',
+    transition: 'all 0.2s ease-in-out',
+}
+
+const header_user_menu_ul_li = {
+    float: 'left',
+    width: '100%',
+    padding: '0px 0',
+    borderBottom: '1px solid #f6f6f6',
+}
+
+const header_user_menu_ul_li_a = {
+    color: '#50596e',
+    float: 'left',
+    width: '100%',
+    fontWeight: 500,
+    textAlign: 'left',
+    padding: '6px 15px',
+}
+
 function Header(props) {
 
     const dispatch = useDispatch();
 
-    const handleShowPopup = (e) => {
-        e.preventDefault();
-        setTriggerPopup(true)
-    }
+    const loggedInUser = useSelector((state) => state.userSlice.current);
+    const isLoggedIn = !!loggedInUser.id;
+
+    const [showPopupProfile, setShowPopupProfile] = useState(false);
 
     const handleLogout = (e) => {
         e.preventDefault();
-        const action = logout();
-        dispatch(action);
+        dispatch(logout());
     }
 
-    const { loggedInUser, isLoggedIn, setTriggerPopup } = props;
+    // const { loggedInUser, isLoggedIn } = props;
 
 
     return (
-        // <header className="header menu_fixed sticky">
-        //     {/* <div id="preloader">
-        //         <div data-loader="circle-side" />
-        //     </div> */}
-        //     <div id="logo">
-        //         <a href="index.html">
-        //             <img src="img/logo.png" width={150} height={36} data-retina="true" alt="" className="logo_normal" />
-        //             <img src="img/logo_sticky.png" width={150} height={36} data-retina="true" alt="" className="logo_sticky" />
-        //         </a>
-        //     </div>
-        //     <ul id="top_menu">
-        //         <li><a href="wishlist.html" className="wishlist_bt_top" title="Your wishlist">Your wishlist</a></li>
-        //     </ul>
-        //     {/* /top_menu */}
-        //     <a href="#menu" className="btn_mobile">
-        //         <div className="hamburger hamburger--spin" id="hamburger">
-        //             <div className="hamburger-box">
-        //                 <div className="hamburger-inner" />
-        //             </div>
-        //         </div>
-        //     </a>
-        //     <nav id="menu" className="main-menu">
-        //         <ul>
-        //             <li><span><a href="#0">Host</a></span></li>
-        //             {!isLoggedIn ? (
-        //                 <>
-        //                     <li><span><a href="#0">Đăng ký</a></span></li>
-        //                     <li><span><a onClick={(handleShowPopup)} href="#sign-in-dialog" id="sign-in" className="login" title="Sign In">Đăng nhập</a></span></li>
-        //                 </>
-        //             ) : (
-        //                 <>
-        //                     <li><span><a href="#0">{loggedInUser.name}</a></span></li>
-        //                     <li><span><a href="#0" onClick={handleLogout}>Log out</a></span></li>
-        //                 </>
-        //             )}
-        //         </ul>
-        //     </nav>
-        // </header>
 
         <header className="k-main-header" style={main_header}>
             {/* logo*/}
-            <a href="index.html" className="k-logo-holder" style={logo_holder}><img src="https://i.ytimg.com/vi/FPtITmtjWhQ/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB3TdlYzQKkXD7XtPbNwCGLGycr2Q" alt="" style={{ width: 'auto', height: '100%' }} /></a>
+            <Link to="/" className="k-logo-holder" style={logo_holder}><img src="https://i.ytimg.com/vi/FPtITmtjWhQ/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB3TdlYzQKkXD7XtPbNwCGLGycr2Q" alt="" style={{ width: 'auto', height: '100%' }} /></Link>
             {/* header-search_btn*/}
             <div className="k-header-search_btn show-search-button" style={header_search_btn}><i className="fal fa-search" style={{ color: '#4DB7FE', marginRight: '30px' }} /> <span style={{ position: 'relative' }}>Search</span></div>
             {/* header opt */}
-            <div className="k-cart-btn show-header-modal" data-microtip-position="bottom" role="tooltip" aria-label="Your Wishlist" style={cart_btn}><i className="fal fa-heart" style={{ width: '12px' }} /><span className="k-cart-counter" style={cart_counter} >4</span>
-            </div>
-            <div className="k-show-reg-form modal-open avatar-img" data-srcav="images/avatar/3.jpg" style={show_reg_form}><i className="fal fa-user" style={{ color: '#4DB7F', marginRight: '14px' }} />Sign In</div>
+            {
+                isLoggedIn ? <>
+                    <div className="k-cart-btn show-header-modal" data-microtip-position="bottom" role="tooltip" aria-label="Your Wishlist" style={cart_btn}>
+                        <i className="fal fa-heart" style={{ width: '12px' }} /><span className="k-cart-counter" style={cart_counter} >4</span>
+                    </div>
+
+                    <div className="header-user-menu hu-menu-visdec" style={header_user_menu}>
+                        <div className="header-user-name" style={header_user_name} onClick={() => setShowPopupProfile(!showPopupProfile)}>
+                            <span style={header_user_name_span}>
+                                <AvatarPlaceholder
+                                    avatar_url={loggedInUser.avatar_url}
+                                    style={header_user_name_span_img}
+                                />
+                            </span>
+                            {loggedInUser.name}
+                        </div>
+                        <ul className={showPopupProfile ? 'hu-menu-vis' : ''}>
+                            <li style={header_user_menu_ul_li}><Link to="/me/profile" style={header_user_menu_ul_li_a}> Edit profile</Link></li>
+                            <li style={header_user_menu_ul_li}><a href="dashboard-bookings.html" style={header_user_menu_ul_li_a}>  Bookings</a></li>
+                            <li style={header_user_menu_ul_li}><Link to="/me/favorite" style={header_user_menu_ul_li_a}> Danh sách yêu thích </Link></li>
+                            <li style={header_user_menu_ul_li}><a href="#" style={header_user_menu_ul_li_a} onClick={(e) => handleLogout(e)}> Log Out</a></li>
+                        </ul>
+                    </div>
+                </> :
+                    <LoginModal>
+                        <div className="k-show-reg-form modal-open avatar-img" data-srcav="images/avatar/3.jpg" style={show_reg_form}><i className="fal fa-user" style={{ color: '#4DB7F', marginRight: '14px' }} />Sign In</div>
+                    </LoginModal>
+            }
+
             {/* nav-button-wrap*/}
             <div className="k-nav-button-wrap" style={nav_button_wrap}>
                 <div className="nav-button">
@@ -270,7 +333,7 @@ function Header(props) {
                     <div className="close-header-modal"><i className="far fa-times" /></div>
                 </div>
             </div> */}
-        </header>
+        </header >
 
     )
 }

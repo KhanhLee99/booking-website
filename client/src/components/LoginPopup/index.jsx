@@ -11,6 +11,7 @@ import { login, loginFacebook, loginGoogle } from '../../app/reducer/userSlice';
 import PulseLoading from '../Loading/PulseLoading';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useHistory } from 'react-router';
+import userApi from '../../api/userApi';
 
 LoginPopup.propTypes = {
 
@@ -141,6 +142,9 @@ const custom_form_button = {
     border: 'none',
     cursor: 'pointer',
     marginTop: '0px',
+    width: '100%',
+    padding: '13px 0',
+    color: '#fff',
 }
 
 const btn_i = {
@@ -207,7 +211,7 @@ const log_separator_span = {
 }
 
 function LoginPopup(props) {
-    // const deviceToken = useSelector(state => state.userSlice.deviceToken);
+    const deviceToken = useSelector(state => state.userSlice.deviceToken);
     const [loading, setLoading] = useState(false);
     const dispatch = useDispatch();
     const history = useHistory();
@@ -255,11 +259,13 @@ function LoginPopup(props) {
                 password: values.password
             }
             setLoading(true);
-            await dispatch(login(params));
-            setLoading(false);
-            setTriggerPopup(false);
+            await dispatch(login(params)).then(res => {
+                const access_token = unwrapResult(res).data.token;
+                userApi.updateDeviceToken({ device_token: deviceToken }, access_token);
+                setLoading(false);
+                refreshPage();
+            });
             resetForm();
-            // history.push('/posts');
         } catch (err) {
             console.log(err.message)
             setLoading(false);
@@ -269,6 +275,10 @@ function LoginPopup(props) {
     const handleClosePopup = (resetForm) => {
         setTriggerPopup(false)
         resetForm();
+    }
+
+    const refreshPage = () => {
+        window.location.reload();
     }
 
     const { trigger, setTriggerPopup } = props;
@@ -379,18 +389,49 @@ function LoginPopup(props) {
                         {/*tab */}
                         <div id="tab-1" className="k-tab-content k-first-tab">
                             <div className="k-custom-form" style={custom_form}>
-                                <form method="post" name="registerform">
-                                    <label style={custom_form_label}>Username or Email Address <span>*</span> </label>
-                                    <input name="email" type="text" onclick="this.select()" style={custom_form_input} />
-                                    <label style={custom_form_label}>Password <span>*</span> </label>
-                                    <input name="password" type="password" onclick="this.select()" style={custom_form_input} />
-                                    <button type="submit" className="btn float-btn color2-bg" style={custom_form_button}> Log In <i className="fas fa-caret-right" style={btn_i} /></button>
-                                    <div className="clearfix" />
-                                    <div className="k-filter-tags" style={filter_tags}>
-                                        <input id="check-a3" type="checkbox" name="check" style={filter_tags_input} />
-                                        <label htmlFor="check-a3" style={label_rmbm}>Remember me</label>
-                                    </div>
-                                </form>
+                                <Formik
+                                    initialValues={{ email: '', password: '' }}
+                                    validationSchema={
+                                        Yup.object({
+                                            email: Yup.string().email('Invalid email address').required('Required'),
+                                            password: Yup.string()
+                                                // .max(1, 'Must be 1 characters or less')
+                                                .required('Required'),
+                                        })}
+                                    onSubmit={(values, { resetForm }) => {
+                                        handleLogin(values, resetForm);
+                                    }}
+                                >
+                                    {formik => (
+                                        <form onSubmit={formik.handleSubmit}>
+                                            <label style={custom_form_label}>Email Address <span>*</span> </label>
+                                            <input
+                                                type="text"
+                                                {...formik.getFieldProps('email')}
+                                                style={custom_form_input}
+                                            />
+                                            {formik.touched.email && formik.errors.email ? (
+                                                <label className='custom_form_label' style={{ color: 'red', marginTop: '-20px' }}>{formik.errors.email}</label>
+                                            ) : null}
+
+                                            <label style={custom_form_label}>Password <span>*</span> </label>
+                                            <input
+                                                type="password"
+                                                {...formik.getFieldProps('password')}
+                                                style={custom_form_input}
+                                            />
+                                            {formik.touched.password && formik.errors.password ? (
+                                                <label className='custom_form_label' style={{ color: 'red', marginTop: '-20px' }}>{formik.errors.password}</label>
+                                            ) : null}
+                                            <button type="submit" className="btn float-btn color2-bg" style={custom_form_button}>{loading ? <PulseLoading /> : 'Log In'} </button>
+                                            <div className="clearfix" />
+                                            <div className="k-filter-tags" style={filter_tags}>
+                                                <input id="check-a3" type="checkbox" name="check" style={filter_tags_input} />
+                                                <label htmlFor="check-a3" style={label_rmbm}>Remember me</label>
+                                            </div>
+                                        </form>
+                                    )}
+                                </Formik>
                                 <div className="lost_password" style={{ marginTop: '24px', float: 'right' }}>
                                     <a href="#" style={{ float: 'left', fontSize: '12px', fontWeight: 600, }}>Lost Your Password?</a>
                                 </div>
