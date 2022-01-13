@@ -261,9 +261,12 @@ function LoginPopup(props) {
             setLoading(true);
             await dispatch(login(params)).then(res => {
                 const access_token = unwrapResult(res).data.token;
-                userApi.updateDeviceToken({ device_token: deviceToken }, access_token);
-                setLoading(false);
-                refreshPage();
+                userApi.updateDeviceToken({ device_token: deviceToken }, access_token).then(() => {
+                    setLoading(false);
+                    refreshPage();
+                }).catch(err => {
+                    setLoading(false);
+                });
             });
             resetForm();
         } catch (err) {

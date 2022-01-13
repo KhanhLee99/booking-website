@@ -1,0 +1,62 @@
+.k-booking-status {
+    position: absolute;
+    right: 0;
+    top: 30px;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    text-align: center;
+
+    & .status-text {
+        padding: 1px 0px;
+        border-radius: 5px;
+        font-weight: 700;
+        font-size: 12px;
+        text-transform: uppercase;
+        width: 100px;
+        display: block;
+    }
+
+    & .booking-price {
+        font-size: 16px;
+        color: #566985;
+        font-weight: 600;
+        margin-top: 0px;
+    }
+
+    & .status-text.request {
+        border: 2px solid #f6cf48;
+        color: #f6cf48;
+    }
+
+    & .status-text.accepted {
+        border: 2px solid #7cccb2;
+        color: #7cccb2;
+    }
+
+    & .status-text.canceled {
+        border: 2px solid #5b5b68;
+        color: #5b5b68;
+    }
+
+    & .status-text.checkout {
+        border: 2px solid #b53e4e;
+        color: #b53e4e;
+    }
+
+    & .status-text.checkin {
+        border: 2px solid #6ab5f8;
+        color: #6ab5f8;
+    }
+}
+
+.dashboard-message-text .booking-date {
+    color: black;
+    font-size: 20px;
+    margin-bottom: -1px;
+    display: block;
+}
+
+.dashboard-message-text .booking-address {
+    font-size: 15px;
+    cursor: default;
+}

@@ -43,6 +43,7 @@ Route::post('update-avatar', 'UserController@update_avatar');
 Route::post('upload-multiple-images', 'UserController@upload_multiple_images');
 
 Route::put('update-device-token', 'UserController@add_device_token');
+Route::put('delete-device-token', 'UserController@delete_device_token');
 Route::post('send-notifications', 'UserController@send_notification');
 
 // Social Provider
@@ -105,7 +106,6 @@ Route::put('reservation-status/{id}', 'Admin\ReservationStatusController@edit');
 // Favorite
 Route::post('favorite/add', 'User\FavoriteController@add');
 Route::get('favorite', 'User\FavoriteController@index');
-Route::delete('favorite/{id}', 'User\FavoriteController@delete');
 
 // Price Special
 Route::get('price-special/{id}', 'Host\ListingPriceSpecialController@index');
@@ -140,6 +140,10 @@ Route::get('reservation/listing/{id}/month', 'Host\ReservationController@get_res
 Route::get('reservation/host/{host_id}', 'Host\ReservationController@get_host_booking');
 Route::put('reservation/{id}', 'Host\ReservationController@edit');
 Route::delete('reservation/{id}', 'Host\ReservationController@delete');
+Route::get('reservation/me', 'Host\ReservationController@get_my_reservation');
+Route::get('reservation/{id}', 'Host\ReservationController@get_detail_reservation');
+Route::put('reservation/edit-status/{id}', 'Host\ReservationController@edit_status');
+
 
 // Conversation
 Route::post('conversation/add', 'Common\ConversationController@create_conversation');

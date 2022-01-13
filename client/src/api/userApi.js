@@ -32,7 +32,12 @@ const userApi = {
         return axiosClient.put(url, params, {
             headers: { Authorization: `Bearer ${token}` },
         });
-    }
+    },
+
+    deleteDeviceToken: () => {
+        const url = '/delete-device-token';
+        return axiosClient.put(url);
+    },
 }
 
 export default userApi;

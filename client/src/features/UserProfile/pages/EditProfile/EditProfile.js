@@ -9,6 +9,7 @@ import PulseLoading from '../../../../components/Loading/PulseLoading';
 import { updateProfile } from '../../../../app/reducer/userSlice';
 import uploadApi from '../../../../api/uploadApi';
 import Header from '../../../../components/Header';
+import AvatarPlaceholder from '../../../../components/Placeholder/AvatarPlaceholder/AvatarPlaceholder';
 
 EditProfile.propTypes = {
 
@@ -95,7 +96,9 @@ function EditProfile(props) {
                                             avatarImg ?
                                                 <img src={URL.createObjectURL(avatarImg)} alt="" />
                                                 :
-                                                <img src={loggedInUser.avatar_url} alt="" />
+                                                <AvatarPlaceholder
+                                                    avatar_url={loggedInUser.avatar_url}
+                                                />
                                         }
                                         <div className="change-photo-btn k-change-photo-btn">
                                             <div className="photoUpload" style={{ textAlign: 'center' }}>

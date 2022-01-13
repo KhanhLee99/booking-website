@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './styles.scss';
+import { Link } from 'react-router-dom';
 
 HeaderHost.propTypes = {
 
@@ -8,7 +9,7 @@ HeaderHost.propTypes = {
 
 function HeaderHost(props) {
     return (
-        <header id="header-container" className="no-shadow">
+        <header id="header-container" className="no-shadow" style={{ background: '#fff' }}>
             {/* Header */}
             <div id="header">
                 <div className="container">
@@ -35,7 +36,7 @@ function HeaderHost(props) {
                                 <li><a href="#">Menu</a>
                                     <ul>
                                         <li><a href="dashboard.html">Nhà/phòng cho thuê</a></li>
-                                        <li><a href="dashboard-messages.html">Đặt phòng</a></li>
+                                        <li><Link to="/host/booking">Đặt phòng</Link></li>
                                         <li><a href="dashboard-bookings.html">Tạo mục cho thuê mới</a></li>
                                         <li><a href="dashboard-wallet.html">Lịch sử giao dịch</a></li>
                                     </ul>

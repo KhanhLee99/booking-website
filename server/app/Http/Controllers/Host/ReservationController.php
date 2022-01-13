@@ -16,9 +16,61 @@ class ReservationController extends Controller
         'status' => 'fail'
     ];
 
+    public function get_host_booking($host_id)
+    {
+        try {
+            $data = DB::table('reservation')
+                ->join('users', 'users.id', '=', 'reservation.guest_id')
+                ->join('listing', 'listing.id', '=', 'reservation.listing_id')
+                ->where('listing.user_id', $host_id)
+                ->orderBy('reservation.id', 'desc')
+                ->join('reservation_status', 'reservation_status.id', '=', 'reservation.reservation_status_id')
+                ->select('reservation.*', 'listing.name as listing_name', 'listing.street_address', 'listing.avatar_url as thumb_img', 'users.name as user_name', 'users.avatar_url as user_avatar_url', 'reservation_status.name as status')
+                ->get();
+            if ($data) {
+                $this->response = [
+                    'status' => 'success',
+                    'data' => $data
+                ];
+                return response()->json($this->response, $this->success_code);
+            }
+            return response()->json($this->response, 401);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
+    }
+
+    public function get_my_reservation(Request $request)
+    {
+        $user_login = $request->user('api');
+        $data = DB::table('reservation')
+            ->where('guest_id', $user_login->id)
+            ->join('listing', 'listing.id', '=', 'reservation.listing_id')
+            ->orderBy('reservation.id', 'desc')
+            ->join('reservation_status', 'reservation_status.id', '=', 'reservation.reservation_status_id')
+            ->select('reservation.*', 'listing.name as listing_name', 'listing.avatar_url as thumb_img',  'listing.street_address', 'reservation_status.name as status')
+            ->get();
+        if ($data) {
+            $this->response = [
+                'status' => 'success',
+                'data' => $data
+            ];
+            return response()->json($this->response);
+        }
+        return response()->json($this->response, 400);
+    }
+
     public function get_reservation_by_user_id($id)
     {
         try {
+            $data = DB::table('reservation')
+                ->where('guest_id', $id)
+                ->join('users', 'users.id', '=', 'reservation.guest_id')
+                ->join('listing', 'listing.id', '=', 'reservation.listing_id')
+                ->orderBy('reservation.id', 'desc')
+                ->select('reservation.id as reservation_id', 'reservation.total_price', 'listing.name as listing_name', 'users.name as user_name', 'reservation.created_at as created_at')
+                ->get();
             $result = Reservation::where('guest_id', '=', $id)->get();
             if ($result) {
                 $this->response = [
@@ -119,24 +171,41 @@ class ReservationController extends Controller
         }
     }
 
-    public function get_host_booking($host_id)
+    public function get_detail_reservation($id)
     {
         try {
             $data = DB::table('reservation')
                 ->join('users', 'users.id', '=', 'reservation.guest_id')
+                ->where('reservation.id', $id)
                 ->join('listing', 'listing.id', '=', 'reservation.listing_id')
-                ->where('listing.user_id', $host_id)
                 ->orderBy('reservation.id', 'desc')
-                ->select('reservation.id as reservation_id', 'reservation.total_price', 'listing.name as listing_name', 'users.name as user_name', 'reservation.created_at as created_at')
+                ->join('reservation_status', 'reservation_status.id', '=', 'reservation.reservation_status_id')
+                ->select('reservation.*', 'listing.name as listing_name', 'listing.street_address', 'listing.avatar_url as thumb_img', 'users.name as user_name', 'users.avatar_url as user_avatar_url', 'reservation_status.name as status')
                 ->get();
             if ($data) {
                 $this->response = [
                     'status' => 'success',
-                    'data' => $data
+                    'data' => $data[0]
                 ];
                 return response()->json($this->response, $this->success_code);
             }
-            return response()->json($this->response, 401);
+            return response()->json($this->response, 400);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
+    }
+
+    public function edit_status(Request $request, $id)
+    {
+        try {
+            $reservation = Reservation::find($id);
+            if ($reservation) {
+                $reservation->update(['reservation_status_id' => $request->reservation_status_id]);
+                $this->response['status'] = 'success';
+                return response()->json($this->response, $this->success_code);
+            }
+            return response()->json($this->response);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);

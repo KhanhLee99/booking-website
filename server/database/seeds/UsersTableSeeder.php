@@ -50,7 +50,7 @@ class UsersTableSeeder extends Seeder
                 'email' => $faker->unique()->email,
                 'phone_number' => $faker->phoneNumber,
                 'password' => Hash::make('khanh'),
-                'role_id' => 1,
+                'role_id' => 3,
                 'avatar_url' => "https://picsum.photos/id/" . rand(1, 1000) . "/400/300",
             ]);
         }

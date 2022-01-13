@@ -10,6 +10,7 @@ import {
 import EditProfile from './pages/EditProfile/EditProfile';
 import ChangePassword from './pages/ChangePassword/ChangePassword';
 import Favorite from './pages/Favorite/Favorite';
+import MyBooking from './pages/MyBooking/MyBooking';
 
 UserProfileFeature.propTypes = {
 
@@ -36,6 +37,12 @@ function UserProfileFeature(props) {
                     path={`${match.url}/favorite`}
                     exact
                     component={Favorite}
+                />
+
+                <Route
+                    path={`${match.url}/bookings`}
+                    exact
+                    component={MyBooking}
                 />
 
             </Switch>

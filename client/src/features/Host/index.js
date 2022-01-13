@@ -16,6 +16,8 @@ import AddName from './pages/AddName';
 import AddPrice from './pages/AddPrice';
 import DnDCalendarr from '../../components/Test/calendar/DnDCalendar';
 import Reservation from './pages/Reservation/Reservation';
+import Hosting from './pages/Hosting';
+import ReservationDetail from './pages/ReservationDetail/ReservationDetail';
 
 HostFeature.propTypes = {
 
@@ -86,6 +88,17 @@ function HostFeature(props) {
                     component={Reservation}
                 />
 
+                <Route
+                    path={`${match.url}/listings`}
+                    exact
+                    component={Hosting}
+                />
+
+                <Route
+                    path={`${match.url}/reservation/:id`}
+                    exact
+                    component={ReservationDetail}
+                />
 
 
             </Switch>

@@ -3,12 +3,15 @@ import PropTypes from 'prop-types';
 import Header from '../../../../components/Header';
 import ListListingsLocation from '../../../Listings/components/ListListingsLocation';
 import userProfileApi from '../../../../api/userProfileApi';
+import { useSelector } from 'react-redux';
 
 Favorite.propTypes = {
 
 };
 
 function Favorite(props) {
+    const loggedInUser = useSelector((state) => state.userSlice.current);
+    const isLoggedIn = !!loggedInUser.id;
     const [loading, setLoading] = useState(false);
     const [listings, setListings] = useState([]);
 
@@ -41,6 +44,8 @@ function Favorite(props) {
             <ListListingsLocation
                 listings={listings}
                 loading={loading}
+                isLoggedIn={isLoggedIn}
+                loggedInUser={loggedInUser}
             />
         </div>
     );

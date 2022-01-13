@@ -61,7 +61,6 @@ import AddListingFeature from './features/Host/AddListingFeature';
 import CommonAddListing from './components/CommonAddListing/CommonAddListing';
 import CommonUserProfile from './components/CommonUserProfile/CommonUserProfile';
 import UserProfileFeature from './features/UserProfile';
-import ListingItemSkeleton from './features/Listings/components/ListingItem/ListingItemSkeleton/ListingItemSkeleton';
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
 // const GuestFeauture = React.lazy(() => import('./features/Guest'));
@@ -104,44 +103,43 @@ function App() {
 
 
   return (
+    <div>hello</div>
     // <ListingItemSkeleton />
-    <>
-      {show ? (
-        <ReactNotificationComponent
-          title={notification.title}
-          body={notification.body}
-        />
-      ) : (
-        <></>
-      )}
-      <Suspense fallback={<div>Loading ...</div>}>
-        <BrowserRouter>
-          <Switch>
-            <Route path="/" exact component={Home} />
-            <Route path="/admin/login" component={AdminLogin} />
-            <Route path="/host/login" component={HostLogin} />
-            <Route path="/host/listings" component={Hosting} />
+    // <>
+    //   {show ? (
+    //     <ReactNotificationComponent
+    //       title={notification.title}
+    //       body={notification.body}
+    //     />
+    //   ) : (
+    //     <></>
+    //   )}
+    //   <Suspense fallback={<div>Loading ...</div>}>
+    //     <BrowserRouter>
+    //       <Switch>
+    //         <Route path="/" exact component={Home} />
+    //         <Route path="/admin/login" component={AdminLogin} />
+    //         <Route path="/host/login" component={HostLogin} />
+    //         <Route path="/hosting" component={MessageHost} />
 
-            {/* <PrivateRouteHost path="/host" component={HostFeature} /> */}
-            <PrivateRouteAddListing path="/host" component={AddListingFeature} layout={CommonAddListing} />
-            <PrivateRouteAdmin path="/admin" component={AdminFeature} layout={CommonAdmin} />
-            <PrivateRouteMe path="/me" component={UserProfileFeature} layout={CommonUserProfile} />
+    //         <PrivateRouteHost path="/host" component={HostFeature} />
+    //         <PrivateRouteAddListing path="/become-host" component={AddListingFeature} layout={CommonAddListing} />
+    //         <PrivateRouteAdmin path="/admin" component={AdminFeature} layout={CommonAdmin} />
+    //         <PrivateRouteMe path="/me" component={UserProfileFeature} layout={CommonUserProfile} />
 
-            <Route path="/listing/:id" component={ListingDetail} />
-            <Route path="/checkout/:id/:checkin/:checkout/:guests" component={Booking} />
-            <Route path="/hosting" component={MessageHost} />
-            {/* <Route path="/hosting/inbox" component={MessageHost} /> */}
-            <Route path="/location/:id" exact component={ListingsLocation} />
+    //         <Route path="/listing/:id" component={ListingDetail} />
+    //         <Route path="/checkout/:id/:checkin/:checkout/:guests" component={Booking} />
+    //         <Route path="/location/:id" exact component={ListingsLocation} />
 
-            {/* <Route path="/login" component={Login} /> */}
-            {/* <Redirect exact from='/' to='/login' /> */}
-            {/* <PrivateRoute path='/guest' component={GuestFeauture} />
-          <Route path="/error" component={MainErrorPage} />
-          <Route component={NotFoundPage} /> */}
-          </Switch>
-        </BrowserRouter>
-      </Suspense>
-    </>
+    //         {/* <Route path="/login" component={Login} /> */}
+    //         {/* <Redirect exact from='/' to='/login' /> */}
+    //         {/* <PrivateRoute path='/guest' component={GuestFeauture} />
+    //       <Route path="/error" component={MainErrorPage} />
+    //       <Route component={NotFoundPage} /> */}
+    //       </Switch>
+    //     </BrowserRouter>
+    //   </Suspense>
+    // </>
 
   )
 }

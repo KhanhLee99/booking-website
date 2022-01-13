@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './styles.scss';
 import { useHistory } from 'react-router';
-import { Link, NavLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import listingApi from '../../../../api/listingApi';
-import ListingItemImage from './ListingItemImage/ListingItemImage';
 import LoginModal from '../../../../components/LoginModal/LoginModal';
+import ThumbListingPlaceholder from '../../../../components/Placeholder/ThumbListingPlaceholder/ThumbListingPlaceholder';
 
 ListingItem.propTypes = {
 
@@ -40,7 +40,7 @@ const geodir_js_favorite_btn = {
     zIndex: '20',
     cursor: 'pointer',
     color: '#fff',
-    textAlign: 'center'
+    textAlign: 'center',
 }
 
 const geodir_js_favorite_btn_i = {
@@ -416,16 +416,13 @@ function ListingItem(props) {
                         :
                         <a onClick={(e) => handleSave(e)} className="k-geodir-js-favorite_btn" style={geodir_js_favorite_btn}><i className="fal fa-heart" style={geodir_js_favorite_btn_i} /><span style={geodir_js_favorite_btn_span}>Save</span></a>
                     }
-                    {/* <div className="k-geodir-js-favorite_btn" style={geodir_js_favorite_btn}><i className="fal fa-heart" style={geodir_js_favorite_btn_i} /><span style={geodir_js_favorite_btn_span}>Save</span></div> */}
                     <a href="listing-single.html" className="k-geodir-category-img-wrap fl-wrap" style={geodir_category_img_wrap}>
-                        {/* <img src={listing.listing_img} alt="" style={geodir_category_img_wrap_img} /> */}
-                        <ListingItemImage
+                        <ThumbListingPlaceholder
                             listing_img={listing.listing_img}
+                            className='geodir_category_img_wrap_img'
                         />
                     </a>
-                    {/* <div className="k-listing-avatar" style={listing_avatar}><a href="author-single.html"><img src="https://cdn.luxstay.com/users/329302/X2Ht56Nlx5GBsHV4oUmeE1w-.jpg" alt="" style={listing_avatar_img} /></a>
-                        <span className="k-avatar-tooltip" style={avatar_tooltip}>Added By  <strong>Alisa Noory</strong></span>
-                    </div> */}
+
                     <div className="k-geodir-category-opt" style={geodir_category_opt}>
                         <div className="k-listing-rating-count-wrap">
                             <div className="k-review-score" style={review_score}>4.8</div>
@@ -445,7 +442,6 @@ function ListingItem(props) {
                         </div>
                     </div>
                     <div className="k-geodir-category-text fl-wrap" style={{ padding: '0 20px' }}>
-                        {/* <p className="k-small-text" style={geodir_category_content_p}>{listing.listing_type} - {listing.bedroom_count} phòng ngủ</p> */}
                         <div className="k-facilities-list fl-wrap" style={{ margin: '10px 0' }}>
                             <div className="k-facilities-list-title" style={facilities_list_title}>Facilities : </div>
                             <ul style={{ listStyle: 'none' }}>

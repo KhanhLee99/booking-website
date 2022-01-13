@@ -27,10 +27,10 @@ export const hostLogin = createAsyncThunk('host/login', async (payload) => {
     return response;
 })
 
-// export const updateDeviceToken = createAsyncThunk('update/device-token', async (payload) => {
-//     const response = await userApi.updateDeviceToken(payload);
-//     return response;
-// })
+export const deleteDeviceToken = createAsyncThunk('delete/device-token', async () => {
+    const response = await userApi.deleteDeviceToken();
+    return response;
+})
 
 const userSlice = createSlice({
     name: 'userSlice',
@@ -84,6 +84,15 @@ const userSlice = createSlice({
             localStorage.setItem('access_token', action.payload.data.token);
             localStorage.setItem('user', JSON.stringify(action.payload.data));
         },
+
+        [deleteDeviceToken.fulfilled]: (state) => {
+            // clear local storage
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('role');
+            // reset current
+            state.current = {};
+        }
     }
 });
 

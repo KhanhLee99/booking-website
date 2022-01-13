@@ -28,7 +28,7 @@ function CommonUserProfile(props) {
                                         <li><Link to="/me/change-password">Thay đổi mật khẩu</Link></li>
                                         <li><a href="dashboard-myprofile.html">Thanh toán</a></li>
                                         <li><Link to="/me/favorite">Danh sách yêu thích</Link></li>
-                                        <li><a href="dashboard-password.html">Change Password</a></li>
+                                        <li><Link to="/me/bookings">Bookings</Link></li>
                                     </ul>
                                 </div>
 

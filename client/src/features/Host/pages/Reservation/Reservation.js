@@ -4,6 +4,7 @@ import adminListing from '../../../../api/adminListing';
 import { useSelector } from 'react-redux';
 import ReservationItem from '../../components/ReservationItem/ReservationItem';
 import HeaderHost from '../../components/HeaderHost';
+import './Reservation.scss';
 
 Reservation.propTypes = {
 
@@ -31,35 +32,21 @@ function Reservation(props) {
         }
     }, []);
     return (
-        <div id="wrapper">
+        <div id="wrapper" style={{ background: '#f6f6f6' }}>
             <HeaderHost />
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col" className='k-title-name-th'>Guest</th>
-                        <th scope="col">Listing</th>
-                        <th scope="col">Total Price</th>
-                        <th scope="col">Payment Method</th>
-                        <th scope="col">Payment Status</th>
-                        <th scope="col">Create At</th>
-                        <th scope="col">Status</th>
-                        <th scope="col">Operations</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {loading ? <>
-                        {/* <HostingSkeleton /> */}
-                    </> :
-                        booking.map((item, index) => (
-                            <ReservationItem
-                                key={index}
-                                reservation={item}
-                            />
-                        ))
+            <div className='container'>
+                <div className="dashboard-list-box fl-wrap">
+                    {
+                        loading ? <div>Loading</div> :
+                            booking.map((item, index) => (
+                                <ReservationItem
+                                    key={index}
+                                    reservation={item}
+                                />
+                            ))
                     }
-                </tbody>
-            </table>
+                </div>
+            </div>
         </div>
     );
 }

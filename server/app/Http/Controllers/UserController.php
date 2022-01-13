@@ -149,7 +149,23 @@ class UserController extends Controller
                 $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
             }
+            return response()->json($this->response, 400);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);
+        }
+    }
+
+    public function delete_device_token(Request $request)
+    {
+        try {
+            $current_user = $request->user('api');
+            if ($current_user->update([
+                'device_token' => null
+            ])) {
+                return response()->json($this->response, $this->success_code);
+            }
+            return response()->json($this->response, 400);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);

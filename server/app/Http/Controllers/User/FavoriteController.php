@@ -57,33 +57,29 @@ class FavoriteController extends Controller
             }
             if ($listing_id = $request->listing_id) {
                 $user_login = $request->user('api');
-                $data = [
-                    "user_id" => $user_login->id,
-                    "listing_id" => $listing_id
-                ];
-                if (Favorite::create($data)) {
-                    $this->response['status'] = 'success';
-                    return response()->json($this->response, $this->success_code);
+
+                if ($favorite = Favorite::where([
+                    ["user_id", $user_login->id],
+                    ["listing_id", $listing_id]
+                ])->get()) {
+                    if ($favorite->each->delete()) {
+                        $this->response['status'] = 'success';
+                        return response()->json($this->response, $this->success_code);
+                    }
+                } else {
+                    $data = [
+                        "user_id" => $user_login->id,
+                        "listing_id" => $listing_id
+                    ];
+
+                    if (Favorite::create($data)) {
+                        $this->response['status'] = 'success';
+                        return response()->json($this->response, $this->success_code);
+                    }
                 }
+
                 return response()->json($this->response);
             }
-            return response()->json($this->response);
-        } catch (Exception $e) {
-            $this->response['errorMessage'] = $e->getMessage();
-            return response()->json($this->response);
-        }
-    }
-
-    public function delete($id)
-    {
-        try {
-            $favorite = Favorite::find($id);
-            if ($favorite) {
-                $favorite->delete();
-                $this->response['status'] = 'success';
-                return response()->json($this->response, $this->success_code);
-            }
-            $this->response['errorMessage'] = "Record có id = $id không tồn tại";
             return response()->json($this->response);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();

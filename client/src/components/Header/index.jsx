@@ -2,12 +2,13 @@ import React from 'react';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { logout } from '../../app/reducer/userSlice';
+import { deleteDeviceToken, logout } from '../../app/reducer/userSlice';
 import './styles.css';
 import Popup from 'reactjs-popup';
 import LoginPopup from '../LoginPopup';
 import AvatarPlaceholder from '../Placeholder/AvatarPlaceholder/AvatarPlaceholder';
 import LoginModal from '../LoginModal/LoginModal';
+import userApi from '../../api/userApi';
 
 
 const main_header = {
@@ -221,9 +222,15 @@ function Header(props) {
 
     const [showPopupProfile, setShowPopupProfile] = useState(false);
 
-    const handleLogout = (e) => {
+    const handleLogout = async (e) => {
         e.preventDefault();
-        dispatch(logout());
+        await dispatch(deleteDeviceToken()).then(() => {
+            refreshPage();
+        })
+    }
+
+    const refreshPage = () => {
+        window.location.reload();
     }
 
     // const { loggedInUser, isLoggedIn } = props;
@@ -240,7 +247,7 @@ function Header(props) {
             {
                 isLoggedIn ? <>
                     <div className="k-cart-btn show-header-modal" data-microtip-position="bottom" role="tooltip" aria-label="Your Wishlist" style={cart_btn}>
-                        <i className="fal fa-heart" style={{ width: '12px' }} /><span className="k-cart-counter" style={cart_counter} >4</span>
+                        <i className="fas fa-bell" style={{ width: '12px' }} /><span className="k-cart-counter" style={cart_counter} >4</span>
                     </div>
 
                     <div className="header-user-menu hu-menu-visdec" style={header_user_menu}>
@@ -255,8 +262,11 @@ function Header(props) {
                         </div>
                         <ul className={showPopupProfile ? 'hu-menu-vis' : ''}>
                             <li style={header_user_menu_ul_li}><Link to="/me/profile" style={header_user_menu_ul_li_a}> Edit profile</Link></li>
-                            <li style={header_user_menu_ul_li}><a href="dashboard-bookings.html" style={header_user_menu_ul_li_a}>  Bookings</a></li>
+                            <li style={header_user_menu_ul_li}><Link to="/me/bookings" style={header_user_menu_ul_li_a}>  Bookings</Link></li>
                             <li style={header_user_menu_ul_li}><Link to="/me/favorite" style={header_user_menu_ul_li_a}> Danh sách yêu thích </Link></li>
+                            {loggedInUser.role_id === 2 ?
+                                <li style={header_user_menu_ul_li}><Link to="/host/listings" style={header_user_menu_ul_li_a}>Quản lý nhà/phòng cho thuê</Link></li>
+                                : null}
                             <li style={header_user_menu_ul_li}><a href="#" style={header_user_menu_ul_li_a} onClick={(e) => handleLogout(e)}> Log Out</a></li>
                         </ul>
                     </div>
