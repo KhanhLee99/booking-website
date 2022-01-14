@@ -24,7 +24,17 @@ const listingApi = {
     getBaseInfoListing: (id) => {
         const url = `listing/${id}/base-infomation`;
         return axiosClient.get(url);
-    }
+    },
+
+    filterByListingType: (params) => {
+        const url = 'listing-type/filter';
+        return axiosClient.get(url, params);
+    },
+
+    filterByRating: (params) => {
+        const url = 'listing-rating/filter';
+        return axiosClient.get(url, params);
+    },
 }
 
 export default listingApi;
