@@ -58,9 +58,9 @@ const hostApi = {
             });
     },
 
-    getListingsByUserId: (id) => {
-        const url = `/listing/user/${id}`;
-        return axiosClient.get(url)
+    getListingsByUserId: (params) => {
+        const url = '/listing/user';
+        return axiosClient.get(url, params)
             .catch(function (error) {
                 console.log(error);
             });

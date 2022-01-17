@@ -32,10 +32,16 @@ export const deleteDeviceToken = createAsyncThunk('delete/device-token', async (
     return response;
 })
 
+export const getMe = createAsyncThunk('user/getMe', async () => {
+    const response = await userApi.getMe();
+    return response;
+})
+
 const userSlice = createSlice({
     name: 'userSlice',
     initialState: {
-        current: JSON.parse(localStorage.getItem('user')) || {},
+        // current: JSON.parse(localStorage.getItem('user')) || {},
+        current: {},
         host: JSON.parse(localStorage.getItem('host')) || {},
         deviceToken: ''
     },
@@ -62,12 +68,12 @@ const userSlice = createSlice({
         [login.fulfilled]: (state, action) => {
             state.current = action.payload.data
             localStorage.setItem('access_token', action.payload.data.token);
-            localStorage.setItem('user', JSON.stringify(action.payload.data));
+            // localStorage.setItem('user', JSON.stringify(action.payload.data));
         },
         [hostLogin.fulfilled]: (state, action) => {
             state.current = action.payload.data
-            localStorage.setItem('host_access_token', action.payload.data.token);
-            localStorage.setItem('host', JSON.stringify(action.payload.data));
+            localStorage.setItem('access_token', action.payload.data.token);
+            localStorage.setItem('user', JSON.stringify(action.payload.data));
         },
         [loginGoogle.fulfilled]: (state, action) => {
             state.current = action.payload.data.user;
@@ -83,6 +89,18 @@ const userSlice = createSlice({
             state.current = action.payload.data
             localStorage.setItem('access_token', action.payload.data.token);
             localStorage.setItem('user', JSON.stringify(action.payload.data));
+        },
+
+        [getMe.fulfilled]: (state, action) => {
+            state.current = action.payload.data;
+            // localStorage.setItem('user', JSON.stringify(action.payload.data));
+        },
+
+        [getMe.rejected]: (state) => {
+            state.current = {};
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('role');
         },
 
         [deleteDeviceToken.fulfilled]: (state) => {

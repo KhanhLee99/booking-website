@@ -18,6 +18,7 @@ import DnDCalendarr from '../../components/Test/calendar/DnDCalendar';
 import Reservation from './pages/Reservation/Reservation';
 import Hosting from './pages/Hosting';
 import ReservationDetail from './pages/ReservationDetail/ReservationDetail';
+import Reviews from './pages/Reviews/Reviews';
 
 HostFeature.propTypes = {
 
@@ -28,53 +29,6 @@ function HostFeature(props) {
     return (
         <>
             <Switch>
-                {/* <Route
-                    path={`${match.url}/basic-infomation`}
-                    exact
-                    component={BasicInfomation}
-                />
-
-                <Route
-                    path={`${match.url}/:id/basic-infomation`}
-                    exact
-                    component={BasicInfomation}
-                />
-
-                <Route
-                    path={`${match.url}/:id/location`}
-                    exact
-                    component={Location}
-                />
-
-                <Route
-                    path={`${match.url}/:id/floor-plan`}
-                    exact
-                    component={Rooms}
-                />
-
-                <Route
-                    path={`${match.url}/:id/amenities`}
-                    exact
-                    component={Amenity}
-                />
-
-                <Route
-                    path={`${match.url}/:id/photos`}
-                    exact
-                    component={AddPhotos}
-                />
-
-                <Route
-                    path={`${match.url}/:id/title`}
-                    exact
-                    component={AddName}
-                />
-
-                <Route
-                    path={`${match.url}/:id/price`}
-                    exact
-                    component={AddPrice}
-                /> */}
 
                 <Route
                     path={`${match.url}/calendar/listing/:id`}
@@ -98,6 +52,12 @@ function HostFeature(props) {
                     path={`${match.url}/reservation/:id`}
                     exact
                     component={ReservationDetail}
+                />
+
+                <Route
+                    path={`${match.url}/reviews`}
+                    exact
+                    component={Reviews}
                 />
 
 

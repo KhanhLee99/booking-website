@@ -40,8 +40,8 @@ function FilterItem(props) {
     const { item, handleFilter } = props;
     return (
         <li style={filter_tags_li}>
-            <input id={item.id} type="checkbox" name="check" style={checkbox} onChange={handleFilter}/>
-            <label htmlFor={item.id} style={title}>{item.name}</label>
+            <input id={item.id} type="checkbox" name="check" style={checkbox} onChange={handleFilter} />
+            <label htmlFor={item.value} style={title}>{item.name}</label>
             <span className='_4abc4c3d5'>85</span>
         </li>
     );

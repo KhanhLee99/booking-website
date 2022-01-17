@@ -62,9 +62,6 @@ const guestSlice = createSlice({
     },
     // when thunk successfully, use extraReducer update data
     extraReducers: {
-        //     [login.fulfilled]: (state, action) => {
-        // 		state.current = action.payload;
-        // 	},
         [logout.fulfilled]: (state) => {
             state.current = {};
         },
@@ -76,7 +73,16 @@ const guestSlice = createSlice({
         },
         [getMe.fulfilled]: (state, action) => {
             state.current = action.payload.data;
+            // localStorage.setItem('user', JSON.stringify(action.payload.data));
         },
+
+        [getMe.rejected]: (state) => {
+            state.current = {};
+            localStorage.removeItem('access_token');
+            localStorage.removeItem('user');
+            localStorage.removeItem('role');
+        },
+
         [login.fulfilled]: (state, action) => {
             state.current = action.payload.data
             localStorage.setItem('access_token', action.payload.data.token);

@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom';
 import listingApi from '../../../../api/listingApi';
 import LoginModal from '../../../../components/LoginModal/LoginModal';
 import ThumbListingPlaceholder from '../../../../components/Placeholder/ThumbListingPlaceholder/ThumbListingPlaceholder';
+import Dotdotdot from 'react-dotdotdot'
 
 ListingItem.propTypes = {
 
@@ -437,7 +438,14 @@ function ListingItem(props) {
                         <div className="geodir-category-content-title-item" style={geodir_category_content_title_item}>
                             <p className="k-small-text" style={geodir_category_content_p}>{listing.listing_type} - {listing.bedroom_count} phòng ngủ</p>
 
-                            <h3 className="title-sin_map" style={geodir_category_content_h3}><Link to={`/listing/${listing.listing_id}`} style={{ color: '#566985' }}>{listing.name}</Link></h3>
+
+                            <h3 className="title-sin_map" style={geodir_category_content_h3}>
+                                <Link to={`/listing/${listing.listing_id}`} style={{ color: '#566985' }} title={listing.name}>
+                                    <Dotdotdot clamp={2}>
+                                        <p>{listing.name}</p>
+                                    </Dotdotdot>
+                                </Link>
+                            </h3>
                             <div className="k-geodir-category-location fl-wrap"><a href="#1" className="map-item" style={geodir_category_location_a}><i className="fas fa-map-marker-alt" style={{ color: '#4DB7FE', paddingRight: '6px' }} />{listing.street_address}</a></div>
                         </div>
                     </div>

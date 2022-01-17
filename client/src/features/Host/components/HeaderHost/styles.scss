@@ -1,3 +1,36 @@
 #navigation ul ul li {
     width: 220px;
 }
+
+.nav_holder_nav_li_ul {
+    margin: 30px 0 0 0;
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    min-width: 150px;
+    top: 50px;
+    left: 0;
+    z-index: 1;
+    padding: 10px 0;
+    background: #fff;
+    border-radius: 6px;
+    border: 1px solid #eee;
+    transition: all 0.2s ease-in-out;
+    list-style: none;
+}
+
+.nav-holder ul .nav_holder_nav_li_ul.hu-menu-vis {
+    opacity: 1;
+    visibility: visible;
+    top: 20px;
+}
+
+.k-main-header.relative {
+    position: relative;
+
+    & .nav-holder {
+        position: absolute;
+        right: 50%;
+        transform: translateX(40%);
+    }
+}

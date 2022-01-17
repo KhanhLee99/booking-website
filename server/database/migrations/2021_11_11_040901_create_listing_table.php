@@ -37,6 +37,8 @@ class CreateListingTable extends Migration
             $table->enum('rental_form', ['entire_place', 'private_room', 'shared_room'])->nullable();
             $table->enum('reservation_form', ['quick', 'request'])->nullable();
             $table->boolean('is_public')->nullable();
+            $table->boolean('is_verified')->default(0);
+            $table->enum('status', ['active', 'stop_public', 'block_activity'])->nullable();
 
             $table->unsignedBigInteger('listing_type_id')->nullable();
             $table->foreign('listing_type_id')->references('id')->on('listing_type');

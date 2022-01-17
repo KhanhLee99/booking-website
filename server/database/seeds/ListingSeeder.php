@@ -37,7 +37,7 @@ class ListingSeeder extends Seeder
                 'standard_guest_count' => $faker->numberBetween($min = 2, $max = 10),
                 'listing_type_id' => $faker->numberBetween($min = 1, $max = 7),
                 'city_id' => $city_id,
-                'user_id' => 2,
+                'user_id' => rand(15, 20),
                 'bedroom_count' => $faker->numberBetween($min = 1, $max = 5),
                 'bed_count' => $faker->numberBetween($min = 1, $max = 5),
                 'bathroom_count' => $faker->numberBetween($min = 1, $max = 5),
@@ -46,6 +46,9 @@ class ListingSeeder extends Seeder
                 'avatar_url' => "https://picsum.photos/id/" . rand(1, 1000) . "/400/300",
                 'rental_form' => $faker->randomElement(['entire_place', 'private_room', 'shared_room']),
                 'reservation_form' => $faker->randomElement(['quick', 'request']),
+                'is_verified' => rand(0, 1),
+                'status' => $faker->randomElement(['active', 'stop_public', 'block_activity']),
+                'rating' => $faker->randomFloat($nbMaxDecimals = 1, $min = 1, $max = 5)
             ]);
 
             $last_listing = Listing::orderBy('id', 'desc')->first();
@@ -67,8 +70,8 @@ class ListingSeeder extends Seeder
             for ($v = 0; $v < 5; $v++) {
                 DB::table('review_listing')->insert([
                     'note' => $faker->text($maxNbChars = 100),
-                    'rating' => rand(1,5),
-                    'guest_id' => rand(3,10),
+                    'rating' => rand(1, 5),
+                    'guest_id' => rand(3, 10),
                     'listing_id' => $last_listing->id
                 ]);
             }

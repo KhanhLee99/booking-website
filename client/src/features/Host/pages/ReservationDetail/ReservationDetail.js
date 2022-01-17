@@ -60,7 +60,7 @@ function ReservationDetail(props) {
     return (
         <div id="wrapper">
             <HeaderHost />
-            <div className='container'>
+            <div className='container' style={{ marginTop: '100px' }}>
 
                 <div className='row'>
                     <div className='col-12'>

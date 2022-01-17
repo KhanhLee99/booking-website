@@ -21,9 +21,9 @@ const adminListing = {
         return axiosClient.put(url);
     },
 
-    getHostBooking: (host_id) => {
+    getHostBooking: (host_id, params) => {
         const url = `/reservation/host/${host_id}`;
-        return axiosClient.get(url);
+        return axiosClient.get(url, params);
     }
 }
 

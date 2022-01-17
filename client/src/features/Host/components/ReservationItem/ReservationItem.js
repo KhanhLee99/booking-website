@@ -31,11 +31,16 @@ const color_reservation_status = (status_id) => {
     }
 }
 
+const ava_size = {
+    width: '60px',
+    height: '60px'
+}
+
 function ReservationItem(props) {
     const { reservation } = props;
     return (
-        <div className="dashboard-list fl-wrap" style={{ border: '1px solid #e5e7f2', marginBottom: '20px' }}>
-            <div className="dashboard-message">
+        <div className="dashboard-list fl-wrap " style={{ border: '1px solid #e5e7f2', marginBottom: '20px' }}>
+            <div className="dashboard-message r-item">
                 <div className="k-booking-status">
                     <span className='status-text' style={color_reservation_status(reservation.reservation_status_id)}>{reservation.status}</span>
                     <p className='booking-price'>{parseInt(reservation.total_price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }).replace('.', ',')}</p>
@@ -54,6 +59,7 @@ function ReservationItem(props) {
                     <AvatarPlaceholder
                         avatar_url={reservation.user_avatar_url}
                         className='avatar-radius'
+                        style={ava_size}
                     />
                     <h4 className='b'><a href={`/listing/`}>{reservation.user_name}</a></h4>
                 </div>

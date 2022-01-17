@@ -38,6 +38,11 @@ const userApi = {
         const url = '/delete-device-token';
         return axiosClient.put(url);
     },
+
+    getMe: () => {
+        const url = '/me';
+        return axiosClient.get(url);
+    }
 }
 
 export default userApi;

@@ -16,12 +16,21 @@ function MyBooking(props) {
         })
     }
 
+    const handleCancel = async (id) => {
+        const params = {
+            reservation_status_id: 4
+        }
+        await reservationApi.editStatusReservation(id, params);
+    }
+
     useEffect(() => {
         fetchMyReservation();
         return () => {
             setReservations([]);
         }
     }, []);
+
+
     return (
         <div>
             <h3 className='h3_title'>Bookings</h3>
@@ -30,6 +39,7 @@ function MyBooking(props) {
                     <UserBookingItem
                         key={index}
                         reservation={item}
+                        handleCancel={handleCancel}
                     />
                 ))}
             </div>

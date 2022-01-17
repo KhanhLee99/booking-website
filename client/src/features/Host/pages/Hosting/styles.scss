@@ -50,3 +50,21 @@ table tbody tr th {
     vertical-align: middle !important;
     font-family: "Open Sans", sans-serif;
 }
+
+.filter-host-listing {
+    float: right;
+    width: 40%;
+    position: relative;
+
+    & > .dropdown {
+        width: 40%;
+        position: absolute;
+        right: 0;
+        float: right;
+    }
+
+    & > .search {
+        float: left;
+        width: 58%;
+    }
+}

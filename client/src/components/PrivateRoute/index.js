@@ -70,7 +70,7 @@ export function PrivateRouteAdmin({ component: Component, layout: Layout, ...res
 }
 
 export function PrivateRouteAddListing({ component: Component, layout: Layout, ...rest }) {
-	const loggedInUser = useSelector((state) => state.userSlice.host);
+	const loggedInUser = useSelector((state) => state.userSlice.current);
 	const isLoggedIn = !!loggedInUser.id;
 
 	return (

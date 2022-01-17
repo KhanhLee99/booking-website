@@ -18,9 +18,12 @@ use App\Listing_Amenities;
 use App\Photo_Listing;
 use Exception;
 
+
+
 class ListingController extends Controller
 {
     //
+
     private $success_code = 200;
     private $response = [
         'status' => 'fail'
@@ -140,15 +143,24 @@ class ListingController extends Controller
         }
     }
 
-    public function getListingsByUserId($user_id)
+    public function getListingsByUserId(Request $request)
     {
         try {
-            $listings = User::find($user_id)->Listings;
+            $user = $request->user('api');
+            $status = $request->status;
+            switch ($status) {
+                case 'all':
+                    $listings = User::find($user->id)->Listings()->paginate($request->limit);
+                    break;
+                case 'unverified':
+                    $listings = User::find($user->id)->Listings()->where('is_verified', 0)->paginate($request->limit);
+                    break;
+                default:
+                    $listings = User::find($user->id)->Listings()->where('status', $status)->paginate($request->limit);
+                    break;
+            }
+            // $listings = User::find($user->id)->Listings()->paginate($request->limit);
             $listings->makeHidden(['user_id']);
-            $user = User::find($user_id);
-            // foreach ($listings as $listing) {
-            //     $listing['user'] = $user;
-            // }
             $this->response = [
                 'status' => 'success',
                 'data' => $listings,
@@ -449,6 +461,4 @@ class ListingController extends Controller
             return response()->json($this->response);
         }
     }
-
-
 }

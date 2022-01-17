@@ -239,7 +239,6 @@ function Header(props) {
     return (
 
         <header className="k-main-header" style={main_header}>
-            {/* logo*/}
             <Link to="/" className="k-logo-holder" style={logo_holder}><img src="https://i.ytimg.com/vi/FPtITmtjWhQ/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB3TdlYzQKkXD7XtPbNwCGLGycr2Q" alt="" style={{ width: 'auto', height: '100%' }} /></Link>
             {/* header-search_btn*/}
             <div className="k-header-search_btn show-search-button" style={header_search_btn}><i className="fal fa-search" style={{ color: '#4DB7FE', marginRight: '30px' }} /> <span style={{ position: 'relative' }}>Search</span></div>

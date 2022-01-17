@@ -82,7 +82,7 @@ Route::get('listing', 'Host\ListingController@index');
 Route::delete('listing/{id}', 'Host\ListingController@delete');
 Route::put('listing/{id}', 'Host\ListingController@edit');
 Route::put('listing/update-thumbnail/{id}', 'Host\ListingController@update_thumbnail');
-Route::get('listing/user/{user_id}', 'Host\ListingController@getListingsByUserId');
+Route::get('listing/user', 'Host\ListingController@getListingsByUserId');
 Route::post('listing/amenities/{id}', 'Host\ListingController@add_listing_amenities');
 Route::get('listing/city/{id}', 'Host\ListingController@get_listing_by_city_id');
 Route::get('listing/newest', 'Host\ListingController@get_last_listing');
@@ -120,6 +120,7 @@ Route::delete('photo-listing/all/{id}', 'Host\PhotoListingController@delete_all_
 // Review Listing
 Route::post('review-listing/{id}', 'User\ReviewListingController@add');
 Route::get('review-listing/{id}', 'User\ReviewListingController@index');
+Route::get('host/review-listing', 'User\ReviewListingController@get_review_by_host_id');
 
 // Block booking
 Route::post('block-booking/add', 'Host\BlockBookingController@add');
@@ -165,8 +166,8 @@ Route::get('send-mail-auth', 'Mails\MailAuthController@send_mail');
 
 // Detail Listing
 Route::get('listing-location', 'Common\DetailListingController@get_litings_location');
-Route::get('listing-type/filter', 'Common\DetailListingController@filter_by_listing_type');
-Route::get('listing-rating/filter', 'Common\DetailListingController@filter_by_star');
+Route::post('listing-type/filter', 'Common\DetailListingController@filter_by_listing_type');
+Route::post('listing-rating/filter', 'Common\DetailListingController@filter_by_star');
 
 Route::get('listing/{id}', 'Host\ListingController@get_listing_by_id');
 

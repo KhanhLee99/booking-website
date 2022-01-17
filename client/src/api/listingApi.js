@@ -28,12 +28,12 @@ const listingApi = {
 
     filterByListingType: (params) => {
         const url = 'listing-type/filter';
-        return axiosClient.get(url, params);
+        return axiosClient.post(url, params);
     },
 
     filterByRating: (params) => {
         const url = 'listing-rating/filter';
-        return axiosClient.get(url, params);
+        return axiosClient.post(url, params);
     },
 }
 

@@ -16,17 +16,38 @@ class ReservationController extends Controller
         'status' => 'fail'
     ];
 
-    public function get_host_booking($host_id)
+    public function get_host_booking(Request $request, $host_id)
     {
         try {
-            $data = DB::table('reservation')
-                ->join('users', 'users.id', '=', 'reservation.guest_id')
-                ->join('listing', 'listing.id', '=', 'reservation.listing_id')
-                ->where('listing.user_id', $host_id)
-                ->orderBy('reservation.id', 'desc')
-                ->join('reservation_status', 'reservation_status.id', '=', 'reservation.reservation_status_id')
-                ->select('reservation.*', 'listing.name as listing_name', 'listing.street_address', 'listing.avatar_url as thumb_img', 'users.name as user_name', 'users.avatar_url as user_avatar_url', 'reservation_status.name as status')
-                ->get();
+            $filter = $request->filter;
+            switch ($filter) {
+                case 'request':
+                    $data = DB::table('reservation')
+                        ->join('users', 'users.id', '=', 'reservation.guest_id')
+                        ->join('listing', 'listing.id', '=', 'reservation.listing_id')
+                        ->where('listing.user_id', $host_id)
+                        ->where('reservation_status_id', 1)
+                        ->orderBy('reservation.id', 'desc')
+                        ->join('reservation_status', 'reservation_status.id', '=', 'reservation.reservation_status_id')
+                        ->select('reservation.*', 'listing.name as listing_name', 'listing.street_address', 'listing.avatar_url as thumb_img', 'users.name as user_name', 'users.avatar_url as user_avatar_url', 'reservation_status.name as status')
+                        ->paginate($request->limit);
+                    break;
+                case 'upcoming':
+                    break;
+                case 'today':
+                    break;
+                default:
+                    $data = DB::table('reservation')
+                        ->join('users', 'users.id', '=', 'reservation.guest_id')
+                        ->join('listing', 'listing.id', '=', 'reservation.listing_id')
+                        ->where('listing.user_id', $host_id)
+                        ->orderBy('reservation.id', 'desc')
+                        ->join('reservation_status', 'reservation_status.id', '=', 'reservation.reservation_status_id')
+                        ->select('reservation.*', 'listing.name as listing_name', 'listing.street_address', 'listing.avatar_url as thumb_img', 'users.name as user_name', 'users.avatar_url as user_avatar_url', 'reservation_status.name as status')
+                        ->paginate($request->limit);
+                    break;
+            }
+
             if ($data) {
                 $this->response = [
                     'status' => 'success',

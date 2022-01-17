@@ -114,35 +114,61 @@ function ListingsLocation(props) {
         console.log(type);
         switch (type) {
             case 'type':
+
                 if (e.target.checked) {
+                    filterByType([...filterType, parseInt(e.target.id)])
                     setFilterType([...filterType, parseInt(e.target.id)]);
                 } else {
-                    setFilterType(filterType.filter((id) => id !== parseInt(e.target.id)));
+                    const ids = filterType.filter((id) => id !== parseInt(e.target.id));
+                    ids.length > 0 ? filterByType(ids) : fetchListings();
+                    setFilterType(ids);
                 }
-                filterByType();
                 console.log(filterType);
                 break;
             case 'star':
                 if (e.target.checked) {
+                    filterByRating([...filterStar, parseInt(e.target.id)]);
                     setFilterStar([...filterStar, parseInt(e.target.id)]);
                 } else {
-                    setFilterStar(filterStar.filter((id) => id !== parseInt(e.target.id)));
+                    const stars = filterStar.filter((id) => id !== parseInt(e.target.id));
+                    stars.length > 0 ? filterByRating(stars) : fetchListings();
+                    setFilterStar(stars);
                 }
                 console.log(filterStar);
                 break;
             default:
-            // code block
+                break;
         }
-
     }
 
-    const filterByType = async () => {
+    const filterByType = async (ids) => {
         const params = {
             city_id: id,
             limit: 10,
-            list_type_id: filterType
+            list_type_id: ids
         }
-        await listingApi.filterByListingType(params).then(res => console.log(res))
+        setLoading(true);
+        await listingApi.filterByListingType(params).then(res => {
+            setLoading(false);
+            setListings(res.data.data.data)
+            setTotalPages(res.data.data.last_page);
+            window.scrollTo(0, 0)
+        })
+    }
+
+    const filterByRating = async (stars) => {
+        const params = {
+            city_id: id,
+            limit: 10,
+            rate: stars
+        }
+        setLoading(true);
+        await listingApi.filterByRating(params).then(res => {
+            setLoading(false);
+            setListings(res.data.data.data)
+            setTotalPages(res.data.data.last_page);
+            window.scrollTo(0, 0)
+        })
     }
 
     return (
@@ -156,6 +182,7 @@ function ListingsLocation(props) {
                             star={star}
                             handleFilter={handleFilter}
                         />
+                        <button onClick={filterByType}>Search</button>
                     </div>
 
                     <div className="col-md-8">

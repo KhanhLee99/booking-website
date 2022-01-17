@@ -17,10 +17,16 @@ class CreateReviewListingTable extends Migration
             $table->id();
             $table->string('note');
             $table->float('rating');
+
             $table->unsignedBigInteger('guest_id');
             $table->foreign('guest_id')->references('id')->on('users')->onDelete('cascade');
+
             $table->unsignedBigInteger('listing_id');
             $table->foreign('listing_id')->references('id')->on('listing')->onDelete('cascade');
+
+            $table->unsignedBigInteger('reservation_id');
+            $table->foreign('reservation_id')->references('id')->on('reservation')->onDelete('cascade');
+
             $table->timestamps();
         });
     }

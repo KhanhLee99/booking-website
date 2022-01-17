@@ -30,16 +30,43 @@ const color_reservation_status = (status_id) => {
 }
 
 function UserBookingItem(props) {
-    const { reservation } = props;
+    const { reservation, handleCancel } = props;
+
+    const cancelReservation = (e) => {
+        e.preventDefault();
+        handleCancel(reservation.id);
+    }
+
+    const checkBtnCancel = () => {
+        if (reservation.reservation_status_id != 4) {
+            return <a href='#' className='cancel-reservation-btn' onClick={(e) => cancelReservation(e)}>Huỷ đặt phòng</a>
+        }
+        return null;
+    }
 
     return (
 
         <div className="dashboard-list fl-wrap" style={{ border: '1px solid #e5e7f2', marginBottom: '20px' }}>
-            <div className="dashboard-message">
+            <div className='fl-wrap reservation-head'>
+                <div className='host-info'>
+                    hsdgfjhgas
+                </div>
+
                 <div className="k-booking-status">
+                    {checkBtnCancel()}
                     <span className='status-text' style={color_reservation_status(reservation.reservation_status_id)}>{reservation.status}</span>
+                </div>
+            </div>
+
+            <div className='fl-wrap'>
+                <span class="fw-separator"></span>
+            </div>
+
+            <div className="dashboard-message">
+                <div className="k-booking-price">
                     <p className='booking-price'>{parseInt(reservation.total_price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }).replace('.', ',')}</p>
                 </div>
+
                 <div className="dashboard-message-text">
                     <Link to={`/listing/${reservation.listing_id}`}>
                         <ThumbListingPlaceholder
@@ -56,3 +83,5 @@ function UserBookingItem(props) {
 }
 
 export default UserBookingItem;
+
+

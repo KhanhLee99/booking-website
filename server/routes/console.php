@@ -17,3 +17,9 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+Artisan::command('refresh:db', function () {
+    Artisan::call('migrate:refresh', []); // optional arguments
+    Artisan::call('passport:install');
+    Artisan::call('db:seed');
+})->describe('Running commands');

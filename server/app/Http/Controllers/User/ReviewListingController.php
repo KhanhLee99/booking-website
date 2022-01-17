@@ -53,4 +53,32 @@ class ReviewListingController extends Controller
             return response()->json($this->response);
         }
     }
+
+    public function get_review_by_host_id(Request $request)
+    {
+        try {
+            $user_login = $request->user('api');
+            if ($user_login) {
+                $data = DB::table('review_listing')
+                    ->join('listing', 'review_listing.listing_id', '=', 'listing.id')
+                    ->join('users', 'review_listing.guest_id', '=', 'users.id')
+                    ->where('listing.user_id', $user_login->id)
+                    ->orderBy('review_listing.id', 'DESC')
+                    ->select('review_listing.note as content', 'review_listing.rating', 'review_listing.created_at', 'listing.name as listing_name', 'users.name as user_name', 'users.avatar_url as user_avatar')
+                    ->paginate($request->limit);
+                if ($data) {
+                    $this->response = [
+                        'status' => 'success',
+                        'data' => $data
+                    ];
+                    return response()->json($this->response, $this->success_code);
+                }
+                return response()->json($this->response, 400);
+            }
+            return response()->json($this->response, 401);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
+    }
 }
