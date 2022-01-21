@@ -26,23 +26,22 @@ function BestCity(props) {
                     <p>In ut odio libero, at vulputate urna. Nulla tristique mi a massa convallis cursus.</p>
                 </div>
                 <div className="listing-item-grid_container fl-wrap">
-                    <div className="row">
-                        {/*  listing-item-grid  */}
-                        {cities.map((city, index) => (
-                            <div className="col-sm-4">
-                                <div className="listing-item-grid">
-                                    <div className="bg" data-bg="images/all/1.jpg"
-                                        style={{ backgroundImage: "url(" + city.thumb_url + ")" }}
-                                    />
-                                    <div className="d-gr-sec" />
-                                    <div className="listing-counter color2-bg"><span>16 </span> Locations</div>
-                                    <div className="listing-item-grid_title">
-                                        <h3><Link to={`/location/${city.id}/?page=1`}>{city.name}</Link></h3>
-                                    </div>
-                                </div>
+                    {/* <div className="row"> */}
+                    {cities.map((city, index) => (
+                        // <div className="col-sm-4">
+                        <div className="listing-item-grid" onClick={() => handleClickCity(city.id)}>
+                            <div className="bg" data-bg="images/all/1.jpg"
+                                style={{ backgroundImage: "url(" + city.thumb_url + ")" }}
+                            />
+                            <div className="d-gr-sec" />
+                            <div className="listing-counter color2-bg"><span>16 </span> Locations</div>
+                            <div className="listing-item-grid_title">
+                                <h3><Link to={`/location/${city.id}/?page=1`}>{city.name}</Link></h3>
                             </div>
-                        ))}
-                    </div>
+                        </div>
+                        // </div>
+                    ))}
+                    {/* </div> */}
                 </div>
             </div>
         </section>

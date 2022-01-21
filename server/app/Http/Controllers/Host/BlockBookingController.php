@@ -70,9 +70,31 @@ class BlockBookingController extends Controller
     public function get_block_date_in_month($id, Request $request)
     {
         try {
+            $dateS = Carbon::createFromFormat('Y-m-d', $request->month)->startOfMonth();
+            $dateE = Carbon::createFromFormat('Y-m-d', $request->month)->startOfMonth()->addMonth(12);
+            // $result = Block_Booking::where('listing_id', $id)
+            //     ->whereBetween('start_date', [Carbon::createFromFormat('d-m-Y',  $request->month), Carbon::now()->addMonth()])
+            //     ->orWhereBetween('end_date', [Carbon::createFromFormat('d-m-Y',  $request->month), Carbon::now()->addMonth()])
+            //     ->get();
             $result = Block_Booking::where('listing_id', $id)
-                ->whereBetween('start_date', [Carbon::createFromFormat('d-m-Y',  $request->month), Carbon::now()->addMonth()])
-                ->orWhereBetween('end_date', [Carbon::createFromFormat('d-m-Y',  $request->month), Carbon::now()->addMonth()])
+                ->where(function ($query) use ($dateS, $dateE) {
+                    $query->where(function ($q) use ($dateS, $dateE) {
+                        $q->whereBetween('start_date', [$dateS, $dateE])
+                            ->whereBetween('end_date', [$dateS, $dateE]);
+                    })
+                        ->orWhere(function ($q) use ($dateS, $dateE) {
+                            $q->where('start_date', '<', $dateS)
+                                ->whereBetween('end_date', [$dateS, $dateE]);
+                        })
+                        ->orWhere(function ($q) use ($dateS, $dateE) {
+                            $q->where('start_date', '<', $dateS)
+                                ->where('end_date', '>=', $dateE);
+                        })
+                        ->orWhere(function ($q) use ($dateS, $dateE) {
+                            $q->whereBetween('start_date', [$dateS, $dateE])
+                                ->where('end_date', '>', $dateE);
+                        });
+                })
                 ->get();
             if ($result) {
                 $this->response = [
@@ -87,4 +109,6 @@ class BlockBookingController extends Controller
             return response()->json($this->response);
         }
     }
+
+    
 }

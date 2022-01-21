@@ -14,6 +14,10 @@ import blockBookingApi from '../../../api/blockBookingApi';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { useParams } from 'react-router-dom';
+import HeaderHost from '../../../features/Host/components/HeaderHost';
+import './styles.scss';
+import CalendarLoading from './CalendarLoading';
+import { getDaysArray } from '../../../@helper/helper';
 
 
 const localizer = momentLocalizer(moment);
@@ -29,13 +33,9 @@ function DnDCalendarr(props) {
     const dispatch = useDispatch();
 
     const [blockList, setBlockList] = useState([]);
-    const [loading, setLoading] = useState(false);
-
-    const [events, setEvents] = useState([{
-        start: moment().toDate(),
-        end: moment().add(0, "days").toDate(),
-        title: "Some title",
-    }]);
+    const [loading, setLoading] = useState(true);
+    const [events, setEvents] = useState([]);
+    const [date, setDate] = useState(moment(moment().toDate()).format('YYYY-MM-DD'));
 
     const onEventResize = (data) => {
         const { start, end } = data;
@@ -67,29 +67,38 @@ function DnDCalendarr(props) {
         };
     };
 
-
-
     useEffect(() => {
         const fetchReservations = async () => {
-            const params = {
-                month: '2022-01-01'
+            try {
+                const params = {
+                    month: date
+                }
+                // setLoading(true);
+                await reservationApi.getReservationInMonth(id, params).then(res => {
+                    const tmpEvent = [];
+                    res.data.data.forEach(element => tmpEvent.push({ start: element.checkin_date, end: element.checkout_date, title: element.username }));
+                    setEvents(tmpEvent)
+                })
+            } catch (err) {
+                console.log(err.message)
             }
-            await reservationApi.getReservationInMonth(2, params).then(res => {
-                const tmpEvent = [];
-                res.data.data.forEach(element => tmpEvent.push({ start: element.checkin_date, end: element.checkout_date, title: element.username }));
-                setEvents(tmpEvent)
-            })
         }
 
         const getBlockInMonth = async () => {
-            const params = {
-                month: '01-01-2022'
+            try {
+                const params = {
+                    month: date
+                }
+                setLoading(true);
+                await blockBookingApi.getBlockInMonth(id, params).then(res => {
+                    let tmp = [];
+                    res.data.data.forEach(item => tmp = tmp.concat(getDaysArray(new Date(item.start_date), new Date(item.end_date))));
+                    setBlockList(tmp);
+                    setLoading(false);
+                })
+            } catch (err) {
+                console.log(err.message)
             }
-            await blockBookingApi.getBlockInMonth(id, params).then(res => {
-                let tmp = [];
-                res.data.data.forEach(item => tmp = tmp.concat(getDaysArray(new Date(item.start_date), new Date(item.end_date))));
-                setBlockList(tmp);
-            })
         }
 
         fetchReservations();
@@ -100,77 +109,63 @@ function DnDCalendarr(props) {
             setBlockList([]);
         }
 
-    }, []);
+    }, [date]);
 
     useState(() => {
     }, [blockList]);
 
-    const getDaysArray = function (start, end) {
-        for (var arr = [], dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1)) {
-            arr.push(new Date(dt));
-        }
-        return arr;
-    };
+    // const getDaysArray = function (start, end) {
+    //     for (var arr = [], dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1)) {
+    //         arr.push(new Date(dt));
+    //     }
+    //     return arr;
+    // };
+
+    const onNavigate = (date, view) => {
+        setDate(moment(date).format('YYYY-MM-DD'));
+    }
 
 
     return (
-        <div className="App">
-            {loading ? <DnDCalendar
-                localizer={localizer}
-                components={{
-                    dateCellWrapper: ({ children, value }) => {
-                        return React.cloneElement(Children.only(children), {
-                            style: {
-                                backgroundColor: 'white',
-                            },
-                        });
-                    },
-                    dateHeader: () => (
-                        <Skeleton height={30} />
-                    )
-                }}
-                style={{ height: "100vh" }}
-            /> : <DnDCalendar
-                selectable
-                defaultDate={moment().toDate()}
-                defaultView="month"
-                events={events}
-                localizer={localizer}
-                onEventDrop={moveEvent} // move
-                onEventResize={onEventResize}
-                resizable
-                startAccessor="start"
-                endAccessor="end"
-                // views={allViews}
-                components={{
-                    dateCellWrapper: ({ children, value }) => {
-                        let index = blockList.findIndex(item => (item.getDate() === value.getDate() && item.getFullYear() === value.getFullYear() && item.getMonth() === value.getMonth()));
+        <div id="wrapper" style={{ background: '#f6f6f6' }}>
+            <HeaderHost />
+            <div className='container' style={{ marginTop: '80px' }}>
+                <button onClick={() => setLoading(!loading)}>Show Price</button>
+                {/* {loading ?
+                    // <DnDCalendar
+                    //     localizer={localizer}
+                    //     components={{
+                    //         dateCellWrapper: ({ children, value }) => {
+                    //             return React.cloneElement(Children.only(children), {
+                    //                 style: {
+                    //                     backgroundColor: 'white',
+                    //                 },
+                    //             });
+                    //         },
+                    //         dateHeader: () => (
+                    //             <Skeleton height={30} />
+                    //         )
+                    //     }}
+                    //     style={{ height: "100vh" }}
+                    // />
+                    <>Loading</>
+                    : */}
+                <div className={loading ? 'filtering' : null}>
 
-                        return React.cloneElement(Children.only(children), {
-                            style: {
-                                ...children.style,
-                                backgroundColor: index != -1 ? 'red' : null,
-                            },
-                        });
-                    },
-                }}
-                step={60}
-                style={{ height: "100vh" }}
-                showMultiDayTimes
-                onSelectEvent={event => {
-                    dispatch(openEditEventDialog(event));
-                }}
-                onSelectSlot={slotInfo => {
-                    dispatch(openNewEventDialog({
-                        start: slotInfo.start.toLocaleString(),
-                        end: slotInfo.end.toLocaleString()
-                    }))
-                }
-                }
-                monthDayCustomHeader={<CustomComponent />}
-                eventPropGetter={(eventStyleGetter)}
-            />}
-            <EventDialog />
+                    <CalendarLoading
+                        events={events}
+                        blockList={blockList}
+                        onNavigate={onNavigate}
+                        moveEvent={moveEvent}
+                        onEventResize={onEventResize}
+                    />
+                </div>
+
+                {/* } */}
+                <EventDialog
+                    id={id}
+                />
+            </div>
         </div>
     );
 }

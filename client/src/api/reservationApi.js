@@ -24,6 +24,11 @@ const reservationApi = {
     editStatusReservation: (id, params) => {
         const url = `/reservation/edit-status/${id}`;
         return axiosClient.put(url, params);
+    },
+
+    countTotalPrice: (params) => {
+        const url = '/reservation/count-total-price';
+        return axiosClient.post(url, params);
     }
 }
 

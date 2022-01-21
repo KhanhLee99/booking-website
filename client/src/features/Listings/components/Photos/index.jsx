@@ -23,9 +23,11 @@ function Photos(props) {
     return (
         <div style={{ marginTop: '80px' }}>
             <Slider {...settings}>
-                {photos.map(image => (
-                    <ImageItem image={image} />
-
+                {photos.map((image, index) => (
+                    <ImageItem
+                        key={index}
+                        image={image}
+                    />
                 ))}
             </Slider>
         </div>

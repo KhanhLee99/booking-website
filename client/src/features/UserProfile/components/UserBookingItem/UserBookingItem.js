@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import './UserBookingItem.scss';
 import ThumbListingPlaceholder from '../../../../components/Placeholder/ThumbListingPlaceholder/ThumbListingPlaceholder';
+import moment from 'moment';
+import { datediff, parseDate } from '../../../../@helper/helper';
 
 UserBookingItem.propTypes = {
 
@@ -44,6 +46,29 @@ function UserBookingItem(props) {
         return null;
     }
 
+    const checkBtnReview = () => {
+        try {
+            var now = moment(moment().toDate(), "YYYY-MM-DD hh:mm:ss");
+            var checkout = moment(reservation.checkout_date, "YYYY-MM-DD hh:mm:ss");
+            var { _data } = moment.duration(now.diff(checkout));
+            console.log(_data.days)
+            if (_data.days >= 0 && _data.days <= 14) {
+                return <>
+                    <div className='fl-wrap'>
+                        <span className="fw-separator"></span>
+                    </div>
+
+                    <div className='review-btn fl-wrap'>
+                        <a href='#' className='cancel-reservation-btn' onClick={(e) => checkBtnReview(e)}>Đánh giá</a>
+                    </div>
+                </>
+            }
+            return null;
+        } catch (err) {
+            console.log(err.message)
+        }
+    }
+
     return (
 
         <div className="dashboard-list fl-wrap" style={{ border: '1px solid #e5e7f2', marginBottom: '20px' }}>
@@ -59,7 +84,7 @@ function UserBookingItem(props) {
             </div>
 
             <div className='fl-wrap'>
-                <span class="fw-separator"></span>
+                <span className="fw-separator"></span>
             </div>
 
             <div className="dashboard-message">
@@ -78,6 +103,8 @@ function UserBookingItem(props) {
                     <div className="geodir-category-location clearfix"><a href="#" className='booking-address'>{reservation.street_address}</a></div>
                 </div>
             </div>
+
+            {checkBtnReview()}
         </div>
     );
 }

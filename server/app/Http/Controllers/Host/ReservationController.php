@@ -3,9 +3,15 @@
 namespace App\Http\Controllers\Host;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Helper\TotalDateController;
+use App\Listing;
 use Illuminate\Http\Request;
 use Exception;
 use App\Reservation;
+use Carbon\Carbon;
+use DateInterval;
+use DatePeriod;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 
 class ReservationController extends Controller
@@ -15,6 +21,11 @@ class ReservationController extends Controller
     private $response = [
         'status' => 'fail'
     ];
+
+    public function __construct()
+    {
+        $this->totalDateController = new TotalDateController();
+    }
 
     public function get_host_booking(Request $request, $host_id)
     {
@@ -110,18 +121,32 @@ class ReservationController extends Controller
     public function get_reservation_listing_in_month($id, Request $request)
     {
         try {
+            $dateS = Carbon::createFromFormat('Y-m-d', $request->month)->startOfMonth();
+            $dateE = Carbon::createFromFormat('Y-m-d', $request->month)->startOfMonth()->addMonth(12);
+
             $result = DB::table('reservation')
-                ->where([
-                    ['listing_id', '=', $id],
-                    ['checkin_date', '>', $request->month]
-                ])
+                ->where('listing_id', '=', $id)
+                ->where(function ($query) use ($dateS, $dateE) {
+                    $query->where(function ($q) use ($dateS, $dateE) {
+                        $q->whereBetween('checkin_date', [$dateS, $dateE])
+                            ->whereBetween('checkout_date', [$dateS, $dateE]);
+                    })
+                        ->orWhere(function ($q) use ($dateS, $dateE) {
+                            $q->where('checkin_date', '<', $dateS)
+                                ->whereBetween('checkout_date', [$dateS, $dateE]);
+                        })
+                        ->orWhere(function ($q) use ($dateS, $dateE) {
+                            $q->where('checkin_date', '<', $dateS)
+                                ->where('checkout_date', '>=', $dateE);
+                        })
+                        ->orWhere(function ($q) use ($dateS, $dateE) {
+                            $q->whereBetween('checkin_date', [$dateS, $dateE])
+                                ->where('checkout_date', '>', $dateE);
+                        });
+                })
                 ->join('users', 'users.id', '=', 'reservation.guest_id')
                 ->select('reservation.*', 'users.name as username')
                 ->get();
-            // $result = Reservation::where([
-            //     ['listing_id', '=', $id],
-            //     ['checkin_date', '>', $request->month]
-            // ])->get();
             if ($result) {
                 $this->response = [
                     'status' => 'success',
@@ -225,6 +250,43 @@ class ReservationController extends Controller
                 $reservation->update(['reservation_status_id' => $request->reservation_status_id]);
                 $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
+            }
+            return response()->json($this->response);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
+    }
+
+    public function count_total_price(Request $request)
+    {
+        try {
+            $checkin = $request->checkin;
+            $checkout = $request->checkout;
+            // $adults = $request->adults;
+            // $child = $request->child;
+            $listing_id = $request->listing_id;
+            $listing = Listing::where('id', $listing_id)->first();
+            if ($listing) {
+                $price_base = $listing->price_per_night_base;
+                $price_weekend = $listing->price_per_night_weekend;
+
+                $number_normal_days = $this->totalDateController->number_of_working_days($checkin, $checkout);
+                $number_weekend_days = $this->totalDateController->number_of_weekend_days($checkin, $checkout);
+                in_array(date("N", strtotime($checkout)), [6, 7]) ? $number_weekend_days -= 1 : $number_normal_days -= 1;
+
+                $total_price = $number_normal_days * $price_base + $number_weekend_days * $price_weekend;
+                $data = [
+                    'nights' => $number_weekend_days + $number_normal_days,
+                    'rental_price' => $total_price,
+                    'total_price' => $total_price
+                ];
+
+                $this->response = [
+                    'status' => 'success',
+                    'data' => $data
+                ];
+                return response()->json($this->response, 200);
             }
             return response()->json($this->response);
         } catch (Exception $e) {

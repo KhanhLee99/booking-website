@@ -18,16 +18,24 @@ const defaultFormState = {
     desc: ''
 };
 
+EventDialog.defaultProps = {
+    title: '',
+    allDay: true,
+    start: new Date(),
+    end: new Date(),
+    desc: ''
+}
+
 function EventDialog(props) {
     const dispatch = useDispatch();
     const eventDialog = useSelector((state) => state.eventSlice.eventDialog);
 
     const { form, handleChange, setForm } = useForm(defaultFormState);
-    let start = moment(form.start).format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS);
-    let end = moment(form.end).format(moment.HTML5_FMT.DATETIME_LOCAL_SECONDS);
-
+    let start = moment(form.start).format(moment.HTML5_FMT.DATE);
+    let end = moment(form.end).format(moment.HTML5_FMT.DATE);
     const initDialog = useCallback(
         () => {
+
             /**
              * Dialog type: 'edit'
              */
@@ -53,7 +61,7 @@ function EventDialog(props) {
         /**
          * After Dialog Open
          */
-        console.log(eventDialog.props);
+        console.log(eventDialog.props, start);
         if (eventDialog.props.open) {
             initDialog();
         }
@@ -72,14 +80,14 @@ function EventDialog(props) {
     async function handleSubmit(event) {
 
         event.preventDefault();
-
+        console.log('jds')
 
         if (eventDialog.type === 'new') {
             const params = {
                 start_date: form.start,
                 end_date: form.end,
                 note: form.desc,
-                listing_id: 1
+                listing_id: props.id
             }
             await blockBookingApi.blockBooking(params).then(res => {
                 console.log(res);
@@ -148,7 +156,7 @@ function EventDialog(props) {
                         id="start"
                         name="start"
                         label="Start"
-                        type="datetime-local"
+                        type="date"
                         className="mt-8 mb-16"
                         InputLabelProps={{
                             shrink: true
@@ -166,7 +174,7 @@ function EventDialog(props) {
                         id="end"
                         name="end"
                         label="End"
-                        type="datetime-local"
+                        type="date"
                         className="mt-8 mb-16"
                         InputLabelProps={{
                             shrink: true

@@ -4,9 +4,13 @@ import './BoxBooking.scss';
 import QtyPerson from '../../../Home/components/QtyPerson';
 import Skeleton from 'react-loading-skeleton';
 import 'antd/dist/antd.css';
-import { DatePicker, Space } from 'antd';
+import { DatePicker } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { useEffect } from 'react';
+import moment from 'moment';
+import useQuery from '../../../../@use/useQuery';
+import reservationApi from '../../../../api/reservationApi';
+import { parseVNDCurrency } from '../../../../@helper/helper';
 
 BoxBooking.propTypes = {
 
@@ -27,22 +31,43 @@ const enableClick = {
     border: "1px solid #ced4da"
 }
 
+const rangePicker = {
+    border: "none",
+    width: "100%",
+    borderRadius: "5px",
+    cursor: "pointer",
+    marginBottom: "10px",
+    paddingTop: "5px",
+    fontWeight: "bold",
+    fontSize: "0px",
+    boxShadow: "0 1px 6px 0px rgba(0, 0, 0, 0.1)"
+}
+
 
 function BoxBooking(props) {
+    const query = useQuery();
     const history = useHistory();
     const [active, setActive] = useState(false);
     const [adults, setAdults] = useState(1);
     const [childrens, setChildrens] = useState(0);
     const [nights, setNights] = useState(1);
     const [calculating, setCalculating] = useState(false);
-    const [checkin, setCheckin] = useState('');
-    const [checkout, setCheckout] = useState('');
+    const [checkin, setCheckin] = useState(null);
+    const [checkout, setCheckout] = useState(null);
     const [isDisableIncAdult, setIsDisableIncAdult] = useState(false);
     const [isDisableIncChildren, setIsDisableIncChildren] = useState(false);
     const [isDisableDecAdult, setIsDisableDecAdult] = useState(true);
     const [isDisableDecChildren, setIsDisableDecChildren] = useState(true);
+    const [totalPrice, setTotalPrice] = useState();
 
-    const { loadingListingDetail, listingDetail } = props;
+    const { loadingListingDetail, listingDetail, reservationDate, blockList } = props;
+
+    const disabledDate = current => {
+        if (current && current < moment().endOf('day')) return true;
+        if (reservationDate.findIndex(item => (item.getDate() === current._d.getDate() && item.getFullYear() === current._d.getFullYear() && item.getMonth() === current._d.getMonth())) != -1) return true;
+        if (blockList.findIndex(item => (item.getDate() === current._d.getDate() && item.getFullYear() === current._d.getFullYear() && item.getMonth() === current._d.getMonth())) != -1) return true;
+        return false;
+    }
 
     const handleDec = (type, value) => {
         if (value > 0) {
@@ -68,32 +93,55 @@ function BoxBooking(props) {
     }
 
     const handleChangeDebut = range => {
-        const startDate = range[0].format("DD/MM/YYYY");
-        const endDate = range[1].format("DD/MM/YYYY");
+        const startDate = range[0].format("YYYY/MM/DD");
+        const endDate = range[1].format("YYYY/MM/DD");
+        history.push(`/listing/${listingDetail.id}?checkin=${startDate.replaceAll('/', '-')}&checkout=${endDate.replaceAll('/', '-')}`);
         setCheckin(startDate);
         setCheckout(endDate);
-        // setNights(datediff(parseDate(checkin), parseDate(checkout)))
-
-        // console.log(datediff(parseDate(checkin), parseDate(checkout)));
-        // console.log('start date', checkin1.replaceAll('/', '-'));
-        // console.log("end date", checkout);
-    }
-
-    const parseDate = (str) => {
-        var mdy = str.split('/');
-        return new Date(mdy[2], mdy[1] - 1, mdy[0]);
-    }
-
-    const datediff = (first, second) => {
-        // Take the difference between the dates and divide by milliseconds per day.
-        // Round to nearest whole number to deal with DST.
-        return Math.round((second - first) / (1000 * 60 * 60 * 24));
     }
 
     const handleBooking = (e) => {
         e.preventDefault();
-        history.push(`/checkout/${listingDetail.id}/${checkin.replaceAll('/', '-')}/${checkout.replaceAll('/', '-')}/${adults + childrens}`);
+        history.push(`host/checkout/${listingDetail.id}?checkin=${checkin.replaceAll('/', '-')}&checkout=${checkout.replaceAll('/', '-')}&guests=${adults + childrens}`);
     }
+
+    const checkAvailableDate = () => {
+
+        // if ((query.get('checkin') && query.get('checkout'))) {
+        //     return <TotalPrice
+        //         nights={moment.duration(moment(query.get('checkout'), "YYYY-MM-DD").diff(moment(query.get('checkin'), "YYYY-MM-DD")))._data.days}
+        //     />
+        // }
+
+        if (totalPrice) {
+            return <TotalPrice
+                nights={totalPrice.nights}
+                rentalPrice={totalPrice.rental_price}
+                totalPrice={totalPrice.total_price}
+            />
+        }
+
+        return null;
+    }
+
+    const countPrice = async () => {
+        try {
+            const params = {
+                checkin: checkin,
+                checkout: checkout,
+                listing_id: listingDetail.id
+            }
+            await reservationApi.countTotalPrice(params).then(res => {
+                setTotalPrice(res.data.data);
+            })
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
+    useEffect(() => {
+        countPrice();
+    }, [checkin, checkout]);
 
     useEffect(() => {
         if (adults === 1 && childrens === 0) {
@@ -140,10 +188,9 @@ function BoxBooking(props) {
     }, [adults, childrens]);
 
     return (
-        < div className="col-lg-4 col-md-4 margin-top-75 sticky" >
+        <div className="col-lg-4 col-md-4 margin-top-75 sticky" >
             {
                 loadingListingDetail ? <Skeleton height={300} borderRadius={12} /> :
-
                     <div id="booking-widget-anchor" className="boxed-widget booking-widget">
                         <span style={{ marginBottom: "20px" }}>
                             <span style={{
@@ -151,41 +198,33 @@ function BoxBooking(props) {
                                 fontWeight: "600",
                                 fontFamily: "Luxstay"
                             }}>
-                                {parseInt(listingDetail.price_per_night_base * nights).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}
+                                {totalPrice ? parseVNDCurrency(totalPrice.total_price) : parseVNDCurrency(listingDetail.price_per_night_base * nights)
+                                }
                             </span>
                             <span style={{
                                 fontSize: "16px",
                                 fontWeight: "400",
                                 fontFamily: "Luxstay"
 
-                            }}> /{nights === 1 ? null : ` ${nights} `}đêm</span>
+                            }}> /{totalPrice ? ` ${totalPrice.nights} ` : null}đêm</span>
                         </span>
 
                         <div className="row with-forms  margin-top-20">
                             <div className="col-lg-12">
-                                {/* <input type="text" id="date-picker" placeholder="Date" readOnly="readonly" /> */}
                                 <RangePicker
+                                    disabledDate={disabledDate}
                                     format="DD/MM/YYYY"
                                     placeholder={['dd/mm/yyyy', 'dd/mm/yyyy']}
                                     suffixIcon
+                                    inputReadOnly
                                     onChange={handleChangeDebut}
-                                    style={{
-                                        border: "none",
-                                        // height: "auto",
-                                        width: "100%",
-                                        borderRadius: "5px",
-                                        cursor: "pointer",
-                                        marginBottom: "10px",
-                                        paddingTop: "5px",
-                                        fontWeight: "bold",
-                                        fontSize: "0px",
-                                        boxShadow: "0 1px 6px 0px rgba(0, 0, 0, 0.1)"
-                                    }}
+                                    defaultValue={[query.get('checkin') == null ? null : moment(query.get('checkin')), query.get('checkout') == null ? null : moment(query.get('checkout'))]}
+                                    style={rangePicker}
                                 />
                             </div>
                             <div className="col-lg-12">
                                 <div className={active ? "panel-dropdown active" : "panel-dropdown"}>
-                                    <a href="#" onClick={handleShowDropDown}>Guests <span className="qtyTotal" name="qtyTotal">{adults + childrens}</span></a>
+                                    <a href="#" onClick={handleShowDropDown}>Guests <span className="qtyTotal" name="qtyTotal" style={{ background: "rgb(66, 89, 152)" }}>{adults + childrens}</span></a>
                                     <div className="panel-dropdown-content" style={{ width: "100%" }}>
                                         <div className="qtyButtons">
                                             <div className="qtyTitle">Adults</div>
@@ -203,31 +242,11 @@ function BoxBooking(props) {
                                 </div>
                             </div>
                         </div>
-                        <div className="mb--12">
-                            <div className="checkup__price fadeIn border-1">
-                                <div className="is-flex middle-xs between-xs">
-                                    <div className="is-flex align-center">
-                                        <span className="pr--6">Giá thuê 1 đêm</span>
-                                    </div>
-                                    <span>850,000₫</span>
-                                </div>
-                                <div className="is-flex middle-xs between-xs">
-                                    <div className="is-relative">
-                                        <span>Phí dịch vụ</span>
-                                    </div>
-                                    <span>102,000₫</span>
-                                </div>
-                                <hr className="my--18" />
-                                <div className="is-flex middle-xs between-xs">
-                                    <div>
-                                        <span className="extra-bold">Tổng tiền</span>
-                                    </div>
-                                    <span className="extra-bold">952,000₫</span>
-                                </div>
-                            </div>
-                            <div className="my--12" />
-                        </div>
-                        <a onClick={handleBooking} href="#" className="button book-now fullwidth margin-top-5" style={{ borderRadius: "8px", padding: "14px 24px" }}>Kiểm tra tình trạng còn phòng</a>
+                        {
+                            checkAvailableDate()
+                        }
+
+                        <a onClick={handleBooking} href="#" className="button book-now fullwidth margin-top-5" style={{ borderRadius: "8px", padding: "14px 24px", background: "rgb(46, 63, 110)" }}>{totalPrice ? 'Đặt ngay' : 'Kiểm tra tình trạng còn phòng'}</a>
                     </div>
             }
         </div >
@@ -236,3 +255,40 @@ function BoxBooking(props) {
 }
 
 export default BoxBooking;
+
+TotalPrice.defaultProps = {
+    nights: '',
+    rentalPrice: '',
+    servicePrice: '',
+    totalPrice: '',
+}
+
+function TotalPrice(props) {
+    const { nights, rentalPrice, servicePrice, totalPrice } = props;
+    return (
+        <div className="mb--12">
+            <div className="checkup__price fadeIn border-1">
+                <div className="is-flex middle-xs between-xs">
+                    <div className="is-flex align-center">
+                        <span className="pr--6">Giá thuê {nights} đêm</span>
+                    </div>
+                    <span>{parseVNDCurrency(rentalPrice)}</span>
+                </div>
+                <div className="is-flex middle-xs between-xs">
+                    <div className="is-relative">
+                        <span>Phí dịch vụ</span>
+                    </div>
+                    <span>{servicePrice}</span>
+                </div>
+                <hr className="my--18" />
+                <div className="is-flex middle-xs between-xs">
+                    <div>
+                        <span className="extra-bold">Tổng tiền</span>
+                    </div>
+                    <span className="extra-bold">{parseVNDCurrency(totalPrice)}</span>
+                </div>
+            </div>
+            <div className="my--12" />
+        </div>
+    )
+}

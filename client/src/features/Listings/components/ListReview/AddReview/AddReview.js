@@ -43,7 +43,7 @@ function AddReview(props) {
                 style={{ resize: 'none' }}
             />
 
-            <button onClick={() => handleAddReview()} className="btn color2-bg float-btn" style={custom_form_button}>Submit Reviewd <i class="fal fa-paper-plane" style={btn_i} /></button>
+            <button onClick={() => handleAddReview()} className="btn color2-bg float-btn" style={custom_form_button}>Submit Reviewd <i className="fal fa-paper-plane" style={btn_i} /></button>
 
             <div className="_npr0qi" style={{ borderTopColor: 'rgb(221, 221, 221)', marginBottom: '45px' }} />
         </>

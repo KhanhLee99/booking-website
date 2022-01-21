@@ -19,6 +19,7 @@ import Reservation from './pages/Reservation/Reservation';
 import Hosting from './pages/Hosting';
 import ReservationDetail from './pages/ReservationDetail/ReservationDetail';
 import Reviews from './pages/Reviews/Reviews';
+import Booking from '../Listings/components/Booking';
 
 HostFeature.propTypes = {
 
@@ -59,6 +60,12 @@ function HostFeature(props) {
                     exact
                     component={Reviews}
                 />
+
+                <Route
+                    path={`${match.url}/checkout/:id`}
+                    exact
+                    component={Booking} />
+
 
 
             </Switch>

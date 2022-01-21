@@ -10,6 +10,9 @@ import PayPal from '../PayPal';
 import { useSelector } from 'react-redux';
 import notificationApi from '../../../../api/notificationApi';
 import Header from '../../../../components/Header';
+import useQuery from '../../../../@use/useQuery';
+import { Link } from 'react-router-dom';
+import { parseVNDCurrency } from '../../../../@helper/helper';
 
 
 Booking.propTypes = {
@@ -17,21 +20,23 @@ Booking.propTypes = {
 };
 
 function Booking(props) {
+    const query = useQuery();
     const loggedInUser = useSelector((state) => state.userSlice.current);
 
-    const { id, checkin, checkout, guests } = useParams();
+    const { id } = useParams();
     const [listing, setListing] = useState({});
+    const [totalPrice, setTotalPrice] = useState();
     // const paypal = useRef();
 
     useEffect(() => {
         const getListing = async () => {
             await listingApi.getBaseInfoListing(id).then(res => {
                 setListing(res.data.data)
-                console.log(res.data.data)
             });
 
         }
         getListing();
+        countPrice();
         return () => {
 
         }
@@ -41,8 +46,8 @@ function Booking(props) {
     const handlePay = async (e) => {
         e.preventDefault();
         const params = {
-            checkin_date: checkin.split("-").reverse().join("-"),
-            checkout_date: checkout.split("-").reverse().join("-"),
+            checkin_date: query.get('checkin').split("-").reverse().join("-"),
+            checkout_date: query.get('checkout').split("-").reverse().join("-"),
             total_price: 1,
             adult_count: 1,
             child_count: 1,
@@ -72,6 +77,21 @@ function Booking(props) {
         }
     }
 
+    const countPrice = async () => {
+        try {
+            const params = {
+                checkin: query.get('checkin'),
+                checkout: query.get('checkout'),
+                listing_id: id
+            }
+            await reservationApi.countTotalPrice(params).then(res => {
+                setTotalPrice(res.data.data);
+            })
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
     return (
         <div id="wrapper">
             <Header />
@@ -91,7 +111,7 @@ function Booking(props) {
                                 <a style={{ fontWeight: "600" }}>Edit</a>
                             </div>
                             <div className="col-md-12">
-                                <p>{`${(new Date(checkin)).toDateString()} to ${(new Date(checkout)).toDateString()}`}</p>
+                                <p>{`${(new Date(query.get('checkin'))).toDateString()} to ${(new Date(query.get('checkout'))).toDateString()}`}</p>
                             </div>
 
                             <div className="col-md-6">
@@ -101,7 +121,7 @@ function Booking(props) {
                                 <a style={{ fontWeight: "600" }}>Edit</a>
                             </div>
                             <div className="col-md-12">
-                                <p>{guests} guest</p>
+                                <p>{query.get('guests')} guest</p>
                             </div>
                         </div>
 
@@ -162,21 +182,21 @@ function Booking(props) {
                             </div>
                         </div> */}
                         </div>
-                        <a href="#" onClick={handlePay} className="button booking-confirmation-btn margin-top-40 margin-bottom-65">Confirm and Pay</a>
+                        <a href="#" onClick={handlePay} className="button booking-confirmation-btn margin-top-40 margin-bottom-65" style={{ background: "rgb(66, 89, 152)" }}>Confirm and Pay</a>
                     </div>
                     <div className="col-1"></div>
                     <div className="col-lg-5 col-md-5 margin-top-0 margin-bottom-60">
                         <div id="booking-widget-anchor" className="boxed-widget booking-widget">
                             <div className="row with-forms">
                                 <div className="checkup__header">
-                                    <a href="/vi/rooms/68886" className="is-flex">
+                                    <Link to={`/listing/${id}`} className="is-flex">
                                         <div className="grow">
-                                            <h4 className="checkup__title">{listing.name}</h4>
+                                            <h4 className="checkup__title">{listing.name}</h4>
                                         </div>
-                                        <div style={{ width: '128px' }}>
+                                        <div style={{ width: '128px', marginLeft: '20px' }}>
                                             <div className="bg-img bg-img--85 radius-xs" style={{ backgroundImage: "url(" + listing.avatar_url + ")" }} />
                                         </div>
-                                    </a>
+                                    </Link>
                                 </div>
                             </div>
                             <hr className="my--18" />
@@ -184,9 +204,9 @@ function Booking(props) {
                                 <div className="checkup__price fadeIn border-1">
                                     <div className="is-flex middle-xs between-xs">
                                         <div className="is-flex align-center">
-                                            <span className="pr--6">Giá thuê 1 đêm</span>
+                                            <span className="pr--6">Giá thuê {totalPrice ? ` ${totalPrice.nights}` : 1} đêm</span>
                                         </div>
-                                        <span>850,000₫</span>
+                                        <span>{totalPrice ? parseVNDCurrency(totalPrice.rental_price) : ''}</span>
                                     </div>
                                     <div className="is-flex middle-xs between-xs">
                                         <div className="is-relative">
@@ -199,7 +219,7 @@ function Booking(props) {
                                         <div>
                                             <span className="extra-bold">Tổng tiền</span>
                                         </div>
-                                        <span className="extra-bold">952,000₫</span>
+                                        <span className="extra-bold">{totalPrice ? parseVNDCurrency(totalPrice.total_price) : ''}</span>
                                     </div>
                                 </div>
                                 <div className="my--12" />

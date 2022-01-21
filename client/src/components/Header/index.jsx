@@ -1,14 +1,12 @@
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { deleteDeviceToken, logout } from '../../app/reducer/userSlice';
-import './styles.css';
-import Popup from 'reactjs-popup';
-import LoginPopup from '../LoginPopup';
-import AvatarPlaceholder from '../Placeholder/AvatarPlaceholder/AvatarPlaceholder';
+import { deleteDeviceToken } from '../../app/reducer/userSlice';
 import LoginModal from '../LoginModal/LoginModal';
-import userApi from '../../api/userApi';
+import AvatarPlaceholder from '../Placeholder/AvatarPlaceholder/AvatarPlaceholder';
+import './styles.scss';
+import { DatePicker } from 'antd';
+
 
 
 const main_header = {
@@ -31,8 +29,8 @@ const logo_holder = {
 
 const header_search_btn = {
     float: 'left',
-    marginLeft: '70px',
-    width: '180px',
+    marginLeft: '170px',
+    width: '200px',
     padding: '14px 0',
     borderRadius: '30px',
     position: 'relative',
@@ -82,19 +80,6 @@ const show_reg_form = {
     fontSize: '12px',
 }
 
-const header_search_container = {
-    position: 'absolute',
-    bottom: '-120px',
-    left: 0,
-    width: '100%',
-    padding: '30px 0',
-    background: '#3d528b',
-    zIndex: -1,
-    opacity: 0,
-    visibility: 'hidden',
-    transition: 'all 300ms linear',
-}
-
 const nav_button_wrap = {
     float: 'right',
     height: '36px',
@@ -118,7 +103,7 @@ const header_search_input = {
 const header_search_input_label = {
     position: 'absolute',
     left: '20px',
-    top: '18px',
+    top: '14px',
     zIndex: 10,
     fontSize: '14px',
 }
@@ -213,6 +198,8 @@ const header_user_menu_ul_li_a = {
     padding: '6px 15px',
 }
 
+const { RangePicker } = DatePicker;
+
 function Header(props) {
 
     const dispatch = useDispatch();
@@ -221,6 +208,7 @@ function Header(props) {
     const isLoggedIn = !!loggedInUser.id;
 
     const [showPopupProfile, setShowPopupProfile] = useState(false);
+    const [showPopupSearch, setShowPopupSearch] = useState(false);
 
     const handleLogout = async (e) => {
         e.preventDefault();
@@ -241,7 +229,13 @@ function Header(props) {
         <header className="k-main-header" style={main_header}>
             <Link to="/" className="k-logo-holder" style={logo_holder}><img src="https://i.ytimg.com/vi/FPtITmtjWhQ/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB3TdlYzQKkXD7XtPbNwCGLGycr2Q" alt="" style={{ width: 'auto', height: '100%' }} /></Link>
             {/* header-search_btn*/}
-            <div className="k-header-search_btn show-search-button" style={header_search_btn}><i className="fal fa-search" style={{ color: '#4DB7FE', marginRight: '30px' }} /> <span style={{ position: 'relative' }}>Search</span></div>
+            <div
+                className="k-header-search_btn show-search-button"
+                style={header_search_btn}
+                onClick={() => setShowPopupSearch(!showPopupSearch)}
+            >
+                <i className="fal fa-search" style={{ color: '#4DB7FE', marginRight: '30px' }} /> <span style={{ position: 'relative' }}>Search</span>
+            </div>
             {/* header opt */}
             {
                 isLoggedIn ? <>
@@ -282,24 +276,33 @@ function Header(props) {
                 </div>
             </div>
 
-            <div className="k-header-search_container header-search vis-search" style={header_search_container}>
+            <div className={showPopupSearch ? "k-header-search_container vis-head-search" : "k-header-search_container"}>
                 <div className="container small-container" style={{ maxWidth: '1024px', width: '92%', margin: '0 auto', position: 'relative', zIndex: 5 }}>
                     <div className="header-search-input-wrap fl-wrap" style={{ padding: '0 199px 0 0' }}>
-                        {/* header-search-input */}
-                        <div className="k-header-search-input" style={header_search_input}>
-                            <label style={header_search_input_label}><i className="fal fa-keyboard" style={{ color: '#4DB7FE' }} /></label>
-                            <input type="text" placeholder="What are you looking for ?" defaultValue style={header_search_input_input} />
-                        </div>
-                        {/* header-search-input end */}
-                        {/* header-search-input */}
+
                         <div className="k-header-search-input location autocomplete-container" style={header_search_input}>
                             <label style={header_search_input_label}><i className="fal fa-map-marker" style={{ color: '#4DB7FE' }} /></label>
-                            <input type="text" placeholder="Location..." className="autocomplete-input" id="autocompleteid2" defaultValue style={header_search_input_input} />
-                            <a href="#"><i className="fal fa-dot-circle" /></a>
+                            <input type="text" placeholder="Location..." className="autocomplete-input" id="autocompleteid2" style={header_search_input_input} />
                         </div>
-                        {/* header-search-input end */}
-                        {/* header-search-input */}
-                        <div className="k-header-search-input header-search_selectinpt" style={header_search_input, header_search_selectinpt}>
+
+                        <div className="k-header-search-input" style={header_search_input}>
+                            <label style={header_search_input_label}><i className="fal fa-keyboard" style={{ color: '#4DB7FE' }} /></label>
+                            <input type="text" placeholder="What are you looking for ?" style={header_search_input_input} />
+                        </div>
+
+                        <div className="k-header-search-input" style={header_search_input}>
+                            <label style={header_search_input_label}><i className="fal fa-keyboard" style={{ color: '#4DB7FE' }} /></label>
+                            <RangePicker
+                                format="DD/MM/YYYY"
+                                placeholder={['Checkin', 'Checkout']}
+                                suffixIcon
+                                // onChange={handleChangeDebut}
+                                style={header_search_input_input}
+                                inputReadOnly
+                            />
+                        </div>
+
+                        {/* <div className="k-header-search-input header-search_selectinpt" style={header_search_input, header_search_selectinpt}>
                             <select data-placeholder="Category" className="chosen-select no-radius">
                                 <option>All Categories</option>
                                 <option>All Categories</option>
@@ -309,21 +312,20 @@ function Header(props) {
                                 <option>Fitness</option>
                                 <option>Events</option>
                             </select>
-                        </div>
-                        {/* header-search-input end */}
+                        </div> */}
+
                         <button className="header-search-button green-bg" onclick="window.location.href='listing.html'"><i className="far fa-search" /> Search </button>
                     </div>
-                    <div className="header-search_close color-bg"><i className="fal fa-long-arrow-up" /></div>
                 </div>
             </div>
 
             {/* wishlist-wrap*/}
-            {/* <div className="header-modal novis_wishlist">
+            <div className="header-modal novis_wishlist">
                 <div className="header-modal-container scrollbar-inner fl-wrap" data-simplebar>
-                    <div className="widget-posts  fl-wrap">
+                    {/* <div className="widget-posts  fl-wrap">
                         <ul className="no-list-style">
                             <li>
-                                <div className="widget-posts-img"><a href="listing-single.html"><img src="images/gallery/thumbnail/1.png" alt="" /></a>
+                                <div className="widget-posts-img"><a href="listing-single.html"><img src="https://i.ytimg.com/vi/hRvJ31HpWY4/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCiLzKdiWmF-dSCIcsEwiQo3u6AIw" alt="" /></a>
                                 </div>
                                 <div className="widget-posts-descr">
                                     <h4><a href="listing-single.html">Iconic Cafe</a></h4>
@@ -331,17 +333,133 @@ function Header(props) {
                                     </div>
                                     <div className="widget-posts-descr-link"><a href="listing.html">Restaurants </a> <a href="listing.html">Cafe</a></div>
                                     <div className="widget-posts-descr-score">4.1</div>
-                                    <div className="clear-wishlist"><i className="fal fa-times-circle" /></div>
+                                </div>
+                            </li>
+                            <li>
+                                <div className="widget-posts-img"><a href="listing-single.html"><img src="https://i.ytimg.com/vi/hRvJ31HpWY4/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCiLzKdiWmF-dSCIcsEwiQo3u6AIw" alt="" /></a>
+                                </div>
+                                <div className="widget-posts-descr">
+                                    <h4><a href="listing-single.html">Iconic Cafe</a></h4>
+                                    <div className="geodir-category-location fl-wrap"><a href="#"><i className="fas fa-map-marker-alt" /> 40 Journal Square Plaza, NJ, USA</a>
+                                    </div>
+                                    <div className="widget-posts-descr-link"><a href="listing.html">Restaurants </a> <a href="listing.html">Cafe</a></div>
+                                    <div className="widget-posts-descr-score">4.1</div>
+                                </div>
+                            </li>
+                            <li>
+                                <div className="widget-posts-img"><a href="listing-single.html"><img src="https://i.ytimg.com/vi/hRvJ31HpWY4/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCiLzKdiWmF-dSCIcsEwiQo3u6AIw" alt="" /></a>
+                                </div>
+                                <div className="widget-posts-descr">
+                                    <h4><a href="listing-single.html">Iconic Cafe</a></h4>
+                                    <div className="geodir-category-location fl-wrap"><a href="#"><i className="fas fa-map-marker-alt" /> 40 Journal Square Plaza, NJ, USA</a>
+                                    </div>
+                                    <div className="widget-posts-descr-link"><a href="listing.html">Restaurants </a> <a href="listing.html">Cafe</a></div>
+                                    <div className="widget-posts-descr-score">4.1</div>
                                 </div>
                             </li>
                         </ul>
+                    </div> */}
+
+                    <div className='notification-title'>
+                        <h3>Notifications</h3>
+                    </div>
+
+                    <div className="notification-list-box fl-wrap">
+
+                        <div className="notification-list fl-wrap">
+                            <div className="notification-message">
+                                <div className="notification-message-text">
+                                    <i className="far fa-heart purp-bg"></i>
+                                    <div>
+                                        <p><a href="#">Mark Rose</a> add new Listing Park Central add new Listing Park Central</p>
+                                        <p className="notificattion-message-time">28 may 2020</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="notification-list fl-wrap">
+                            <div className="notification-message">
+                                <div className="notification-message-text">
+                                    <i className="far fa-heart purp-bg"></i>
+                                    <div>
+                                        <p><a href="#">Mark Rose</a> add new Listing Park Central add new Listing Park Central</p>
+                                        <p className="notificattion-message-time">28 may 2020</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="notification-list fl-wrap">
+                            <div className="notification-message">
+                                <div className="notification-message-text">
+                                    <i className="far fa-heart purp-bg"></i>
+                                    <div>
+                                        <p><a href="#">Mark Rose</a> add new Listing Park Central add new Listing Park Central</p>
+                                        <p className="notificattion-message-time">28 may 2020</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="notification-list fl-wrap">
+                            <div className="notification-message">
+                                <div className="notification-message-text">
+                                    <i className="far fa-heart purp-bg"></i>
+                                    <div>
+                                        <p><a href="#">Mark Rose</a> add new Listing Park Central add new Listing Park Central</p>
+                                        <p className="notificattion-message-time">28 may 2020</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="notification-list fl-wrap">
+                            <div className="notification-message">
+                                <div className="notification-message-text">
+                                    <i className="far fa-heart purp-bg"></i>
+                                    <div>
+                                        <p><a href="#">Mark Rose</a> add new Listing Park Central add new Listing Park Central</p>
+                                        <p className="notificattion-message-time">28 may 2020</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="notification-list fl-wrap">
+                            <div className="notification-message">
+                                <div className="notification-message-text">
+                                    <i className="far fa-heart purp-bg"></i>
+                                    <div>
+                                        <p><a href="#">Mark Rose</a> add new Listing Park Central add new Listing Park Central</p>
+                                        <p className="notificattion-message-time">28 may 2020</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="notification-list fl-wrap">
+                            <div className="notification-message">
+                                <div className="notification-message-text">
+                                    <i className="far fa-heart purp-bg"></i>
+                                    <div>
+                                        <p><a href="#">Mark Rose</a> add new Listing Park Central add new Listing Park Central</p>
+                                        <p className="notificattion-message-time">28 may 2020</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
+
+
+
                 <div className="header-modal-top fl-wrap">
                     <h4>Your Wishlist : <span><strong /> Locations</span></h4>
                     <div className="close-header-modal"><i className="far fa-times" /></div>
                 </div>
-            </div> */}
+            </div>
         </header >
 
     )

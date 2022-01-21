@@ -98,7 +98,6 @@ function App() {
               <PrivateRouteMe path="/me" component={UserProfileFeature} layout={CommonUserProfile} />
 
               <Route path="/listing/:id" component={ListingDetail} />
-              <Route path="/checkout/:id/:checkin/:checkout/:guests" component={Booking} />
               <Route path="/location/:id" exact component={ListingsLocation} />
 
               {/* <Route path="/login" component={Login} /> */}

@@ -144,7 +144,7 @@ Route::delete('reservation/{id}', 'Host\ReservationController@delete');
 Route::get('reservation/me', 'Host\ReservationController@get_my_reservation');
 Route::get('reservation/{id}', 'Host\ReservationController@get_detail_reservation');
 Route::put('reservation/edit-status/{id}', 'Host\ReservationController@edit_status');
-
+Route::post('reservation/count-total-price', 'Host\ReservationController@count_total_price');
 
 // Conversation
 Route::post('conversation/add', 'Common\ConversationController@create_conversation');

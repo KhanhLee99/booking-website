@@ -1,18 +1,21 @@
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import TabHorizontal from '../../components/TabHorizontal';
-import Header from '../../../../components/Header';
-import Photos from '../../components/Photos';
-import BoxBooking from '../../components/BoxBooking';
-import { useParams } from 'react-router';
-import listingApi from '../../../../api/listingApi';
-import Header2 from '../../../../components/Header/Header2/Header2';
-import './styles.scss';
-import Skeleton from 'react-loading-skeleton'
-import 'react-loading-skeleton/dist/skeleton.css'
-import ListReview from '../../components/ListReview';
-import reviewApi from '../../../../api/reviewApi';
+import Skeleton from 'react-loading-skeleton';
+import 'react-loading-skeleton/dist/skeleton.css';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router';
+import { getDaysArray } from '../../../../@helper/helper';
+import blockBookingApi from '../../../../api/blockBookingApi';
+import listingApi from '../../../../api/listingApi';
+import reservationApi from '../../../../api/reservationApi';
+import reviewApi from '../../../../api/reviewApi';
+import Header from '../../../../components/Header';
+import AmenityDetail from '../../components/AmenityDetail/AmenityDetail';
+import BoxBooking from '../../components/BoxBooking';
+import ListReview from '../../components/ListReview';
+import Photos from '../../components/Photos';
+import TabHorizontal from '../../components/TabHorizontal';
+import './styles.scss';
 
 ListingDetail.propTypes = {
 
@@ -30,6 +33,9 @@ function ListingDetail(props) {
     const [photos, setPhotos] = useState([]);
     const [reviews, setReviews] = useState([]);
     const [loadingAddReview, setLoadingAddReview] = useState(false);
+    const [date, setDate] = useState(moment(moment().toDate()).format('YYYY-MM-DD'));
+    const [reservationDate, setReservationDate] = useState([])
+    const [blockList, setBlockList] = useState([]);
 
     const handleAddReview = async () => {
         try {
@@ -62,6 +68,37 @@ function ListingDetail(props) {
         }
     }
 
+    const fetchReservation = async () => {
+        try {
+            const params = {
+                month: date
+            }
+            // setLoading(true);
+            await reservationApi.getReservationInMonth(id, params).then(res => {
+                let tmp = [];
+                res.data.data.forEach(item => tmp = tmp.concat(getDaysArray(new Date(item.checkin_date), new Date(item.checkout_date))));
+                setReservationDate(tmp);
+            })
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
+    const getBlockInMonth = async () => {
+        try {
+            const params = {
+                month: date
+            }
+            await blockBookingApi.getBlockInMonth(id, params).then(res => {
+                let tmp = [];
+                res.data.data.forEach(item => tmp = tmp.concat(getDaysArray(new Date(item.start_date), new Date(item.end_date))));
+                setBlockList(tmp);
+            })
+        } catch (err) {
+            console.log(err.message)
+        }
+    }
+
     useEffect(() => {
         const fetchListingDetail = async () => {
             setLoadingListingDetail(true)
@@ -75,6 +112,14 @@ function ListingDetail(props) {
         }
 
         fetchListingDetail();
+        fetchReservation();
+        getBlockInMonth();
+
+        return () => {
+            setReservationDate([]);
+            setBlockList([]);
+        }
+
     }, []);
 
     useEffect(() => {
@@ -125,7 +170,7 @@ function ListingDetail(props) {
                                 <div id="listing-overview" className="listing-section">
                                     {/* Description */}
                                     <h3 className="listing-desc-headline">Overview</h3>
-                                    <p dangerouslySetInnerHTML={{ __html: listingDetail.description }} />
+                                    <p dangerouslySetInnerHTML={{ __html: listingDetail.description }} className='listing-overview'/>
                                     {/* Listing Contacts */}
 
                                     <div className="clearfix" />
@@ -137,18 +182,10 @@ function ListingDetail(props) {
                                     {
                                         amenities.map((item, index) => {
                                             return (
-                                                <>
-                                                    <h4 className='mt-5 mb-4'>{item.amenity_type}</h4>
-                                                    <ul className="listing-features checkboxes margin-top-0">
-                                                        {
-                                                            item.amenities.map((amenity, index) => {
-                                                                return (
-                                                                    <li><i className="im im-icon-Basket-Coins k-icon"></i>{amenity.name}</li>
-                                                                )
-                                                            })
-                                                        }
-                                                    </ul>
-                                                </>
+                                                <AmenityDetail
+                                                    key={index}
+                                                    item={item}
+                                                />
                                             )
                                         })
                                     }
@@ -212,7 +249,6 @@ function ListingDetail(props) {
                                     loadingAddReview={loadingAddReview}
                                     isLoggedIn={isLoggedIn}
                                 />
-
                             </>
                         }
                     </div>
@@ -220,6 +256,8 @@ function ListingDetail(props) {
                     <BoxBooking
                         loadingListingDetail={loadingListingDetail}
                         listingDetail={listingDetail}
+                        reservationDate={reservationDate}
+                        blockList={blockList}
                     />
 
                 </div>
