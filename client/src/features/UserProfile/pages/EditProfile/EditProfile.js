@@ -30,6 +30,11 @@ const custom_form_input = {
     boxShadow: 'none',
 }
 
+const ava_size = {
+    width: '120px',
+    height: '120px'
+}
+
 function EditProfile(props) {
 
     const [loading, setLoading] = useState(false);
@@ -98,6 +103,7 @@ function EditProfile(props) {
                                                 :
                                                 <AvatarPlaceholder
                                                     avatar_url={loggedInUser.avatar_url}
+                                                    style={ava_size}
                                                 />
                                         }
                                         <div className="change-photo-btn k-change-photo-btn">
@@ -112,7 +118,6 @@ function EditProfile(props) {
                                                 />
                                             </div>
                                         </div>
-
                                     </div>
 
                                     <label className='custom_form_label'>Tên</label>

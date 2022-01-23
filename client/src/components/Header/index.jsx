@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import { DatePicker } from 'antd';
+import React, { useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { deleteDeviceToken } from '../../app/reducer/userSlice';
 import LoginModal from '../LoginModal/LoginModal';
+import OutsideAlerter from '../OutsideAlerter/OutsideAlerter';
 import AvatarPlaceholder from '../Placeholder/AvatarPlaceholder/AvatarPlaceholder';
 import './styles.scss';
-import { DatePicker } from 'antd';
 
 
 
@@ -78,19 +79,6 @@ const show_reg_form = {
     top: '32px',
     fontWeight: '500',
     fontSize: '12px',
-}
-
-const nav_button_wrap = {
-    float: 'right',
-    height: '36px',
-    width: '36px',
-    cursor: 'pointer',
-    position: 'relative',
-    borderRadius: '4px',
-    top: '24px',
-    marginRight: '16px',
-    display: 'none',
-    background: '#4DB7FE'
 }
 
 const header_search_input = {
@@ -202,6 +190,10 @@ const { RangePicker } = DatePicker;
 
 function Header(props) {
 
+    const refProfile = useRef(null);
+    const refSearch = useRef(null);
+    const refNotify = useRef(null);
+
     const dispatch = useDispatch();
 
     const loggedInUser = useSelector((state) => state.userSlice.current);
@@ -209,6 +201,8 @@ function Header(props) {
 
     const [showPopupProfile, setShowPopupProfile] = useState(false);
     const [showPopupSearch, setShowPopupSearch] = useState(false);
+    const [showPopupNotify, setShowPopupNotify] = useState(false);
+
 
     const handleLogout = async (e) => {
         e.preventDefault();
@@ -221,47 +215,119 @@ function Header(props) {
         window.location.reload();
     }
 
-    // const { loggedInUser, isLoggedIn } = props;
-
-
     return (
 
         <header className="k-main-header" style={main_header}>
             <Link to="/" className="k-logo-holder" style={logo_holder}><img src="https://i.ytimg.com/vi/FPtITmtjWhQ/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB3TdlYzQKkXD7XtPbNwCGLGycr2Q" alt="" style={{ width: 'auto', height: '100%' }} /></Link>
-            {/* header-search_btn*/}
-            <div
-                className="k-header-search_btn show-search-button"
-                style={header_search_btn}
-                onClick={() => setShowPopupSearch(!showPopupSearch)}
-            >
-                <i className="fal fa-search" style={{ color: '#4DB7FE', marginRight: '30px' }} /> <span style={{ position: 'relative' }}>Search</span>
-            </div>
-            {/* header opt */}
+
+            <OutsideAlerter closePopup={() => setShowPopupSearch(false)} ref={refSearch}>
+
+                <div
+                    className="k-header-search_btn show-search-button"
+                    style={header_search_btn}
+                    onClick={() => setShowPopupSearch(!showPopupSearch)}
+                >
+                    <i className="fal fa-search" style={{ color: '#4DB7FE', marginRight: '30px' }} /> <span style={{ position: 'relative' }}>Search</span>
+                </div>
+
+
+                <div className={showPopupSearch ? "k-header-search_container vis-head-search" : "k-header-search_container"}>
+                    <div className="container small-container" style={{ maxWidth: '1024px', width: '92%', margin: '0 auto', position: 'relative', zIndex: 5 }}>
+                        <div className="header-search-input-wrap fl-wrap" style={{ padding: '0 199px 0 0' }}>
+
+                            <div className="k-header-search-input location autocomplete-container" style={header_search_input}>
+                                <label style={header_search_input_label}><i className="fal fa-map-marker" style={{ color: '#4DB7FE' }} /></label>
+                                <input type="text" placeholder="Location..." className="autocomplete-input" id="autocompleteid2" style={header_search_input_input} />
+                            </div>
+
+                            <div className="k-header-search-input" style={header_search_input}>
+                                <label style={header_search_input_label}><i className="fal fa-keyboard" style={{ color: '#4DB7FE' }} /></label>
+                                <input type="text" placeholder="What are you looking for ?" style={header_search_input_input} />
+                            </div>
+
+                            <div className="k-header-search-input" style={header_search_input}>
+                                <label style={header_search_input_label}><i className="fal fa-keyboard" style={{ color: '#4DB7FE' }} /></label>
+                                <RangePicker
+                                    format="DD/MM/YYYY"
+                                    placeholder={['Checkin', 'Checkout']}
+                                    suffixIcon
+                                    // onChange={handleChangeDebut}
+                                    style={header_search_input_input}
+                                    inputReadOnly
+                                />
+                            </div>
+
+                            <button className="header-search-button green-bg" onClick="window.location.href='listing.html'"><i className="far fa-search" /> Search </button>
+                        </div>
+                    </div>
+                </div>
+
+            </OutsideAlerter>
+
             {
                 isLoggedIn ? <>
-                    <div className="k-cart-btn show-header-modal" data-microtip-position="bottom" role="tooltip" aria-label="Your Wishlist" style={cart_btn}>
-                        <i className="fas fa-bell" style={{ width: '12px' }} /><span className="k-cart-counter" style={cart_counter} >4</span>
-                    </div>
-
-                    <div className="header-user-menu hu-menu-visdec" style={header_user_menu}>
-                        <div className="header-user-name" style={header_user_name} onClick={() => setShowPopupProfile(!showPopupProfile)}>
-                            <span style={header_user_name_span}>
-                                <AvatarPlaceholder
-                                    avatar_url={loggedInUser.avatar_url}
-                                    style={header_user_name_span_img}
-                                />
-                            </span>
-                            {loggedInUser.name}
+                    <OutsideAlerter
+                        closePopup={() => setShowPopupNotify(false)}
+                        ref={refNotify}
+                    >
+                        <div
+                            className="k-cart-btn"
+                            style={cart_btn}
+                            onClick={() => setShowPopupNotify(!showPopupNotify)}
+                        >
+                            <i className="fas fa-bell" style={{ width: '12px' }} /><span className="k-cart-counter" style={cart_counter} >4</span>
                         </div>
-                        <ul className={showPopupProfile ? 'hu-menu-vis' : ''}>
-                            <li style={header_user_menu_ul_li}><Link to="/me/profile" style={header_user_menu_ul_li_a}> Edit profile</Link></li>
-                            <li style={header_user_menu_ul_li}><Link to="/me/bookings" style={header_user_menu_ul_li_a}>  Bookings</Link></li>
-                            <li style={header_user_menu_ul_li}><Link to="/me/favorite" style={header_user_menu_ul_li_a}> Danh sách yêu thích </Link></li>
-                            {loggedInUser.role_id === 2 ?
-                                <li style={header_user_menu_ul_li}><Link to="/host/listings" style={header_user_menu_ul_li_a}>Quản lý nhà/phòng cho thuê</Link></li>
-                                : null}
-                            <li style={header_user_menu_ul_li}><a href="#" style={header_user_menu_ul_li_a} onClick={(e) => handleLogout(e)}> Log Out</a></li>
-                        </ul>
+
+                        <div className={showPopupNotify ? "header-modal vis-wishlist" : "header-modal"}>
+                            <div className="header-modal-container scrollbar-inner fl-wrap" data-simplebar>
+
+                                <div className='notification-title'>
+                                    <h3>Notifications</h3>
+                                </div>
+
+                                <div className="notification-list-box fl-wrap">
+
+                                    <NotificationItem />
+                                    <NotificationItem />
+                                    <NotificationItem />
+                                    <NotificationItem />
+                                    <NotificationItem />
+                                    <NotificationItem />
+
+                                </div>
+                            </div>
+
+                            <div className="header-modal-top fl-wrap">
+                                <h4>Your Wishlist : <span><strong /> Locations</span></h4>
+                                <div className="close-header-modal"><i className="far fa-times" /></div>
+                            </div>
+                        </div>
+                    </OutsideAlerter>
+
+                    <div className="header-user-menu" style={header_user_menu}>
+                        <OutsideAlerter
+                            closePopup={() => { setShowPopupProfile(false) }}
+                            ref={refProfile}
+                        >
+                            <div className={showPopupProfile ? 'rotateX header-user-name' : 'header-user-name'} style={header_user_name} onClick={() => { setShowPopupProfile(!showPopupProfile) }}>
+                                <span style={header_user_name_span}>
+                                    <AvatarPlaceholder
+                                        avatar_url={loggedInUser.avatar_url}
+                                        style={header_user_name_span_img}
+                                    />
+                                </span>
+                                {loggedInUser.name}
+                            </div>
+                            <ul className={showPopupProfile ? 'hu-menu-vis' : ''}>
+                                <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/profile" style={header_user_menu_ul_li_a}> Edit profile</Link></li>
+                                <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/bookings" style={header_user_menu_ul_li_a}>  Bookings</Link></li>
+                                <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/favorite" style={header_user_menu_ul_li_a}> Danh sách yêu thích </Link></li>
+                                {loggedInUser.role_id === 2 ?
+                                    <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/host/listings" style={header_user_menu_ul_li_a}>Quản lý nhà/phòng cho thuê</Link></li>
+                                    : null}
+                                <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><a href="#" style={header_user_menu_ul_li_a} onClick={(e) => handleLogout(e)}> Log Out</a></li>
+                            </ul>
+                        </OutsideAlerter>
                     </div>
                 </> :
                     <LoginModal>
@@ -269,199 +335,39 @@ function Header(props) {
                     </LoginModal>
             }
 
-            {/* nav-button-wrap*/}
-            <div className="k-nav-button-wrap" style={nav_button_wrap}>
-                <div className="nav-button">
-                    <span /><span /><span />
-                </div>
-            </div>
-
-            <div className={showPopupSearch ? "k-header-search_container vis-head-search" : "k-header-search_container"}>
-                <div className="container small-container" style={{ maxWidth: '1024px', width: '92%', margin: '0 auto', position: 'relative', zIndex: 5 }}>
-                    <div className="header-search-input-wrap fl-wrap" style={{ padding: '0 199px 0 0' }}>
-
-                        <div className="k-header-search-input location autocomplete-container" style={header_search_input}>
-                            <label style={header_search_input_label}><i className="fal fa-map-marker" style={{ color: '#4DB7FE' }} /></label>
-                            <input type="text" placeholder="Location..." className="autocomplete-input" id="autocompleteid2" style={header_search_input_input} />
-                        </div>
-
-                        <div className="k-header-search-input" style={header_search_input}>
-                            <label style={header_search_input_label}><i className="fal fa-keyboard" style={{ color: '#4DB7FE' }} /></label>
-                            <input type="text" placeholder="What are you looking for ?" style={header_search_input_input} />
-                        </div>
-
-                        <div className="k-header-search-input" style={header_search_input}>
-                            <label style={header_search_input_label}><i className="fal fa-keyboard" style={{ color: '#4DB7FE' }} /></label>
-                            <RangePicker
-                                format="DD/MM/YYYY"
-                                placeholder={['Checkin', 'Checkout']}
-                                suffixIcon
-                                // onChange={handleChangeDebut}
-                                style={header_search_input_input}
-                                inputReadOnly
-                            />
-                        </div>
-
-                        {/* <div className="k-header-search-input header-search_selectinpt" style={header_search_input, header_search_selectinpt}>
-                            <select data-placeholder="Category" className="chosen-select no-radius">
-                                <option>All Categories</option>
-                                <option>All Categories</option>
-                                <option>Shops</option>
-                                <option>Hotels</option>
-                                <option>Restaurants</option>
-                                <option>Fitness</option>
-                                <option>Events</option>
-                            </select>
-                        </div> */}
-
-                        <button className="header-search-button green-bg" onclick="window.location.href='listing.html'"><i className="far fa-search" /> Search </button>
-                    </div>
-                </div>
-            </div>
-
-            {/* wishlist-wrap*/}
-            <div className="header-modal novis_wishlist">
-                <div className="header-modal-container scrollbar-inner fl-wrap" data-simplebar>
-                    {/* <div className="widget-posts  fl-wrap">
-                        <ul className="no-list-style">
-                            <li>
-                                <div className="widget-posts-img"><a href="listing-single.html"><img src="https://i.ytimg.com/vi/hRvJ31HpWY4/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCiLzKdiWmF-dSCIcsEwiQo3u6AIw" alt="" /></a>
-                                </div>
-                                <div className="widget-posts-descr">
-                                    <h4><a href="listing-single.html">Iconic Cafe</a></h4>
-                                    <div className="geodir-category-location fl-wrap"><a href="#"><i className="fas fa-map-marker-alt" /> 40 Journal Square Plaza, NJ, USA</a>
-                                    </div>
-                                    <div className="widget-posts-descr-link"><a href="listing.html">Restaurants </a> <a href="listing.html">Cafe</a></div>
-                                    <div className="widget-posts-descr-score">4.1</div>
-                                </div>
-                            </li>
-                            <li>
-                                <div className="widget-posts-img"><a href="listing-single.html"><img src="https://i.ytimg.com/vi/hRvJ31HpWY4/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCiLzKdiWmF-dSCIcsEwiQo3u6AIw" alt="" /></a>
-                                </div>
-                                <div className="widget-posts-descr">
-                                    <h4><a href="listing-single.html">Iconic Cafe</a></h4>
-                                    <div className="geodir-category-location fl-wrap"><a href="#"><i className="fas fa-map-marker-alt" /> 40 Journal Square Plaza, NJ, USA</a>
-                                    </div>
-                                    <div className="widget-posts-descr-link"><a href="listing.html">Restaurants </a> <a href="listing.html">Cafe</a></div>
-                                    <div className="widget-posts-descr-score">4.1</div>
-                                </div>
-                            </li>
-                            <li>
-                                <div className="widget-posts-img"><a href="listing-single.html"><img src="https://i.ytimg.com/vi/hRvJ31HpWY4/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLCiLzKdiWmF-dSCIcsEwiQo3u6AIw" alt="" /></a>
-                                </div>
-                                <div className="widget-posts-descr">
-                                    <h4><a href="listing-single.html">Iconic Cafe</a></h4>
-                                    <div className="geodir-category-location fl-wrap"><a href="#"><i className="fas fa-map-marker-alt" /> 40 Journal Square Plaza, NJ, USA</a>
-                                    </div>
-                                    <div className="widget-posts-descr-link"><a href="listing.html">Restaurants </a> <a href="listing.html">Cafe</a></div>
-                                    <div className="widget-posts-descr-score">4.1</div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div> */}
-
-                    <div className='notification-title'>
-                        <h3>Notifications</h3>
-                    </div>
-
-                    <div className="notification-list-box fl-wrap">
-
-                        <div className="notification-list fl-wrap">
-                            <div className="notification-message">
-                                <div className="notification-message-text">
-                                    <i className="far fa-heart purp-bg"></i>
-                                    <div>
-                                        <p><a href="#">Mark Rose</a> add new Listing Park Central add new Listing Park Central</p>
-                                        <p className="notificattion-message-time">28 may 2020</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="notification-list fl-wrap">
-                            <div className="notification-message">
-                                <div className="notification-message-text">
-                                    <i className="far fa-heart purp-bg"></i>
-                                    <div>
-                                        <p><a href="#">Mark Rose</a> add new Listing Park Central add new Listing Park Central</p>
-                                        <p className="notificattion-message-time">28 may 2020</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="notification-list fl-wrap">
-                            <div className="notification-message">
-                                <div className="notification-message-text">
-                                    <i className="far fa-heart purp-bg"></i>
-                                    <div>
-                                        <p><a href="#">Mark Rose</a> add new Listing Park Central add new Listing Park Central</p>
-                                        <p className="notificattion-message-time">28 may 2020</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="notification-list fl-wrap">
-                            <div className="notification-message">
-                                <div className="notification-message-text">
-                                    <i className="far fa-heart purp-bg"></i>
-                                    <div>
-                                        <p><a href="#">Mark Rose</a> add new Listing Park Central add new Listing Park Central</p>
-                                        <p className="notificattion-message-time">28 may 2020</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="notification-list fl-wrap">
-                            <div className="notification-message">
-                                <div className="notification-message-text">
-                                    <i className="far fa-heart purp-bg"></i>
-                                    <div>
-                                        <p><a href="#">Mark Rose</a> add new Listing Park Central add new Listing Park Central</p>
-                                        <p className="notificattion-message-time">28 may 2020</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="notification-list fl-wrap">
-                            <div className="notification-message">
-                                <div className="notification-message-text">
-                                    <i className="far fa-heart purp-bg"></i>
-                                    <div>
-                                        <p><a href="#">Mark Rose</a> add new Listing Park Central add new Listing Park Central</p>
-                                        <p className="notificattion-message-time">28 may 2020</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="notification-list fl-wrap">
-                            <div className="notification-message">
-                                <div className="notification-message-text">
-                                    <i className="far fa-heart purp-bg"></i>
-                                    <div>
-                                        <p><a href="#">Mark Rose</a> add new Listing Park Central add new Listing Park Central</p>
-                                        <p className="notificattion-message-time">28 may 2020</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-
-
-
-                <div className="header-modal-top fl-wrap">
-                    <h4>Your Wishlist : <span><strong /> Locations</span></h4>
-                    <div className="close-header-modal"><i className="far fa-times" /></div>
-                </div>
-            </div>
         </header >
-
     )
 }
 export default Header;
+
+function NotificationItem(props) {
+    const { } = props;
+
+    return (
+        <div className="notification-list fl-wrap">
+            <div className="notification-message">
+                <div className="notification-message-text">
+                    <i className="far fa-heart purp-bg"></i>
+                    <div>
+                        <p><a href="#">Mark Rose</a> add new Listing Park Central add new Listing Park Central</p>
+                        <p className="notificattion-message-time">28 may 2020</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+
+
+    // <div  className = "k-header-search-input header-search_selectinpt" style = { header_search_input, header_search_selectinpt } >
+    //     <select data-placeholder="Category" className="chosen-select no-radius">
+    //         <option>All Categories</option>
+    //         <option>All Categories</option>
+    //         <option>Shops</option>
+    //         <option>Hotels</option>
+    //         <option>Restaurants</option>
+    //         <option>Fitness</option>
+    //         <option>Events</option>
+    //     </select>
+    //                     </div >

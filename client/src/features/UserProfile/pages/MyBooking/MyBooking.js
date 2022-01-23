@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import UserBookingItem from '../../components/UserBookingItem/UserBookingItem';
 import reservationApi from '../../../../api/reservationApi';
+import reviewApi from '../../../../api/reviewApi';
 
 MyBooking.propTypes = {
 
@@ -9,6 +10,7 @@ MyBooking.propTypes = {
 
 function MyBooking(props) {
     const [reservations, setReservations] = useState([]);
+    const [loadingAddReview, setLoadingAddReview] = useState(false);
 
     const fetchMyReservation = async () => {
         await reservationApi.getMyReservation().then(res => {
@@ -21,6 +23,23 @@ function MyBooking(props) {
             reservation_status_id: 4
         }
         await reservationApi.editStatusReservation(id, params);
+    }
+
+    const handleAddReview = async (id, content) => {
+        try {
+            const params = {
+                note: content,
+                rating: 5,
+            }
+            setLoadingAddReview(true);
+            await reviewApi.addReviewListing(params, id).then(res => {
+                if (res.data.status = 'success') {
+                    setLoadingAddReview(false);
+                }
+            })
+        } catch (err) {
+            console.log(err.message);
+        }
     }
 
     useEffect(() => {
@@ -40,6 +59,7 @@ function MyBooking(props) {
                         key={index}
                         reservation={item}
                         handleCancel={handleCancel}
+                        handleAddReview={handleAddReview}
                     />
                 ))}
             </div>

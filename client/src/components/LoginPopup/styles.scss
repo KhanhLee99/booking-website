@@ -16,6 +16,17 @@
 
 .firebaseui-idp-button {
     max-width: 100% !important;
+    height: 50px !important;
+    border-radius: 30px !important;
+    // box-shadow: 0px 0px 0px 7px rgb(255 255 255 / 20%) !important;
+
+    &.firebaseui-idp-google {
+        background-color: #dc4e41 !important;
+    }
+}
+
+.firebaseui-idp-google > .firebaseui-idp-text {
+    color: #fff !important;
 }
 
 .firebaseui-idp-list {
@@ -279,14 +290,120 @@ button {
 }
 
 // townhub
-.k-main-register-holder .tabs-menu:before {
-    content: "";
-    position: absolute;
-    left: 30px;
-    right: 30px;
-    height: 1px;
-    bottom: 1px;
-    background: #e5e5e5;
+.k-main-register-holder {
+    & .display-none {
+        display: none;
+    }
+    & .tabs-menu {
+        &:before {
+            content: "";
+            position: absolute;
+            left: 30px;
+            right: 30px;
+            height: 1px;
+            bottom: 1px;
+            background: #e5e5e5;
+        }
+
+        & .current {
+            border-bottom: 3px solid transparent;
+        }
+    }
+
+    & .k-tabs-container {
+        & .current-content {
+            display: none;
+        }
+
+        & .k-filter-tags input[type="checkbox"] {
+            float: left;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            position: relative;
+            border-radius: 2px;
+            color: #fff;
+            background: #fff;
+            margin-bottom: 20px;
+            top: 4px;
+        }
+
+        & .soc-log {
+            padding: 15px 0;
+
+            & p {
+                margin-bottom: 12px;
+                font-size: 12px;
+                color: #7d93b2;
+            }
+
+            & .social-login {
+                z-index: 1;
+            }
+        }
+
+        & .wave-bg {
+            position: absolute;
+            bottom: -400px;
+            height: 220px;
+            left: 60px;
+            width: 100%;
+            z-index: -1; /* z index 0 */
+            transform: rotateY(10deg);
+
+            & .wave {
+                opacity: 0.9;
+                position: absolute;
+                top: 3%;
+                left: 50%;
+                background: #475897;
+                width: 500px;
+                height: 500px;
+                margin-left: -250px;
+                margin-top: -250px;
+                transform-origin: 50% 48%;
+                border-radius: 43%;
+                animation: drift 6000ms infinite linear;
+            }
+
+            & .wave.-two {
+                animation: drift 14000ms infinite linear;
+                opacity: 0.4;
+                background: #79bcfc;
+            }
+        }
+    }
+
+    & .close-tag i:hover {
+        color: rgb(77, 183, 254);
+    }
+
+    & #forgot_box p {
+        font-size: 13px;
+        color: #7d93b2;
+        float: left;
+        text-align: left;
+    }
+}
+
+@-webkit-keyframes drift {
+    from {
+        transform: rotate(0deg);
+    }
+    from {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes drift {
+    from {
+        transform: rotate(0deg);
+    }
+    from {
+        transform: rotate(360deg);
+    }
 }
 
 .k-log-separator:before,

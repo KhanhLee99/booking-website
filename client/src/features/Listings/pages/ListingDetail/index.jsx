@@ -8,7 +8,6 @@ import { getDaysArray } from '../../../../@helper/helper';
 import blockBookingApi from '../../../../api/blockBookingApi';
 import listingApi from '../../../../api/listingApi';
 import reservationApi from '../../../../api/reservationApi';
-import reviewApi from '../../../../api/reviewApi';
 import Header from '../../../../components/Header';
 import AmenityDetail from '../../components/AmenityDetail/AmenityDetail';
 import BoxBooking from '../../components/BoxBooking';
@@ -32,31 +31,31 @@ function ListingDetail(props) {
     const [amenities, setAmenities] = useState([])
     const [photos, setPhotos] = useState([]);
     const [reviews, setReviews] = useState([]);
-    const [loadingAddReview, setLoadingAddReview] = useState(false);
+    // const [loadingAddReview, setLoadingAddReview] = useState(false);
     const [date, setDate] = useState(moment(moment().toDate()).format('YYYY-MM-DD'));
     const [reservationDate, setReservationDate] = useState([])
     const [blockList, setBlockList] = useState([]);
 
-    const handleAddReview = async () => {
-        try {
-            const params = {
-                note: 'abc',
-                // name: loggedInUser.name,
-                // avatar_url: loggedInUser.avatar_url,
-                rating: 5,
-            }
-            setLoadingAddReview(true);
-            await reviewApi.addReviewListing(params, id).then(res => {
-                if (res.data.status = 'success') {
-                    setLoadingAddReview(false);
-                    const tmp = reviews.concat(params);
-                    setReviews(tmp);
-                }
-            })
-        } catch (err) {
-            console.log(err.message);
-        }
-    }
+    // const handleAddReview = async () => {
+    //     try {
+    //         const params = {
+    //             note: 'abc',
+    //             // name: loggedInUser.name,
+    //             // avatar_url: loggedInUser.avatar_url,
+    //             rating: 5,
+    //         }
+    //         setLoadingAddReview(true);
+    //         await reviewApi.addReviewListing(params, id).then(res => {
+    //             if (res.data.status = 'success') {
+    //                 setLoadingAddReview(false);
+    //                 const tmp = reviews.concat(params);
+    //                 setReviews(tmp);
+    //             }
+    //         })
+    //     } catch (err) {
+    //         console.log(err.message);
+    //     }
+    // }
 
     const handleSave = async () => {
         if (isLoggedIn) {
@@ -170,7 +169,7 @@ function ListingDetail(props) {
                                 <div id="listing-overview" className="listing-section">
                                     {/* Description */}
                                     <h3 className="listing-desc-headline">Overview</h3>
-                                    <p dangerouslySetInnerHTML={{ __html: listingDetail.description }} className='listing-overview'/>
+                                    <p dangerouslySetInnerHTML={{ __html: listingDetail.description }} className='listing-overview' />
                                     {/* Listing Contacts */}
 
                                     <div className="clearfix" />
@@ -245,8 +244,8 @@ function ListingDetail(props) {
                                 {/* Reviews */}
                                 <ListReview
                                     reviews={reviews}
-                                    handleAddReview={handleAddReview}
-                                    loadingAddReview={loadingAddReview}
+                                    // handleAddReview={handleAddReview}
+                                    // loadingAddReview={loadingAddReview}
                                     isLoggedIn={isLoggedIn}
                                 />
                             </>

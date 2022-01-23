@@ -1,6 +1,14 @@
 import axiosClient from "../utils/axiosClient";
 
 const userApi = {
+    register: (params) => {
+        const url = '/register';
+        return axiosClient.post(url, params)
+            .catch(function (error) {
+                console.log(error);
+            });
+    },
+
     login: (params) => {
         const url = '/login';
         return axiosClient.post(url, params)
@@ -42,7 +50,9 @@ const userApi = {
     getMe: () => {
         const url = '/me';
         return axiosClient.get(url);
-    }
+    },
+
+
 }
 
 export default userApi;

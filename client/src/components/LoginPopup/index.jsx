@@ -12,6 +12,7 @@ import PulseLoading from '../Loading/PulseLoading';
 import { unwrapResult } from '@reduxjs/toolkit';
 import { useHistory } from 'react-router';
 import userApi from '../../api/userApi';
+import { MdKeyboardBackspace } from "react-icons/md";
 
 LoginPopup.propTypes = {
 
@@ -73,9 +74,9 @@ const tabs_menu_li = {
     textAlign: 'left',
     position: 'relative',
     zIndex: 2,
-    borderBottom: '3px solid transparent',
     width: '50%',
-    borderColor: '#4DB7FE'
+    borderColor: '#4DB7FE',
+    cursor: 'pointer',
 }
 
 const tabs_menu_li_a = {
@@ -135,6 +136,7 @@ const custom_form_input = {
     outline: 'none',
     overflow: 'hidden',
     zIndex: 1,
+    boxShadow: 'none',
 }
 
 const custom_form_button = {
@@ -142,21 +144,9 @@ const custom_form_button = {
     border: 'none',
     cursor: 'pointer',
     marginTop: '0px',
-    width: '100%',
+    width: '50%',
     padding: '13px 0',
     color: '#fff',
-}
-
-const btn_i = {
-    // position: 'absolute',
-    // right: '20px',
-    // top: '50%',
-    // height: '20px',
-    // width: '20px',
-    // borderRadius: '100%',
-    // lineHeight: '20px',
-    // marginTop: '-10px',
-    // transition: 'all 200ms linear',
 }
 
 const filter_tags = {
@@ -164,21 +154,7 @@ const filter_tags = {
     color: '#7d93b2',
     fontSize: '12px',
     fontWeight: 600,
-}
-
-const filter_tags_input = {
-    float: 'left',
-    position: 'relative',
-    border: '1px solid #ccc',
-    cursor: 'pointer',
-    padding: 0,
-    width: '20px',
-    height: '20px',
-    position: 'relative',
-    borderRadius: '2px',
-    color: '#fff',
-    background: '#fff',
-    marginBottom: '20px',
+    marginTop: '24px',
 }
 
 const label_rmbm = {
@@ -213,6 +189,8 @@ const log_separator_span = {
 function LoginPopup(props) {
     const deviceToken = useSelector(state => state.userSlice.deviceToken);
     const [loading, setLoading] = useState(false);
+    const [tabLogin, setTabLogin] = useState(true);
+    const [isForgot, setIsForgot] = useState(false);
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -242,10 +220,10 @@ function LoginPopup(props) {
                 social_token: token
             }
             const actionResult = await dispatch((signInMethod === 'google.com') ? loginGoogle(params) : loginFacebook(params));
-            const currentUser = unwrapResult(actionResult);
+            const currentUser = unwrapResult(actionResult).then(() => {
+                refreshPage();
+            });
             console.log(currentUser.data);
-            setTriggerPopup(false);
-            history.push('/posts');
         } catch (err) {
             console.log(err);
             setLoading(false);
@@ -275,208 +253,261 @@ function LoginPopup(props) {
         }
     }
 
-    const handleClosePopup = (resetForm) => {
-        setTriggerPopup(false)
-        resetForm();
+    const handleRegister = async (values, resetForm) => {
+        try {
+            const params = {
+                name: values.name,
+                email: values.email,
+                password: values.password
+            };
+            setLoading(true);
+            await userApi.register(params).then(res => {
+                console.log(res);
+                setLoading(false);
+                resetForm();
+            })
+        } catch (err) {
+            console.log(err.message);
+            setLoading(false)
+        }
     }
 
     const refreshPage = () => {
         window.location.reload();
     }
 
-    const { trigger, setTriggerPopup } = props;
+    const { close } = props;
+
 
     return (
-        // trigger ? (
-        //     <div className="k-pop-up">
-        //         <div id="sign-in-dialog" className="zoom-anim-dialog">
-        //             <Formik
-        //                 initialValues={{
-        //                     email: '',
-        //                     password: '',
-        //                 }}
-        //                 validationSchema={
-        //                     Yup.object({
-        //                         email: Yup.string().email('Invalid email address').required('Required'),
-        //                         password: Yup.string()
-        //                             // .max(1, 'Must be 1 characters or less')
-        //                             .required('Required'),
-        //                     })}
-        //                 onSubmit={(values, { resetForm }) => {
-        //                     handleLogin(values, resetForm);
-        //                 }}
-        //             >
-        //                 {formik => (
-        //                     <>
-        //                         <div className="small-dialog-header">
-        //                             <h3>Sign In</h3>
-        //                             <button onClick={handleClosePopup.bind(null, formik.resetForm)} title="%title%" type="button" className="mfp-close"></button>
-        //                         </div>
-
-        //                         <form onSubmit={formik.handleSubmit}>
-        //                             <div className="sign-in-wrapper">
-        //                                 <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
-        //                                 <div className="divider"><span>Or</span></div>
-        //                                 <div className="form-group">
-        //                                     <label htmlFor="email">Email</label>
-        //                                     <input
-        //                                         id="email"
-        //                                         type="email"
-        //                                         className="form-control"
-        //                                         {...formik.getFieldProps('email')}
-        //                                     />
-        //                                     {formik.touched.email && formik.errors.email ? (
-        //                                         <div>{formik.errors.email}</div>
-        //                                     ) : null}
-        //                                     <i className="icon_mail_alt" />
-        //                                 </div>
-        //                                 <div className="form-group">
-        //                                     <label htmlFor="password">Password</label>
-        //                                     <input
-        //                                         id="password"
-        //                                         type="password"
-        //                                         className="form-control"
-        //                                         {...formik.getFieldProps('password')}
-        //                                     />
-        //                                     {formik.touched.email && formik.errors.email ? (
-        //                                         <div>{formik.errors.email}</div>
-        //                                     ) : null}
-        //                                     <i className="icon_lock_alt" />
-        //                                 </div>
-        //                                 <div className="clearfix add_bottom_15">
-        //                                     <div className="checkboxes float-left">
-        //                                         <label className="container_check">Remember me
-        //                                             <input type="checkbox" />
-        //                                             <span className="checkmark" />
-        //                                         </label>
-        //                                     </div>
-        //                                     <div className="float-right mt-1"><a id="forgot" href="javascript:void(0);">Forgot Password?</a></div>
-        //                                 </div>
-        //                                 <div className="text-center">
-        //                                     <button type="submit" className="btn_1 full-width" disabled={loading ? true : false}>{loading ? <PulseLoading /> : "Log In"}</button>
-        //                                 </div>
-        //                                 <div className="text-center">
-        //                                     Don’t have an account?<a href="register.html">Sign up</a>
-        //                                 </div>
-        //                                 {/* <div id="forgot_pw">
-        //                                     <div className="form-group">
-        //                                         <label>Please confirm login email below</label>
-        //                                         <input type="email" className="form-control" name="email_forgot" id="email_forgot" />
-        //                                         <i className="icon_mail_alt" />
-        //                                     </div>
-        //                                     <p>You will receive an email containing a link allowing you to reset your password to a new preferred one.</p>
-        //                                     <div className="text-center"><input type="submit" defaultValue="Reset Password" className="btn_1" /></div>
-        //                                 </div> */}
-        //                             </div>
-        //                         </form>
-        //                     </>
-        //                 )}
-        //             </Formik>
-
-        //         </div>
-        //     </div >
-        // ) : null
 
         <div className="k-main-register-holder tabs-act" style={main_register_holder}>
-            <div className="k-main-register fl-wrap  modal_main" style={main_register}>
-                <div className="k-main-register_title" style={main_register_title}>Welcome to <span style={{ textTransform: 'uppercase', fontWeight: 800 }}><strong style={{ color: '#4DB7FE' }}>Town</strong>Hub<strong style={{ color: '#4DB7FE' }}>.</strong></span>
-                </div>
-                <div className="k-close-reg" style={close_reg}><i className="fal fa-times" /></div>
-                <ul className="tabs-menu fl-wrap" style={{ padding: '0 30px', listStyle: 'none' }}>
-                    <li className="current" style={tabs_menu_li}><a href="#tab-1" style={tabs_menu_li_a}><i className="fal fa-sign-in-alt" style={{ color: '#4DB7FE' }} /> Login</a></li>
-                    <li style={tabs_menu_li}><a href="#tab-2" style={tabs_menu_li_a}><i className="fal fa-user-plus" style={{ color: '#4DB7FE' }} /> Register</a></li>
+            <div className="k-main-register fl-wrap" style={main_register}>
+                <div className="k-main-register_title" style={main_register_title}>Welcome to <span style={{ textTransform: 'uppercase', fontWeight: 800 }}><strong style={{ color: '#4DB7FE' }}>Town</strong>Hub<strong style={{ color: '#4DB7FE' }}>.</strong></span></div>
+                <div className='close-tag' style={close_reg} onClick={close}><i className="fal fa-times" /></div>
+                <ul className={isForgot ? "tabs-menu fl-wrap display-none" : "tabs-menu fl-wrap"} style={{ padding: '0 30px', listStyle: 'none' }}>
+                    <li className={tabLogin ? 'current' : ''} style={tabs_menu_li} onClick={e => { e.preventDefault(); setTabLogin(true) }}><a href="#tab-1" style={tabs_menu_li_a}><i className="fal fa-sign-in-alt" style={{ color: '#4DB7FE' }} /> Login</a></li>
+                    <li className={tabLogin ? '' : 'current'} style={tabs_menu_li} onClick={e => { e.preventDefault(); setTabLogin(false) }}><a href="#tab-2" style={tabs_menu_li_a}><i className="fal fa-user-plus" style={{ color: '#4DB7FE' }} /> Register</a></li>
                 </ul>
                 {/*tabs */}
                 <div className="k-tabs-container" style={tabs_container}>
-                    <div className="k-tab" style={{ width: '100%', float: 'left' }}>
-                        {/*tab */}
-                        <div id="tab-1" className="k-tab-content k-first-tab">
-                            <div className="k-custom-form" style={custom_form}>
-                                <Formik
-                                    initialValues={{ email: '', password: '' }}
-                                    validationSchema={
-                                        Yup.object({
-                                            email: Yup.string().email('Invalid email address').required('Required'),
-                                            password: Yup.string()
-                                                // .max(1, 'Must be 1 characters or less')
-                                                .required('Required'),
-                                        })}
-                                    onSubmit={(values, { resetForm }) => {
-                                        handleLogin(values, resetForm);
-                                    }}
-                                >
-                                    {formik => (
-                                        <form onSubmit={formik.handleSubmit}>
-                                            <label style={custom_form_label}>Email Address <span>*</span> </label>
-                                            <input
-                                                type="text"
-                                                {...formik.getFieldProps('email')}
-                                                style={custom_form_input}
-                                            />
-                                            {formik.touched.email && formik.errors.email ? (
-                                                <label className='custom_form_label' style={{ color: 'red', marginTop: '-20px' }}>{formik.errors.email}</label>
-                                            ) : null}
+                    <div className={isForgot ? "k-tab display-none" : "k-tab"} style={{ width: '100%', float: 'left' }}>
+                        {/* TAB LOGIN */}
+                        <TabLogin
+                            tabLogin={tabLogin}
+                            handleLogin={handleLogin}
+                            loading={loading}
+                            showForgotBox={() => setIsForgot(true)}
+                        />
 
-                                            <label style={custom_form_label}>Password <span>*</span> </label>
-                                            <input
-                                                type="password"
-                                                {...formik.getFieldProps('password')}
-                                                style={custom_form_input}
-                                            />
-                                            {formik.touched.password && formik.errors.password ? (
-                                                <label className='custom_form_label' style={{ color: 'red', marginTop: '-20px' }}>{formik.errors.password}</label>
-                                            ) : null}
-                                            <button type="submit" className="btn float-btn color2-bg" style={custom_form_button}>{loading ? <PulseLoading /> : 'Log In'} </button>
-                                            <div className="clearfix" />
-                                            <div className="k-filter-tags" style={filter_tags}>
-                                                <input id="check-a3" type="checkbox" name="check" style={filter_tags_input} />
-                                                <label htmlFor="check-a3" style={label_rmbm}>Remember me</label>
-                                            </div>
-                                        </form>
-                                    )}
-                                </Formik>
-                                <div className="lost_password" style={{ marginTop: '24px', float: 'right' }}>
-                                    <a href="#" style={{ float: 'left', fontSize: '12px', fontWeight: 600, }}>Lost Your Password?</a>
-                                </div>
-                            </div>
-                        </div>
-                        {/*tab end */}
-                        {/*tab */}
-                        <div className="tab">
-                            <div id="tab-2" className="k-tab-content" style={{ display: 'none' }}>
-                                <div className="k-custom-form" style={custom_form}>
-                                    <form method="post" name="registerform" className="main-register-form" id="main-register-form2">
-                                        <label style={custom_form_label}>Full Name <span>*</span> </label>
-                                        <input name="name" type="text" onclick="this.select()" style={custom_form_input} />
-                                        <label style={custom_form_label}>Email Address <span>*</span></label>
-                                        <input name="email" type="text" onclick="this.select()" style={custom_form_input} />
-                                        <label style={custom_form_label}>Password <span>*</span></label>
-                                        <input name="password" type="password" onclick="this.select()" style={custom_form_input} />
+                        {/* TAB REGISTER */}
+                        <TabRegister
+                            tabLogin={tabLogin}
+                            handleRegister={handleRegister}
+                            loading={loading}
+                        />
 
-                                        <div className="clearfix" />
-                                        <button type="submit" className="btn float-btn color2-bg"> Register <i className="fas fa-caret-right" /></button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                        {/*tab end */}
+                        {/* LOGIN SOCIAL */}
+                        <SocialLogin uiConfig={uiConfig} />
+
                     </div>
-                    {/*tabs end */}
-                    <div className="k-log-separator fl-wrap" style={{ textAlign: 'center' }}><span style={log_separator_span}>or</span></div>
-                    <div className="soc-log fl-wrap">
-                        <p>For faster login or register use your social account.</p>
-                        <a href="#" className="facebook-log"> Facebook</a>
-                    </div>
-                    <div className="wave-bg">
-                        <div className="wave -one" />
-                        <div className="wave -two" />
-                    </div>
+
+                    {/* FORGOT PASSWORD */}
+                    <ForgotForm
+                        hideForgotBox={() => setIsForgot(false)}
+                        isForgot={isForgot}
+                    />
+
                 </div>
             </div>
-        </div>
-
-
+        </div >
     );
 }
 
 export default LoginPopup;
+
+function TabLogin(props) {
+    const { tabLogin, handleLogin, loading, showForgotBox } = props;
+    return (
+        <div id="tab-1" className={tabLogin ? '' : 'current-content'}>
+            <div className="k-custom-form" style={custom_form}>
+                <Formik
+                    initialValues={{ email: '', password: '' }}
+                    validationSchema={
+                        Yup.object({
+                            email: Yup.string().email('Invalid email address').required('Required').max(255),
+                            password: Yup.string()
+                                // .min(6, 'Must be 6 characters or more')
+                                .required('Required'),
+                        })}
+                    onSubmit={(values, { resetForm }) => {
+                        handleLogin(values, resetForm);
+                    }}
+                >
+                    {formik => (
+                        <form onSubmit={formik.handleSubmit}>
+                            <label style={custom_form_label}>Email Address <span>*</span> </label>
+                            <input
+                                type="text"
+                                {...formik.getFieldProps('email')}
+                                style={custom_form_input}
+                            />
+                            {formik.touched.email && formik.errors.email ? (
+                                <label className='custom_form_label' style={{ color: 'red', marginTop: '-20px' }}>{formik.errors.email}</label>
+                            ) : null}
+
+                            <label style={custom_form_label}>Password <span>*</span> </label>
+                            <input
+                                type="password"
+                                {...formik.getFieldProps('password')}
+                                style={custom_form_input}
+                            />
+                            {formik.touched.password && formik.errors.password ? (
+                                <label className='custom_form_label' style={{ color: 'red', marginTop: '-20px' }}>{formik.errors.password}</label>
+                            ) : null}
+                            <button type="submit" className="btn float-btn color2-bg" style={custom_form_button}>{loading ? <PulseLoading /> : 'Log In'} </button>
+                            <div className="clearfix" />
+                            <div className="k-filter-tags" style={filter_tags}>
+                                <input id="check-a3" type="checkbox" name="check" />
+                                <label htmlFor="check-a3" style={label_rmbm}>Remember me</label>
+                            </div>
+                            <div className="lost_password" style={{ marginTop: '24px', float: 'right' }}>
+                                <a
+                                    href="#"
+                                    style={{ float: 'left', fontSize: '12px', fontWeight: 600, }}
+                                    onClick={showForgotBox}
+                                >Lost Your Password?</a>
+                            </div>
+                        </form>
+                    )}
+                </Formik>
+            </div>
+        </div>
+    );
+}
+
+function TabRegister(props) {
+    const { tabLogin, loading, handleRegister } = props;
+
+    return (
+        <div className="tab">
+            <div id="tab-2" className={tabLogin ? 'current-content' : ''}>
+                <div className="k-custom-form" style={custom_form}>
+                    <Formik
+                        initialValues={{ email: '', password: '' }}
+                        validationSchema={
+                            Yup.object({
+                                name: Yup.string().max(255).min(6),
+                                email: Yup.string().email('Invalid email address').required('Required').max(255),
+                                password: Yup.string()
+                                    .min(6, 'Must be 6 characters or more')
+                                    .required('Required'),
+                                confirm_password: Yup.string()
+                                    .min(6, 'Vui lòng nhập Xác nhận mật khẩu mới')
+                                    .required('Password is required')
+                                    .oneOf([Yup.ref('password'), null], 'Xác nhận mật khẩu mới khác với Mật khẩu mới')
+                            })}
+                        onSubmit={(values, { resetForm }) => {
+                            handleRegister(values, resetForm);
+                        }}
+                    >
+                        {formik => (
+                            <form onSubmit={formik.handleSubmit}>
+                                <label style={custom_form_label}>Full Name <span>*</span> </label>
+                                <input
+                                    type="text"
+                                    {...formik.getFieldProps('name')}
+                                    style={custom_form_input}
+                                />
+
+                                <label style={custom_form_label}>Email Address <span>*</span></label>
+                                <input
+                                    type="email"
+                                    {...formik.getFieldProps('email')}
+                                    style={custom_form_input}
+                                />
+
+                                <label style={custom_form_label}>Password <span>*</span></label>
+                                <input
+                                    type="password"
+                                    {...formik.getFieldProps('password')}
+                                    style={custom_form_input}
+                                />
+
+                                <label style={custom_form_label}>Confirm Password <span>*</span></label>
+                                <input
+                                    type="password"
+                                    {...formik.getFieldProps('confirm_password')}
+                                    style={custom_form_input}
+                                />
+
+                                <div className="clearfix" />
+                                <button type="submit" className="btn float-btn color2-bg" style={custom_form_button}>{loading ? <PulseLoading /> : 'Register'}  </button>
+                            </form>
+                        )}
+                    </Formik>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function SocialLogin(props) {
+    const { uiConfig } = props;
+    return (
+        <>
+            <div className="k-log-separator fl-wrap" style={{ textAlign: 'center' }}><span style={log_separator_span}>or</span></div>
+            <div className="soc-log fl-wrap">
+                <p>For faster login or register use your social account.</p>
+                <div className='social-login'>
+                    <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+                </div>
+            </div>
+            <div className="wave-bg">
+                <div className="wave -one" />
+                <div className="wave -two" />
+            </div>
+        </>
+    )
+}
+
+function ForgotForm(props) {
+    const { hideForgotBox, isForgot } = props;
+    return (
+        <div id="forgot_box" className={isForgot ? '' : 'display-none'}>
+            <Formik
+                initialValues={{ email: '', password: '' }}
+                validationSchema={
+                    Yup.object({
+                        email: Yup.string().email('Invalid email address').required('Required').max(255),
+                    })}
+                onSubmit={(values, { resetForm }) => {
+                    // handleRegister(values, resetForm);
+                }}
+            >
+                {formik => (
+
+                    <form onSubmit={formik.handleSubmit}>
+                        <div>
+                            <label style={custom_form_label}>Please confirm login email below</label>
+                            <input
+                                type="email"
+                                {...formik.getFieldProps('email')}
+                                style={custom_form_input}
+                            />
+                        </div>
+                        <p>You will receive an email containing a link allowing you to reset your password to a new
+                            preferred one.</p>
+                        <div className="text-center">
+                            <button className="btn float-btn color2-bg" style={custom_form_button} onClick={hideForgotBox}>Back</button>
+                            <button type="submit" className="btn float-btn color2-bg" style={custom_form_button}>Reset Password</button>
+                        </div>
+                    </form>
+                )}
+            </Formik>
+
+
+        </div>
+
+    )
+}

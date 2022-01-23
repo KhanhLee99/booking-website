@@ -28,18 +28,11 @@ function BestCity(props) {
                 <div className="listing-item-grid_container fl-wrap">
                     {/* <div className="row"> */}
                     {cities.map((city, index) => (
-                        // <div className="col-sm-4">
-                        <div className="listing-item-grid" onClick={() => handleClickCity(city.id)}>
-                            <div className="bg" data-bg="images/all/1.jpg"
-                                style={{ backgroundImage: "url(" + city.thumb_url + ")" }}
-                            />
-                            <div className="d-gr-sec" />
-                            <div className="listing-counter color2-bg"><span>16 </span> Locations</div>
-                            <div className="listing-item-grid_title">
-                                <h3><Link to={`/location/${city.id}/?page=1`}>{city.name}</Link></h3>
-                            </div>
-                        </div>
-                        // </div>
+                        <BestCityItem
+                            key={index}
+                            city={city}
+                            handleClickCity={handleClickCity}
+                        />
                     ))}
                     {/* </div> */}
                 </div>
@@ -49,3 +42,24 @@ function BestCity(props) {
 }
 
 export default BestCity;
+
+function BestCityItem(props) {
+
+    const { city, handleClickCity } = props;
+    return (
+        // <div className="col-sm-4">
+
+        <div className="listing-item-grid" onClick={() => handleClickCity(city.id)}>
+            <div className="bg" data-bg="images/all/1.jpg"
+                style={{ backgroundImage: "url(" + city.thumb_url + ")" }}
+            />
+            <div className="d-gr-sec" />
+            <div className="listing-counter color2-bg"><span>16 </span> Locations</div>
+            <div className="listing-item-grid_title">
+                <h3><Link to={`/location/${city.id}/?page=1`}>{city.name}</Link></h3>
+            </div>
+        </div>
+        // </div>
+
+    )
+}

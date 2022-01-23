@@ -37,10 +37,30 @@ const title = {
 }
 
 function FilterItem(props) {
-    const { item, handleFilter } = props;
+
+    const { item, handleFilter, filterType, filterStar, type } = props;
+
+    const checkFiltered = () => {
+        let idx;
+        if (type == 'type') {
+            idx = filterType.findIndex(element => element == item.id);
+        } else {
+            idx = filterStar.findIndex(element => element == item.id);
+        }
+        return <input
+            id={item.id}
+            type="checkbox"
+            name="check"
+            style={checkbox}
+            onChange={handleFilter}
+            defaultChecked={idx != -1 ? true : false}
+        />
+    }
+
+
     return (
         <li style={filter_tags_li}>
-            <input id={item.id} type="checkbox" name="check" style={checkbox} onChange={handleFilter} />
+            {checkFiltered()}
             <label htmlFor={item.value} style={title}>{item.name}</label>
             <span className='_4abc4c3d5'>85</span>
         </li>

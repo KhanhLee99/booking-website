@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
+import './AddReview.scss';
 
 AddReview.propTypes = {
 
@@ -34,19 +35,34 @@ const btn_i = {
 }
 
 function AddReview(props) {
+    const [isEmpty, setIsEmpty] = useState(false);
+    const textRef = useRef();
+    const { handleAddReview, name, id, close } = props;
 
-    const { handleAddReview } = props;
+    const addReview = () => {
+        if (textRef.current.value) {
+            setIsEmpty(false)
+            handleAddReview(id, textRef.current.value);
+            close();
+        } else {
+            setIsEmpty(true)
+        }
+    }
+
+
     return (
-        <>
+        <div className='add-review-box'>
+            <h3>Hãy để lại đánh giá về trải nghiệm ở của bạn <span className='listing-name'>{name}</span></h3>
             <textarea
                 placeholder='Your Review:'
                 style={{ resize: 'none' }}
+                ref={textRef}
             />
 
-            <button onClick={() => handleAddReview()} className="btn color2-bg float-btn" style={custom_form_button}>Submit Reviewd <i className="fal fa-paper-plane" style={btn_i} /></button>
+            {isEmpty && <p className='text-error'> Vui lòng nhập đánh giá </p>}
 
-            <div className="_npr0qi" style={{ borderTopColor: 'rgb(221, 221, 221)', marginBottom: '45px' }} />
-        </>
+            <button onClick={() => addReview()} className="btn color2-bg float-btn" style={custom_form_button}>Submit Reviewd <i className="fal fa-paper-plane" style={btn_i} /></button>
+        </div>
     );
 }
 

@@ -8,7 +8,7 @@ FilterBox.propTypes = {
 };
 
 function FilterBox(props) {
-    const { listing_types, star, handleFilter } = props;
+    const { listing_types, star, handleFilter, filterType, filterStar } = props;
     return (
         <div className="fl-wrap block_box">
             <div className="_62409d4c7"><h2 className="ac6bdec376">Filter by:</h2></div>
@@ -22,6 +22,8 @@ function FilterBox(props) {
                                     item={type}
                                     key={index}
                                     handleFilter={(e) => handleFilter(e, 'type')}
+                                    filterType={filterType}
+                                    type='type'
                                 />
                             ))}
                         </ul>
@@ -36,6 +38,8 @@ function FilterBox(props) {
                                     item={item}
                                     key={index}
                                     handleFilter={(e) => handleFilter(e, 'star')}
+                                    filterStar={filterStar}
+                                    type='star'
                                 />
                             ))}
                         </ul>

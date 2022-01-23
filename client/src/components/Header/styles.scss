@@ -75,6 +75,10 @@
     transition: all 0.2s ease-in-out;
 }
 
+.rotateX.header-user-name:before {
+    transform: rotateX(180deg);
+}
+
 .header-user-menu:after {
     content: "";
     position: absolute;
@@ -114,7 +118,7 @@
 
 .popup-content {
     background-color: rgba(25, 25, 25, 0) !important;
-    text-align: center;
+    // text-align: center;
     margin: auto;
     max-width: 420px;
     border-radius: 6px;
@@ -138,26 +142,25 @@
 }
 
 /* notification */
-.vis-wishlist {
-    opacity: 1;
-    visibility: visible;
-    right: 210px;
-    display: block;
-}
 
 .header-modal {
     position: absolute;
-    top: 110%;
+    top: 90%;
     width: 400px;
     z-index: -1;
-    transition: all 300ms linear;
-    right: 20px;
+    transition: all 200ms linear;
+    right: 10px;
     overflow: hidden;
     box-shadow: 0 2px 12px 0 rgb(0 0 0 / 12%);
     border-radius: 10px;
-    /* opacity: 0;
+    opacity: 0;
     visibility: hidden;
-    display: none; */
+
+    &.vis-wishlist {
+        opacity: 1;
+        visibility: visible;
+        right: 20px;
+    }
 }
 
 .header-modal-container {
@@ -180,91 +183,6 @@
     max-height: inherit;
     margin: -10px -20px;
 }
-
-// .widget-posts li {
-//     padding: 10px 0;
-//     position: relative;
-//     float: left;
-//     width: 100%;
-//     overflow: hidden;
-//     background: #fff;
-//     border-bottom: 1px solid #eee;
-//     transition: all 100ms linear;
-// }
-
-// .widget-posts-img {
-//     float: left;
-//     width: 30%;
-//     position: relative;
-// }
-
-// .widget-posts-img img {
-//     width: 100%;
-//     height: auto;
-//     border-radius: 4px;
-// }
-
-// .widget-posts-descr {
-//     float: left;
-//     width: 70%;
-//     padding: 0 20px;
-// }
-
-// .widget-posts-descr h4 {
-//     text-align: left;
-//     font-weight: 600;
-//     font-size: 13px;
-//     padding-bottom: 2px;
-// }
-
-// .widget-posts-descr h4 a {
-//     color: #566985;
-// }
-
-// .widget-posts-descr .geodir-category-location {
-//     margin-top: 4px;
-// }
-
-// .widget-posts-descr .geodir-category-location a {
-//     float: left;
-//     text-align: left;
-//     color: #999;
-//     font-weight: 600;
-//     text-transform: uppercase;
-//     font-size: 10px;
-// }
-
-// .widget-posts-descr-link {
-//     float: left;
-//     width: 100%;
-//     margin-top: 10px;
-// }
-
-// .widget-posts-descr-link a {
-//     float: left;
-//     margin-right: 4px;
-//     text-align: left;
-//     color: #7d93b2;
-//     font-size: 11px;
-//     font-weight: 600;
-// }
-
-// .widget-posts-descr-score {
-//     position: absolute;
-//     right: 0;
-//     bottom: 0;
-//     width: 30px;
-//     height: 30px;
-//     line-height: 30px;
-//     background: #18458b;
-//     font-weight: 600;
-//     color: #fff;
-//     border-radius: 4px 0 0 0;
-//     font-size: 10px;
-//     opacity: 0;
-//     border: 1px solid rgba(0, 0, 0, 0.21);
-//     text-shadow: 0px 2px 5px rgb(0 0 0 / 21%);
-// }
 
 .header-modal-top {
     padding: 15px 60px 15px 20px;

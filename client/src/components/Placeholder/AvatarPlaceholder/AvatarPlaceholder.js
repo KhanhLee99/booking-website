@@ -10,15 +10,22 @@ function AvatarPlaceholder(props) {
 
     const { avatar_url, className, style } = props;
     return (
-        <img
-            src={avatar_url}
-            className={className}
-            style={style}
-            onError={({ currentTarget }) => {
-                currentTarget.onerror = null; // prevents looping
-                currentTarget.src = avatarPlacholder;
-            }}
-        />
+        <>
+            {
+                avatar_url ?
+                    <img
+                        src={avatar_url}
+                        className={className}
+                        style={style}
+                        onError={({ currentTarget }) => {
+                            currentTarget.onerror = null; // prevents looping
+                            currentTarget.src = avatarPlacholder;
+                        }}
+                    />
+                    :
+                    <img src={avatarPlacholder} />
+            }
+        </>
     );
 }
 

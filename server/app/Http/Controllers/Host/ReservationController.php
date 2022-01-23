@@ -81,7 +81,8 @@ class ReservationController extends Controller
             ->join('listing', 'listing.id', '=', 'reservation.listing_id')
             ->orderBy('reservation.id', 'desc')
             ->join('reservation_status', 'reservation_status.id', '=', 'reservation.reservation_status_id')
-            ->select('reservation.*', 'listing.name as listing_name', 'listing.avatar_url as thumb_img',  'listing.street_address', 'reservation_status.name as status')
+            ->join('users', 'listing.user_id', '=', 'users.id')
+            ->select('reservation.*', 'listing.name as listing_name', 'listing.avatar_url as thumb_img',  'listing.street_address', 'reservation_status.name as status', 'users.name as host_name', 'users.avatar_url as host_avatar', 'users.id as host_id')
             ->get();
         if ($data) {
             $this->response = [

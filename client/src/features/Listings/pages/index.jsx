@@ -11,6 +11,7 @@ import ListListingsLocation from '../components/ListListingsLocation';
 import FilterBox from '../components/ListListingsLocation/FilterBox/FilterBox';
 import ListingSort from '../components/ListListingsLocation/ListingSort/ListingSort';
 import './style.scss';
+import queryString from 'query-string'
 
 
 
@@ -27,8 +28,6 @@ const main = {
     zIndex: 2,
     // opacity: 0,
 }
-
-
 
 function ListingsLocation(props) {
     const listing_types = [
@@ -48,39 +47,40 @@ function ListingsLocation(props) {
         { id: 4, name: '4 stars', value: 'star-4' },
         { id: 5, name: '5 stars', value: 'star-5' },
     ];
+
+    const history = useHistory();
+    const { id } = useParams();
+    const qs = queryString.parse(props.location.search);
     const query = useQuery();
     const loggedInUser = useSelector((state) => state.userSlice.current);
     const isLoggedIn = !!loggedInUser.id;
 
     const [loading, setLoading] = useState(false);
-    const [currentPage, setCurrentPage] = useState(0);
-    const [postsPerPage] = useState(10);
+    const [currentPage, setCurrentPage] = useState(() => { return qs.page || 0 });
+    const [postsPerPage] = useState(() => { return qs.limit || 10 });
     const [totalPages, setTotalPages] = useState(0);
-    const [filterType, setFilterType] = useState([]);
-    const [filterStar, setFilterStar] = useState([]);
-
-
-    const { id } = useParams();
+    const [filterType, setFilterType] = useState(() => {
+        let initFilterType = [];
+        if (qs.pt.length > 1) {
+            initFilterType = qs.pt.map(item => parseInt(item));
+        } else if (qs.pt.length == 1) {
+            initFilterType.push(parseInt(qs.pt));
+        }
+        return initFilterType;
+    });
+    const [filterStar, setFilterStar] = useState(() => {
+        let initFilterStar = [];
+        if (qs.st.length > 1) {
+            initFilterStar = qs.st.map(item => parseInt(item));
+        } else if (qs.st.length == 1) {
+            initFilterStar.push(parseInt(qs.st));
+        }
+        return initFilterStar;
+    });
     const [listings, setListings] = useState([]);
 
-    const history = useHistory();
 
-    // useEffect(() => {
 
-    //     fetchListings();
-
-    //     return () => {
-    //         setListings([]);
-    //     }
-    // }, []);
-
-    useEffect(() => {
-        fetchListings();
-
-        return () => {
-            setListings([]);
-        }
-    }, [currentPage]);
 
     const fetchListings = async () => {
         try {
@@ -116,23 +116,41 @@ function ListingsLocation(props) {
             case 'type':
 
                 if (e.target.checked) {
-                    filterByType([...filterType, parseInt(e.target.id)])
-                    setFilterType([...filterType, parseInt(e.target.id)]);
+                    let tmpPTCheck = [...filterType, parseInt(e.target.id)];
+                    filterByType(tmpPTCheck)
+                    setFilterType(tmpPTCheck);
+                    history.replace({
+                        pathname: props.location.pathname,
+                        search: queryString.stringify({ pt: tmpPTCheck, st: filterStar })
+                    })
                 } else {
                     const ids = filterType.filter((id) => id !== parseInt(e.target.id));
                     ids.length > 0 ? filterByType(ids) : fetchListings();
                     setFilterType(ids);
+                    history.replace({
+                        pathname: props.location.pathname,
+                        search: queryString.stringify({ pt: ids, st: filterStar })
+                    })
                 }
                 console.log(filterType);
                 break;
             case 'star':
                 if (e.target.checked) {
-                    filterByRating([...filterStar, parseInt(e.target.id)]);
-                    setFilterStar([...filterStar, parseInt(e.target.id)]);
+                    let tmpPTStar = [...filterStar, parseInt(e.target.id)];
+                    filterByRating(tmpPTStar);
+                    setFilterStar(tmpPTStar);
+                    history.replace({
+                        pathname: props.location.pathname,
+                        search: queryString.stringify({ pt: filterType, st: tmpPTStar })
+                    })
                 } else {
                     const stars = filterStar.filter((id) => id !== parseInt(e.target.id));
                     stars.length > 0 ? filterByRating(stars) : fetchListings();
                     setFilterStar(stars);
+                    history.replace({
+                        pathname: props.location.pathname,
+                        search: queryString.stringify({ pt: filterType, st: stars })
+                    })
                 }
                 console.log(filterStar);
                 break;
@@ -171,6 +189,16 @@ function ListingsLocation(props) {
         })
     }
 
+    useEffect(() => {
+        console.log('token', qs.pt)
+        console.log(props.location.pathname);
+        fetchListings();
+
+        return () => {
+            setListings([]);
+        }
+    }, [currentPage]);
+
     return (
         <div className="k-main" style={main}>
             <Header />
@@ -181,6 +209,8 @@ function ListingsLocation(props) {
                             listing_types={listing_types}
                             star={star}
                             handleFilter={handleFilter}
+                            filterType={filterType}
+                            filterStar={filterStar}
                         />
                         <button onClick={filterByType}>Search</button>
                     </div>

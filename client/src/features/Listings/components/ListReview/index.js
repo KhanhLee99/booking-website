@@ -26,18 +26,18 @@ function ListReview(props) {
                                 review={review}
                             />
                         ))}
-                        {
+                        {/* {
                             loadingAddReview ? <ReviewItemSkeleton /> : null
-                        }
+                        } */}
 
                     </ul>
                 </section>
             </div>
-            {
+            {/* {
                 isLoggedIn ? <AddReview
                     handleAddReview={handleAddReview}
                 /> : null
-            }
+            } */}
 
         </>
 

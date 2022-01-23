@@ -13,6 +13,11 @@ const listing_review_item = {
     marginTop: '20px',
 }
 
+const ava_size = {
+    width: '80px',
+    height: '80px'
+}
+
 function ReviewItem(props) {
     const { review } = props;
     return (
@@ -20,6 +25,7 @@ function ReviewItem(props) {
             <div className="avatar">
                 <AvatarPlaceholder
                     avatar_url={review.avatar_url}
+                    style={ava_size}
                 />
             </div>
             <div className="comment-content">

@@ -29,8 +29,11 @@ class AuthController extends Controller
             'password' => $q->password
         ])) {
             $user = User::whereEmail($q->email)->first();
-            $user->token = $user->createToken('Personal Access Token')->accessToken;
-            return response()->json($user, 200);
+            if ($user->hasVerifiedEmail()) {
+                $user->token = $user->createToken('Personal Access Token')->accessToken;
+                return response()->json($user, 200);
+            }
+            return response()->json(['message' => 'Unauthenticated. Please Verify Your Email.'], 401);
         }
         return response()->json(['message' => 'Unauthenticated'], 401);
     }
@@ -78,13 +81,15 @@ class AuthController extends Controller
         $user = User::where('firebaseUID', $uid)->first();
         if (!$user) {
             $user_information = $this->auth->getUser($uid);
+            // dd($user_information);
             if (!$this->is_exists_email($user_information->email)) {
                 $user = User::create([
                     'name' => $user_information->displayName,
                     'email' => $user_information->email,
                     'signin_method' => $user_information->providerData[0]->providerId,
                     'phone_number' => $user_information->phoneNumber,
-                    'firebaseUID' => $user_information->uid
+                    'firebaseUID' => $user_information->uid,
+                    'avatar_url' => $user_information->photoUrl,
                 ]);
             } else {
                 return response()->json(['message' => 'Email already exists'], 401);

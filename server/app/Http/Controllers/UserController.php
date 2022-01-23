@@ -23,15 +23,40 @@ class UserController extends Controller
     }
 
     //
-    public function register(UserRegisterRequest $q)
+    public function register(Request $request)
     {
-        $user = new User;
-        $user->fill($q->all());
-        $user->password = Hash::make($q->password);
-        $user->save();
-        $user->sendEmailVerificationNotification();
+        try {
+            $rules = array(
+                'name' => 'required|max:255',
+                'email' => 'required|email|unique:users|max:255',
+                'password' => 'required|min:6',
+            );
+            $validator = Validator::make($request->all(), $rules);
+            if ($validator->fails()) {
+                $this->response = [
+                    'errorMessage' => $validator->errors(),
+                    'status' => 'fail'
+                ];
+                return response()->json($this->response, 400);
+            }
+            $user = new User;
+            $user->fill($request->all());
+            $user->password = Hash::make($request->password);
 
-        return response()->json($user);
+            if ($user->save()) {
+                $user->sendEmailVerificationNotification();
+                $this->response = [
+                    'status' => 'success',
+                    'message' => 'Please Verify Your Email.',
+                    'data' => $user,
+                ];
+                return response()->json($this->response, $this->success_code);
+            }
+            $this->response['status'] = 'fail';
+            return response()->json($this->response, 400);
+        } catch (\Exception $e) {
+            return response()->json(['message' => $e->getMessage()]);
+        }
     }
 
     public function new_password(Request $q)
@@ -194,7 +219,7 @@ class UserController extends Controller
         // CURL
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, env('FIRE_BASE_URL'));
-        //FIRE_BASE_URL = https://fcm.googleapis.com/fcm/send 
+        //FIRE_BASE_URL = https://fcm.googleapis.com/fcm/send
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headerRequest);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

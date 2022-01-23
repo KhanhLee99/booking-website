@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import './UserBookingItem.scss';
 import ThumbListingPlaceholder from '../../../../components/Placeholder/ThumbListingPlaceholder/ThumbListingPlaceholder';
 import moment from 'moment';
-import { datediff, parseDate } from '../../../../@helper/helper';
+import Popup from 'reactjs-popup';
+import AddReview from '../../../Listings/components/ListReview/AddReview/AddReview';
+import AvatarPlaceholder from '../../../../components/Placeholder/AvatarPlaceholder/AvatarPlaceholder';
+
 
 UserBookingItem.propTypes = {
 
@@ -31,8 +34,15 @@ const color_reservation_status = (status_id) => {
     }
 }
 
+const ava_size = {
+    width: '30px',
+    height: '30px',
+    borderRadius: '50%',
+}
+
 function UserBookingItem(props) {
-    const { reservation, handleCancel } = props;
+
+    const { reservation, handleCancel, handleAddReview } = props;
 
     const cancelReservation = (e) => {
         e.preventDefault();
@@ -51,7 +61,6 @@ function UserBookingItem(props) {
             var now = moment(moment().toDate(), "YYYY-MM-DD hh:mm:ss");
             var checkout = moment(reservation.checkout_date, "YYYY-MM-DD hh:mm:ss");
             var { _data } = moment.duration(now.diff(checkout));
-            console.log(_data.days)
             if (_data.days >= 0 && _data.days <= 14) {
                 return <>
                     <div className='fl-wrap'>
@@ -59,7 +68,24 @@ function UserBookingItem(props) {
                     </div>
 
                     <div className='review-btn fl-wrap'>
-                        <a href='#' className='cancel-reservation-btn' onClick={(e) => checkBtnReview(e)}>Đánh giá</a>
+                        <Popup
+                            trigger={<a href='#' onClick={e => e.preventDefault()}>Đánh giá</a>}
+                            position="center"
+                            modal
+                            nested
+                            closeOnDocumentClick
+                            className='popup-content'
+                        >
+                            {close => (
+                                <AddReview
+                                    id={reservation.listing_id}
+                                    name={reservation.listing_name}
+                                    handleAddReview={handleAddReview}
+                                    close={close}
+                                />
+                            )}
+
+                        </Popup >
                     </div>
                 </>
             }
@@ -74,7 +100,11 @@ function UserBookingItem(props) {
         <div className="dashboard-list fl-wrap" style={{ border: '1px solid #e5e7f2', marginBottom: '20px' }}>
             <div className='fl-wrap reservation-head'>
                 <div className='host-info'>
-                    hsdgfjhgas
+                    <AvatarPlaceholder
+                        avatar_url={reservation.host_avatar}
+                        style={ava_size}
+                    />
+                    <h5>{reservation.host_name}</h5>
                 </div>
 
                 <div className="k-booking-status">
@@ -87,7 +117,7 @@ function UserBookingItem(props) {
                 <span className="fw-separator"></span>
             </div>
 
-            <div className="dashboard-message">
+            <div className="dashboard-message user-booking">
                 <div className="k-booking-price">
                     <p className='booking-price'>{parseInt(reservation.total_price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }).replace('.', ',')}</p>
                 </div>
@@ -98,8 +128,9 @@ function UserBookingItem(props) {
                             listing_img={reservation.thumb_img}
                         />
                     </Link>
-                    <h4><a href='#' onClick={e => e.preventDefault()} className='booking-date'>{(new Date(reservation.checkin_date)).toDateString()} - {(new Date(reservation.checkout_date)).toDateString()}</a></h4>
-                    <h4><Link to={`/listing/${reservation.listing_id}`}>{reservation.listing_name}</Link></h4>
+                    {/* <h4><a href='#' onClick={e => e.preventDefault()} className='booking-date'>{(new Date(reservation.checkin_date)).toDateString()} - {(new Date(reservation.checkout_date)).toDateString()}</a></h4> */}
+                    <h3><Link to={`/listing/${reservation.listing_id}`}>{reservation.listing_name}</Link></h3>
+                    <h4><a href='#' onClick={e => e.preventDefault()} className='booking-date'>Booking Date: {(new Date(reservation.checkin_date)).toLocaleDateString("vi-VN")} - {(new Date(reservation.checkout_date)).toLocaleDateString("vi-VN")}</a></h4>
                     <div className="geodir-category-location clearfix"><a href="#" className='booking-address'>{reservation.street_address}</a></div>
                 </div>
             </div>
@@ -110,5 +141,3 @@ function UserBookingItem(props) {
 }
 
 export default UserBookingItem;
-
-
