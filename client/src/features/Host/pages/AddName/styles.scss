@@ -5,7 +5,19 @@
     position: fixed;
     left: 0;
     bottom: 0;
-    border-top: 1px solid #333;
+    // border-top: 1px solid #333;
+    z-index: 999999;
+
+    & .progress {
+        border-radius: 0;
+        height: 3px;
+        transition: 1s ease;
+        transition-delay: 0.5s;
+
+        & .progress-bar {
+            background-color: #000;
+        }
+    }
 }
 
 .k-back-div,

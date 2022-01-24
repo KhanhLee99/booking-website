@@ -1,5 +1,5 @@
 .add-bed-type {
-    margin: 30px 0 0 0;
+    margin: 10px 0 0 0;
     display: flex;
 
     & .bed-info {
@@ -22,13 +22,28 @@
     }
 
     & .bed-info .bed-name {
-        font-weight: 300;
+        font-weight: 600;
         margin-bottom: -7px;
-        color: #3d3d3e;
+        color: rgb(102, 102, 102);
+        font-size: 15px;
     }
 
     & .bed-info .bed-count {
-        font-weight: 300;
+        font-weight: 400;
         color: #838283;
+        text-align: left;
+        font-size: 15px;
     }
+}
+
+._npr1df {
+    border-top-width: 1px !important;
+    border-top-style: solid !important;
+    margin: 20px 0;
+    border-top-color: rgb(221, 221, 221);
+}
+
+.add_bed_type_box {
+    // background-color: brown;
+    margin-bottom: 20px;
 }

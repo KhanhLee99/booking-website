@@ -30,6 +30,7 @@
     "query-string": "^7.0.1",
     "react": "^17.0.2",
     "react-big-calendar": "^0.38.2",
+    "react-bootstrap": "^2.1.1",
     "react-bootstrap-daterangepicker": "^7.0.0",
     "react-calendar": "^3.5.0",
     "react-datepicker": "^4.5.0",

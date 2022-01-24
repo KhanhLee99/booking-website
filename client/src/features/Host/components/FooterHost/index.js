@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import PulseLoading from '../../../../components/Loading/PulseLoading';
+import { ProgressBar } from 'react-bootstrap';
 
 FooterHost.propTypes = {
 
@@ -12,9 +13,10 @@ function FooterHost(props) {
             handleNext();
         }
     }
-    const { loading, handleBack, handleNext, hiddenBackButton, isHandleClick } = props;
+    const { loading, handleBack, handleNext, hiddenBackButton, isHandleClick, now } = props;
     return (
         <div className='k-footer'>
+            <ProgressBar now={now} />
             <div className='container'>
                 <div className='row'>
                     <div className='col-6 k-back-div'>

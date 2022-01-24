@@ -10,7 +10,7 @@ function IncDecFormQty(props) {
 
     const { title, handleDec, handleInc, qty, type } = props;
     return (
-        <div className="qtyButtons">
+        <div className="qtyButtons" style={{ marginBottom: '20px' }}>
             <div className="qtyTitle custom_form_label" style={{ color: '#878c9f' }}>{title}</div>
             <div className="qtyDec" onClick={() => handleDec(type, qty)}></div>
             <input type="text" name="qtyInput" placeholder={qty} />

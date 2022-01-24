@@ -168,6 +168,7 @@ Route::get('send-mail-auth', 'Mails\MailAuthController@send_mail');
 Route::get('listing-location', 'Common\DetailListingController@get_litings_location');
 Route::post('listing-type/filter', 'Common\DetailListingController@filter_by_listing_type');
 Route::post('listing-rating/filter', 'Common\DetailListingController@filter_by_star');
+Route::post('listing/filter', 'Common\DetailListingController@filter_listing');
 
 Route::get('listing/{id}', 'Host\ListingController@get_listing_by_id');
 

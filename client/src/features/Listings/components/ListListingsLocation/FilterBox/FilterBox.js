@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './FilterBox.scss';
 import FilterItem from './FilterItem/FilterItem';
+import { UserListingFilter } from '../../../../../app/constant';
 
 FilterBox.propTypes = {
 
@@ -21,9 +22,9 @@ function FilterBox(props) {
                                 <FilterItem
                                     item={type}
                                     key={index}
-                                    handleFilter={(e) => handleFilter(e, 'type')}
+                                    handleFilter={(e) => handleFilter(e, UserListingFilter.TYPE)}
                                     filterType={filterType}
-                                    type='type'
+                                    type={UserListingFilter.TYPE}
                                 />
                             ))}
                         </ul>
@@ -37,9 +38,9 @@ function FilterBox(props) {
                                 <FilterItem
                                     item={item}
                                     key={index}
-                                    handleFilter={(e) => handleFilter(e, 'star')}
+                                    handleFilter={(e) => handleFilter(e, UserListingFilter.STAR)}
                                     filterStar={filterStar}
-                                    type='star'
+                                    type={UserListingFilter.STAR}
                                 />
                             ))}
                         </ul>

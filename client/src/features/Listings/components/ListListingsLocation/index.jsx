@@ -10,10 +10,6 @@ function ListListingsLocation(props) {
 
     const { listings, loading, isLoggedIn, loggedInUser } = props;
 
-    if (loading) {
-        return <h2>Loading...</h2>;
-    }
-
     return (
         <div className="fl-wrap" style={{ padding: '30px 0 0' }}>
             {listings.map((listing, index) => (

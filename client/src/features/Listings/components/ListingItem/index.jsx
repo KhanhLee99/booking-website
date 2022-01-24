@@ -426,7 +426,7 @@ function ListingItem(props) {
 
                     <div className="k-geodir-category-opt" style={geodir_category_opt}>
                         <div className="k-listing-rating-count-wrap">
-                            <div className="k-review-score" style={review_score}>4.8</div>
+                            <div className="k-review-score" style={review_score}>{listing.rating.toFixed(1)}</div>
                             <div className="k-listing-rating card-popup-rainingvis" data-starrating2={5} style={listing_rating} />
                             <br />
                             <div className="k-reviews-count" style={reviews_count}>12 reviews</div>

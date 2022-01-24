@@ -153,7 +153,7 @@ function ListingDetail(props) {
                                 <h3 className="listing-desc-headline"><Skeleton width={"40%"} /></h3>
                                 <p><Skeleton /></p>
                             </div> : <>
-                                <div id="titlebar" className="listing-titlebar">
+                                <div id="titlebar" className="listing-titlebar" style={{ paddingBottom: 0 }}>
                                     <div className="listing-titlebar-title">
                                         <h2>{listingDetail.name}</h2>
                                         <span>

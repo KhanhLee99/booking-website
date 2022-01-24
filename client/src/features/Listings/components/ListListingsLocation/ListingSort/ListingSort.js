@@ -56,10 +56,11 @@ const listsearch_input_item = {
 }
 
 function ListingSort(props) {
+    const { totalListing } = props;
     return (
         <div className="list-main-wrap-header" style={list_main_wrap_header}>
             <div className="list-main-wrap-title" style={list_main_wrap_title}>
-                <h2 style={list_main_wrap_title_h2}>1836 homestay tại <span>New York </span></h2>
+                <h2 style={list_main_wrap_title_h2}>{totalListing} homestay tại <span>New York </span></h2>
             </div>
             <div className="list-main-wrap-opt" style={list_main_wrap_opt}>
                 <div className="price-opt" style={{ float: 'left' }}>

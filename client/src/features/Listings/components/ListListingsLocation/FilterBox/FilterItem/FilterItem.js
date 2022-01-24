@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { UserListingFilter } from '../../../../../../app/constant';
 
 FilterItem.propTypes = {
 
@@ -42,7 +43,7 @@ function FilterItem(props) {
 
     const checkFiltered = () => {
         let idx;
-        if (type == 'type') {
+        if (type == UserListingFilter.TYPE) {
             idx = filterType.findIndex(element => element == item.id);
         } else {
             idx = filterStar.findIndex(element => element == item.id);

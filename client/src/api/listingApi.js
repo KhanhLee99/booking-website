@@ -35,6 +35,11 @@ const listingApi = {
         const url = 'listing-rating/filter';
         return axiosClient.post(url, params);
     },
+
+    filterListing: (params) => {
+        const url = 'listing/filter';
+        return axiosClient.post(url, params);
+    },
 }
 
 export default listingApi;

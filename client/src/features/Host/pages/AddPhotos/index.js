@@ -7,6 +7,7 @@ import './styles.scss';
 import uploadApi from '../../../../api/uploadApi';
 import FooterHost from '../../components/FooterHost';
 import listingApi from '../../../../api/listingApi';
+import Loading from '../../../../components/Loading/Loading';
 
 AddPhotos.propTypes = {
 
@@ -51,6 +52,7 @@ function AddPhotos(props) {
     const [files, setFiles] = useState([]);
     const [params, setParams] = useState(new FormData());
     const [photos, setPhotos] = useState([]);
+    const [percent, setPercent] = useState(100 / 5);
 
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*',
@@ -99,10 +101,15 @@ function AddPhotos(props) {
             // setLoadingListingDetail(true)
             await listingApi.getListingById(id).then(res => {
                 setPhotos(res.data.photos);
+                setPercent(100 / 4);
             });
         }
 
         fetchListingDetail();
+
+        return () => {
+            setPhotos([]);
+        }
     }, []);
 
     const handleNext = async () => {
@@ -114,7 +121,7 @@ function AddPhotos(props) {
             await uploadApi.uploadPhotosListing(params, id).then(res => {
                 setLoading(false);
                 if (res.data.status == 'success') {
-                    history.push(`/host/${id}/title`)
+                    history.push(`/become-host/${id}/title`)
                 }
             });
 
@@ -125,40 +132,55 @@ function AddPhotos(props) {
     }
 
     const handleBack = () => {
+        history.push(`/become-host/${id}/amenities`)
     }
 
     return (
+        <div className='row'>
+            {loading && <Loading />}
+            <div className='col-8'>
+                <div id="add-listing">
+                    <h3 className='h3_title'>Gallery</h3>
+                    <div className="add-listing-section">
+                        <div className="submit-section">
+                            {/* <form action="/file-upload" className="dropzone" /> */}
+                            <div {...getRootProps({ className: 'dropzone' })}>
+                                <input {...getInputProps()} />
+                                {
+                                    (files.length == 0) ? <><i className='sl sl-icon-plus'></i> Click here or drop files to upload</> : null
+                                }
 
-        <div id="add-listing">
-            <h3 className='h3_title'>Gallery</h3>
-            <div className="add-listing-section margin-top-45">
-                <div className="submit-section">
-                    {/* <form action="/file-upload" className="dropzone" /> */}
-                    <div {...getRootProps({ className: 'dropzone' })}>
-                        <input {...getInputProps()} />
-                        {
-                            (files.length == 0) ? <><i className='sl sl-icon-plus'></i> Click here or drop files to upload</> : null
-                        }
-
-                        <aside style={thumbsContainer}>
-                            {defaultThumbs}
-                            {thumbs}
-                        </aside>
+                                <aside style={thumbsContainer}>
+                                    {defaultThumbs}
+                                    {thumbs}
+                                </aside>
+                            </div>
+                        </div>
                     </div>
+                    <FooterHost
+                        loading={loading}
+                        handleBack={handleBack}
+                        handleNext={handleNext}
+                        hiddenBackButton={false}
+                        isHandleClick={true}
+                        now={percent}
+                    />
                 </div>
             </div>
-            <FooterHost
-                loading={loading}
-                handleBack={handleBack}
-                handleNext={handleNext}
-                hiddenBackButton={false}
-                isHandleClick={true}
-            />
+            <RightSide />
         </div>
-
-
-
     );
 }
 
 export default AddPhotos;
+
+function RightSide(props) {
+    return (
+        <div className='col-4 k-right-side'>
+            <div className='k-property-content'>
+                <h5>Text</h5>
+                <p>Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recent</p>
+            </div>
+        </div>
+    )
+}

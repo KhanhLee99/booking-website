@@ -9,6 +9,7 @@ import RentalFormItem from '../../components/RentalFormItem';
 import { useHistory, useParams } from 'react-router-dom';
 import FooterHost from '../../components/FooterHost';
 import listingApi from '../../../../api/listingApi';
+import Loading from '../../../../components/Loading/Loading';
 
 BasicInfomation.propTypes = {
 
@@ -41,6 +42,7 @@ function BasicInfomation(props) {
     const [loading, setLoading] = useState(false);
     const [listingTypes, setListTypes] = useState([]);
     const [idActive, setIdActive] = useState(null);
+    const [typeActive, setTypeActive] = useState(null);
     const [rentalFormSelect, setRentalFormSelect] = useState(null);
     const [reservationForm, setReservationForm] = useState('quick');
     const rentalForms = [
@@ -86,7 +88,7 @@ function BasicInfomation(props) {
         try {
             const res = await hostApi.getNewestListing();
             if (res.data.data) {
-                history.push(`/host/${res.data.data.id}/location`);
+                history.push(`/become-host/${res.data.data.id}/location`);
                 setLoading(false);
             }
         } catch (err) {
@@ -94,15 +96,7 @@ function BasicInfomation(props) {
         }
     }
 
-    const getListingTypes = async () => {
-        try {
-            const res = await hostApi.getListingType();
-            setListTypes(res.data.data);
-            console.log(res.data.data);
-        } catch (err) {
-            console.log(err);
-        }
-    }
+
 
     const handleNext = async () => {
         if (id) {
@@ -116,7 +110,7 @@ function BasicInfomation(props) {
                 await hostApi.updateListing(params, id).then(res => {
                     setLoading(false);
                     if (res.data.status == 'success') {
-                        history.push(`/host/${id}/location`);
+                        history.push(`/become-host/${id}/location`);
                     }
                 });
             } catch (err) {
@@ -141,9 +135,27 @@ function BasicInfomation(props) {
     }
 
     useEffect(() => {
+        const getListingTypes = async () => {
+            try {
+                setLoading(true);
+                await hostApi.getListingType().then(res => {
+                    setListTypes(res.data.data);
+                    if (id == undefined) {
+                        const type = res.data.data[0];
+                        setIdActive(type.id);
+                        setTypeActive(type);
+                    }
+                    setLoading(false);
+                });
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
         getListingTypes();
+
         return () => {
-            setListTypes([]); // This worked for me
+            setListTypes([]);
         };
     }, []);
 
@@ -154,90 +166,116 @@ function BasicInfomation(props) {
                 setIdActive(res.data.listing.listing_type_id);
                 setRentalFormSelect(res.data.listing.rental_form);
                 setReservationForm(res.data.listing.reservation_form);
+                setTypeActive(listingTypes.find(type => type.id == res.data.listing.listing_type_id));
             });
         }
-        if (id) {
+
+        if (id && listingTypes.length > 0) {
             fetchListingDetail();
         }
-    }, []);
 
-    const selectListingType = listingId => setIdActive(listingId);
+    }, [listingTypes]);
+
+    const selectListingType = listingId => {
+        setIdActive(listingId);
+        setTypeActive(listingTypes.find(item => item.id == listingId));
+    }
+
     const selectRentalForm = rentalFormId => setRentalFormSelect(rentalFormId);
 
     return (
+        <div className='row'>
+            {/* {loading && <Loading />} */}
+            <div className='col-8'>
+                <div id="add-listing">
+                    <h3 className='h3_title' style={h3_title}>Basic Informations</h3>
 
-        <div id="add-listing">
-            <h3 className='h3_title' style={h3_title}>Basic Informations</h3>
-
-            <div className="add-listing-section">
-                <div className='k-property-type'>
-                    <label className='custom_form_label' style={custom_form_label}>CHỖ NGHỈ CỦA BẠN LÀ:</label>
-                    {listingTypes.length > 0 ? listingTypes.map((type, index) => {
-                        return (
-                            <ListingTypeItem
-                                key={index}
-                                id={type.id}
-                                name={type.name}
-                                selectListingType={selectListingType}
-                                idActive={idActive}
-                            />
-                        )
-                    }) : <PulseLoading colorLoading='#000000' />}
-
-                </div>
-
-                <div className="row with-forms">
-                    <div className="col-md-12">
-                        <label className='custom_form_label' style={custom_form_label}>HÌNH THỨC CHO THUÊ ?</label>
-
+                    <div className="add-listing-section">
                         <div className='k-property-type'>
-                            {rentalForms.map((item, index) => {
+                            <label className='custom_form_label' style={custom_form_label}>CHỖ NGHỈ CỦA BẠN LÀ:</label>
+                            {listingTypes.length > 0 ? listingTypes.map((type, index) => {
                                 return (
-                                    <RentalFormItem
+                                    <ListingTypeItem
                                         key={index}
-                                        name={item.name}
-                                        id={item.id}
-                                        selectRentalForm={selectRentalForm}
-                                        rentalFormSelect={rentalFormSelect}
+                                        id={type.id}
+                                        name={type.name}
+                                        selectListingType={selectListingType}
+                                        idActive={idActive}
                                     />
                                 )
-                            })}
+                            }) : <PulseLoading colorLoading='#000000' />}
+
                         </div>
-                    </div>
-                </div>
 
-                <div className="row with-forms">
-                    <div className="col-md-12">
-                        <label className='custom_form_label' style={custom_form_label}>LOẠI ĐẶT CHỖ ?</label>
-                        <select className="k-dropdown nice-select chosen-select no-search-select" value={reservationForm} onChange={handleChange} >
-                            {
-                                reservationForm === 'quick' ? (
-                                    <>
-                                        <option value="quick" selected>Đặt phòng nhanh</option>
-                                        <option value="request">Yêu cầu xác nhận</option>
-                                    </>
-                                ) : (
-                                    <>
-                                        <option value="quick" >Đặt phòng nhanh</option>
-                                        <option value="request" selected>Yêu cầu xác nhận</option>
-                                    </>
-                                )
-                            }
-                        </select>
+                        <div className="row with-forms">
+                            <div className="col-md-12">
+                                <label className='custom_form_label' style={custom_form_label}>HÌNH THỨC CHO THUÊ ?</label>
+
+                                <div className='k-property-type'>
+                                    {rentalForms.map((item, index) => {
+                                        return (
+                                            <RentalFormItem
+                                                key={index}
+                                                name={item.name}
+                                                id={item.id}
+                                                selectRentalForm={selectRentalForm}
+                                                rentalFormSelect={rentalFormSelect}
+                                            />
+                                        )
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="row with-forms">
+                            <div className="col-md-12">
+                                <label className='custom_form_label' style={custom_form_label}>LOẠI ĐẶT CHỖ ?</label>
+                                <select className="k-dropdown nice-select chosen-select no-search-select" value={reservationForm} onChange={handleChange} >
+                                    {
+                                        reservationForm === 'quick' ? (
+                                            <>
+                                                <option value="quick" selected>Đặt phòng nhanh</option>
+                                                <option value="request">Yêu cầu xác nhận</option>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <option value="quick" >Đặt phòng nhanh</option>
+                                                <option value="request" selected>Yêu cầu xác nhận</option>
+                                            </>
+                                        )
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        {/* Row / End */}
                     </div>
+
+                    <FooterHost
+                        loading={loading}
+                        handleBack={handleBack}
+                        handleNext={handleNext}
+                        hiddenBackButton={true}
+                        isHandleClick={true}
+                    />
                 </div>
-                {/* Row / End */}
             </div>
-
-            <FooterHost
-                loading={loading}
-                handleBack={handleBack}
-                handleNext={handleNext}
-                hiddenBackButton={true}
-                isHandleClick={true}
+            <RightSide
+                type={typeActive}
             />
         </div>
     );
 }
 
 export default BasicInfomation;
+
+function RightSide(props) {
+    const { type } = props;
+    return (
+        <div className='col-4 k-right-side'>
+            <div className='k-property-content'>
+                <h5>{type ? type.name : ''}</h5>
+                <p>{type ? type.description : ''}</p>
+            </div>
+        </div>
+    )
+}

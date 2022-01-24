@@ -70,7 +70,7 @@ function AddBeds(props) {
     }
 
     return (
-        <>
+        <div className='add_bed_type_box'>
             <div className='add-bed-type'>
                 <div className='bed-info'>
                     <p className='bed-name'>Bed room {number}</p>
@@ -100,7 +100,10 @@ function AddBeds(props) {
                     }
                 </div>
             ) : null}
-        </>
+
+            {/* <div className="_npr1df" /> */}
+
+        </div>
     );
 }
 

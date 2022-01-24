@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import Header from '../../../components/Header';
+import Loading from '../../../components/Loading/Loading';
 import BestCity from '../components/BestCity/BestCity';
 
 Home.propTypes = {
@@ -8,9 +9,9 @@ Home.propTypes = {
 };
 
 function Home(props) {
-    // const [triggerPopup, setTriggerPopup] = useState(false);
     const loggedInUser = useSelector((state) => state.userSlice.current);
     const isLoggedIn = !!loggedInUser.id;
+    const [loading, setLoading] = useState(false);
 
     const cities = [
         { name: 'Hà Nội', id: 1, thumb_url: 'https://cdn.luxstay.com/home/location/location_1_1559373089.png' },
@@ -22,7 +23,8 @@ function Home(props) {
     ]
 
     return (
-        <>
+        <div>
+            {loading && <Loading />}
             <div id="page">
                 <Header
                     loggedInUser={loggedInUser}
@@ -34,7 +36,7 @@ function Home(props) {
                     cities={cities}
                 />
             </main>
-        </>
+        </div>
     );
 }
 

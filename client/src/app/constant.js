@@ -12,3 +12,8 @@ export const ReservationFilter = {
     UPCOMING: 'upcoming',
     TODAY: 'today',
 }
+
+export const UserListingFilter = {
+    TYPE: 'type',
+    STAR: 'star',
+}
