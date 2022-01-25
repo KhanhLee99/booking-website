@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import './BoxBooking.scss';
 import QtyPerson from '../../../Home/components/QtyPerson';
@@ -11,6 +11,7 @@ import moment from 'moment';
 import useQuery from '../../../../@use/useQuery';
 import reservationApi from '../../../../api/reservationApi';
 import { parseVNDCurrency } from '../../../../@helper/helper';
+import OutsideAlerter from '../../../../components/OutsideAlerter/OutsideAlerter';
 
 BoxBooking.propTypes = {
 
@@ -38,13 +39,16 @@ const rangePicker = {
     cursor: "pointer",
     marginBottom: "10px",
     paddingTop: "5px",
+    paddingLeft: '17px',
     fontWeight: "bold",
     fontSize: "0px",
-    boxShadow: "0 1px 6px 0px rgba(0, 0, 0, 0.1)"
+    boxShadow: "0 1px 6px 0px rgba(0, 0, 0, 0.1)",
+    height: '50px',
 }
 
 
 function BoxBooking(props) {
+    const refQty = useRef(null);
     const query = useQuery();
     const history = useHistory();
     const [active, setActive] = useState(false);
@@ -102,16 +106,10 @@ function BoxBooking(props) {
 
     const handleBooking = (e) => {
         e.preventDefault();
-        history.push(`host/checkout/${listingDetail.id}?checkin=${checkin.replaceAll('/', '-')}&checkout=${checkout.replaceAll('/', '-')}&guests=${adults + childrens}`);
+        history.push(`/host/checkout/${listingDetail.id}?checkin=${checkin.replaceAll('/', '-')}&checkout=${checkout.replaceAll('/', '-')}&guests=${adults + childrens}`);
     }
 
     const checkAvailableDate = () => {
-
-        // if ((query.get('checkin') && query.get('checkout'))) {
-        //     return <TotalPrice
-        //         nights={moment.duration(moment(query.get('checkout'), "YYYY-MM-DD").diff(moment(query.get('checkin'), "YYYY-MM-DD")))._data.days}
-        //     />
-        // }
 
         if (totalPrice) {
             return <TotalPrice
@@ -196,7 +194,7 @@ function BoxBooking(props) {
                             <span style={{
                                 fontSize: "30px",
                                 fontWeight: "600",
-                                fontFamily: "Luxstay"
+                                fontFamily: "Roboto"
                             }}>
                                 {totalPrice ? parseVNDCurrency(totalPrice.total_price) : parseVNDCurrency(listingDetail.price_per_night_base * nights)
                                 }
@@ -204,12 +202,12 @@ function BoxBooking(props) {
                             <span style={{
                                 fontSize: "16px",
                                 fontWeight: "400",
-                                fontFamily: "Luxstay"
+                                fontFamily: "Roboto"
 
                             }}> /{totalPrice ? ` ${totalPrice.nights} ` : null}đêm</span>
                         </span>
 
-                        <div className="row with-forms  margin-top-20">
+                        <div className="row with-forms margin-top-20">
                             <div className="col-lg-12">
                                 <RangePicker
                                     disabledDate={disabledDate}
@@ -223,23 +221,29 @@ function BoxBooking(props) {
                                 />
                             </div>
                             <div className="col-lg-12">
-                                <div className={active ? "panel-dropdown active" : "panel-dropdown"}>
-                                    <a href="#" onClick={handleShowDropDown}>Guests <span className="qtyTotal" name="qtyTotal" style={{ background: "rgb(66, 89, 152)" }}>{adults + childrens}</span></a>
-                                    <div className="panel-dropdown-content" style={{ width: "100%" }}>
-                                        <div className="qtyButtons">
-                                            <div className="qtyTitle">Adults</div>
-                                            <div onClick={() => handleDec('adults', adults)} className="qtyDec" style={isDisableDecAdult ? disableClick : enableClick} />
-                                            <input type="text" name="qtyInput" defaultValue={adults} value={adults} />
-                                            <div onClick={() => handleInc('adults', adults)} className="qtyInc" style={isDisableIncAdult ? disableClick : enableClick} />
-                                        </div>
-                                        <div className="qtyButtons">
-                                            <div className="qtyTitle">Childrens</div>
-                                            <div onClick={() => handleDec('childrens', childrens)} className="qtyDec" style={isDisableDecChildren ? disableClick : enableClick} />
-                                            <input type="text" name="qtyInput" defaultValue={childrens} value={childrens} />
-                                            <div onClick={() => handleInc('childrens', childrens)} className="qtyInc" style={isDisableIncChildren ? disableClick : enableClick} />
+                                <OutsideAlerter
+                                    closePopup={() => setActive(false)}
+                                    ref={refQty}
+                                >
+                                    <div className={active ? "panel-dropdown active" : "panel-dropdown"}>
+                                        <a href="#" onClick={handleShowDropDown}>Guests <span className="qtyTotal" name="qtyTotal" style={{ background: "rgb(66, 89, 152)" }}>{adults + childrens}</span></a>
+
+                                        <div className="panel-dropdown-content" style={{ width: "100%" }}>
+                                            <div className="qtyButtons">
+                                                <div className="qtyTitle">Adults</div>
+                                                <div onClick={() => handleDec('adults', adults)} className="qtyDec" style={isDisableDecAdult ? disableClick : enableClick} />
+                                                <input type="text" name="qtyInput" defaultValue={adults} value={adults} />
+                                                <div onClick={() => handleInc('adults', adults)} className="qtyInc" style={isDisableIncAdult ? disableClick : enableClick} />
+                                            </div>
+                                            <div className="qtyButtons">
+                                                <div className="qtyTitle">Childrens</div>
+                                                <div onClick={() => handleDec('childrens', childrens)} className="qtyDec" style={isDisableDecChildren ? disableClick : enableClick} />
+                                                <input type="text" name="qtyInput" defaultValue={childrens} value={childrens} />
+                                                <div onClick={() => handleInc('childrens', childrens)} className="qtyInc" style={isDisableIncChildren ? disableClick : enableClick} />
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                </OutsideAlerter>
                             </div>
                         </div>
                         {

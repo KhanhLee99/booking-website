@@ -130,7 +130,6 @@ function BasicInfomation(props) {
     }
 
     const handleChange = e => {
-        console.log(e.target.value)
         setReservationForm(e.target.value);
     }
 

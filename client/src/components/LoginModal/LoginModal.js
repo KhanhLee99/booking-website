@@ -17,7 +17,7 @@ function LoginModal({ children }) {
             closeOnDocumentClick
             className='popup-content'
             scrollable={true}
-            // open={true}
+        // open={true}
         >
             {close => <LoginPopup close={close} />}
         </Popup >

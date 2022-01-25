@@ -5,18 +5,6 @@ ListingSort.propTypes = {
 
 };
 
-const no_vis_shadow = {
-
-}
-
-const block_box = {
-
-}
-
-const list_main_wrap_header = {
-
-}
-
 const list_main_wrap_title = {
     float: 'left',
     position: 'relative',
@@ -56,19 +44,45 @@ const listsearch_input_item = {
 }
 
 function ListingSort(props) {
-    const { totalListing } = props;
+    const { totalListing, handleChange, sort, city } = props;
+    const checkOption = () => {
+        if (sort == 'desc') {
+            return (
+                <>
+                    <option>-- Select --</option>
+                    <option value='asc'>Price: low to high</option>
+                    <option value='desc' selected>Price: high to low</option>
+                </>
+            )
+        } else if (sort == 'asc') {
+            return (
+                <>
+                    <option>-- Select --</option>
+                    <option value='asc' selected>Price: low to high</option>
+                    <option value='desc'>Price: high to low</option>
+                </>
+            )
+        } else {
+            return (
+                <>
+                    <option>-- Select --</option>
+                    <option value='asc'>Price: low to high</option>
+                    <option value='desc'>Price: high to low</option>
+                </>
+            )
+        }
+    }
     return (
-        <div className="list-main-wrap-header" style={list_main_wrap_header}>
+        <div className="list-main-wrap-header">
             <div className="list-main-wrap-title" style={list_main_wrap_title}>
-                <h2 style={list_main_wrap_title_h2}>{totalListing} homestay tại <span>New York </span></h2>
+                <h2 style={list_main_wrap_title_h2}>{totalListing} homestays tại <span>{city}</span></h2>
             </div>
             <div className="list-main-wrap-opt" style={list_main_wrap_opt}>
                 <div className="price-opt" style={{ float: 'left' }}>
                     <span className="price-opt-title" style={price_opt_title}>Sort by:</span>
                     <div className="listsearch-input-item" style={listsearch_input_item}>
-                        <select data-placeholder="Popularity" className="chosen-select no-search-select" style={{ display: 'none' }}>
-                            <option>Price: low to high</option>
-                            <option>Price: high to low</option>
+                        <select data-placeholder="Popularity" className="chosen-select no-search-select" value={sort} onChange={handleChange}>
+                            {checkOption()}
                         </select>
                     </div>
                 </div>
@@ -76,7 +90,5 @@ function ListingSort(props) {
         </div>
     );
 }
-
-
 
 export default ListingSort;

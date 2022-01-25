@@ -5,7 +5,7 @@
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
-        'reference' => '82e619d5b71a7c83083ab6a23b9a0e04788b13d1',
+        'reference' => 'b2c0d8e60d5783cd1dc07a4889b213e815a3d8ee',
         'name' => 'laravel/laravel',
         'dev' => true,
     ),
@@ -532,7 +532,7 @@
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
-            'reference' => '82e619d5b71a7c83083ab6a23b9a0e04788b13d1',
+            'reference' => 'b2c0d8e60d5783cd1dc07a4889b213e815a3d8ee',
             'dev_requirement' => false,
         ),
         'laravel/passport' => array(
@@ -668,12 +668,12 @@
             ),
         ),
         'nesbot/carbon' => array(
-            'pretty_version' => '2.55.2',
-            'version' => '2.55.2.0',
+            'pretty_version' => '2.56.0',
+            'version' => '2.56.0.0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../nesbot/carbon',
             'aliases' => array(),
-            'reference' => '8c2a18ce3e67c34efc1b29f64fe61304368259a2',
+            'reference' => '626ec8cbb724cd3c3400c3ed8f730545b744e3f4',
             'dev_requirement' => false,
         ),
         'nexmo/laravel' => array(

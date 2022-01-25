@@ -93,6 +93,7 @@ Route::put('listing/edit-bedroom/{id}', 'Host\ListingController@edit_bed_room');
 
 // City
 Route::get('city', 'Admin\CityController@index');
+Route::get('city/{id}/name', 'Admin\CityController@get_name_by_id');
 Route::post('city/add', 'Admin\CityController@add');
 Route::delete('city/{id}', 'Admin\CityController@delete');
 Route::put('city/{id}', 'Admin\CityController@edit');
@@ -193,3 +194,6 @@ Route::post('notification/add', 'Admin\AdminNotificationController@add');
 
 // Listing Amenities
 Route::get('listing/{id}/amenities', 'Host\ListingAmenitiesController@get_listing_amenities_id');
+
+Route::post('reset-password', 'Auth\ResetPasswordController@sendMail');
+Route::put('reset-password', 'Auth\ResetPasswordController@reset');

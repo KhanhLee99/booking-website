@@ -13,6 +13,8 @@ import ReactPaginate from 'react-paginate';
 import { MdArrowBackIosNew, MdArrowForwardIos } from 'react-icons/md';
 import { useHistory } from 'react-router-dom';
 import { ListingStatus } from '../../../../app/constant';
+import queryString from 'query-string';
+
 
 Hosting.propTypes = {
 
@@ -20,6 +22,7 @@ Hosting.propTypes = {
 
 function Hosting(props) {
     const query = useQuery();
+    const qs = queryString.parse(props.location.search);
     const history = useHistory();
     const [listings, setListings] = useState([]);
     const [loading, setLoading] = useState([]);
@@ -27,19 +30,23 @@ function Hosting(props) {
     const [postsPerPage] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
     const [total, setTotal] = useState(0);
-    const [status, setStatus] = useState(ListingStatus.ALL);
+    const [status, setStatus] = useState(() => {
+        let st = ListingStatus.ALL;
+        if (qs.status, (typeof qs.status) == 'string') st = qs.status;
+        return st;
+    });
 
     const handlePageClick = (event) => {
+        historyReplace({ page: event.selected + 1, status: status });
         setCurrentPage(event.selected + 1);
-        history.push(`/host/listings/?page=${event.selected + 1}`)
     };
 
-    const getListings = async () => {
+    const getListings = async (page = 1) => {
         try {
             const params = {
                 status: status,
                 limit: postsPerPage,
-                page: query.get('page') || 1,
+                page: page,
             }
             setLoading(true);
             await hostApi.getListingsByUserId({ params }).then(res => {
@@ -55,13 +62,19 @@ function Hosting(props) {
     }
 
     const handleChange = e => {
-        console.log(e.target.value)
+        historyReplace({ page: 1, status: e.target.value });
         setStatus(e.target.value);
     }
 
-    useEffect(() => {
+    const historyReplace = (params) => {
+        history.replace({
+            pathname: props.location.pathname,
+            search: queryString.stringify(params)
+        })
+    }
 
-        getListings();
+    useEffect(() => {
+        getListings(query.get('page'));
 
         return () => {
             setListings([]);
@@ -107,9 +120,7 @@ function Hosting(props) {
                         </tr>
                     </thead>
                     <tbody>
-                        {loading ? <>
-                            <HostingSkeleton />
-                        </> :
+                        {loading ? <HostingSkeleton /> :
                             listings.map((listing, index) => (
                                 <HostingItem
                                     key={index}
@@ -126,9 +137,6 @@ function Hosting(props) {
                     nextLabel={
                         <MdArrowForwardIos />
                     }
-
-                    // initialPage={1}
-                    // initialPage={currentPage}
                     forcePage={(query.get('page') != undefined) ? query.get('page') - 1 : 0}
                     breakLabel={"..."}
                     pageCount={totalPages}
@@ -147,7 +155,6 @@ function Hosting(props) {
                     activeClassName={"active"}
                 /> : null}
             </div>
-            <span></span>
         </div>
     );
 }

@@ -11,7 +11,7 @@ import ListListingsLocation from '../components/ListListingsLocation';
 import FilterBox from '../components/ListListingsLocation/FilterBox/FilterBox';
 import ListingSort from '../components/ListListingsLocation/ListingSort/ListingSort';
 import './style.scss';
-import queryString from 'query-string'
+import queryString from 'query-string';
 import Loading from '../../../components/Loading/Loading';
 import { UserListingFilter } from '../../../app/constant';
 
@@ -62,6 +62,15 @@ function ListingsLocation(props) {
     const [postsPerPage] = useState(() => { return qs.limit || 10 });
     const [totalPages, setTotalPages] = useState(0);
     const [totalListing, setTotalListing] = useState(0);
+    const [listings, setListings] = useState([]);
+    const [city, setCity] = useState();
+    const [sort, setSort] = useState(() => {
+        let s = null;
+        if (qs.sort) {
+            s = (qs.sort == 'asc') ? 'asc' : 'desc';
+        }
+        return s;
+    });
     const [filterType, setFilterType] = useState(() => {
         let initFilterType = [];
         if (qs.pt) {
@@ -84,39 +93,11 @@ function ListingsLocation(props) {
         }
         return initFilterStar;
     });
-    const [listings, setListings] = useState([]);
 
-    const fetchListings = async () => {
-        try {
-            const params = {
-                city_id: id,
-                limit: postsPerPage,
-                page: query.get('page') || 1,
-            }
-            setLoading(true);
-            await listingApi.getListingsLocation(params).then(res => {
-                setListings(res.data.data.data);
-                setTotalPages(res.data.data.last_page);
-                setTotalListing(res.data.data.total);
-                window.scrollTo(0, 0)
-                setLoading(false);
-            });
-
-        } catch (error) {
-            console.log(error.message);
-        }
-    };
-
-    // Change page
-    const paginate = pageNumber => setCurrentPage(pageNumber);
 
     const handlePageClick = (event) => {
         setCurrentPage(event.selected + 1);
-        history.replace({
-            pathname: props.location.pathname,
-            search: queryString.stringify({ pt: filterType, st: filterStar, page: event.selected + 1 })
-        })
-        // history.push(`/location/${id}/?page=${event.selected + 1}`)
+        historyReplace({ pt: filterType, st: filterStar, sort: sort, page: event.selected + 1 });
     };
 
     const handleFilter = (e, type) => {
@@ -127,38 +108,26 @@ function ListingsLocation(props) {
                 if (e.target.checked) {
                     let tmpPTCheck = [...filterType, parseInt(e.target.id)];
                     setFilterType(tmpPTCheck);
-                    history.replace({
-                        pathname: props.location.pathname,
-                        search: queryString.stringify({ pt: tmpPTCheck, st: filterStar, page: 1 })
-                    })
-                    filterListing(filterStar, tmpPTCheck);
+                    historyReplace({ pt: tmpPTCheck, st: filterStar, sort: sort, page: 1 });
+                    filterListing(filterStar, tmpPTCheck, sort);
                 } else {
                     const ids = filterType.filter((id) => id !== parseInt(e.target.id));
                     setFilterType(ids);
-                    history.replace({
-                        pathname: props.location.pathname,
-                        search: queryString.stringify({ pt: ids, st: filterStar, page: 1 })
-                    })
-                    filterListing(filterStar, ids)
+                    historyReplace({ pt: ids, st: filterStar, sort: sort, page: 1 });
+                    filterListing(filterStar, ids, sort)
                 }
                 break;
             case UserListingFilter.STAR:
                 if (e.target.checked) {
                     let tmpPTStar = [...filterStar, parseInt(e.target.id)];
                     setFilterStar(tmpPTStar);
-                    history.replace({
-                        pathname: props.location.pathname,
-                        search: queryString.stringify({ pt: filterType, st: tmpPTStar, page: 1 })
-                    })
-                    filterListing(tmpPTStar, filterType)
+                    historyReplace({ pt: filterType, st: tmpPTStar, sort: sort, page: 1 });
+                    filterListing(tmpPTStar, filterType, sort)
                 } else {
                     const stars = filterStar.filter((id) => id !== parseInt(e.target.id));
                     setFilterStar(stars);
-                    history.replace({
-                        pathname: props.location.pathname,
-                        search: queryString.stringify({ pt: filterType, st: stars, page: 1 })
-                    })
-                    filterListing(stars, filterType)
+                    historyReplace({ pt: filterType, st: stars, sort: sort, page: 1 })
+                    filterListing(stars, filterType, sort)
                 }
                 break;
             default:
@@ -166,14 +135,15 @@ function ListingsLocation(props) {
         }
     }
 
-    const filterListing = async (rate, list_type_id, page = 1) => {
+    const filterListing = async (rate, list_type_id, sort = '', page = 1) => {
         try {
             const params = {
                 city_id: id,
-                limit: 10,
+                limit: postsPerPage,
                 rate: rate,
                 list_type_id: list_type_id,
                 page: page,
+                sort: sort,
             }
             setLoading(true);
             await listingApi.filterListing(params).then(res => {
@@ -188,10 +158,39 @@ function ListingsLocation(props) {
         }
     }
 
-    useEffect(() => {
+    const handleChange = e => {
+        historyReplace({ pt: filterType, st: filterStar, sort: e.target.value, page: 1 });
+        filterListing(filterStar, filterType, e.target.value);
+        setSort(e.target.value);
+    }
 
-        // fetchListings();
-        filterListing(filterStar, filterType, query.get('page'));
+    const historyReplace = (params) => {
+        history.replace({
+            pathname: props.location.pathname,
+            search: queryString.stringify(params)
+        })
+    }
+
+
+
+    useEffect(() => {
+        const getNameCity = () => {
+            try {
+                listingApi.getNameCity(id).then(res => setCity(res.data.data));
+            } catch (err) {
+                console.log(err.message);
+            }
+        }
+
+        getNameCity();
+
+        return () => {
+            setCity(null);
+        }
+    }, []);
+
+    useEffect(() => {
+        filterListing(filterStar, filterType, sort, query.get('page'));
 
         return () => {
             setListings([]);
@@ -218,6 +217,9 @@ function ListingsLocation(props) {
 
                         <ListingSort
                             totalListing={totalListing}
+                            handleChange={handleChange}
+                            sort={sort}
+                            city={city}
                         />
                         <ListListingsLocation
                             loggedInUser={loggedInUser}

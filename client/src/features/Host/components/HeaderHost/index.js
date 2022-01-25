@@ -202,22 +202,6 @@ const logo_holder = {
     top: '20px',
 }
 
-const header_search_btn = {
-    float: 'left',
-    marginLeft: '70px',
-    width: '180px',
-    padding: '14px 0',
-    borderRadius: '30px',
-    position: 'relative',
-    color: '#fff',
-    top: '18px',
-    fontWeight: 500,
-    fontSize: '13px',
-    background: '#3d528b',
-    cursor: 'pointer',
-    textAlign: 'center'
-}
-
 const cart_btn = {
     float: 'right',
     position: 'relative',
@@ -253,68 +237,6 @@ const show_reg_form = {
     top: '32px',
     fontWeight: '500',
     fontSize: '12px',
-}
-
-const header_search_container = {
-    position: 'absolute',
-    bottom: '-120px',
-    left: 0,
-    width: '100%',
-    padding: '30px 0',
-    background: '#3d528b',
-    zIndex: -1,
-    opacity: 0,
-    visibility: 'hidden',
-    transition: 'all 300ms linear',
-}
-
-const nav_button_wrap = {
-    float: 'right',
-    height: '36px',
-    width: '36px',
-    cursor: 'pointer',
-    position: 'relative',
-    borderRadius: '4px',
-    top: '24px',
-    marginRight: '16px',
-    display: 'none',
-    background: '#4DB7FE'
-}
-
-const header_search_input = {
-    width: '32%',
-    float: 'left',
-    padding: '0 4px',
-    position: 'relative',
-}
-
-const header_search_input_label = {
-    position: 'absolute',
-    left: '20px',
-    top: '18px',
-    zIndex: 10,
-    fontSize: '14px',
-}
-
-const header_search_input_input = {
-    float: 'left',
-    border: 'none',
-    background: 'rgba(255, 255, 255, 0.11)',
-    borderRadius: '4px',
-    position: 'relative',
-    height: '50px',
-    padding: '0 20px 0 40px',
-    zIndex: 1,
-    width: '100%',
-    color: '#fff',
-    boxSizing: 'border-box',
-    borderBottom: '2px solid rgba(255, 255, 255, 0)',
-}
-
-const header_search_selectinpt = {
-    float: 'left',
-    width: '36%',
-    padding: '0 4px',
 }
 
 const header_user_menu = {
@@ -353,23 +275,6 @@ const header_user_name_span_img = {
     height: '100%',
 }
 
-const header_user_menu_ul = {
-    margin: '10px 0 0 0',
-    opacity: 0,
-    listStyle: 'none',
-    visibility: 'hidden',
-    position: 'absolute',
-    minWidth: '150px',
-    top: '60px',
-    left: '-50px',
-    zIndex: 1,
-    padding: '10px 0',
-    background: '#fff',
-    borderRadius: '6px',
-    border: '1px solid #eee',
-    transition: 'all 0.2s ease-in-out',
-}
-
 const header_user_menu_ul_li = {
     float: 'left',
     width: '100%',
@@ -384,4 +289,67 @@ const header_user_menu_ul_li_a = {
     fontWeight: 500,
     textAlign: 'left',
     padding: '6px 15px',
+}
+
+export function HeaderAddListing(props) {
+
+    const dispatch = useDispatch();
+
+    const loggedInUser = useSelector((state) => state.userSlice.current);
+    const isLoggedIn = !!loggedInUser.id;
+
+    const [showPopupProfile, setShowPopupProfile] = useState(false);
+
+    const handleLogout = async (e) => {
+        e.preventDefault();
+        await dispatch(deleteDeviceToken()).then(() => {
+            refreshPage();
+        })
+    }
+
+    const refreshPage = () => {
+        window.location.reload();
+    }
+
+    return (
+        <header className="k-main-header relative" style={main_header}>
+            <Link to="/" className="k-logo-holder" style={logo_holder}><img src="https://i.ytimg.com/vi/FPtITmtjWhQ/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB3TdlYzQKkXD7XtPbNwCGLGycr2Q" alt="" style={{ width: 'auto', height: '100%' }} /></Link>
+            {/* header opt */}
+            {
+                isLoggedIn ? <>
+                    <div className="k-cart-btn show-header-modal" data-microtip-position="bottom" role="tooltip" aria-label="Your Wishlist" style={cart_btn}>
+                        <i className="fas fa-bell" style={{ width: '12px' }} /><span className="k-cart-counter" style={cart_counter} >4</span>
+                    </div>
+
+                    <div className="header-user-menu hu-menu-visdec" style={header_user_menu}>
+                        <div
+                            className="header-user-name"
+                            style={header_user_name}
+                            onClick={() => setShowPopupProfile(!showPopupProfile)}
+                        >
+                            <span style={header_user_name_span}>
+                                <AvatarPlaceholder
+                                    avatar_url={loggedInUser.avatar_url}
+                                    style={header_user_name_span_img}
+                                />
+                            </span>
+                            {loggedInUser.name}
+                        </div>
+                        <ul className={showPopupProfile ? 'hu-menu-vis' : ''}>
+                            <li style={header_user_menu_ul_li}><Link to="/me/profile" style={header_user_menu_ul_li_a}> Edit profile</Link></li>
+                            <li style={header_user_menu_ul_li}><Link to="/me/bookings" style={header_user_menu_ul_li_a}>  Bookings</Link></li>
+                            <li style={header_user_menu_ul_li}><Link to="/me/favorite" style={header_user_menu_ul_li_a}> Danh sách yêu thích </Link></li>
+                            {loggedInUser.role_id === 2 ?
+                                <li style={header_user_menu_ul_li}><Link to="/host/listings" style={header_user_menu_ul_li_a}>Quản lý nhà/phòng cho thuê</Link></li>
+                                : null}
+                            <li style={header_user_menu_ul_li}><a href="#" style={header_user_menu_ul_li_a} onClick={(e) => handleLogout(e)}> Log Out</a></li>
+                        </ul>
+                    </div>
+                </> :
+                    <LoginModal>
+                        <div className="k-show-reg-form modal-open avatar-img" data-srcav="images/avatar/3.jpg" style={show_reg_form}><i className="fal fa-user" style={{ color: '#4DB7F', marginRight: '14px' }} />Sign In</div>
+                    </LoginModal>
+            }
+        </header >
+    );
 }

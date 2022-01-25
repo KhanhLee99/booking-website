@@ -45,7 +45,7 @@ function HostingItem(props) {
             </td>
             <td className='verify-status' style={{ color: listing.is_verified == 0 ? '#6ab5f8' : '#b53e4e' }}>{listing.is_verified == 0 ? <MdClose /> : <MdCheck />}</td>
             <td className='verify-status'><Link to={`/host/calendar/listing/${listing.id}`}><MdEditCalendar /></Link></td>
-            <td><a>Chỉnh sửa</a></td>
+            <td><Link to={`/become-host/${listing.id}/basic-infomation`}>Chỉnh sửa</Link></td>
         </tr>
     );
 }

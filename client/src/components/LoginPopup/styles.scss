@@ -326,12 +326,12 @@ button {
             border-radius: 2px;
             color: #fff;
             background: #fff;
-            margin-bottom: 20px;
-            top: 4px;
+            // margin-bottom: 16px;
+            top: 0px;
         }
 
         & .soc-log {
-            padding: 15px 0;
+            // padding: 0 0 15px;
 
             & p {
                 margin-bottom: 12px;
@@ -385,6 +385,10 @@ button {
         color: #7d93b2;
         float: left;
         text-align: left;
+    }
+
+    & #forgot_box .fgb_label {
+        margin-top: 10px;
     }
 }
 

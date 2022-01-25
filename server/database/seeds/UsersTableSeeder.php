@@ -23,7 +23,7 @@ class UsersTableSeeder extends Seeder
         $list_user = [
             [
                 'name' => 'khanh',
-                'email' => 'khanh@gmail.com',
+                'email' => 'levietkhanh99@gmail.com',
                 'password' => Hash::make('khanh'),
                 'role_id' => 3
             ],

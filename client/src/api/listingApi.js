@@ -40,6 +40,11 @@ const listingApi = {
         const url = 'listing/filter';
         return axiosClient.post(url, params);
     },
+
+    getNameCity: (id) => {
+        const url = `city/${id}/name`;
+        return axiosClient.get(url);
+    }
 }
 
 export default listingApi;

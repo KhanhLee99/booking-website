@@ -26,12 +26,12 @@ class CreateListingTable extends Migration
             $table->integer('bedroom_count')->default(0);
             $table->integer('bathroom_count')->default(0);
             $table->integer('bed_count')->default(0);
-            $table->float('price_per_night_base')->default(0);
-            $table->float('price_per_night_weekend')->default(0);
+            $table->double('price_per_night_base')->default(0);
+            $table->double('price_per_night_weekend')->default(0);
             $table->float('discount_weekly')->default(0);
             $table->float('discount_monthly')->default(0);
-            $table->float('extra_per_adult')->default(0);
-            $table->float('extra_per_child')->default(0);
+            $table->double('extra_per_adult')->default(0);
+            $table->double('extra_per_child')->default(0);
             $table->longText('avatar_url')->nullable();
             $table->float('rating')->default(0);
             $table->enum('rental_form', ['entire_place', 'private_room', 'shared_room'])->nullable();

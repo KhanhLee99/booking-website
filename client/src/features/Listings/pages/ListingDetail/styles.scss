@@ -9,8 +9,8 @@
 
 .k-icon {
     display: inline-block;
-    width: 19px;
-    height: 19px;
+    width: 12px;
+    height: 12px;
     position: relative;
     /* content: "\f00c"; */
     font-family: "FontAwesome";
@@ -31,7 +31,15 @@
 #listing-overview .listing-overview {
     text-align: left;
     color: #878c9f;
-    font-size: 12px;
+    font-size: 14px;
+    line-height: 24px;
+    padding-bottom: 10px;
+}
+
+#listing-pricing-list .listing-overview {
+    text-align: left;
+    color: #878c9f;
+    font-size: 14px;
     line-height: 24px;
     padding-bottom: 10px;
 }
@@ -42,4 +50,9 @@
     font-weight: 600;
     color: #566985;
     font-family: "Nunito", sans-serif;
+}
+
+#listing-detail .listing-address {
+    //     font-size: 10px;
+    //     font-weight: 600;
 }

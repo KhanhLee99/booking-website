@@ -11,3 +11,5 @@ run multiple commands: https://stackoverflow.com/questions/61872499/custom-artis
 php artisan migrate:refresh
 php artisan passport:install
 php artisan db:seed
+
+drop all table => php artisan db:wipe

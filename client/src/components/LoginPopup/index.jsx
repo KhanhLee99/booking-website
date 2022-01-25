@@ -13,6 +13,7 @@ import { unwrapResult } from '@reduxjs/toolkit';
 import { useHistory } from 'react-router';
 import userApi from '../../api/userApi';
 import { MdKeyboardBackspace } from "react-icons/md";
+import { Spinner } from 'react-bootstrap';
 
 LoginPopup.propTypes = {
 
@@ -30,7 +31,7 @@ const main_register = {
     float: 'left',
     width: '100%',
     position: 'relative',
-    padding: '80px 0 20px',
+    padding: '60px 0px 20px',
     marginBottom: '50px',
     background: '#fff',
     borderRadius: '6px',
@@ -137,6 +138,7 @@ const custom_form_input = {
     overflow: 'hidden',
     zIndex: 1,
     boxShadow: 'none',
+    // marginBottom: 12,
 }
 
 const custom_form_button = {
@@ -144,9 +146,11 @@ const custom_form_button = {
     border: 'none',
     cursor: 'pointer',
     marginTop: '0px',
-    width: '50%',
+    width: '48%',
     padding: '13px 0',
     color: '#fff',
+    // marginLeft: '50%',
+    // transform: 'translateX(-50%)',
 }
 
 const filter_tags = {
@@ -154,7 +158,7 @@ const filter_tags = {
     color: '#7d93b2',
     fontSize: '12px',
     fontWeight: 600,
-    marginTop: '24px',
+    marginTop: '18px',
 }
 
 const label_rmbm = {
@@ -164,7 +168,7 @@ const label_rmbm = {
     float: 'left',
     padding: '0 10px',
     position: 'relative',
-    top: '4px',
+    top: '0px',
     fontWeight: 600,
     width: 'auto',
     textAlign: 'left'
@@ -186,11 +190,15 @@ const log_separator_span = {
     textAlign: 'center'
 }
 
+const errorLogin = { color: 'red', margin: '-12px 0 0', fontSize: '12px' }
+
 function LoginPopup(props) {
     const deviceToken = useSelector(state => state.userSlice.deviceToken);
     const [loading, setLoading] = useState(false);
     const [tabLogin, setTabLogin] = useState(true);
     const [isForgot, setIsForgot] = useState(false);
+    const [messageSuccess, setMessageSuccess] = useState('');
+
     const dispatch = useDispatch();
     const history = useHistory();
 
@@ -272,6 +280,19 @@ function LoginPopup(props) {
         }
     }
 
+    const handleSendMailResetPassword = async (values, resetForm) => {
+        try {
+            setLoading(true);
+            await userApi.sendMailResetPassword({ mail: values.email }).then(res => {
+                resetForm();
+                setMessageSuccess('You will receive an email containing a link allowing you to reset your password.');
+                setLoading(false);
+            })
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
     const refreshPage = () => {
         window.location.reload();
     }
@@ -283,9 +304,10 @@ function LoginPopup(props) {
 
         <div className="k-main-register-holder tabs-act" style={main_register_holder}>
             <div className="k-main-register fl-wrap" style={main_register}>
-                <div className="k-main-register_title" style={main_register_title}>Welcome to <span style={{ textTransform: 'uppercase', fontWeight: 800 }}><strong style={{ color: '#4DB7FE' }}>Town</strong>Hub<strong style={{ color: '#4DB7FE' }}>.</strong></span></div>
+                {/* <div className="k-main-register_title" style={main_register_title}>Welcome to <span style={{ textTransform: 'uppercase', fontWeight: 800 }}><strong style={{ color: '#4DB7FE' }}>Town</strong>Hub<strong style={{ color: '#4DB7FE' }}>.</strong></span></div> */}
+                <div className="k-main-register_title" style={main_register_title}>Welcome </div>
                 <div className='close-tag' style={close_reg} onClick={close}><i className="fal fa-times" /></div>
-                <ul className={isForgot ? "tabs-menu fl-wrap display-none" : "tabs-menu fl-wrap"} style={{ padding: '0 30px', listStyle: 'none' }}>
+                <ul className={isForgot ? "tabs-menu fl-wrap display-none" : "tabs-menu fl-wrap"} style={{ padding: '0 30px', listStyle: 'none', background: 'white', marginBottom: 5 }}>
                     <li className={tabLogin ? 'current' : ''} style={tabs_menu_li} onClick={e => { e.preventDefault(); setTabLogin(true) }}><a href="#tab-1" style={tabs_menu_li_a}><i className="fal fa-sign-in-alt" style={{ color: '#4DB7FE' }} /> Login</a></li>
                     <li className={tabLogin ? '' : 'current'} style={tabs_menu_li} onClick={e => { e.preventDefault(); setTabLogin(false) }}><a href="#tab-2" style={tabs_menu_li_a}><i className="fal fa-user-plus" style={{ color: '#4DB7FE' }} /> Register</a></li>
                 </ul>
@@ -298,6 +320,7 @@ function LoginPopup(props) {
                             handleLogin={handleLogin}
                             loading={loading}
                             showForgotBox={() => setIsForgot(true)}
+                            uiConfig={uiConfig}
                         />
 
                         {/* TAB REGISTER */}
@@ -307,8 +330,11 @@ function LoginPopup(props) {
                             loading={loading}
                         />
 
-                        {/* LOGIN SOCIAL */}
-                        <SocialLogin uiConfig={uiConfig} />
+                        {/* ANIMATION FOOTER*/}
+                        {/* <div className="wave-bg">
+                            <div className="wave -one" />
+                            <div className="wave -two" />
+                        </div> */}
 
                     </div>
 
@@ -316,6 +342,9 @@ function LoginPopup(props) {
                     <ForgotForm
                         hideForgotBox={() => setIsForgot(false)}
                         isForgot={isForgot}
+                        handleSendMailResetPassword={handleSendMailResetPassword}
+                        messageSuccess={messageSuccess}
+                        loading={loading}
                     />
 
                 </div>
@@ -327,7 +356,7 @@ function LoginPopup(props) {
 export default LoginPopup;
 
 function TabLogin(props) {
-    const { tabLogin, handleLogin, loading, showForgotBox } = props;
+    const { tabLogin, handleLogin, loading, showForgotBox, uiConfig } = props;
     return (
         <div id="tab-1" className={tabLogin ? '' : 'current-content'}>
             <div className="k-custom-form" style={custom_form}>
@@ -353,7 +382,7 @@ function TabLogin(props) {
                                 style={custom_form_input}
                             />
                             {formik.touched.email && formik.errors.email ? (
-                                <label className='custom_form_label' style={{ color: 'red', marginTop: '-20px' }}>{formik.errors.email}</label>
+                                <label className='custom_form_label' style={errorLogin}>{formik.errors.email}</label>
                             ) : null}
 
                             <label style={custom_form_label}>Password <span>*</span> </label>
@@ -363,15 +392,15 @@ function TabLogin(props) {
                                 style={custom_form_input}
                             />
                             {formik.touched.password && formik.errors.password ? (
-                                <label className='custom_form_label' style={{ color: 'red', marginTop: '-20px' }}>{formik.errors.password}</label>
+                                <label className='custom_form_label' style={errorLogin}>{formik.errors.password}</label>
                             ) : null}
-                            <button type="submit" className="btn float-btn color2-bg" style={custom_form_button}>{loading ? <PulseLoading /> : 'Log In'} </button>
+                            <button type="submit" className="btn float-btn color2-bg" style={custom_form_button}>{loading ? <PulseLoading /> : 'Sign in'} </button>
                             <div className="clearfix" />
                             <div className="k-filter-tags" style={filter_tags}>
                                 <input id="check-a3" type="checkbox" name="check" />
                                 <label htmlFor="check-a3" style={label_rmbm}>Remember me</label>
                             </div>
-                            <div className="lost_password" style={{ marginTop: '24px', float: 'right' }}>
+                            <div className="lost_password" style={{ marginTop: '18px', float: 'right' }}>
                                 <a
                                     href="#"
                                     style={{ float: 'left', fontSize: '12px', fontWeight: 600, }}
@@ -382,6 +411,9 @@ function TabLogin(props) {
                     )}
                 </Formik>
             </div>
+
+            {/* LOGIN SOCIAL */}
+            <SocialLogin uiConfig={uiConfig} />
         </div>
     );
 }
@@ -394,18 +426,18 @@ function TabRegister(props) {
             <div id="tab-2" className={tabLogin ? 'current-content' : ''}>
                 <div className="k-custom-form" style={custom_form}>
                     <Formik
-                        initialValues={{ email: '', password: '' }}
+                        initialValues={{ name: '', email: '', password: '', confirm_password: '' }}
                         validationSchema={
                             Yup.object({
-                                name: Yup.string().max(255).min(6),
-                                email: Yup.string().email('Invalid email address').required('Required').max(255),
+                                name: Yup.string().required('Name is required').max(255).min(6),
+                                email: Yup.string().email('Invalid email address').required('Email is required').max(255),
                                 password: Yup.string()
                                     .min(6, 'Must be 6 characters or more')
-                                    .required('Required'),
+                                    .required('Password is required'),
                                 confirm_password: Yup.string()
                                     .min(6, 'Vui lòng nhập Xác nhận mật khẩu mới')
-                                    .required('Password is required')
-                                    .oneOf([Yup.ref('password'), null], 'Xác nhận mật khẩu mới khác với Mật khẩu mới')
+                                    .required('Confirm password is required')
+                                    .oneOf([Yup.ref('password'), null], 'Xác nhận mật khẩu mới khác với Mật khẩu')
                             })}
                         onSubmit={(values, { resetForm }) => {
                             handleRegister(values, resetForm);
@@ -419,6 +451,9 @@ function TabRegister(props) {
                                     {...formik.getFieldProps('name')}
                                     style={custom_form_input}
                                 />
+                                {formik.touched.name && formik.errors.name ? (
+                                    <label className='custom_form_label' style={errorLogin}>{formik.errors.name}</label>
+                                ) : null}
 
                                 <label style={custom_form_label}>Email Address <span>*</span></label>
                                 <input
@@ -426,6 +461,9 @@ function TabRegister(props) {
                                     {...formik.getFieldProps('email')}
                                     style={custom_form_input}
                                 />
+                                {formik.touched.email && formik.errors.email ? (
+                                    <label className='custom_form_label' style={errorLogin}>{formik.errors.email}</label>
+                                ) : null}
 
                                 <label style={custom_form_label}>Password <span>*</span></label>
                                 <input
@@ -433,6 +471,9 @@ function TabRegister(props) {
                                     {...formik.getFieldProps('password')}
                                     style={custom_form_input}
                                 />
+                                {formik.touched.password && formik.errors.password ? (
+                                    <label className='custom_form_label' style={errorLogin}>{formik.errors.password}</label>
+                                ) : null}
 
                                 <label style={custom_form_label}>Confirm Password <span>*</span></label>
                                 <input
@@ -440,9 +481,12 @@ function TabRegister(props) {
                                     {...formik.getFieldProps('confirm_password')}
                                     style={custom_form_input}
                                 />
+                                {formik.touched.confirm_password && formik.errors.confirm_password ? (
+                                    <label className='custom_form_label' style={errorLogin}>{formik.errors.confirm_password}</label>
+                                ) : null}
 
                                 <div className="clearfix" />
-                                <button type="submit" className="btn float-btn color2-bg" style={custom_form_button}>{loading ? <PulseLoading /> : 'Register'}  </button>
+                                <button type="submit" className="btn float-btn color2-bg" style={custom_form_button}>{loading ? <PulseLoading /> : 'Register'}</button>
                             </form>
                         )}
                     </Formik>
@@ -456,23 +500,22 @@ function SocialLogin(props) {
     const { uiConfig } = props;
     return (
         <>
-            <div className="k-log-separator fl-wrap" style={{ textAlign: 'center' }}><span style={log_separator_span}>or</span></div>
+            <div className="k-log-separator fl-wrap" style={{ textAlign: 'center', padding: '20px 0' }}><span style={log_separator_span}>or</span></div>
             <div className="soc-log fl-wrap">
-                <p>For faster login or register use your social account.</p>
                 <div className='social-login'>
                     <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
                 </div>
             </div>
-            <div className="wave-bg">
-                <div className="wave -one" />
-                <div className="wave -two" />
-            </div>
+
         </>
     )
 }
 
 function ForgotForm(props) {
-    const { hideForgotBox, isForgot } = props;
+
+    const { hideForgotBox, isForgot, handleSendMailResetPassword, messageSuccess, loading } = props;
+
+
     return (
         <div id="forgot_box" className={isForgot ? '' : 'display-none'}>
             <Formik
@@ -482,32 +525,40 @@ function ForgotForm(props) {
                         email: Yup.string().email('Invalid email address').required('Required').max(255),
                     })}
                 onSubmit={(values, { resetForm }) => {
-                    // handleRegister(values, resetForm);
+                    handleSendMailResetPassword(values, resetForm);
                 }}
             >
                 {formik => (
 
                     <form onSubmit={formik.handleSubmit}>
                         <div>
-                            <label style={custom_form_label}>Please confirm login email below</label>
+                            <label className='fgb_label' style={custom_form_label}>Please confirm login email below</label>
                             <input
                                 type="email"
                                 {...formik.getFieldProps('email')}
                                 style={custom_form_input}
                             />
                         </div>
-                        <p>You will receive an email containing a link allowing you to reset your password to a new
-                            preferred one.</p>
-                        <div className="text-center">
+                        {messageSuccess && <p>{messageSuccess}</p>}
+                        <div className="">
                             <button className="btn float-btn color2-bg" style={custom_form_button} onClick={hideForgotBox}>Back</button>
-                            <button type="submit" className="btn float-btn color2-bg" style={custom_form_button}>Reset Password</button>
+                            <button type="submit" className="btn float-btn color2-bg" style={custom_reset_button}>{loading ? <Spinner animation="border" variant="secondary" size="sm" /> : 'Reset Password'}</button>
                         </div>
                     </form>
                 )}
             </Formik>
-
-
         </div>
 
     )
+}
+
+const custom_reset_button = {
+    outline: 'none',
+    border: 'none',
+    cursor: 'pointer',
+    marginTop: '0px',
+    width: '48%',
+    padding: '13px 0',
+    color: '#fff',
+    float: 'right',
 }

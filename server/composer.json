@@ -19,6 +19,7 @@
         "laravel/passport": "~9.0",
         "laravel/tinker": "^2.5",
         "laravel/ui": "^2.4",
+        "nesbot/carbon": "^2.56",
         "nexmo/laravel": "^2.4",
         "pusher/pusher-php-server": "4.1",
         "symfony/psr-http-message-bridge": "^2.1"

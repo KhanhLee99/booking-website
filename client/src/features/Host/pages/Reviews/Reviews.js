@@ -91,8 +91,6 @@ function Reviews(props) {
                                 <MdArrowForwardIos />
                             }
 
-                            // initialPage={1}
-                            // initialPage={currentPage}
                             forcePage={(query.get('page') != undefined) ? query.get('page') - 1 : 0}
                             breakLabel={"..."}
                             pageCount={totalPages}

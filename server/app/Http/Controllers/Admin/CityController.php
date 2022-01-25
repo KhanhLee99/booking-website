@@ -16,10 +16,11 @@ class CityController extends Controller
         'status' => 'fail'
     ];
 
-    public function index(Request $request) {
+    public function index(Request $request)
+    {
         try {
             $cities = City::orderBy('id', 'asc')->select('id', 'name')->paginate($request->limit);
-            if($cities) {
+            if ($cities) {
                 $this->response = [
                     'status' => 'success',
                     'data' => $cities
@@ -33,7 +34,8 @@ class CityController extends Controller
         }
     }
 
-    public function add(Request $request) {
+    public function add(Request $request)
+    {
         try {
             $validator = Validator::make(
                 $request->all(),
@@ -65,7 +67,8 @@ class CityController extends Controller
         }
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         try {
             $city = City::find($id);
             if ($city) {
@@ -81,7 +84,8 @@ class CityController extends Controller
         }
     }
 
-    public function edit(Request $request, $id) {
+    public function edit(Request $request, $id)
+    {
         try {
             $city = City::find($id);
             if ($city) {
@@ -98,7 +102,7 @@ class CityController extends Controller
                         'name' => 'Tên thành phố'
                     ]
                 );
-    
+
                 if ($validator->fails()) {
                     $this->response['errorMessage'] = $validator->errors();
                     return response()->json($this->response);
@@ -110,6 +114,23 @@ class CityController extends Controller
             }
             $this->response['errorMessage'] = "Record có id = $id không tồn tại";
             return response()->json($this->response);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
+    }
+
+    function get_name_by_id($id)
+    {
+        try {
+            if ($city = City::find($id)) {
+                $this->response = [
+                    'status' => 'success',
+                    'data' => $city->name
+                ];
+                return response()->json($this->response, $this->success_code);
+            }
+            return response()->json($this->response, 400);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);

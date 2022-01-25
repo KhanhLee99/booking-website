@@ -7,6 +7,7 @@ import listingApi from '../../../../api/listingApi';
 import LoginModal from '../../../../components/LoginModal/LoginModal';
 import ThumbListingPlaceholder from '../../../../components/Placeholder/ThumbListingPlaceholder/ThumbListingPlaceholder';
 import Dotdotdot from 'react-dotdotdot'
+import { parseVNDCurrency } from '../../../../@helper/helper';
 
 ListingItem.propTypes = {
 
@@ -417,17 +418,20 @@ function ListingItem(props) {
                         :
                         <a onClick={(e) => handleSave(e)} className="k-geodir-js-favorite_btn" style={geodir_js_favorite_btn}><i className="fal fa-heart" style={geodir_js_favorite_btn_i} /><span style={geodir_js_favorite_btn_span}>Save</span></a>
                     }
-                    <a href="listing-single.html" className="k-geodir-category-img-wrap fl-wrap" style={geodir_category_img_wrap}>
+                    <Link to={`/listing/${listing.listing_id}`} className="k-geodir-category-img-wrap fl-wrap" style={geodir_category_img_wrap}>
                         <ThumbListingPlaceholder
                             listing_img={listing.listing_img}
                             className='geodir_category_img_wrap_img'
                         />
-                    </a>
+                    </Link>
 
                     <div className="k-geodir-category-opt" style={geodir_category_opt}>
                         <div className="k-listing-rating-count-wrap">
                             <div className="k-review-score" style={review_score}>{listing.rating.toFixed(1)}</div>
-                            <div className="k-listing-rating card-popup-rainingvis" data-starrating2={5} style={listing_rating} />
+                            <div data-starrating2={5} style={listing_rating} >
+                                <i className='fas fa-star' style={{ color: '#facc39' }} />
+                            </div>
+
                             <br />
                             <div className="k-reviews-count" style={reviews_count}>12 reviews</div>
                         </div>
@@ -446,7 +450,7 @@ function ListingItem(props) {
                                     </Dotdotdot>
                                 </Link>
                             </h3>
-                            <div className="k-geodir-category-location fl-wrap"><a href="#1" className="map-item" style={geodir_category_location_a}><i className="fas fa-map-marker-alt" style={{ color: '#4DB7FE', paddingRight: '6px' }} />{listing.street_address}</a></div>
+                            <div className="k-geodir-category-location fl-wrap"><a href="#" className="map-item" style={geodir_category_location_a}><i className="fas fa-map-marker-alt" style={{ color: '#4DB7FE', paddingRight: '6px' }} />{listing.street_address}</a></div>
                         </div>
                     </div>
                     <div className="k-geodir-category-text fl-wrap" style={{ padding: '0 20px' }}>
@@ -463,7 +467,7 @@ function ListingItem(props) {
                     <div className="k-geodir-category-footer fl-wrap" style={geodir_category_footer}>
                         <a className="listing-item-category-wrap" style={{ float: 'left', position: 'relative' }}>
                             {/* <div className="k-listing-item-category" style={listing_item_category}></div> */}
-                            <span style={listing_item_category_wrap_span}>{parseInt(listing.price_per_night).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })} /đêm</span>
+                            <span style={listing_item_category_wrap_span}>{parseVNDCurrency(listing.price_per_night)} /đêm</span>
                         </a>
                         <div className="k-geodir-opt-list" style={geodir_opt_list}>
                             <ul style={{ listStyle: 'none' }}>

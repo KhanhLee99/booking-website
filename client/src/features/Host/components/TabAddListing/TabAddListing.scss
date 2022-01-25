@@ -1,0 +1,27 @@
+#tab-add-listing {
+    position: fixed;
+    left: 0;
+    right: 0;
+    top: 80px;
+    z-index: 999;
+
+    & .tabs-menu {
+        padding-left: 0;
+        list-style: none;
+        background-color: #fff;
+
+        &:before {
+            content: "";
+            position: absolute;
+            left: 0px;
+            right: 0px;
+            height: 3px;
+            bottom: 0px;
+            background: #e5e5e5;
+        }
+
+        & .current {
+            border-bottom: 3px solid transparent;
+        }
+    }
+}

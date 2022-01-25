@@ -94,3 +94,13 @@ hr {
 .is-relative {
     position: relative;
 }
+
+#booking-widget-anchor .ant-picker-range-separator svg {
+    position: relative;
+    top: -5px;
+    left: -28px;
+    font-size: 22px;
+}
+#booking-widget-anchor .with-forms input {
+    margin-bottom: 0;
+}

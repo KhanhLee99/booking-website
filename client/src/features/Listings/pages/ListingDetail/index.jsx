@@ -20,6 +20,14 @@ ListingDetail.propTypes = {
 
 };
 
+const title = {
+    textAlign: 'left',
+    fontSize: '18px',
+    fontWeight: 600,
+    color: '#566985',
+    fontFamily: "'Nunito', sans-serif",
+}
+
 
 
 function ListingDetail(props) {
@@ -31,31 +39,9 @@ function ListingDetail(props) {
     const [amenities, setAmenities] = useState([])
     const [photos, setPhotos] = useState([]);
     const [reviews, setReviews] = useState([]);
-    // const [loadingAddReview, setLoadingAddReview] = useState(false);
     const [date, setDate] = useState(moment(moment().toDate()).format('YYYY-MM-DD'));
     const [reservationDate, setReservationDate] = useState([])
     const [blockList, setBlockList] = useState([]);
-
-    // const handleAddReview = async () => {
-    //     try {
-    //         const params = {
-    //             note: 'abc',
-    //             // name: loggedInUser.name,
-    //             // avatar_url: loggedInUser.avatar_url,
-    //             rating: 5,
-    //         }
-    //         setLoadingAddReview(true);
-    //         await reviewApi.addReviewListing(params, id).then(res => {
-    //             if (res.data.status = 'success') {
-    //                 setLoadingAddReview(false);
-    //                 const tmp = reviews.concat(params);
-    //                 setReviews(tmp);
-    //             }
-    //         })
-    //     } catch (err) {
-    //         console.log(err.message);
-    //     }
-    // }
 
     const handleSave = async () => {
         if (isLoggedIn) {
@@ -126,7 +112,7 @@ function ListingDetail(props) {
     }, [])
 
     return (
-        <div id="wrapper" style={{ backgroundColor: '#fff', maxWidth: '100%', overflowX: 'hidden' }}>
+        <div id="wrapper listing-detail" style={{ backgroundColor: '#fff', maxWidth: '100%', overflowX: 'hidden' }}>
             <Header />
 
             <div className="clearfix" />
@@ -155,35 +141,35 @@ function ListingDetail(props) {
                             </div> : <>
                                 <div id="titlebar" className="listing-titlebar" style={{ paddingBottom: 0 }}>
                                     <div className="listing-titlebar-title">
-                                        <h2>{listingDetail.name}</h2>
+                                        <h2 style={{ fontWeight: 600, color: '#566985', paddingBottom: 8 }}>{listingDetail.name}</h2>
                                         <span>
-                                            <a href="#listing-location" className="listing-address">
-                                                <i className="fa fa-map-marker" />{listingDetail.street_address}
+                                            <a href="#" className="listing-address">
+                                                <i className="fas fa-map-marker-alt" style={{ color: '#4DB7FE', fontSize: 12 }} />{listingDetail.street_address}
                                             </a>
                                         </span>
-                                        <p>{listingDetail.rental_form === 'shared_room' ? 'Phòng chung' : listingDetail.rental_form === 'private_room' ? 'Phòng riêng' : 'Toàn bộ nhà'} · {listingDetail.bathroom_count} Phòng tắm · {listingDetail.bed_count} giường · {listingDetail.bedroom_count} phòng ngủ · {listingDetail.standard_guest_count} khách</p>
+                                        <p style={{ fontSize: '14px', fontWeight: 600, color: '#878c9f' }}>{listingDetail.rental_form === 'shared_room' ? 'Phòng chung' : listingDetail.rental_form === 'private_room' ? 'Phòng riêng' : 'Toàn bộ nhà'} · {listingDetail.bathroom_count} Phòng tắm · {listingDetail.bed_count} giường · {listingDetail.bedroom_count} phòng ngủ · {listingDetail.standard_guest_count} khách</p>
                                     </div>
                                 </div>
 
                                 {/* Overview */}
                                 <div id="listing-overview" className="listing-section">
                                     {/* Description */}
-                                    <h3 className="listing-desc-headline">Overview</h3>
+                                    <h3 className="listing-desc-headline" style={title}>Overview</h3>
                                     <p dangerouslySetInnerHTML={{ __html: listingDetail.description }} className='listing-overview' />
-                                    {/* Listing Contacts */}
 
                                     <div className="clearfix" />
                                     <div className="_npr0qi" style={{ borderTopColor: 'rgb(221, 221, 221)' }} />
 
                                     {/* Amenities */}
-                                    <h3 className="listing-desc-headline">Amenities</h3>
-                                    <p>Giới thiệu về các tiện nghi và dịch vụ tại nơi lưu trú</p>
+                                    <h3 className="listing-desc-headline" style={title}>Amenities</h3>
+                                    <p className='listing-overview'>Giới thiệu về các tiện nghi và dịch vụ tại nơi lưu trú</p>
                                     {
                                         amenities.map((item, index) => {
                                             return (
                                                 <AmenityDetail
                                                     key={index}
                                                     item={item}
+                                                    title={title}
                                                 />
                                             )
                                         })
@@ -194,8 +180,8 @@ function ListingDetail(props) {
 
                                 {/* Food Menu */}
                                 <div id="listing-pricing-list" className="listing-section">
-                                    <h3 className="listing-desc-headline">Pricing</h3>
-                                    <p>Giá có thể tăng vào cuối tuần hoặc ngày lễ</p>
+                                    <h3 className="listing-desc-headline" style={title}>Pricing</h3>
+                                    <p className='listing-overview'>Giá có thể tăng vào cuối tuần hoặc ngày lễ</p>
                                     <div className="pricing-list-container">
                                         {/* Food List */}
                                         <ul>
@@ -231,22 +217,21 @@ function ListingDetail(props) {
                                 <div className="_npr0qi" style={{ borderTopColor: 'rgb(221, 221, 221)' }} />
 
                                 {/* Location */}
-                                <div id="listing-location" className="listing-section">
-                                    <h3 className="listing-desc-headline">Location</h3>
+                                {/* <div id="listing-location" className="listing-section">
+                                    <h3 className="listing-desc-headline" style={title}>Location</h3>
                                     <div id="singleListingMap-container">
                                         <div id="singleListingMap" data-latitude="40.70437865245596" data-longitude="-73.98674011230469" data-map-icon="im im-icon-Hamburger" />
                                         <a href="#" id="streetView">Street View</a>
                                     </div>
                                 </div>
 
-                                <div className="_npr0qi" style={{ borderTopColor: 'rgb(221, 221, 221)' }} />
+                                <div className="_npr0qi" style={{ borderTopColor: 'rgb(221, 221, 221)' }} /> */}
 
                                 {/* Reviews */}
                                 <ListReview
                                     reviews={reviews}
-                                    // handleAddReview={handleAddReview}
-                                    // loadingAddReview={loadingAddReview}
-                                    isLoggedIn={isLoggedIn}
+                                    rating={listingDetail.rating}
+                                    title={title}
                                 />
                             </>
                         }

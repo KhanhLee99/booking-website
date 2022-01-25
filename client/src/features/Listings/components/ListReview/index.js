@@ -9,13 +9,13 @@ ListReview.propTypes = {
 };
 
 function ListReview(props) {
-    const { reviews, handleAddReview, loadingAddReview, isLoggedIn } = props;
+    const { reviews, rating, title } = props;
     return (
         <>
             <div id="listing-reviews" className="listing-section">
-                <h3 className="listing-desc-headline">Đánh giá</h3>
+                <h3 className="listing-desc-headline" style={title}>Reviews</h3>
                 <div className="star-rating" data-rating="3.5">
-                    <h3 className="listing-desc-headline"><span className="star"></span>4,89 <span>({reviews.length} đánh giá)</span></h3>
+                    <h3 className="listing-desc-headline" style={{ fontFamily: "Roboto", fontSize: '18px', }}><span className="star"></span>{rating} <span>({reviews.length} đánh giá)</span></h3>
                 </div>
 
                 <section className="comments listing-reviews" style={{ padding: 0 }}>
@@ -26,18 +26,10 @@ function ListReview(props) {
                                 review={review}
                             />
                         ))}
-                        {/* {
-                            loadingAddReview ? <ReviewItemSkeleton /> : null
-                        } */}
 
                     </ul>
                 </section>
             </div>
-            {/* {
-                isLoggedIn ? <AddReview
-                    handleAddReview={handleAddReview}
-                /> : null
-            } */}
 
         </>
 

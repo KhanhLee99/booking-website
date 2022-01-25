@@ -24,7 +24,7 @@ class CreateReviewListingTable extends Migration
             $table->unsignedBigInteger('listing_id');
             $table->foreign('listing_id')->references('id')->on('listing')->onDelete('cascade');
 
-            $table->unsignedBigInteger('reservation_id');
+            $table->unsignedBigInteger('reservation_id')->nullable();
             $table->foreign('reservation_id')->references('id')->on('reservation')->onDelete('cascade');
 
             $table->timestamps();
