@@ -10,6 +10,7 @@ import { useRouteMatch } from 'react-router-dom';
 import AdminListingPending from './pages/AdminListingPending/AdminListingPending';
 import AdminListingActive from './pages/AdminListingActive/AdminListingActive';
 import AdminLogin from './pages/AdminLogin/AdminLogin';
+import Dashboard from './pages/Dashboard/Dashboard';
 
 AdminFeature.propTypes = {
 
@@ -30,6 +31,12 @@ function AdminFeature(props) {
                     path={`${match.url}/listing/active`}
                     exact
                     component={AdminListingActive}
+                />
+
+                <Route
+                    path={`${match.url}/dashboard`}
+                    exact
+                    component={Dashboard}
                 />
 
                 {/* <Route

@@ -3,16 +3,18 @@ import PropTypes from 'prop-types';
 import './CommonAddListing.scss';
 import HeaderHost, { HeaderAddListing } from '../../features/Host/components/HeaderHost';
 import TabAddListing from '../../features/Host/components/TabAddListing/TabAddListing';
+import { useParams } from 'react-router-dom';
 
 CommonAddListing.propTypes = {
 
 };
 
 function CommonAddListing(props) {
+    const { id } = useParams();
     return (
         <div className='k-wrap'>
             <HeaderAddListing />
-            <TabAddListing />
+            <TabAddListing id={id} />
             <div className='k-content'>
                 <div className='container'>
                     <div className='row'>

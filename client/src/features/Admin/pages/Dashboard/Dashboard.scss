@@ -1,0 +1,33 @@
+.dashboard_inline-facts-wrap {
+    display: block;
+    padding: 20px 30px 30px;
+    position: relative;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.dashboard_inline-facts-wrap i {
+    position: absolute;
+    right: 30px;
+    top: 10px;
+    font-size: 44px;
+    color: #fff;
+    opacity: 0.4;
+}
+
+.dashboard_inline-facts-wrap .num {
+    float: left;
+    font-size: 36px;
+    color: #fff;
+    font-weight: 800;
+}
+
+.dashboard_inline-facts-wrap h6 {
+    width: 100%;
+    float: left;
+    font-size: 16px;
+    text-align: left;
+    color: #fff;
+    font-weight: 400;
+    margin-top: 6px;
+}

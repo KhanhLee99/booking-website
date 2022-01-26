@@ -171,7 +171,7 @@ function HeaderHost(props) {
                                 <li style={nav_holder_nav_li_ul_li}><Link to="/host/listings" style={nav_holder_nav_li_ul_a}>Nhà/phòng cho thuê</Link></li>
                                 <li style={nav_holder_nav_li_ul_li}><Link to="/host/booking" style={nav_holder_nav_li_ul_a}>Đặt phòng</Link></li>
                                 <li style={nav_holder_nav_li_ul_li}><Link to="/host/reviews" style={nav_holder_nav_li_ul_a}>Reviews</Link></li>
-                                <li style={nav_holder_nav_li_ul_li}><a href="dashboard-bookings.html" style={nav_holder_nav_li_ul_a}>Tạo mục cho thuê mới</a></li>
+                                <li style={nav_holder_nav_li_ul_li}><Link to="/become-host/basic-infomation" style={nav_holder_nav_li_ul_a}>Tạo mục cho thuê mới</Link></li>
                                 <li style={nav_holder_nav_li_ul_li}><a href="dashboard-wallet.html" style={nav_holder_nav_li_ul_a}>Lịch sử giao dịch</a></li>
                             </ul>
                         </li>

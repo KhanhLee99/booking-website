@@ -84,7 +84,7 @@
 @import url("bootstrap-grid.css");
 @import url("icons.css");
 @import url("plugins/revolutionslider.css");
-@import url("https://fonts.googleapis.com/css?family=Raleway:300,400,500,600,700");
+/* @import url("https://fonts.googleapis.com/css?family=Raleway:300,400,500,600,700"); */
 @import url("https://fonts.googleapis.com/css?family=Open+Sans:500,600,700");
 
 /* ------------------------------------------------------------------- */
@@ -3845,7 +3845,7 @@ body .pac-container {
 	border-top: none;
 	box-sizing: content-box;
 	margin-top: -2px;
-	font-family: "Raleway";
+	/* font-family: "Raleway"; */
 }
 
 /* Autocomplete for homepage */
@@ -20151,7 +20151,7 @@ button,
 .map-box div,
 .numerical-rating .rating-counter,
 body .menu-responsive i.menu-trigger:after {
-	font-family: "Raleway", "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-family: "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, sans-serif;
 	text-transform: none;
 }
 

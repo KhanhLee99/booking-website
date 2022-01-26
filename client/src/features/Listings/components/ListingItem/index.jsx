@@ -16,7 +16,6 @@ ListingItem.propTypes = {
 const listingItem = {
     float: 'left',
     width: '50%',
-    padding: '0 8px 0 0',
     marginBottom: '12px',
     position: 'relative',
 }

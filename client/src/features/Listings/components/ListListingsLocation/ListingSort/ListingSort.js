@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import './ListingSort.scss';
 
 ListingSort.propTypes = {
 
@@ -73,7 +74,7 @@ function ListingSort(props) {
         }
     }
     return (
-        <div className="list-main-wrap-header">
+        <div className="wrap-title-header fl-wrap">
             <div className="list-main-wrap-title" style={list_main_wrap_title}>
                 <h2 style={list_main_wrap_title_h2}>{totalListing} homestays tại <span>{city}</span></h2>
             </div>

@@ -13,6 +13,7 @@ import Header from '../../../../components/Header';
 import useQuery from '../../../../@use/useQuery';
 import { Link } from 'react-router-dom';
 import { parseVNDCurrency } from '../../../../@helper/helper';
+import LoginModal from '../../../../components/LoginModal/LoginModal';
 
 
 Booking.propTypes = {
@@ -22,35 +23,25 @@ Booking.propTypes = {
 function Booking(props) {
     const query = useQuery();
     const loggedInUser = useSelector((state) => state.userSlice.current);
+    const isLoggedIn = !!loggedInUser.id;
 
     const { id } = useParams();
     const [listing, setListing] = useState({});
     const [totalPrice, setTotalPrice] = useState();
     // const paypal = useRef();
 
-    useEffect(() => {
-        const getListing = async () => {
-            await listingApi.getBaseInfoListing(id).then(res => {
-                setListing(res.data.data)
-            });
 
-        }
-        getListing();
-        countPrice();
-        return () => {
-
-        }
-
-    }, []);
 
     const handlePay = async (e) => {
         e.preventDefault();
         const params = {
-            checkin_date: query.get('checkin').split("-").reverse().join("-"),
-            checkout_date: query.get('checkout').split("-").reverse().join("-"),
-            total_price: 1,
+            // checkin_date: query.get('checkin').split("-").reverse().join("-"),
+            // checkout_date: query.get('checkout').split("-").reverse().join("-"),
+            checkin_date: query.get('checkin'),
+            checkout_date: query.get('checkout'),
+            total_price: totalPrice.total_price,
             adult_count: 1,
-            child_count: 1,
+            child_count: 0,
             reservation_status_id: 1,
             guest_id: loggedInUser.id,
             listing_id: id
@@ -58,7 +49,8 @@ function Booking(props) {
 
         await reservationApi.sendReservation(params).then(res => {
             console.log(res);
-            sendNotification();
+            alert('Booking Success');
+            // sendNotification();
         });
     }
 
@@ -77,20 +69,35 @@ function Booking(props) {
         }
     }
 
-    const countPrice = async () => {
-        try {
-            const params = {
-                checkin: query.get('checkin'),
-                checkout: query.get('checkout'),
-                listing_id: id
-            }
-            await reservationApi.countTotalPrice(params).then(res => {
-                setTotalPrice(res.data.data);
-            })
-        } catch (err) {
-            console.log(err.message);
+    useEffect(() => {
+        const getListing = async () => {
+            await listingApi.getBaseInfoListing(id).then(res => {
+                setListing(res.data.data)
+            });
         }
-    }
+
+        const countPrice = async () => {
+            try {
+                const params = {
+                    checkin: query.get('checkin'),
+                    checkout: query.get('checkout'),
+                    listing_id: id
+                }
+                await reservationApi.countTotalPrice(params).then(res => {
+                    setTotalPrice(res.data.data);
+                })
+            } catch (err) {
+                console.log(err.message);
+            }
+        }
+
+        getListing();
+        countPrice();
+        return () => {
+
+        }
+    }, []);
+
 
     return (
         <div id="wrapper">
@@ -182,7 +189,12 @@ function Booking(props) {
                             </div>
                         </div> */}
                         </div>
-                        <a href="#" onClick={handlePay} className="button booking-confirmation-btn margin-top-40 margin-bottom-65" style={{ background: "rgb(66, 89, 152)" }}>Confirm and Pay</a>
+                        {isLoggedIn ? <a href="#" onClick={handlePay} className="button booking-confirmation-btn margin-top-40 margin-bottom-65" style={{ background: "rgb(66, 89, 152)" }}>Confirm and Pay</a>
+                            : <LoginModal>
+                                <a href="#" className="button booking-confirmation-btn margin-top-40 margin-bottom-65" style={{ background: "rgb(66, 89, 152)" }}>Confirm and Pay</a>
+                            </LoginModal>
+                        }
+
                     </div>
                     <div className="col-1"></div>
                     <div className="col-lg-5 col-md-5 margin-top-0 margin-bottom-60">

@@ -61,9 +61,9 @@ function Reservation(props) {
     return (
         <div id="wrapper" style={{ background: '#f6f6f6' }}>
             <HeaderHost />
-            <div className='container' style={{ marginTop: '100px' }}>
-                <div className='k-listing-info'>
-                    <div className='k-listing-count'>
+            <div className='container' style={{ marginTop: '80px', paddingTop: '20px', minHeight: window.innerHeight }}>
+                <div className='reservations-header-title wrap-title-header fl-wrap'>
+                    <div style={{ width: '50%', float: 'left', height: '69px', display: 'flex', alignItems: 'center' }}>
                         <h3 className='h3_title'>Reservation</h3>
                     </div>
                     <div className='filter-host-listing'>

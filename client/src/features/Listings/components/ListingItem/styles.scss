@@ -28,3 +28,11 @@
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
 }
+
+.k-listing-item {
+    padding: 0 8px 0 0;
+}
+
+.k-listing-item:nth-child(even) {
+    padding: 0 0 0 8px;
+}

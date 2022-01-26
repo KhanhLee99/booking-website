@@ -106,7 +106,9 @@ function BoxBooking(props) {
 
     const handleBooking = (e) => {
         e.preventDefault();
-        history.push(`/host/checkout/${listingDetail.id}?checkin=${checkin.replaceAll('/', '-')}&checkout=${checkout.replaceAll('/', '-')}&guests=${adults + childrens}`);
+        if (totalPrice) {
+            history.push(`/host/checkout/${listingDetail.id}?checkin=${checkin.replaceAll('/', '-')}&checkout=${checkout.replaceAll('/', '-')}&guests=${adults + childrens}`);
+        }
     }
 
     const checkAvailableDate = () => {

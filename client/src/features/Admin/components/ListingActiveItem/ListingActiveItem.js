@@ -20,7 +20,7 @@ function ListingActiveItem(props) {
             <div className="dashboard-message">
                 <div className="booking-list-contr">
                     <a onClick={(e) => handleLockListing(e, listing.id)} href="#" className="green-bg tolt" data-microtip-position="left" data-tooltip="Public"><i className="fal fa-lock" /></a>
-                    <a href="#" className="color-bg tolt" data-microtip-position="left" data-tooltip="Edit"><i className="fal fa-edit" /></a>
+                    {/* <a href="#" className="color-bg tolt" data-microtip-position="left" data-tooltip="Edit"><i className="fal fa-edit" /></a> */}
                     <a href="#" className="red-bg tolt" data-microtip-position="left" data-tooltip="Delete"><i className="fal fa-trash" /></a>
                 </div>
                 <div className="dashboard-message-text">

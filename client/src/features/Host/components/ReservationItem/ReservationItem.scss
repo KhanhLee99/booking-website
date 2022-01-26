@@ -4,13 +4,39 @@
 
 .abc {
     position: relative;
-}
+    height: 100%;
+    display: flex;
+    align-items: top;
 
-.b {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 120px;
+    & .user-booking-info {
+        // margin-left: -45px;
+        font-family: "Roboto";
+        float: left;
+        // background-color: red;
+    }
+
+    & .user-booking-info .user-name-booking {
+        font-weight: 600;
+        font-size: 14px;
+        padding-bottom: 20px;
+        color: #50596e;
+
+        & span {
+            color: #4db7fe;
+        }
+    }
+
+    & .user-booking-info .booking-details {
+        & .booking-title {
+            color: #999;
+            padding-right: 10px;
+        }
+
+        & .booking-text,
+        & .booking-text a {
+            color: #7d93b2;
+        }
+    }
 }
 
 .dashboard-message.r-item {
@@ -24,8 +50,8 @@
     width: 120px;
     position: absolute;
     right: 0;
-    top: 50%;
-    transform: translateY(-50%);
+    // top: 50%;
+    // transform: translateY(-50%);
 
     & .status-text {
         display: block;

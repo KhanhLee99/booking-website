@@ -14,7 +14,7 @@ function CommonUserProfile(props) {
             <Header />
 
             <section className="gray-bg main-dashboard-sec" id="sec1" style={{ marginTop: '80px' }}>
-                <div className="container">
+                <div className="container" style={{ minHeight: window.innerHeight }}>
                     {/*  dashboard-menu*/}
                     <div className="col-md-3">
                         <div className="mob-nav-content-btn color2-bg init-dsmen fl-wrap"><i className="fal fa-bars" />

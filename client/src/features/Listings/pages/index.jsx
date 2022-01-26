@@ -29,6 +29,7 @@ const main = {
     left: 0,
     zIndex: 2,
     // opacity: 0,
+    background: '#f6f6f6',
 }
 
 function ListingsLocation(props) {
@@ -201,7 +202,7 @@ function ListingsLocation(props) {
         <div className="k-main" style={main}>
             {loading && <Loading />}
             <Header />
-            <div className="container" style={{ marginTop: '100px' }}>
+            <div className="container" style={{ marginTop: '80px', paddingTop: '20px' }}>
                 <div className="row">
                     <div className="col-md-4">
                         <FilterBox

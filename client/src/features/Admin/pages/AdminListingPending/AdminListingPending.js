@@ -12,6 +12,7 @@ AdminListingPending.propTypes = {
 function AdminListingPending(props) {
 
     const [listingPending, setListingPending] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         const fetchListingPending = async () => {

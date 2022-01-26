@@ -130,7 +130,8 @@ function UserBookingItem(props) {
                     </Link>
                     {/* <h4><a href='#' onClick={e => e.preventDefault()} className='booking-date'>{(new Date(reservation.checkin_date)).toDateString()} - {(new Date(reservation.checkout_date)).toDateString()}</a></h4> */}
                     <h3><Link to={`/listing/${reservation.listing_id}`}>{reservation.listing_name}</Link></h3>
-                    <h4><a href='#' onClick={e => e.preventDefault()} className='booking-date'>Booking Date: {(new Date(reservation.checkin_date)).toLocaleDateString("vi-VN")} - {(new Date(reservation.checkout_date)).toLocaleDateString("vi-VN")}</a></h4>
+                    <h4 style={{ color: '#566985' }}>Date :<a href='#' onClick={e => e.preventDefault()} className='booking-date' style={{ color: '#4db7fe' }}> {(new Date(reservation.checkin_date)).toLocaleDateString("vi-VN")} - {(new Date(reservation.checkout_date)).toLocaleDateString("vi-VN")}</a></h4>
+                    <h4 style={{ color: '#566985' }}>Guests : 1 adult</h4>
                     <div className="geodir-category-location clearfix"><a href="#" className='booking-address'>{reservation.street_address}</a></div>
                 </div>
             </div>
@@ -141,3 +142,4 @@ function UserBookingItem(props) {
 }
 
 export default UserBookingItem;
+

@@ -1,49 +1,51 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './TabAddListing.scss';
+import { Link, useParams } from 'react-router-dom';
 
 TabAddListing.propTypes = {
 
 };
 
 function TabAddListing(props) {
+    const { id } = props;
     return (
         <div id='tab-add-listing'>
             <ul className="tabs-menu fl-wrap">
                 <li className='current' style={tabs_menu_li} onClick={e => { e.preventDefault() }}>
-                    <a href="#tab-1" style={tabs_menu_li_a}>Basic infomation
+                    <Link to={`/become-host/${id}/basic-infomation`} style={tabs_menu_li_a}>Basic infomation
                         <i className="fas fa-check-circle" style={check} />
-                    </a>
+                    </Link>
                 </li>
                 <li className='current' style={tabs_menu_li} onClick={e => { e.preventDefault() }}>
-                    <a href="#tab-1" style={tabs_menu_li_a}>Location
+                    <Link to={`/become-host/${id}/location`} style={tabs_menu_li_a}>Location
                         <i className="fas fa-check-circle" style={check} />
-                    </a>
+                    </Link>
                 </li>
                 <li className='current' style={tabs_menu_li} onClick={e => { e.preventDefault() }}>
-                    <a href="#tab-1" style={tabs_menu_li_a}>Rooms
+                    <Link to={`/become-host/${id}/floor-plan`} style={tabs_menu_li_a}>Rooms
                         <i className="fas fa-check-circle" style={check} />
-                    </a>
+                    </Link>
                 </li>
                 <li className='current' style={tabs_menu_li} onClick={e => { e.preventDefault() }}>
-                    <a href="#tab-1" style={tabs_menu_li_a}>Amenity
+                    <Link to={`/become-host/${id}/amenities`} style={tabs_menu_li_a}>Amenity
                         <i className="fas fa-check-circle" style={check} />
-                    </a>
+                    </Link>
                 </li>
                 <li className='current' style={tabs_menu_li} onClick={e => { e.preventDefault() }}>
-                    <a href="#tab-1" style={tabs_menu_li_a}>Photos
+                    <Link to={`/become-host/${id}/photos`} style={tabs_menu_li_a}>Photos
                         <i className="fas fa-check-circle" style={check} />
-                    </a>
+                    </Link>
                 </li>
                 <li className='current' style={tabs_menu_li} onClick={e => { e.preventDefault() }}>
-                    <a href="#tab-1" style={tabs_menu_li_a}>Description
+                    <Link to={`/become-host/${id}/title`} style={tabs_menu_li_a}>Description
                         <i className="fas fa-check-circle" style={check} />
-                    </a>
+                    </Link>
                 </li>
                 <li className='current' style={tabs_menu_li} onClick={e => { e.preventDefault() }}>
-                    <a href="#tab-1" style={tabs_menu_li_a}>Pricing
+                    <Link to={`/become-host/${id}/price`} style={tabs_menu_li_a}>Pricing
                         <i className="fas fa-check-circle" style={check} />
-                    </a>
+                    </Link>
                 </li>
 
             </ul>
