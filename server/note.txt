@@ -13,3 +13,4 @@ php artisan passport:install
 php artisan db:seed
 
 drop all table => php artisan db:wipe
+performance query

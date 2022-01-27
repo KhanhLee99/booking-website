@@ -8,7 +8,7 @@ ListListingsLocation.propTypes = {
 
 function ListListingsLocation(props) {
 
-    const { listings, loading, isLoggedIn, loggedInUser } = props;
+    const { listings, isLoggedIn, handleSave } = props;
 
     return (
         <div className="fl-wrap" style={{ padding: '30px 0 0' }}>
@@ -17,7 +17,7 @@ function ListListingsLocation(props) {
                     key={index}
                     listing={listing}
                     isLoggedIn={isLoggedIn}
-                    loggedInUser={loggedInUser}
+                    handleSave={handleSave}
                 />
             ))}
         </div >

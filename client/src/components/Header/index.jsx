@@ -174,7 +174,6 @@ const header_user_menu_ul_li = {
     float: 'left',
     width: '100%',
     padding: '0px 0',
-    borderBottom: '1px solid #f6f6f6',
 }
 
 const header_user_menu_ul_li_a = {
@@ -183,7 +182,7 @@ const header_user_menu_ul_li_a = {
     width: '100%',
     fontWeight: 500,
     textAlign: 'left',
-    padding: '6px 15px',
+    padding: '10px 15px',
 }
 
 const { RangePicker } = DatePicker;
@@ -318,12 +317,12 @@ function Header(props) {
                                 </span>
                                 {loggedInUser.name}
                             </div>
-                            <ul className={showPopupProfile ? 'hu-menu-vis' : ''}>
+                            <ul className={showPopupProfile ? 'popup-user-nav hu-menu-vis' : 'popup-user-nav'}>
                                 <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/profile" style={header_user_menu_ul_li_a}> Edit profile</Link></li>
                                 <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/bookings" style={header_user_menu_ul_li_a}>  Bookings</Link></li>
                                 <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/favorite" style={header_user_menu_ul_li_a}> Danh sách yêu thích </Link></li>
                                 {loggedInUser.role_id === 2 ?
-                                    <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/host/listings" style={header_user_menu_ul_li_a}>Quản lý nhà/phòng cho thuê</Link></li>
+                                    <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/host/listings" style={header_user_menu_ul_li_a}>Quản lý phòng cho thuê</Link></li>
                                     : null}
                                 <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><a href="#" style={header_user_menu_ul_li_a} onClick={(e) => handleLogout(e)}> Log Out</a></li>
                             </ul>

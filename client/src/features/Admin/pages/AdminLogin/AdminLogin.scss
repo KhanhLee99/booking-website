@@ -1,0 +1,49 @@
+.admin-login-box form {
+    width: 280px;
+    height: 290px;
+    margin: 70px auto;
+    background: white;
+    border-radius: 3px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.4);
+    text-align: center;
+    padding-top: 1px;
+    display: block;
+
+    & h2 {
+        color: #336895;
+        font-size: 26px;
+        font-weight: 600;
+        padding: 30px 0 10px;
+    }
+
+    & input.text-field {
+        border: 1px solid #a6a6a6;
+        width: 242px;
+        height: 46px;
+        border-radius: 3px;
+        margin: 10px auto;
+        padding-left: 10px;
+        color: #6c6c6c;
+        background: #fcfcfc;
+        outline: none;
+    }
+
+    & button.admin-login-submit-btn {
+        border-radius: 3px;
+        border: 1px solid #336895;
+        width: 242px;
+        height: 40px;
+        margin-top: 20px;
+
+        background: rgb(46, 63, 110);
+
+        cursor: pointer;
+        color: white;
+        font-weight: bold;
+        font-size: 13px;
+    }
+}
+
+.admin-login-box {
+    overflow-y: hidden;
+}

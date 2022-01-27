@@ -12,11 +12,6 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const messaging = firebase.messaging();
-// messaging.setBackgroundMessageHandler(function (payload) {
-//     console.log("message", payload)
-
-//     return ;
-// });
 
 navigator.serviceWorker.register('service-worker.js')
     .then((registration) => {

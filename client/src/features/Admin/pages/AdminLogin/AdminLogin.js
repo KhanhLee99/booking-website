@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './AdminLogin.scss';
 import { Formik } from 'formik';
@@ -21,6 +21,8 @@ function AdminLogin(props) {
     const history = useHistory();
     const dispatch = useDispatch();
 
+    const [loading, setLoading] = useState(false);
+
     const handleLogin = async (values) => {
         const params = {
             email: values.email,
@@ -42,8 +44,8 @@ function AdminLogin(props) {
     }, []);
 
     return (
-        <div>
-            <h2>ADMIN LOGIN</h2>
+        <div className='admin-login-box gray-bg' style={{ minHeight: window.innerHeight }}>
+
             <Formik
                 initialValues={{ email: '', password: '' }}
                 onSubmit={(values, { setSubmitting }) => {
@@ -52,17 +54,20 @@ function AdminLogin(props) {
             >
                 {formik => (
                     <form onSubmit={formik.handleSubmit}>
+                        <h2 className='admin-login-title'>ADMIN LOGIN</h2>
                         <input
                             type='text'
                             placeholder='email'
                             {...formik.getFieldProps('email')}
+                            className="text-field"
                         />
                         <input
                             type='password'
                             placeholder='password'
                             {...formik.getFieldProps('password')}
+                            className="text-field"
                         />
-                        <button type='submit'>Login</button>
+                        <button type='submit' className='admin-login-submit-btn'>Login</button>
                     </form>
                 )}
             </Formik>

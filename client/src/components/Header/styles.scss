@@ -89,6 +89,10 @@
     background: rgba(255, 255, 255, 0.21);
 }
 
+.header-user-menu ul.popup-user-nav li:not(:last-child) {
+    border-bottom: 1px solid #f6f6f6;
+}
+
 .header-user-menu ul li a:hover {
     color: #4db7fe !important;
 }
@@ -105,11 +109,11 @@
     list-style: none;
     visibility: hidden;
     position: absolute;
-    min-width: 150px;
+    min-width: 200px;
     top: 60px;
     left: -50px;
     z-index: 1;
-    padding: 10px 0;
+    padding: 0;
     background: #fff;
     border-radius: 6px;
     border: 1px solid #eee;

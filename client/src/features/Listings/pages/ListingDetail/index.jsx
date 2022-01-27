@@ -9,6 +9,7 @@ import blockBookingApi from '../../../../api/blockBookingApi';
 import listingApi from '../../../../api/listingApi';
 import reservationApi from '../../../../api/reservationApi';
 import Header from '../../../../components/Header';
+import Loading from '../../../../components/Loading/Loading';
 import AmenityDetail from '../../components/AmenityDetail/AmenityDetail';
 import BoxBooking from '../../components/BoxBooking';
 import ListReview from '../../components/ListReview';
@@ -42,6 +43,7 @@ function ListingDetail(props) {
     const [date, setDate] = useState(moment(moment().toDate()).format('YYYY-MM-DD'));
     const [reservationDate, setReservationDate] = useState([])
     const [blockList, setBlockList] = useState([]);
+    const [saved, setSaved] = useState(false);
 
     const handleSave = async () => {
         if (isLoggedIn) {
@@ -49,7 +51,11 @@ function ListingDetail(props) {
                 listing_id: id,
                 user_id: loggedInUser.id
             }
-            await listingApi.favoriteListing(params);
+            setLoadingListingDetail(true);
+            await listingApi.favoriteListing(params).then(res => {
+                setSaved(!saved);
+                setLoadingListingDetail(false);
+            });
         }
     }
 
@@ -88,10 +94,11 @@ function ListingDetail(props) {
         const fetchListingDetail = async () => {
             setLoadingListingDetail(true)
             await listingApi.getListingById(id).then(res => {
-                setListingDetail(res.data.listing);
-                setAmenities(res.data.amenities);
-                setPhotos(res.data.photos);
-                setReviews(res.data.reviews);
+                setListingDetail(res.data.data.listing);
+                setAmenities(res.data.data.amenities);
+                setPhotos(res.data.data.photos);
+                setReviews(res.data.data.reviews);
+                setSaved(res.data.data.saved);
                 setLoadingListingDetail(false)
             });
         }
@@ -113,6 +120,7 @@ function ListingDetail(props) {
 
     return (
         <div id="wrapper listing-detail" style={{ backgroundColor: '#fff', maxWidth: '100%', overflowX: 'hidden' }}>
+            {loadingListingDetail && <Loading />}
             <Header />
 
             <div className="clearfix" />
@@ -123,6 +131,7 @@ function ListingDetail(props) {
 
             <TabHorizontal
                 isLoggedIn={isLoggedIn}
+                saved={saved}
                 handleSave={handleSave}
             />
 

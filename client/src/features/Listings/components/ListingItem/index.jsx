@@ -391,20 +391,9 @@ const listing_item_category_wrap_span = {
 
 function ListingItem(props) {
 
-    const { listing, loggedInUser, isLoggedIn } = props;
+    const { listing, isLoggedIn, handleSave } = props;
 
     const history = useHistory();
-
-    const handleSave = async (e) => {
-        e.preventDefault();
-        if (isLoggedIn) {
-            const params = {
-                listing_id: listing.listing_id,
-                user_id: loggedInUser.id
-            }
-            await listingApi.favoriteListing(params);
-        }
-    }
 
     return (
         <div className="k-listing-item" style={listingItem}>
@@ -412,10 +401,14 @@ function ListingItem(props) {
                 <div className="k-geodir-category-img" style={geodirCategoryImg}>
                     {!isLoggedIn ?
                         <LoginModal>
-                            <a className="k-geodir-js-favorite_btn" style={geodir_js_favorite_btn}><i className="fal fa-heart" style={geodir_js_favorite_btn_i} /><span style={geodir_js_favorite_btn_span}>Save</span></a>
+                            <a className="geodir-js-favorite_btn" style={geodir_js_favorite_btn}><i className="fal fa-heart" style={geodir_js_favorite_btn_i} /></a>
                         </LoginModal>
                         :
-                        <a onClick={(e) => handleSave(e)} className="k-geodir-js-favorite_btn" style={geodir_js_favorite_btn}><i className="fal fa-heart" style={geodir_js_favorite_btn_i} /><span style={geodir_js_favorite_btn_span}>Save</span></a>
+                        (listing.saved ?
+                            <a onClick={() => handleSave(listing.listing_id)} className="bg-saved" style={geodir_js_favorite_btn}><i className="fas fa-heart" style={geodir_js_favorite_btn_i} /></a>
+                            :
+                            <a onClick={() => handleSave(listing.listing_id)} className="geodir-js-favorite_btn" style={geodir_js_favorite_btn}><i className="fal fa-heart" style={geodir_js_favorite_btn_i} /></a>
+                        )
                     }
                     <Link to={`/listing/${listing.listing_id}`} className="k-geodir-category-img-wrap fl-wrap" style={geodir_category_img_wrap}>
                         <ThumbListingPlaceholder

@@ -2,13 +2,18 @@ import React from "react";
 import PropTypes from "prop-types";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import './ReactNotification.scss';
 
 const ReactNotificationComponent = ({ title, body }) => {
-  let hideNotif = title === "";
+  // let hideNotif = title === "";
 
-  if (!hideNotif) {
-    toast.info(<Display />);
-  }
+  // if (!hideNotif) {
+  // toast.info(<Display />);
+  // }
+
+  toast.success(<Display />, {
+    toastId: 'success1',
+  });
 
   function Display() {
     return (
@@ -21,7 +26,7 @@ const ReactNotificationComponent = ({ title, body }) => {
 
   return (
     <ToastContainer
-      autoClose={3000}
+      autoClose={2000}
       hideProgressBar
       newestOnTop={false}
       closeOnClick
@@ -29,6 +34,7 @@ const ReactNotificationComponent = ({ title, body }) => {
       pauseOnFocusLoss={false}
       draggable
       pauseOnHover={false}
+      height={200}
     />
   );
 };

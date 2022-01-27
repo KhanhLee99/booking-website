@@ -24,11 +24,11 @@ function CommonUserProfile(props) {
                             <div className="user-profile-menu-wrap fl-wrap block_box pd-0">
                                 <div className="user-profile-menu no-border">
                                     <ul className="no-list-style">
-                                        <li><Link to="/me/profile">Thông tin cá nhân</Link></li>
-                                        <li><Link to="/me/change-password">Thay đổi mật khẩu</Link></li>
-                                        <li><a href="dashboard-myprofile.html">Thanh toán</a></li>
-                                        <li><Link to="/me/favorite">Danh sách yêu thích</Link></li>
-                                        <li><Link to="/me/bookings">Bookings</Link></li>
+                                        <li className='pl-0'><Link to="/me/profile"><i className="fal fa-user-edit" />Thông tin cá nhân</Link></li>
+                                        <li className='pl-0'><Link to="/me/change-password"><i className="fal fa-key" />Thay đổi mật khẩu</Link></li>
+                                        <li className='pl-0'><a href="dashboard-myprofile.html"><i className="fal fa-money-check" />Thanh toán</a></li>
+                                        <li className='pl-0'><Link to="/me/favorite"><i className="fal fa-heart" />Danh sách yêu thích</Link></li>
+                                        <li className='pl-0'><Link to="/me/bookings"><i className="fal fa-calendar-check" />Bookings</Link></li>
                                     </ul>
                                 </div>
 

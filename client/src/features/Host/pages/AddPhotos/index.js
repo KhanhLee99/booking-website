@@ -8,6 +8,8 @@ import uploadApi from '../../../../api/uploadApi';
 import FooterHost from '../../components/FooterHost';
 import listingApi from '../../../../api/listingApi';
 import Loading from '../../../../components/Loading/Loading';
+import TabAddListing from '../../components/TabAddListing/TabAddListing';
+import CommonAddListing from '../../../../components/CommonAddListing/CommonAddListing';
 
 AddPhotos.propTypes = {
 
@@ -100,7 +102,7 @@ function AddPhotos(props) {
         const fetchListingDetail = async () => {
             // setLoadingListingDetail(true)
             await listingApi.getListingById(id).then(res => {
-                setPhotos(res.data.photos);
+                setPhotos(res.data.data.photos);
                 setPercent(100 / 4);
             });
         }
@@ -136,39 +138,42 @@ function AddPhotos(props) {
     }
 
     return (
-        <div className='row'>
-            {loading && <Loading />}
-            <div className='col-8'>
-                <div id="add-listing">
-                    <h3 className='h3_title'>Gallery</h3>
-                    <div className="add-listing-section">
-                        <div className="submit-section">
-                            {/* <form action="/file-upload" className="dropzone" /> */}
-                            <div {...getRootProps({ className: 'dropzone' })}>
-                                <input {...getInputProps()} />
-                                {
-                                    (files.length == 0) ? <><i className='sl sl-icon-plus'></i> Click here or drop files to upload</> : null
-                                }
+        <CommonAddListing>
+            <TabAddListing id={id} />
+            <div className='row'>
+                {loading && <Loading />}
+                <div className='col-8'>
+                    <div id="add-listing">
+                        <h3 className='h3_title'>Gallery</h3>
+                        <div className="add-listing-section">
+                            <div className="submit-section">
+                                {/* <form action="/file-upload" className="dropzone" /> */}
+                                <div {...getRootProps({ className: 'dropzone' })}>
+                                    <input {...getInputProps()} />
+                                    {
+                                        (files.length == 0) ? <><i className='sl sl-icon-plus'></i> Click here or drop files to upload</> : null
+                                    }
 
-                                <aside style={thumbsContainer}>
-                                    {defaultThumbs}
-                                    {thumbs}
-                                </aside>
+                                    <aside style={thumbsContainer}>
+                                        {defaultThumbs}
+                                        {thumbs}
+                                    </aside>
+                                </div>
                             </div>
                         </div>
+                        <FooterHost
+                            loading={loading}
+                            handleBack={handleBack}
+                            handleNext={handleNext}
+                            hiddenBackButton={false}
+                            isHandleClick={true}
+                            now={percent}
+                        />
                     </div>
-                    <FooterHost
-                        loading={loading}
-                        handleBack={handleBack}
-                        handleNext={handleNext}
-                        hiddenBackButton={false}
-                        isHandleClick={true}
-                        now={percent}
-                    />
                 </div>
+                <RightSide />
             </div>
-            <RightSide />
-        </div>
+        </CommonAddListing>
     );
 }
 

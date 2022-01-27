@@ -11,6 +11,8 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import Popup from 'reactjs-popup';
 import 'reactjs-popup/dist/index.css';
 import listingApi from '../../../../api/listingApi';
+import CommonAddListing from '../../../../components/CommonAddListing/CommonAddListing';
+import TabAddListing from '../../components/TabAddListing/TabAddListing';
 
 AddName.propTypes = {
 
@@ -70,8 +72,8 @@ function AddName(props) {
     useEffect(() => {
         const fetchListingDetail = async () => {
             await listingApi.getListingById(id).then(res => {
-                setName(res.data.listing.name);
-                setDescription(res.data.listing.description);
+                setName(res.data.data.listing.name);
+                setDescription(res.data.data.listing.description);
                 setPercent(100 / 3);
             });
         }
@@ -80,87 +82,90 @@ function AddName(props) {
     }, []);
 
     return (
-        <div className='row'>
-            <div className='col-8'>
-                <Formik
-                    enableReinitialize
-                    initialValues={{ title: name, description: description }}
-                    validationSchema={Yup.object({
-                        title: Yup.string()
-                            // .max(15, 'Must be 15 characters or less')
-                            .required('Required'),
+        <CommonAddListing>
+            <TabAddListing id={id} />
+            <div className='row'>
+                <div className='col-8'>
+                    <Formik
+                        enableReinitialize
+                        initialValues={{ title: name, description: description }}
+                        validationSchema={Yup.object({
+                            title: Yup.string()
+                                // .max(15, 'Must be 15 characters or less')
+                                .required('Required'),
 
-                        // description: Yup.string()
-                        //     .required('Required'),
-                    })}
-                    onSubmit={(values, { setSubmitting }) => {
-                        handleNext(values);
-                    }}
-                >
-                    {formik => (
-                        <form onSubmit={formik.handleSubmit}>
-                            <div id="add-listing">
-                                <h3 className='h3_title'>Tiêu đề và mô tả</h3>
-                                <div className="add-listing-section">
-                                    <div className="row with-forms">
-                                        <div className="col-md-12">
-                                            <label className='custom_form_label'>Tên chỗ nghỉ của bạn là:</label>
-                                            <p>Hãy thu hút khách hàng bằng cách đặt tiêu đề chỗ nghỉ của bạn trở nên đặc biệt.</p>
-                                            <input
-                                                type="text"
-                                                placeholder="Listing title"
-                                                {...formik.getFieldProps('title')}
-                                            // style={custom_form_input}
-                                            />
+                            // description: Yup.string()
+                            //     .required('Required'),
+                        })}
+                        onSubmit={(values, { setSubmitting }) => {
+                            handleNext(values);
+                        }}
+                    >
+                        {formik => (
+                            <form onSubmit={formik.handleSubmit}>
+                                <div id="add-listing">
+                                    <h3 className='h3_title'>Tiêu đề và mô tả</h3>
+                                    <div className="add-listing-section">
+                                        <div className="row with-forms">
+                                            <div className="col-md-12">
+                                                <label className='custom_form_label'>Tên chỗ nghỉ của bạn là:</label>
+                                                <p>Hãy thu hút khách hàng bằng cách đặt tiêu đề chỗ nghỉ của bạn trở nên đặc biệt.</p>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Listing title"
+                                                    {...formik.getFieldProps('title')}
+                                                // style={custom_form_input}
+                                                />
+                                            </div>
+
+                                            <div className="col-md-12">
+                                                <label className='custom_form_label'>Mô tả:</label>
+                                                <p>Chia sẻ với khách hàng một vài thông tin ngắn gọn và nổi bật về chỗ nghỉ này của bạn.</p>
+
+                                                <CKEditor
+
+                                                    editor={ClassicEditor}
+                                                    data={description == null ? '' : `${description}`}
+                                                    onReady={editor => {
+                                                        // You can store the "editor" and use when it is needed.
+                                                        console.log('Editor is ready to use!', editor);
+                                                    }}
+                                                    onChange={(event, editor) => {
+                                                        const data = editor.getData();
+                                                        setDescription(data);
+                                                        console.log({ event, editor, data });
+                                                    }}
+                                                    onBlur={(event, editor) => {
+                                                        console.log('Blur.', editor);
+                                                    }}
+                                                    onFocus={(event, editor) => {
+                                                        console.log('Focus.', editor);
+                                                    }}
+                                                />
+                                            </div>
                                         </div>
 
-                                        <div className="col-md-12">
-                                            <label className='custom_form_label'>Mô tả:</label>
-                                            <p>Chia sẻ với khách hàng một vài thông tin ngắn gọn và nổi bật về chỗ nghỉ này của bạn.</p>
-
-                                            <CKEditor
-
-                                                editor={ClassicEditor}
-                                                data={description == null ? '' : `${description}`}
-                                                onReady={editor => {
-                                                    // You can store the "editor" and use when it is needed.
-                                                    console.log('Editor is ready to use!', editor);
-                                                }}
-                                                onChange={(event, editor) => {
-                                                    const data = editor.getData();
-                                                    setDescription(data);
-                                                    console.log({ event, editor, data });
-                                                }}
-                                                onBlur={(event, editor) => {
-                                                    console.log('Blur.', editor);
-                                                }}
-                                                onFocus={(event, editor) => {
-                                                    console.log('Focus.', editor);
-                                                }}
-                                            />
-                                        </div>
                                     </div>
-
                                 </div>
-                            </div>
 
-                            <FooterHost
-                                loading={loading}
-                                handleBack={handleBack}
-                                handleNext={handleNext}
-                                hiddenBackButton={false}
-                                isHandleClick={true}
-                                now={percent}
-                            />
+                                <FooterHost
+                                    loading={loading}
+                                    handleBack={handleBack}
+                                    handleNext={handleNext}
+                                    hiddenBackButton={false}
+                                    isHandleClick={true}
+                                    now={percent}
+                                />
 
-                        </form>
-                    )}
+                            </form>
+                        )}
 
-                </Formik>
+                    </Formik>
+                </div>
+                <RightSide />
+
             </div>
-            <RightSide />
-
-        </div>
+        </CommonAddListing>
     );
 }
 

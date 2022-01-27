@@ -53,7 +53,7 @@ class FavoriteController extends Controller
 
             if ($validator->fails()) {
                 $this->response['errorMessage'] = $validator->errors();
-                return response()->json($this->response);
+                return response()->json($this->response, 400);
             }
             if ($listing_id = $request->listing_id) {
                 $user_login = $request->user('api');
@@ -61,9 +61,12 @@ class FavoriteController extends Controller
                 if ($favorite = Favorite::where([
                     ["user_id", $user_login->id],
                     ["listing_id", $listing_id]
-                ])->get()) {
-                    if ($favorite->each->delete()) {
-                        $this->response['status'] = 'success';
+                ])->first()) {
+                    if ($favorite->delete()) {
+                        $this->response = [
+                            'status' => 'success',
+                            'message' => 'Unsaved'
+                        ];
                         return response()->json($this->response, $this->success_code);
                     }
                 } else {
@@ -73,12 +76,14 @@ class FavoriteController extends Controller
                     ];
 
                     if (Favorite::create($data)) {
-                        $this->response['status'] = 'success';
+                        $this->response = [
+                            'status' => 'success',
+                            'message' => 'Saved'
+                        ];
                         return response()->json($this->response, $this->success_code);
                     }
                 }
-
-                return response()->json($this->response);
+                return response()->json($this->response, 400);
             }
             return response()->json($this->response);
         } catch (Exception $e) {

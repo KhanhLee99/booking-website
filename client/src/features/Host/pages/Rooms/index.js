@@ -8,6 +8,8 @@ import bedApi from '../../../../api/bedApi';
 import hostApi from '../../../../api/hostApi';
 import { useHistory, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import CommonAddListing from '../../../../components/CommonAddListing/CommonAddListing';
+import TabAddListing from '../../components/TabAddListing/TabAddListing';
 
 Rooms.propTypes = {
 
@@ -118,84 +120,86 @@ function Rooms(props) {
     }, [])
 
     return (
-        <div className='row'>
-            <div className='col-7'>
-                <div id="add-listing">
-                    {/* Section */}
-                    <h3 className='h3_title'>Chính sách giá</h3>
-                    <div className="add-listing-section">
+        <CommonAddListing>
+            <TabAddListing id={id} />
+            <div className='row'>
+                <div className='col-7'>
+                    <div id="add-listing">
+                        {/* Section */}
+                        <h3 className='h3_title'>Chính sách giá</h3>
+                        <div className="add-listing-section">
 
-                        <div className="row with-forms">
-                            <div className="col-md-12">
-                                {/* <div className='col-md-10'> */}
-                                <div className="panel-dropdown-content">
-                                    {/* Quantity Buttons */}
-                                    <h5 style={title}>Bạn muốn chào đón bao nhiêu khách ?</h5>
-                                    <IncDecFormQty
-                                        title='Khách'
-                                        type='guests'
-                                        qty={qtyGuests}
-                                        handleInc={handleInc}
-                                        handleDec={handleDec}
-                                    />
-                                    <h5 style={title}>How many bedrooms can guest use ?</h5>
+                            <div className="row with-forms">
+                                <div className="col-md-12">
+                                    {/* <div className='col-md-10'> */}
+                                    <div className="panel-dropdown-content">
+                                        {/* Quantity Buttons */}
+                                        <h5 style={title}>Bạn muốn chào đón bao nhiêu khách ?</h5>
+                                        <IncDecFormQty
+                                            title='Khách'
+                                            type='guests'
+                                            qty={qtyGuests}
+                                            handleInc={handleInc}
+                                            handleDec={handleDec}
+                                        />
+                                        <h5 style={title}>How many bedrooms can guest use ?</h5>
 
-                                    <IncDecFormQty
-                                        title='Phòng ngủ'
-                                        type='bedrooms'
-                                        qty={qtyBedrooms}
-                                        handleInc={handleInc}
-                                        handleDec={handleDec}
-                                    />
+                                        <IncDecFormQty
+                                            title='Phòng ngủ'
+                                            type='bedrooms'
+                                            qty={qtyBedrooms}
+                                            handleInc={handleInc}
+                                            handleDec={handleDec}
+                                        />
 
-                                    <h5 style={title}>How many beds can guest use ?</h5>
-                                    <IncDecFormQty
-                                        title='Giường'
-                                        type='beds'
-                                        qty={qtyBeds}
-                                        handleInc={handleInc}
-                                        handleDec={handleDec}
-                                    />
+                                        <h5 style={title}>How many beds can guest use ?</h5>
+                                        <IncDecFormQty
+                                            title='Giường'
+                                            type='beds'
+                                            qty={qtyBeds}
+                                            handleInc={handleInc}
+                                            handleDec={handleDec}
+                                        />
 
-                                    {bedroomArr.map((item, index) => {
-                                        return (
-                                            <AddBeds
-                                                key={index}
-                                                number={index + 1}
-                                                bedTypes={bedTypes}
-                                                detailRooms={detailRooms}
-                                            />
-                                        )
-                                    })}
+                                        {bedroomArr.map((item, index) => {
+                                            return (
+                                                <AddBeds
+                                                    key={index}
+                                                    number={index + 1}
+                                                    bedTypes={bedTypes}
+                                                    detailRooms={detailRooms}
+                                                />
+                                            )
+                                        })}
 
-                                    <h5 style={title}>How many bathrooms can guest use ?</h5>
-                                    <IncDecFormQty
-                                        title='Phòng tắm'
-                                        type='bathrooms'
-                                        qty={qtyBathrooms}
-                                        handleInc={handleInc}
-                                        handleDec={handleDec}
-                                    />
+                                        <h5 style={title}>How many bathrooms can guest use ?</h5>
+                                        <IncDecFormQty
+                                            title='Phòng tắm'
+                                            type='bathrooms'
+                                            qty={qtyBathrooms}
+                                            handleInc={handleInc}
+                                            handleDec={handleDec}
+                                        />
+                                    </div>
+                                    {/* </div> */}
                                 </div>
-                                {/* </div> */}
                             </div>
+                            {/* Row / End */}
                         </div>
-                        {/* Row / End */}
                     </div>
-                </div>
 
-                <FooterHost
-                    loading={loading}
-                    handleBack={handleBack}
-                    handleNext={handleNext}
-                    hiddenBackButton={false}
-                    isHandleClick={true}
-                    now={percent}
-                />
+                    <FooterHost
+                        loading={loading}
+                        handleBack={handleBack}
+                        handleNext={handleNext}
+                        hiddenBackButton={false}
+                        isHandleClick={true}
+                        now={percent}
+                    />
+                </ div>
+                <RightSide />
             </ div>
-            <RightSide />
-        </ div>
-
+        </CommonAddListing>
     );
 }
 

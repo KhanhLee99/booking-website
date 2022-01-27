@@ -10,11 +10,9 @@ CommonAddListing.propTypes = {
 };
 
 function CommonAddListing(props) {
-    const { id } = useParams();
     return (
         <div className='k-wrap'>
             <HeaderAddListing />
-            <TabAddListing id={id} />
             <div className='k-content'>
                 <div className='container'>
                     <div className='row'>

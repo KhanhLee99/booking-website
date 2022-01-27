@@ -12,6 +12,7 @@ import CommonUserProfile from './components/CommonUserProfile/CommonUserProfile'
 import Loading from './components/Loading/Loading';
 import ReactNotificationComponent from './components/Notification/ReactNotification';
 import { PrivateRouteAddListing, PrivateRouteAdmin, PrivateRouteHost, PrivateRouteMe } from './components/PrivateRoute';
+import { ParentChild } from './components/Test/ParentChild';
 import AdminFeature from './features/Admin';
 import AdminLogin from './features/Admin/pages/AdminLogin/AdminLogin';
 import Home from './features/Home/pages';
@@ -73,7 +74,7 @@ function App() {
 
 
   return (
-    // <ListingItemSkeleton />
+    // <ParentChild />
     <>
       {show ? (
         <ReactNotificationComponent
@@ -93,8 +94,8 @@ function App() {
               <Route path="/hosting" component={MessageHost} />
 
               <PrivateRouteHost path="/host" component={HostFeature} />
-              <PrivateRouteAddListing path="/become-host" component={AddListingFeature} layout={CommonAddListing} />
-              <PrivateRouteAdmin path="/admin" component={AdminFeature} layout={CommonAdmin} />
+              <PrivateRouteAddListing path="/become-host" component={AddListingFeature} />
+              <PrivateRouteAdmin path="/admin" component={AdminFeature} />
               <PrivateRouteMe path="/me" component={UserProfileFeature} layout={CommonUserProfile} />
 
               <Route path="/listing/:id" component={ListingDetail} />

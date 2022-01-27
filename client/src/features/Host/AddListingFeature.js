@@ -22,6 +22,7 @@ AddListingFeature.propTypes = {
 function AddListingFeature(props) {
 
     const match = useRouteMatch();
+    console.log(props);
 
     return (
         <>

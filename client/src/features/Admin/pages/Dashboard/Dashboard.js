@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Dashboard.scss';
+import CommonAdmin from '../../../../components/CommonAdmin/CommonAdmin';
 
 Dashboard.propTypes = {
 
@@ -8,7 +9,7 @@ Dashboard.propTypes = {
 
 function Dashboard(props) {
     return (
-        <>
+        <CommonAdmin>
             <div className="dashboard-title fl-wrap">
                 <h3>Dashboard</h3>
             </div>
@@ -79,7 +80,7 @@ function Dashboard(props) {
 
                 </div>
             </div>
-        </>
+        </CommonAdmin>
     );
 }
 

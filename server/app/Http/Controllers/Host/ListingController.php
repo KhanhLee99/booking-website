@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Host;
 
+use App\Favorite;
 use App\Http\Controllers\Admin\AmenityController;
 use App\Http\Controllers\Admin\AmenityTypeController;
 use App\Http\Controllers\Controller;
@@ -372,7 +373,7 @@ class ListingController extends Controller
         }
     }
 
-    function get_listing_by_id($id)
+    function get_listing_by_id(Request $request, $id)
     {
         try {
             $listing = Listing::find($id);
@@ -398,10 +399,25 @@ class ListingController extends Controller
                     // ->orderBy('review_listing.id', 'DESC')
                     ->select('review_listing.id', 'review_listing.note', 'review_listing.rating', 'review_listing.created_at', 'users.name', 'users.avatar_url')
                     ->get();
-                return $output;
+                if ($user_login = $request->user('api')) {
+                    $favorite = Favorite::where([
+                        ["user_id", $user_login->id],
+                        ["listing_id", $id]
+                    ])->first();
+
+                    $output['saved'] = $favorite ? true : false;
+                } else {
+                    $output['saved'] = false;
+                }
+
+                $this->response = [
+                    'status' => 'success',
+                    'data' => $output
+                ];
+
+                return response()->json($this->response, $this->success_code);
             }
-            $this->response['status'] = 'fail';
-            return response()->json($this->response);
+            return response()->json($this->response, 400);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);

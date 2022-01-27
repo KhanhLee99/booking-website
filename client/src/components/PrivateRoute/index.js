@@ -47,7 +47,7 @@ export function PrivateRouteHost({ component: Component, ...rest }) {
 	)
 }
 
-export function PrivateRouteAdmin({ component: Component, layout: Layout, ...rest }) {
+export function PrivateRouteAdmin({ component: Component, ...rest }) {
 	const loggedInUser = useSelector((state) => state.userSlice.current);
 	const isLoggedIn = !!loggedInUser.id;
 
@@ -56,9 +56,7 @@ export function PrivateRouteAdmin({ component: Component, layout: Layout, ...res
 			{...rest}
 			render={(props) => {
 				return isLoggedIn ? loggedInUser.role_id == 1 ? (
-					<Layout {...props}>
-						<Component {...props} />
-					</Layout>
+					<Component {...rest} {...props} />
 				) : (
 					<Redirect to='/admin/login' />
 				) : (
@@ -69,7 +67,7 @@ export function PrivateRouteAdmin({ component: Component, layout: Layout, ...res
 	)
 }
 
-export function PrivateRouteAddListing({ component: Component, layout: Layout, ...rest }) {
+export function PrivateRouteAddListing({ component: Component, ...rest }) {
 	const loggedInUser = useSelector((state) => state.userSlice.current);
 	const isLoggedIn = !!loggedInUser.id;
 
@@ -78,9 +76,10 @@ export function PrivateRouteAddListing({ component: Component, layout: Layout, .
 			{...rest}
 			render={(props) => {
 				return isLoggedIn ? loggedInUser.role_id == 2 ? (
-					<Layout {...props}>
-						<Component {...props} />
-					</Layout>
+					<Component {...props} />
+
+					// <Layout {...props}>
+					// </Layout>
 				) : (
 					<Redirect to='/host/login' />
 				) : (

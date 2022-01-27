@@ -35,7 +35,7 @@ class AdminListingController extends Controller
     public function get_listing_active()
     {
         try {
-            $listing_active = Listing::where([['status', 'active'], ['is_verified', 1]])->orderBy('id', 'desc')->get();
+            $listing_active = Listing::where('is_verified', 1)->orderBy('id', 'desc')->get();
             if ($listing_active) {
                 $this->response = [
                     'status' => true,
@@ -54,12 +54,12 @@ class AdminListingController extends Controller
     {
         try {
             if (Listing::find($id)->update([
-                'is_public' => true
+                'is_verified' => true
             ])) {
                 $this->response['status'] = true;
                 return response()->json($this->response, $this->success_code);
             }
-            return response()->json($this->response);
+            return response()->json($this->response, 400);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);

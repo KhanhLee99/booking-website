@@ -11,6 +11,8 @@ import hostApi from '../../../../api/hostApi';
 import { useHistory, useParams } from 'react-router-dom';
 import listingApi from '../../../../api/listingApi';
 import Loading from '../../../../components/Loading/Loading';
+import CommonAddListing from '../../../../components/CommonAddListing/CommonAddListing';
+import TabAddListing from '../../components/TabAddListing/TabAddListing';
 
 Amenity.propTypes = {
 
@@ -109,49 +111,52 @@ function Amenity(props) {
     }, []);
 
     return (
-        <div className='row'>
-            {loading && <Loading />}
-            <div className='col-8'>
-                <div id="add-listing">
-                    <h3 className='h3_title'>Amenities</h3>
+        <CommonAddListing>
+            <TabAddListing id={id} />
+            <div className='row'>
+                {loading && <Loading />}
+                <div className='col-8'>
+                    <div id="add-listing">
+                        <h3 className='h3_title'>Amenities</h3>
 
-                    <div className="add-listing-section">
-                        {
-                            validateErr.length > 0 ? (
-                                <p style={{ color: "red" }}>{validateErr}</p>
-                            ) : null
-                        }
-                        {amenityTypes.length ? amenityTypes.map((type, index) => {
-                            return (
-                                <div key={index}>
-                                    <AmenityTypeItem
-                                        name={type.name}
-                                    />
+                        <div className="add-listing-section">
+                            {
+                                validateErr.length > 0 ? (
+                                    <p style={{ color: "red" }}>{validateErr}</p>
+                                ) : null
+                            }
+                            {amenityTypes.length ? amenityTypes.map((type, index) => {
+                                return (
+                                    <div key={index}>
+                                        <AmenityTypeItem
+                                            name={type.name}
+                                        />
 
-                                    <ListAmenity
-                                        amenities={amenities}
-                                        type={type}
-                                        handleCheckboxChange={handleCheckboxChange}
-                                        listAmenityChecked={listAmenityChecked}
-                                    />
-                                </div>
-                            )
-                        }) : <PulseLoading colorLoading='#000000' />}
-                        {/* Row / End */}
+                                        <ListAmenity
+                                            amenities={amenities}
+                                            type={type}
+                                            handleCheckboxChange={handleCheckboxChange}
+                                            listAmenityChecked={listAmenityChecked}
+                                        />
+                                    </div>
+                                )
+                            }) : <PulseLoading colorLoading='#000000' />}
+                            {/* Row / End */}
+                        </div>
                     </div>
-                </div>
 
-                <FooterHost
-                    loading={loading}
-                    handleBack={handleBack}
-                    handleNext={handleNext}
-                    hiddenBackButton={false}
-                    isHandleClick={true}
-                    now={percent}
-                />
+                    <FooterHost
+                        loading={loading}
+                        handleBack={handleBack}
+                        handleNext={handleNext}
+                        hiddenBackButton={false}
+                        isHandleClick={true}
+                        now={percent}
+                    />
+                </div>
+                <RightSide />
             </div>
-            <RightSide />
-        </div>
+        </CommonAddListing>
     );
 }
 

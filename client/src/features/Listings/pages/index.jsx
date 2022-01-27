@@ -72,6 +72,7 @@ function ListingsLocation(props) {
         }
         return s;
     });
+
     const [filterType, setFilterType] = useState(() => {
         let initFilterType = [];
         if (qs.pt) {
@@ -83,6 +84,7 @@ function ListingsLocation(props) {
         }
         return initFilterType;
     });
+
     const [filterStar, setFilterStar] = useState(() => {
         let initFilterStar = [];
         if (qs.st) {
@@ -172,7 +174,32 @@ function ListingsLocation(props) {
         })
     }
 
+    const handleSave = async (listing_id) => {
 
+        if (isLoggedIn) {
+            try {
+                const params = {
+                    listing_id: listing_id,
+                    user_id: loggedInUser.id
+                }
+                setLoading(true);
+                await listingApi.favoriteListing(params).then(res => {
+                    let tmp = [...listings];
+                    let index = tmp.findIndex(listing => listing.listing_id === listing_id);
+                    if (index != -1) {
+                        tmp[index].saved = !tmp[index].saved;
+                        setListings(tmp);
+                    }
+                    setLoading(false);
+                }).catch(err => {
+                    console.log(err.message);
+                    setLoading(false);
+                })
+            } catch (err) {
+                console.log(err.message);
+            }
+        }
+    }
 
     useEffect(() => {
         const getNameCity = () => {
@@ -223,10 +250,9 @@ function ListingsLocation(props) {
                             city={city}
                         />
                         <ListListingsLocation
-                            loggedInUser={loggedInUser}
+                            handleSave={handleSave}
                             isLoggedIn={isLoggedIn}
                             listings={listings}
-                            loading={loading}
                         />
                         {totalPages > 0 ? <ReactPaginate
                             previousLabel={

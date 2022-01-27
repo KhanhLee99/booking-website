@@ -67,7 +67,7 @@ const scroll_nav_wrapper_opt_btn = {
 }
 
 function TabHorizontal(props) {
-    const { handleSave, isLoggedIn } = props;
+    const { handleSave, isLoggedIn, saved } = props;
 
     const handleFavorite = (e) => {
         e.preventDefault();
@@ -88,12 +88,12 @@ function TabHorizontal(props) {
                 <div className="scroll-nav-wrapper-opt" style={scroll_nav_wrapper_opt}>
                     {!isLoggedIn ?
                         <LoginModal>
-                            <a href="#" className="scroll-nav-wrapper-opt-btn" style={scroll_nav_wrapper_opt_btn}> <i className="fas fa-heart" style={{ marginRight: '6px' }} /> Save </a>
+                            <a href="#" style={scroll_nav_wrapper_opt_btn}> <i className="fas fa-heart" style={{ marginRight: '6px' }} /> Save </a>
                         </LoginModal>
                         :
-                        <a href="#" onClick={handleFavorite} className="scroll-nav-wrapper-opt-btn" style={scroll_nav_wrapper_opt_btn}> <i className="fas fa-heart" style={{ marginRight: '6px' }} /> Save </a>
+                        <a href="#" onClick={handleFavorite} className={saved ? 'scroll-nav-wrapper-opt-btn' : ''} style={scroll_nav_wrapper_opt_btn}> <i className="fas fa-heart" style={{ marginRight: '6px' }} /> Save </a>
                     }
-                    <a href="#" className="scroll-nav-wrapper-opt-btn showshare" style={scroll_nav_wrapper_opt_btn}> <i className="fas fa-share" style={{ marginRight: '6px' }} /> Share </a>
+                    <a href="#" className="showshare" style={scroll_nav_wrapper_opt_btn}> <i className="fas fa-share" style={{ marginRight: '6px' }} /> Share </a>
                     <div className="share-holder hid-share">
                         <div className="share-container  isShare" />
                     </div>

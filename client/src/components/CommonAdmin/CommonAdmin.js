@@ -9,21 +9,34 @@ CommonAdmin.propTypes = {
 
 };
 
-function CommonAdmin(props) {
+function CommonAdmin({ children }) {
     const [showNoti, setShowNoti] = useState(false);
+    const [title, setTitle] = useState('');
+    const [body, setBody] = useState('');
 
-    const show = () => {
+
+    const showNotification = (title, body) => {
+        console.log(title, body);
+        setTitle(title);
+        setBody(body);
         setShowNoti(true);
     }
 
+    const childrenWithProps = React.Children.map(children, child => {
+        // Checking isValidElement is the safe way and avoids a typescript
+        // error too.
+        if (React.isValidElement(child)) {
+            return React.cloneElement(child, { showNotification });
+        }
+        return child;
+    });
+
     return (
         <>
-            {showNoti ? (
-                <ReactNotificationComponent
-                />
-            ) : (
-                <></>
-            )}
+            {showNoti && <ReactNotificationComponent
+                title={title}
+                body={body}
+            />}
 
             <div id=''>
                 <HeaderAddListing />
@@ -64,7 +77,7 @@ function CommonAdmin(props) {
                         </div>
 
                         <div className="col-md-9">
-                            {props.children}
+                            {childrenWithProps}
                         </div>
                     </div>
                 </section>

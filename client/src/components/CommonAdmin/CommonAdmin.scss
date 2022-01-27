@@ -96,6 +96,10 @@ section.main-dashboard-sec {
     padding-bottom: 10px;
     float: left;
     width: 100%;
+
+    & ul {
+        padding-left: 0;
+    }
 }
 
 .user-profile-menu h3 {
@@ -116,10 +120,11 @@ section.main-dashboard-sec {
     text-align: left;
     float: left;
     border-bottom: 1px solid #eee;
+    padding-left: 15px;
 }
 
 .user-profile-menu li a {
-    font-weight: 600;
+    font-weight: 700;
     color: #7d93b2;
     position: relative;
     display: block;
@@ -129,7 +134,7 @@ section.main-dashboard-sec {
 .user-profile-menu li a i {
     margin-right: 14px;
     position: relative;
-    top: 2px;
+    top: 5px;
     width: 12px;
     text-align: center;
     float: left;
@@ -269,8 +274,4 @@ h4 {
 #dash_menu {
     position: fixed;
     width: 18%;
-}
-
-.dashboard-list-box {
-    margin-top: 0;
 }
