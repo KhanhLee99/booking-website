@@ -7,30 +7,74 @@ import moment from 'moment';
 import Popup from 'reactjs-popup';
 import AddReview from '../../../Listings/components/ListReview/AddReview/AddReview';
 import AvatarPlaceholder from '../../../../components/Placeholder/AvatarPlaceholder/AvatarPlaceholder';
+import { ReservationStatus } from '../../../../app/constant';
+import { alertConfirm } from '../../../../@helper/alertComfirm';
 
 
 UserBookingItem.propTypes = {
 
 };
 
-const color_reservation_status = (status_id) => {
-    if (status_id === 1) {
-        return {
-            border: '2px solid #f6cf48',
-            color: '#f6cf48',
-        }
+export const color_reservation_status = (status_id) => {
+    switch (status_id) {
+        case ReservationStatus.REQUEST.id:
+            return {
+                borderColor: ReservationStatus.REQUEST.color,
+                color: ReservationStatus.REQUEST.color,
+            }
+        case ReservationStatus.ACCEPTED.id:
+            return {
+                borderColor: ReservationStatus.ACCEPTED.color,
+                color: ReservationStatus.ACCEPTED.color,
+            }
+        case ReservationStatus.PAID.id:
+            return {
+                borderColor: ReservationStatus.PAID.color,
+                color: ReservationStatus.PAID.color,
+            }
+        case ReservationStatus.CANCELLED.id:
+            return {
+                borderColor: ReservationStatus.CANCELLED.color,
+                color: ReservationStatus.CANCELLED.color,
+            }
+        case ReservationStatus.CHECKIN.id:
+            return {
+                borderColor: ReservationStatus.CHECKIN.color,
+                color: ReservationStatus.CHECKIN.color,
+            }
+        case ReservationStatus.CHECKOUT.id:
+            return {
+                borderColor: ReservationStatus.CHECKOUT.color,
+                color: ReservationStatus.CHECKOUT.color,
+            }
+        case ReservationStatus.DECLINE.id:
+            return {
+                borderColor: ReservationStatus.DECLINE.color,
+                color: ReservationStatus.DECLINE.color,
+            }
+        default:
+            return;
     }
-    if (status_id === 2) {
-        return {
-            border: '2px solid #7cccb2',
-            color: '#7cccb2',
-        }
-    }
-    if (status_id === 4) {
-        return {
-            border: '2px solid #5b5b68',
-            color: '#5b5b68',
-        }
+}
+
+export const statusText = (status_id) => {
+    switch (status_id) {
+        case ReservationStatus.REQUEST.id:
+            return ReservationStatus.REQUEST.name;
+        case ReservationStatus.ACCEPTED.id:
+            return ReservationStatus.ACCEPTED.name;
+        case ReservationStatus.PAID.id:
+            return ReservationStatus.PAID.name
+        case ReservationStatus.CANCELLED.id:
+            return ReservationStatus.CANCELLED.name
+        case ReservationStatus.CHECKIN.id:
+            return ReservationStatus.CHECKIN.name
+        case ReservationStatus.CHECKOUT.id:
+            return ReservationStatus.CHECKOUT.name
+        case ReservationStatus.DECLINE.id:
+            return ReservationStatus.DECLINE.name
+        default:
+            return;
     }
 }
 
@@ -46,11 +90,13 @@ function UserBookingItem(props) {
 
     const cancelReservation = (e) => {
         e.preventDefault();
-        handleCancel(reservation.id);
+        alertConfirm('Confirm to submit', 'Are you sure to cancel this reservation ?', () => handleCancel(reservation.id));
     }
 
     const checkBtnCancel = () => {
-        if (reservation.reservation_status_id != 4) {
+        let arr = [ReservationStatus.CANCELLED.id, ReservationStatus.DECLINE.id, ReservationStatus.CHECKOUT.id];
+
+        if (arr.includes(reservation.reservation_status_id) == false) {
             return <a href='#' className='cancel-reservation-btn' onClick={(e) => cancelReservation(e)}>Huỷ đặt phòng</a>
         }
         return null;
@@ -84,7 +130,6 @@ function UserBookingItem(props) {
                                     close={close}
                                 />
                             )}
-
                         </Popup >
                     </div>
                 </>
@@ -96,7 +141,6 @@ function UserBookingItem(props) {
     }
 
     return (
-
         <div className="dashboard-list fl-wrap" style={{ border: '1px solid #e5e7f2', marginBottom: '20px' }}>
             <div className='fl-wrap reservation-head'>
                 <div className='host-info'>
@@ -109,7 +153,9 @@ function UserBookingItem(props) {
 
                 <div className="k-booking-status">
                     {checkBtnCancel()}
-                    <span className='status-text' style={color_reservation_status(reservation.reservation_status_id)}>{reservation.status}</span>
+                    <span className='status-text' style={color_reservation_status(reservation.reservation_status_id)}>
+                        {statusText(reservation.reservation_status_id)}
+                    </span>
                 </div>
             </div>
 

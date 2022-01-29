@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import reservationApi from '../../../../api/reservationApi';
 import { datediff, parseDate } from '../../../../@helper/helper';
 import moment from 'moment';
+import { ReservationStatus } from '../../../../app/constant';
 
 ReservationDetail.propTypes = {
 
@@ -46,13 +47,13 @@ function ReservationDetail(props) {
     }
     const handleAccept = async (e) => {
         e.preventDefault();
-        await reservationApi.editStatusReservation(id, { reservation_status_id: 2 });
+        await reservationApi.editStatusReservation(id, { reservation_status_id: ReservationStatus.ACCEPTED.id });
     }
 
     const handleDecline = async (e) => {
         e.preventDefault();
 
-        await reservationApi.editStatusReservation(id, { reservation_status_id: 7 });
+        await reservationApi.editStatusReservation(id, { reservation_status_id: ReservationStatus.DECLINE.id });
     }
     useEffect(() => {
         fetchReservation();

@@ -8,6 +8,8 @@ PayPal.propTypes = {
 function PayPal(props) {
     const paypal = useRef();
 
+    const { total_usd, handleNext } = props;
+
     useEffect(() => {
         window.paypal
             .Buttons({
@@ -20,14 +22,17 @@ function PayPal(props) {
                                 amount: {
                                     currency_code: "USD",
                                     value: 0.01,
+                                    // value: total_usd.toFixed(1),
                                 },
                             },
                         ],
                     });
                 },
                 onApprove: async (data, actions) => {
-                    const order = await actions.order.capture();
-                    console.log(order);
+                    await actions.order.capture().then(order => {
+                        console.log(order);
+                        handleNext();
+                    });
                 },
                 onError: (err) => {
                     console.log(err);

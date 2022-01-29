@@ -31,33 +31,26 @@ class ReservationController extends Controller
     {
         try {
             $filter = $request->filter;
+            $query = $data = DB::table('reservation')
+                ->join('users', 'users.id', '=', 'reservation.guest_id')
+                ->join('listing', 'listing.id', '=', 'reservation.listing_id')
+                ->where('listing.user_id', $host_id)
+                ->orderBy('reservation.id', 'desc')
+                ->join('reservation_status', 'reservation_status.id', '=', 'reservation.reservation_status_id')
+                ->select('reservation.*', 'listing.name as listing_name', 'listing.street_address', 'listing.avatar_url as thumb_img', 'users.name as user_name', 'users.avatar_url as user_avatar_url', 'users.email as user_email', 'users.phone_number as user_phone', 'reservation_status.name as status');
             switch ($filter) {
                 case 'request':
-                    $data = DB::table('reservation')
-                        ->join('users', 'users.id', '=', 'reservation.guest_id')
-                        ->join('listing', 'listing.id', '=', 'reservation.listing_id')
-                        ->where('listing.user_id', $host_id)
-                        ->where('reservation_status_id', 1)
-                        ->orderBy('reservation.id', 'desc')
-                        ->join('reservation_status', 'reservation_status.id', '=', 'reservation.reservation_status_id')
-                        ->select('reservation.*', 'listing.name as listing_name', 'listing.street_address', 'listing.avatar_url as thumb_img', 'users.name as user_name', 'users.avatar_url as user_avatar_url', 'reservation_status.name as status')
-                        ->paginate($request->limit);
+                    $request->where('reservation_status_id', 1);
                     break;
                 case 'upcoming':
                     break;
                 case 'today':
                     break;
                 default:
-                    $data = DB::table('reservation')
-                        ->join('users', 'users.id', '=', 'reservation.guest_id')
-                        ->join('listing', 'listing.id', '=', 'reservation.listing_id')
-                        ->where('listing.user_id', $host_id)
-                        ->orderBy('reservation.id', 'desc')
-                        ->join('reservation_status', 'reservation_status.id', '=', 'reservation.reservation_status_id')
-                        ->select('reservation.*', 'listing.name as listing_name', 'listing.street_address', 'listing.avatar_url as thumb_img', 'users.name as user_name', 'users.avatar_url as user_avatar_url', 'reservation_status.name as status')
-                        ->paginate($request->limit);
                     break;
             }
+
+            $data = $query->paginate($request->limit);
 
             if ($data) {
                 $this->response = [
@@ -178,7 +171,7 @@ class ReservationController extends Controller
                 $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
             }
-            return response()->json($this->response);
+            return response()->json($this->response, 400);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);
@@ -252,7 +245,7 @@ class ReservationController extends Controller
                 $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
             }
-            return response()->json($this->response);
+            return response()->json($this->response, 400);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);

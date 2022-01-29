@@ -5,31 +5,17 @@ import AvatarPlaceholder from '../../../../components/Placeholder/AvatarPlacehol
 import './ReservationItem.scss';
 import Reservation from '../../pages/Reservation/Reservation';
 import { Link } from 'react-router-dom';
+import moment from 'moment';
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
+import { ReservationStatus } from '../../../../app/constant';
+import { alertConfirm } from '../../../../@helper/alertComfirm';
+import { color_reservation_status, statusText } from '../../../UserProfile/components/UserBookingItem/UserBookingItem';
+
 
 ReservationItem.propTypes = {
 
 };
-
-const color_reservation_status = (status_id) => {
-    if (status_id === 1) {
-        return {
-            border: '2px solid #f6cf48',
-            color: '#f6cf48',
-        }
-    }
-    if (status_id === 2) {
-        return {
-            border: '2px solid #7cccb2',
-            color: '#7cccb2',
-        }
-    }
-    if (status_id === 4) {
-        return {
-            border: '2px solid #5b5b68',
-            color: '#5b5b68',
-        }
-    }
-}
 
 const ava_size = {
     width: '55px',
@@ -38,13 +24,25 @@ const ava_size = {
 }
 
 function ReservationItem(props) {
-    const { reservation } = props;
+    const { reservation, handleDecline, handleAccept } = props;
+
+    const accept = (e) => {
+        e.preventDefault();
+        alertConfirm('Confirm to submit', 'Are you sure to accept this reservation ?', () => handleAccept(reservation.id))
+    }
+    const decline = (e) => {
+        e.preventDefault();
+        alertConfirm('Confirm to submit', 'Are you sure to decline this reservation ?', () => handleDecline(reservation.id))
+    }
+
     return (
         <div className="dashboard-list fl-wrap " style={{ border: '1px solid #e5e7f2', marginBottom: '20px' }}>
             <div className="dashboard-message user-booking r-item">
 
                 <div className="k-booking-status">
-                    <span className='status-text' style={color_reservation_status(reservation.reservation_status_id)}>{reservation.status}</span>
+                    <span className='status-text' style={color_reservation_status(reservation.reservation_status_id)}>
+                        {statusText(reservation.reservation_status_id)}
+                    </span>
                     <p className='booking-price'>{parseInt(reservation.total_price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }).replace('.', ',')}</p>
                 </div>
                 <div className="dashboard-message-text" style={{ width: '50%' }}>
@@ -66,18 +64,18 @@ function ReservationItem(props) {
                         style={ava_size}
                     />
                     <div className='user-booking-info'>
-                        <h4 className='user-name-booking fl-wrap'>{reservation.user_name} - <span>27 December 2019</span></h4>
-                        <div class="booking-details fl-wrap">
-                            <span class="booking-title">Mail :</span>
-                            <span class="booking-text"><a href="#" target="_top">yormail@domain.com</a></span>
+                        <h4 className='user-name-booking fl-wrap'>{reservation.user_name} - <span>{moment(reservation.created_at).format('LL')}</span></h4>
+                        <div className="booking-details fl-wrap">
+                            <span className="booking-title">Mail :</span>
+                            <span className="booking-text"><a href="#" target="_top">{reservation.user_email}</a></span>
                         </div>
-                        <div class="booking-details fl-wrap">
-                            <span class="booking-title">Phone :</span>
-                            <span class="booking-text"><a href="#" target="_top">+496170961709</a></span>
+                        <div className="booking-details fl-wrap">
+                            <span className="booking-title">Phone :</span>
+                            <span className="booking-text"><a href="#" target="_top">{reservation.user_phone}</a></span>
                         </div>
-                        <div class="booking-details fl-wrap">
-                            <span class="booking-title">Payment State :</span>
-                            <span class="booking-text"><a href="#" target="_top">Paypal</a></span>
+                        <div className="booking-details fl-wrap">
+                            <span className="booking-title">Payment State :</span>
+                            <span className="booking-text"><a href="#" target="_top">Paypal</a></span>
                         </div>
                     </div>
                 </div>
@@ -89,8 +87,8 @@ function ReservationItem(props) {
             </div>
 
             <div className='accept-booking fl-wrap'>
-                <a href="#" onClick={() => { }} className="scroll-nav-wrapper-opt-btn" style={scroll_nav_wrapper_opt_btn}>  Accept </a>
-                <a href="#" onClick={() => { }} className="scroll-nav-wrapper-opt-btn showshare" style={scroll_nav_wrapper_opt_btn}> Decline </a>
+                <a href="#" onClick={(e) => { accept(e) }} className="scroll-nav-wrapper-opt-btn" style={scroll_nav_wrapper_opt_btn}>  Accept </a>
+                <a href="#" onClick={(e) => { decline(e) }} className="scroll-nav-wrapper-opt-btn showshare" style={scroll_nav_wrapper_opt_btn}> Decline </a>
             </div>
         </div>
     );

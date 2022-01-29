@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 import UserBookingItem from '../../components/UserBookingItem/UserBookingItem';
 import reservationApi from '../../../../api/reservationApi';
 import reviewApi from '../../../../api/reviewApi';
+import { ReservationStatus } from '../../../../app/constant';
+import Loading from '../../../../components/Loading/Loading';
+import { alertSuccess } from '../../../../@helper/alertComfirm';
 
 MyBooking.propTypes = {
 
@@ -10,19 +13,39 @@ MyBooking.propTypes = {
 
 function MyBooking(props) {
     const [reservations, setReservations] = useState([]);
-    const [loadingAddReview, setLoadingAddReview] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const fetchMyReservation = async () => {
-        await reservationApi.getMyReservation().then(res => {
-            setReservations(res.data.data);
-        })
+        try {
+            await reservationApi.getMyReservation().then(res => {
+                setReservations(res.data.data);
+            })
+        } catch (err) {
+            console.log(err.message);
+        }
     }
 
     const handleCancel = async (id) => {
-        const params = {
-            reservation_status_id: 4
+        try {
+            const params = {
+                reservation_status_id: ReservationStatus.CANCELLED.id
+            }
+            setLoading(true);
+            await reservationApi.editStatusReservation(id, params).then(() => {
+                let tmp = [...reservations];
+                let index = tmp.findIndex(item => item.id == id);
+                if (index != -1) {
+                    tmp[index].reservation_status_id = ReservationStatus.CANCELLED.id;
+                    setReservations(tmp);
+                }
+                setLoading(false);
+                alertSuccess('Success', 'Cancel reservation success');
+            }).catch(err => {
+
+            });
+        } catch (err) {
+            console.log(err.message);
         }
-        await reservationApi.editStatusReservation(id, params);
     }
 
     const handleAddReview = async (id, content) => {
@@ -31,10 +54,10 @@ function MyBooking(props) {
                 note: content,
                 rating: 5,
             }
-            setLoadingAddReview(true);
+            setLoading(true);
             await reviewApi.addReviewListing(params, id).then(res => {
                 if (res.data.status = 'success') {
-                    setLoadingAddReview(false);
+                    setLoading(false);
                 }
             })
         } catch (err) {
@@ -52,6 +75,7 @@ function MyBooking(props) {
 
     return (
         <div>
+            {loading && <Loading />}
             <h3 className='h3_title'>Bookings</h3>
             <div className="dashboard-list-box fl-wrap">
                 {reservations.map((item, index) => (

@@ -9,7 +9,10 @@ import ReactPaginate from 'react-paginate';
 import { MdArrowBackIosNew, MdArrowForwardIos } from 'react-icons/md';
 import useQuery from '../../../../@use/useQuery';
 import { useHistory } from 'react-router-dom';
-import { ReservationFilter } from '../../../../app/constant';
+import { ReservationFilter, ReservationStatus } from '../../../../app/constant';
+import reservationApi from '../../../../api/reservationApi';
+import Loading from '../../../../components/Loading/Loading';
+import ReactNotificationComponent, { NotificationStattus } from '../../../../components/Notification/ReactNotification';
 
 Reservation.propTypes = {
 
@@ -26,21 +29,9 @@ function Reservation(props) {
     const [postsPerPage] = useState(3);
     const [totalPages, setTotalPages] = useState(0);
     const [filter, setFilter] = useState(ReservationFilter.ALL);
+    const [showNoti, setShowNoti] = useState(false);
+    const [noti, setNoti] = useState({ title: '', body: '', status: NotificationStattus.SUCCESS });
 
-    const fetchHostBooking = async () => {
-        const params = {
-            limit: postsPerPage,
-            page: query.get('page') || 1,
-            filter: filter
-        }
-        setLoading(true);
-        await adminListing.getHostBooking(loggedInUser.id, { params }).then(res => {
-            console.log(res)
-            setBooking(res.data.data.data);
-            setTotalPages(res.data.data.last_page);
-            setLoading(false);
-        });
-    }
 
     const handlePageClick = (event) => {
         setCurrentPage(event.selected + 1);
@@ -51,7 +42,68 @@ function Reservation(props) {
         setFilter(e.target.value);
     }
 
+    const handleAccept = async (id) => {
+        setLoading(true);
+        await reservationApi.editStatusReservation(id, { reservation_status_id: ReservationStatus.ACCEPTED.id }).then(res => {
+            setNoti(prevState => ({
+                ...prevState,
+                title: 'Success',
+                body: 'Accepted'
+            }));
+            let tmp = [...booking];
+            let index = tmp.findIndex(item => item.id == id);
+            if (index != -1) {
+                tmp[index].reservation_status_id = ReservationStatus.ACCEPTED.id;
+                setBooking(tmp);
+            }
+            setShowNoti(true);
+            setLoading(false);
+        }).catch(err => {
+            setNoti({ title: 'Error', body: 'Error', status: NotificationStattus.ERROR });
+            setLoading(false);
+            setShowNoti(true);
+        });
+    }
+
+    const handleDecline = async (id) => {
+        setLoading(true);
+        await reservationApi.editStatusReservation(id, { reservation_status_id: ReservationStatus.DECLINE.id }).then(() => {
+            setNoti(prevState => ({
+                ...prevState,
+                title: 'Success',
+                body: 'DECLINE'
+            }));
+            let tmp = [...booking];
+            let index = tmp.findIndex(item => item.id == id);
+            if (index != -1) {
+                tmp[index].reservation_status_id = ReservationStatus.DECLINE.id;
+                setBooking(tmp);
+            }
+            setShowNoti(true);
+            setLoading(false);
+        }).catch(err => {
+            setNoti({ title: 'Error', body: 'Error', status: NotificationStattus.ERROR });
+            setLoading(false);
+            setShowNoti(true);
+        });
+    }
+
     useEffect(() => {
+        const fetchHostBooking = async () => {
+            const params = {
+                limit: postsPerPage,
+                page: query.get('page') || 1,
+                filter: filter
+            }
+            setLoading(true);
+            await adminListing.getHostBooking(loggedInUser.id, { params }).then(res => {
+                console.log(res)
+                setBooking(res.data.data.data);
+                setTotalPages(res.data.data.last_page);
+                setLoading(false);
+            });
+        }
+
         fetchHostBooking();
 
         return () => {
@@ -60,6 +112,12 @@ function Reservation(props) {
     }, [currentPage, filter]);
     return (
         <div id="wrapper" style={{ background: '#f6f6f6' }}>
+            {loading && <Loading />}
+            {showNoti && <ReactNotificationComponent
+                title={noti.title}
+                body={noti.body}
+                status={noti.status}
+            />}
             <HeaderHost />
             <div className='container' style={{ marginTop: '80px', paddingTop: '20px', minHeight: window.innerHeight }}>
                 <div className='reservations-header-title wrap-title-header fl-wrap'>
@@ -83,13 +141,14 @@ function Reservation(props) {
                 </div>
                 <div className="dashboard-list-box fl-wrap">
                     {
-                        loading ? <div>Loading</div> :
-                            booking.map((item, index) => (
-                                <ReservationItem
-                                    key={index}
-                                    reservation={item}
-                                />
-                            ))
+                        booking.map((item, index) => (
+                            <ReservationItem
+                                key={index}
+                                reservation={item}
+                                handleAccept={handleAccept}
+                                handleDecline={handleDecline}
+                            />
+                        ))
                     }
                 </div>
                 {totalPages > 0 ? <ReactPaginate

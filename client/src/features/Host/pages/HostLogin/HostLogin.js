@@ -280,16 +280,11 @@ function HostLogin(props) {
                 password: values.password
             }
             setLoading(true);
-            await dispatch(login(params)).then(res => {
-                const access_token = unwrapResult(res).data.token;
-                userApi.updateDeviceToken({ device_token: deviceToken }, access_token).then(() => {
-                    setLoading(false);
-                    refreshPage();
-                }).catch(err => {
-                    setLoading(false);
-                });
+            await dispatch(hostLogin(params)).then(() => {
+                resetForm();
+                setLoading(false);
+                history.push('/host/listings');
             });
-            resetForm();
         } catch (err) {
             console.log(err.message)
             setLoading(false);
@@ -336,7 +331,7 @@ function HostLogin(props) {
 
 
     return (
-        <div id='host-login' className='gray-bg' style={{width: window.innerWidth, minHeight: window.innerHeight}}>
+        <div id='host-login' className='gray-bg' style={{ width: window.innerWidth, minHeight: window.innerHeight }}>
             <div className="k-main-register-holder tabs-act" style={main_register_holder}>
                 <div className="k-main-register fl-wrap" style={main_register}>
                     <h2 className='host-login-title'>HOST LOGIN</h2>
@@ -488,7 +483,6 @@ function ForgotForm(props) {
                 )}
             </Formik>
         </div>
-
     )
 }
 

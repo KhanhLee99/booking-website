@@ -20116,7 +20116,7 @@ body {
 	padding: 0;
 	height: 100%;
 	/* text-align: center; */
-	background: #2e3f6e;
+	background: #f6f6f6 !important;
 	color: #000;
 	font-family: "Roboto";
 }
@@ -20127,7 +20127,7 @@ body p {
 }
 
 #wrapper {
-	background-color: #fff;
+	background-color: #f6f6f6;
 }
 
 /* Main Font */

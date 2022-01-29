@@ -13,7 +13,7 @@ class ReservationStatusSeeder extends Seeder
     public function run()
     {
         // reservation_status
-        $list_reservation_status = ['Chờ xác nhận', 'Đã xác nhận', 'Đã thanh toán', 'Đã huỷ', 'Checkin', 'Checkout'];
+        $list_reservation_status = ['Chờ xác nhận', 'Đã xác nhận', 'Đã thanh toán', 'Đã huỷ', 'Checkin', 'Checkout', 'Decline'];
         foreach ($list_reservation_status as $status) {
             DB::table('reservation_status')->insert([
                 'name' => $status

@@ -196,7 +196,8 @@ function BoxBooking(props) {
                             <span style={{
                                 fontSize: "30px",
                                 fontWeight: "600",
-                                fontFamily: "Roboto"
+                                fontFamily: "Roboto",
+                                color: '#566985',
                             }}>
                                 {totalPrice ? parseVNDCurrency(totalPrice.total_price) : parseVNDCurrency(listingDetail.price_per_night_base * nights)
                                 }
@@ -204,7 +205,8 @@ function BoxBooking(props) {
                             <span style={{
                                 fontSize: "16px",
                                 fontWeight: "400",
-                                fontFamily: "Roboto"
+                                fontFamily: "Roboto",
+                                color: '#566985',
 
                             }}> /{totalPrice ? ` ${totalPrice.nights} ` : null}đêm</span>
                         </span>
@@ -274,27 +276,25 @@ function TotalPrice(props) {
     return (
         <div className="mb--12">
             <div className="checkup__price fadeIn border-1">
-                <div className="is-flex middle-xs between-xs">
+                <div className="is-flex middle-xs between-xs cart-list">
                     <div className="is-flex align-center">
                         <span className="pr--6">Giá thuê {nights} đêm</span>
                     </div>
                     <span>{parseVNDCurrency(rentalPrice)}</span>
                 </div>
-                <div className="is-flex middle-xs between-xs">
+                <div className="is-flex middle-xs between-xs cart-list">
                     <div className="is-relative">
                         <span>Phí dịch vụ</span>
                     </div>
                     <span>{servicePrice}</span>
                 </div>
-                <hr className="my--18" />
-                <div className="is-flex middle-xs between-xs">
+                <div className="is-flex middle-xs between-xs cart-list">
                     <div>
                         <span className="extra-bold">Tổng tiền</span>
                     </div>
                     <span className="extra-bold">{parseVNDCurrency(totalPrice)}</span>
                 </div>
             </div>
-            <div className="my--12" />
         </div>
     )
 }

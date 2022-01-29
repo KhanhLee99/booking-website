@@ -1,0 +1,46 @@
+._custom_form label {
+    float: left;
+    position: relative;
+    width: 100%;
+    text-align: left;
+    color: #878c9f;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+._custom_form .vis-label {
+    margin-bottom: 10px;
+}
+
+._custom_form textarea,
+._custom_form input[type="text"],
+._custom_form input[type="email"],
+._custom_form input[type="password"],
+._custom_form input[type="button"],
+.listsearch-input-item input[type="text"] {
+    float: left;
+    border: 1px solid #e5e7f2;
+    background: #f9f9f9;
+    width: 100%;
+    padding: 15px 20px 15px 45px;
+    border-radius: 4px;
+    color: #7d93b2;
+    font-size: 12px;
+    -webkit-appearance: none;
+    outline: none;
+    overflow: hidden;
+    z-index: 1;
+}
+
+._custom_form label.vis-label i {
+    top: 49px;
+    color: #4db7fe;
+}
+
+._custom_form label i {
+    padding-right: 12px;
+    font-size: 14px;
+    position: absolute;
+    top: 16px;
+    left: 16px;
+}

@@ -4,16 +4,27 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import './ReactNotification.scss';
 
-const ReactNotificationComponent = ({ title, body }) => {
+export const NotificationStattus = {
+  SUCCESS: 'success',
+  ERROR: 'error',
+}
+
+const ReactNotificationComponent = ({ title, body, status }) => {
   // let hideNotif = title === "";
 
   // if (!hideNotif) {
   // toast.info(<Display />);
   // }
+  if (status == NotificationStattus.SUCCESS) {
+    toast.success(<Display />, {
+      toastId: 'success1',
+    });
+  } else {
+    toast.error(<Display />, {
+      toastId: 'success1',
+    });
+  }
 
-  toast.success(<Display />, {
-    toastId: 'success1',
-  });
 
   function Display() {
     return (
