@@ -12,6 +12,7 @@ import Header from '../../../../components/Header';
 import Loading from '../../../../components/Loading/Loading';
 import AmenityDetail from '../../components/AmenityDetail/AmenityDetail';
 import BoxBooking from '../../components/BoxBooking';
+import Chat from '../../components/Chat/Chat';
 import ListReview from '../../components/ListReview';
 import Photos from '../../components/Photos';
 import TabHorizontal from '../../components/TabHorizontal';
@@ -255,6 +256,8 @@ function ListingDetail(props) {
 
                 </div>
             </div>
+
+            <Chat />
         </div>
     );
 }

@@ -21,6 +21,7 @@ import AddListingFeature from './features/Host/AddListingFeature';
 import HostLogin from './features/Host/pages/HostLogin/HostLogin';
 import MessageHost from './features/Host/pages/Message';
 import Booking from './features/Listings/components/Booking';
+import Chat from './features/Listings/components/Chat/Chat';
 import ListingsLocation from './features/Listings/pages';
 import ListingDetail from './features/Listings/pages/ListingDetail';
 import UserProfileFeature from './features/UserProfile';
@@ -74,44 +75,44 @@ function App() {
 
 
   return (
-    // <ParentChild />
-    <>
-      {show ? (
-        <ReactNotificationComponent
-          title={notification.title}
-          body={notification.body}
-        />
-      ) : (
-        <></>
-      )}
-      {loading ? <Loading /> :
-        <Suspense fallback={<div>Loading ...</div>}>
-          <BrowserRouter>
-            <Switch>
-              <Route path="/" exact component={Home} />
-              <Route path="/admin/login" component={AdminLogin} />
-              <Route path="/host/login" component={HostLogin} />
-              <Route path="/hosting" component={MessageHost} />
+    <Chat />
+    // <>
+    //   {show ? (
+    //     <ReactNotificationComponent
+    //       title={notification.title}
+    //       body={notification.body}
+    //     />
+    //   ) : (
+    //     <></>
+    //   )}
+    //   {loading ? <Loading /> :
+    //     <Suspense fallback={<div>Loading ...</div>}>
+    //       <BrowserRouter>
+    //         <Switch>
+    //           <Route path="/" exact component={Home} />
+    //           <Route path="/admin/login" component={AdminLogin} />
+    //           <Route path="/host/login" component={HostLogin} />
+    //           <Route path="/hosting" component={MessageHost} />
 
-              <PrivateRouteHost path="/host" component={HostFeature} />
-              <PrivateRouteAddListing path="/become-host" component={AddListingFeature} />
-              <PrivateRouteAdmin path="/admin" component={AdminFeature} />
-              <PrivateRouteMe path="/me" component={UserProfileFeature} layout={CommonUserProfile} />
+    //           <PrivateRouteHost path="/host" component={HostFeature} />
+    //           <PrivateRouteAddListing path="/become-host" component={AddListingFeature} />
+    //           <PrivateRouteAdmin path="/admin" component={AdminFeature} />
+    //           <PrivateRouteMe path="/me" component={UserProfileFeature} layout={CommonUserProfile} />
 
-              <Route path="/listing/:id" component={ListingDetail} />
-              <Route path="/location/:id" exact component={ListingsLocation} />
+    //           <Route path="/listing/:id" component={ListingDetail} />
+    //           <Route path="/location/:id" exact component={ListingsLocation} />
 
-              {/* <Route path="/login" component={Login} /> */}
-              {/* <Redirect exact from='/' to='/login' /> */}
-              {/* <PrivateRoute path='/guest' component={GuestFeauture} />
-        <Route path="/error" component={MainErrorPage} />
-        <Route component={NotFoundPage} /> */}
-            </Switch>
-          </BrowserRouter>
-        </Suspense>
-      }
+    //           {/* <Route path="/login" component={Login} /> */}
+    //           {/* <Redirect exact from='/' to='/login' /> */}
+    //           {/* <PrivateRoute path='/guest' component={GuestFeauture} />
+    //     <Route path="/error" component={MainErrorPage} />
+    //     <Route component={NotFoundPage} /> */}
+    //         </Switch>
+    //       </BrowserRouter>
+    //     </Suspense>
+    //   }
 
-    </>
+    // </>
 
   )
 }
