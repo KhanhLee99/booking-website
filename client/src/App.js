@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import {
   BrowserRouter, Route, Switch
 } from "react-router-dom";
+import ReactTooltip from 'react-tooltip';
 import { getMe } from './app/reducer/guestSlice';
 import { saveDeviceToken } from './app/reducer/userSlice';
 import CommonAddListing from './components/CommonAddListing/CommonAddListing';
@@ -19,6 +20,7 @@ import Home from './features/Home/pages';
 import HostFeature from './features/Host';
 import AddListingFeature from './features/Host/AddListingFeature';
 import HostLogin from './features/Host/pages/HostLogin/HostLogin';
+import HostMessage from './features/Host/pages/HostMessage/HostMessage';
 import MessageHost from './features/Host/pages/Message';
 import Booking from './features/Listings/components/Booking';
 import Chat from './features/Listings/components/Chat/Chat';
@@ -75,7 +77,8 @@ function App() {
 
 
   return (
-    <Chat />
+    <HostMessage />
+
     // <>
     //   {show ? (
     //     <ReactNotificationComponent

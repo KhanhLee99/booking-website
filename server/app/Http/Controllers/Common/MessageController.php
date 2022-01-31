@@ -19,12 +19,48 @@ class MessageController extends Controller
         'status' => 'fail'
     ];
 
-    public function get_messages($conversation_id)
+    public function get_conversation_two_person(Request $request)
     {
+        try {
+            $current_user_id = $request->user('api')->id;
+            $host_id = $request->host_id;
+
+            $conversation_is_found = Conversation::whereHas('Users', function ($q) use ($current_user_id) {
+                $q->where('user_id', $current_user_id);
+            })->whereHas('Users', function ($q) use ($host_id) {
+                $q->where('user_id', $host_id);
+            })->first();
+
+            if (!$conversation_is_found) {
+                $conversation = Conversation::create([
+                    'name' => $request->name,
+                    'creator_id' => $current_user_id
+                ]);
+                $conversation->Users()->attach($current_user_id);
+                $conversation->Users()->attach($host_id);
+
+                $conversation_is_found = Conversation::whereHas('Users', function ($q) use ($current_user_id) {
+                    $q->where('user_id', $current_user_id);
+                })->whereHas('Users', function ($q) use ($host_id) {
+                    $q->where('user_id', $host_id);
+                })->first();
+            }
+            $conversation_id = $conversation_is_found->id;
+            return $this->get_messages($request, $conversation_id);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
+    }
+
+    public function get_messages(Request $request, $conversation_id)
+    {
+        $user_current_id = $request->user('api')->id;
         return DB::table('messages')
             ->where('conversation_id', $conversation_id)
             ->join('users', 'users.id', '=', 'messages.sender_id')
-            ->select('users.name', 'users.avatar_url as avatar', 'messages.message', 'messages.created_at as time')
+            ->select('users.id', 'users.name', 'users.avatar_url as avatar', 'messages.message', 'messages.created_at as time')
+            ->selectRaw('(CASE WHEN users.id = ' . $user_current_id . ' THEN 1 ELSE 0 END) AS isMe')
             ->get();
     }
 

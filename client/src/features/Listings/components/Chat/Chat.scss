@@ -57,7 +57,7 @@
 
     & .chat-message {
         padding-left: 60px;
-        margin-bottom: 30px;
+        margin-bottom: 0px;
 
         & .dashboard-message-avatar {
             width: 40px;
@@ -88,7 +88,7 @@
             float: left;
             font-size: 11px;
             color: #999;
-            margin-bottom: 11px;
+            margin-bottom: 2px;
 
             & span {
                 position: relative;
@@ -98,7 +98,7 @@
 
         & p {
             float: left;
-            padding: 10px 20px 15px;
+            padding: 6px 20px;
             background: #f5f6fa;
             border-radius: 0 10px 10px 10px;
             width: 100%;
@@ -116,8 +116,9 @@
     }
 
     .chat-message.chat-message_user {
-        padding-left: 0;
-        padding-right: 60px;
+        // padding-left: 50;
+        // padding-right: 60px;
+        width: auto;
 
         & .dashboard-message-avatar {
             left: inherit;
@@ -134,9 +135,11 @@
         }
 
         & p {
-            background: #4DB7FE;
+            background: #4db7fe;
             border-radius: 10px 0 10px 10px;
             color: #fff;
+            float: right;
+            width: auto;
         }
     }
 }

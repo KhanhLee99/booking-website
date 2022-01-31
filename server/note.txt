@@ -17,3 +17,5 @@ performance query
 
 env EDITOR=nano crontab -e
 * * * * * cd /Users/khanh/Desktop/DATN/server && php artisan schedule:run >> /dev/null 2>&1
+
+attach: tao data cho bang trung gian

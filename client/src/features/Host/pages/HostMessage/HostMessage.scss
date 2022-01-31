@@ -1,0 +1,182 @@
+#inbox-wrapper {
+    overflow-y: hidden;
+    margin: 0;
+}
+.chat-wrapper {
+    background: #fff;
+    border-radius: 0 0 10px px 10px;
+    height: 100%;
+
+    & .chat-box {
+        padding: 50px 30px 60px;
+        // min-height: 300px;
+        overflow: auto;
+        height: calc(100% - 100px);
+
+        & .chat-message {
+            padding-left: 60px;
+            margin-bottom: 0px;
+
+            & .dashboard-message-avatar {
+                width: 40px;
+                height: 40px;
+                border-radius: 100%;
+
+                position: absolute;
+                left: 0;
+                top: 20px;
+
+                & img {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 100%;
+                }
+            }
+
+            & .chat-message-user-name {
+                font-size: 11px;
+                color: #999;
+                position: absolute;
+                left: 4px;
+                top: 70px;
+                font-weight: 600;
+            }
+
+            & .massage-date {
+                float: left;
+                font-size: 11px;
+                color: #999;
+                margin-bottom: 2px;
+
+                & span {
+                    position: relative;
+                    padding-left: 10px;
+                }
+            }
+
+            & p {
+                float: left;
+                padding: 6px 20px;
+                background: #f5f6fa;
+                border-radius: 0 10px 10px 10px;
+                width: 100%;
+                text-align: left;
+                font-size: 11px;
+                color: #878c9f;
+                position: relative;
+            }
+        }
+
+        & .chat-message.chat-message_user {
+            // padding-left: 50;
+            // padding-right: 60px;
+            width: auto;
+
+            & .dashboard-message-avatar {
+                left: inherit;
+                right: 0;
+            }
+
+            & .chat-message-user-name {
+                left: inherit;
+                right: 8px;
+            }
+
+            & .massage-date {
+                float: right;
+            }
+
+            & p {
+                background: #4db7fe;
+                border-radius: 10px 0 10px 10px;
+                color: #fff;
+                float: right;
+                width: auto;
+            }
+        }
+    }
+
+    & .chat-contacts {
+        overflow: auto;
+        height: calc(100% - 100px);
+
+        &:before {
+            content: "";
+            position: absolute;
+            left: -31px;
+            width: 1px;
+            background: #eee;
+            height: 100%;
+            top: 0;
+            z-index: 10;
+        }
+
+        & .chat-contacts-item {
+            float: left;
+            width: 100%;
+            position: relative;
+            padding: 20px 20px 20px 70px;
+            border-bottom: 1px solid #eee;
+            box-sizing: border-box;
+            background: #fff;
+
+            & .dashboard-message-avatar {
+                position: absolute;
+                top: 15px;
+                left: 0;
+
+                & img {
+                    width: 50px;
+                    height: 50px;
+                    border-radius: 100%;
+                }
+            }
+
+            & .chat-contacts-item-text {
+                z-index: 20;
+                position: relative;
+
+                & h4 {
+                    text-align: left;
+                    font-size: 12px;
+                    color: #666;
+                    // padding: 0 0 4px !important;
+                    padding: 0 !important;
+                }
+
+                & span {
+                    position: absolute;
+                    right: 10px;
+                    top: 0px;
+                    font-size: 9px;
+                    color: #4db7fe;
+                }
+
+                & p {
+                    height: 26px;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    font-size: 12px;
+                    color: #888;
+                }
+            }
+        }
+    }
+
+    & .chat-widget_input {
+        margin-top: 30px;
+        position: fixed;
+        width: 100%;
+        float: left;
+        overflow: hidden;
+        height: 60px;
+
+        bottom: 0;
+        left: 0;
+        z-index: 20;
+        padding-right: 60px;
+        border-top: 1px solid #eee;
+        background: #f9f9f9;
+    }
+}

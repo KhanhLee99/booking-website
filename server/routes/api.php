@@ -156,6 +156,7 @@ Route::get('conversation', 'Common\ConversationController@get_conversations');
 Route::post('send-message', 'Common\MessageController@send_message');
 Route::put('seen-message', 'Common\MessageController@seen_message');
 Route::get('messages/{conversation_id}', 'Common\MessageController@get_messages');
+Route::get('messages/with/host', 'Common\MessageController@get_conversation_two_person');
 
 // Listing Type
 Route::post('listing-type/add', 'Admin\ListingTypeController@add');
