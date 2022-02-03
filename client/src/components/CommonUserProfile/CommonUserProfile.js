@@ -3,18 +3,21 @@ import PropTypes from 'prop-types';
 import './CommonUserProfile.scss'
 import { Link } from 'react-router-dom';
 import Header from '../Header';
+import useWindowDimensions from '../../@use/useWindowDimensions';
 
 CommonUserProfile.propTypes = {
 
 };
 
 function CommonUserProfile(props) {
+    const { height } = useWindowDimensions();
+    const heightSection = height - 100;
+
     return (
         <div style={{ background: '#f6f6f6' }}>
             <Header />
-
-            <section className="gray-bg main-dashboard-sec" id="sec1" style={{ marginTop: '80px' }}>
-                <div className="container" style={{ minHeight: window.innerHeight }}>
+            <section className="gray-bg main-dashboard-sec" id="sec1">
+                <div className="container" style={{ minHeight: heightSection }}>
                     {/*  dashboard-menu*/}
                     <div className="col-md-3">
                         <div className="mob-nav-content-btn color2-bg init-dsmen fl-wrap"><i className="fal fa-bars" />
@@ -29,6 +32,7 @@ function CommonUserProfile(props) {
                                         <li className='pl-0'><a href="dashboard-myprofile.html"><i className="fal fa-money-check" />Thanh toán</a></li>
                                         <li className='pl-0'><Link to="/me/favorite"><i className="fal fa-heart" />Danh sách yêu thích</Link></li>
                                         <li className='pl-0'><Link to="/me/bookings"><i className="fal fa-calendar-check" />Bookings</Link></li>
+                                        <li className='pl-0'><Link to="/me/inbox"><i className="fal fa-envelope" />Tin nhắn</Link></li>
                                     </ul>
                                 </div>
 

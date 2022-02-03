@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Common\NotificationController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Review_Listing;
@@ -15,6 +16,11 @@ class ReviewListingController extends Controller
     private $response = [
         'status' => 'fail'
     ];
+
+    function __construct()
+    {
+        $this->notificationController = new NotificationController();
+    }
 
     function index($id)
     {
@@ -44,6 +50,7 @@ class ReviewListingController extends Controller
             $data['guest_id'] = $user_login->id;
             $data['listing_id'] = $id;
             if (Review_Listing::create($data)) {
+                $this->notificationController->send_notify_add_review($id);
                 $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
             }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import './styles.scss';
 import { Link } from 'react-router-dom';
@@ -6,6 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import AvatarPlaceholder from '../../../../components/Placeholder/AvatarPlaceholder/AvatarPlaceholder';
 import LoginModal from '../../../../components/LoginModal/LoginModal';
 import { deleteDeviceToken } from '../../../../app/reducer/userSlice';
+import { getMyNotify, getTotalNoticationsUnread, seenNotifications } from '../../../../app/reducer/notifySlice';
+import OutsideAlerter from '../../../../components/OutsideAlerter/OutsideAlerter';
+import { NotificationItem } from '../../../../components/Header';
 
 HeaderHost.propTypes = {
 
@@ -95,14 +98,18 @@ const nav_holder_nav_li_ul_a = {
 }
 
 function HeaderHost(props) {
-
+    const refNotify = useRef(null);
     const dispatch = useDispatch();
 
     const loggedInUser = useSelector((state) => state.userSlice.current);
     const isLoggedIn = !!loggedInUser.id;
+    const notifications = useSelector((state) => state.notifySlice.myNotify || []);
+    const totalNotiUnread = useSelector((state) => state.notifySlice.totalUnread || 0);
 
     const [showPopupProfile, setShowPopupProfile] = useState(false);
     const [hovered, setHovered] = useState(false);
+    const [showPopupNotify, setShowPopupNotify] = useState(false);
+
     const toggleHover = () => setHovered(!hovered);
 
     const handleLogout = async (e) => {
@@ -112,19 +119,61 @@ function HeaderHost(props) {
         })
     }
 
+    const handleClickBell = () => {
+        setShowPopupNotify(!showPopupNotify);
+        dispatch(seenNotifications());
+    }
+
     const refreshPage = () => {
         window.location.reload();
     }
 
+    useEffect(() => {
+        dispatch(getTotalNoticationsUnread());
+        dispatch(getMyNotify());
+    }, []);
+
     return (
-        <header className="k-main-header relative" style={main_header}>
+        <header className="k-main-header" style={main_header}>
             <Link to="/" className="k-logo-holder" style={logo_holder}><img src="https://i.ytimg.com/vi/FPtITmtjWhQ/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB3TdlYzQKkXD7XtPbNwCGLGycr2Q" alt="" style={{ width: 'auto', height: '100%' }} /></Link>
             {/* header opt */}
             {
                 isLoggedIn ? <>
-                    <div className="k-cart-btn show-header-modal" data-microtip-position="bottom" role="tooltip" aria-label="Your Wishlist" style={cart_btn}>
-                        <i className="fas fa-bell" style={{ width: '12px' }} /><span className="k-cart-counter" style={cart_counter} >4</span>
-                    </div>
+                    <OutsideAlerter
+                        closePopup={() => setShowPopupNotify(false)}
+                        ref={refNotify}
+                    >
+                        <div
+                            className="k-cart-btn"
+                            style={cart_btn}
+                            onClick={() => handleClickBell()}
+                        >
+                            <i className="fas fa-bell" style={{ width: '12px' }} />
+                            {totalNotiUnread > 0 && <span className="k-cart-counter" style={cart_counter} >{totalNotiUnread}</span>}
+                        </div>
+
+                        <div className={showPopupNotify ? "header-modal vis-wishlist" : "header-modal"}>
+                            <div className="header-modal-container scrollbar-inner fl-wrap">
+                                <div className='notification-title'>
+                                    <h3>Notifications</h3>
+                                </div>
+
+                                <div className="notification-list-box fl-wrap">
+                                    {
+                                        notifications.length > 0 ?
+                                            notifications.map((notify, index) => (
+                                                <NotificationItem
+                                                    key={index}
+                                                    notify={notify}
+                                                />
+                                            ))
+                                            : null
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                    </OutsideAlerter>
 
                     <div className="header-user-menu hu-menu-visdec" style={header_user_menu}>
                         <div
@@ -140,6 +189,7 @@ function HeaderHost(props) {
                             </span>
                             {loggedInUser.name}
                         </div>
+
                         <ul className={showPopupProfile ? 'hu-menu-vis' : ''}>
                             <li style={header_user_menu_ul_li}><Link to="/me/profile" style={header_user_menu_ul_li_a}> Edit profile</Link></li>
                             <li style={header_user_menu_ul_li}><Link to="/me/bookings" style={header_user_menu_ul_li_a}>  Bookings</Link></li>
@@ -161,7 +211,7 @@ function HeaderHost(props) {
                 <nav style={nav_holder_nav}>
                     <ul className="no-list-style">
                         <li style={nav_holder_nav_li}><a href="#" style={nav_holder_nav_li_a}>Hôm nay </a></li>
-                        <li style={nav_holder_nav_li}><a href="#" className="act-link" style={nav_holder_nav_li_a}>Hộp thư đến</a></li>
+                        <li style={nav_holder_nav_li}><Link to="/host/inbox" className="act-link" style={nav_holder_nav_li_a}>Tin nhắn</Link></li>
                         <li style={nav_holder_nav_li}><a href="blog.html" style={nav_holder_nav_li_a}>Thông tin phân tích</a></li>
                         <li style={nav_holder_nav_li}
                             onClick={toggleHover}
@@ -317,9 +367,13 @@ export function HeaderAddListing(props) {
             {/* header opt */}
             {
                 isLoggedIn ? <>
-                    <div className="k-cart-btn show-header-modal" data-microtip-position="bottom" role="tooltip" aria-label="Your Wishlist" style={cart_btn}>
+
+                    {/* <div
+                        className="k-cart-btn"
+                        style={cart_btn}
+                    >
                         <i className="fas fa-bell" style={{ width: '12px' }} /><span className="k-cart-counter" style={cart_counter} >4</span>
-                    </div>
+                    </div> */}
 
                     <div className="header-user-menu hu-menu-visdec" style={header_user_menu}>
                         <div
@@ -337,11 +391,8 @@ export function HeaderAddListing(props) {
                         </div>
                         <ul className={showPopupProfile ? 'hu-menu-vis' : ''}>
                             <li style={header_user_menu_ul_li}><Link to="/me/profile" style={header_user_menu_ul_li_a}> Edit profile</Link></li>
-                            <li style={header_user_menu_ul_li}><Link to="/me/bookings" style={header_user_menu_ul_li_a}>  Bookings</Link></li>
-                            <li style={header_user_menu_ul_li}><Link to="/me/favorite" style={header_user_menu_ul_li_a}> Danh sách yêu thích </Link></li>
-                            {loggedInUser.role_id === 2 ?
-                                <li style={header_user_menu_ul_li}><Link to="/host/listings" style={header_user_menu_ul_li_a}>Quản lý nhà/phòng cho thuê</Link></li>
-                                : null}
+                            {/* <li style={header_user_menu_ul_li}><Link to="/me/bookings" style={header_user_menu_ul_li_a}>  Bookings</Link></li> */}
+                            {/* <li style={header_user_menu_ul_li}><Link to="/me/favorite" style={header_user_menu_ul_li_a}> Danh sách yêu thích </Link></li> */}
                             <li style={header_user_menu_ul_li}><a href="#" style={header_user_menu_ul_li_a} onClick={(e) => handleLogout(e)}> Log Out</a></li>
                         </ul>
                     </div>

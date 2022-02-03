@@ -1,11 +1,12 @@
 import moment from 'moment';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
 import { getDaysArray } from '../../../../@helper/helper';
 import blockBookingApi from '../../../../api/blockBookingApi';
+import conversationApi from '../../../../api/conversationApi';
 import listingApi from '../../../../api/listingApi';
 import reservationApi from '../../../../api/reservationApi';
 import Header from '../../../../components/Header';
@@ -33,6 +34,8 @@ const title = {
 
 
 function ListingDetail(props) {
+    const messagesEndRef = useRef(null);
+
     const loggedInUser = useSelector((state) => state.userSlice.current);
     const isLoggedIn = !!loggedInUser.id;
     const [loadingListingDetail, setLoadingListingDetail] = useState(false);
@@ -45,6 +48,9 @@ function ListingDetail(props) {
     const [reservationDate, setReservationDate] = useState([])
     const [blockList, setBlockList] = useState([]);
     const [saved, setSaved] = useState(false);
+    const [showChat, setShowChat] = useState(false);
+    const [conversation, setConversation] = useState([]);
+    const [currentConversationId, setCurrentConversationId] = useState(null);
 
     const handleSave = async () => {
         if (isLoggedIn) {
@@ -91,6 +97,44 @@ function ListingDetail(props) {
         }
     }
 
+    const getConversationTogether = async () => {
+        try {
+            const params = {
+                host_id: listingDetail.user_id
+            }
+            await conversationApi.getConversationTogether({ params }).then(res => {
+                setConversation(res.data.conversation);
+                setCurrentConversationId(res.data.conversation_id);
+            });
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
+    const sendMessage = async (values, resetForm) => {
+        try {
+            const params = {
+                message: values.message,
+                conversation_id: currentConversationId,
+            }
+            await conversationApi.sendMessage(params).then(res => {
+                const newMessage = {
+                    id: loggedInUser.id,
+                    name: loggedInUser.name,
+                    avatar: loggedInUser.avatar,
+                    message: values.message,
+                    time: Date.now(),
+                    isMe: 1,
+                }
+                setConversation(oldState => [...oldState, newMessage]);
+                // setConversation(conversation.push(newMessage));
+                resetForm();
+            });
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
     useEffect(() => {
         const fetchListingDetail = async () => {
             setLoadingListingDetail(true)
@@ -108,16 +152,27 @@ function ListingDetail(props) {
         fetchReservation();
         getBlockInMonth();
 
+        window.scrollTo(0, 0)
+
+
         return () => {
             setReservationDate([]);
             setBlockList([]);
         }
-
     }, []);
 
     useEffect(() => {
-        window.scrollTo(0, 0)
-    }, [])
+        if (listingDetail.user_id) {
+            getConversationTogether();
+        }
+    }, [listingDetail]);
+
+    useEffect(() => {
+        const scrollToBottom = () => {
+            messagesEndRef.current.scrollIntoView();
+        }
+        scrollToBottom();
+    }, [conversation]);
 
     return (
         <div id="wrapper listing-detail" style={{ backgroundColor: '#fff', maxWidth: '100%', overflowX: 'hidden' }}>
@@ -256,8 +311,17 @@ function ListingDetail(props) {
 
                 </div>
             </div>
-
-            <Chat />
+            <div className="chat-widget-button cwb tolt" data-microtip-position="left" data-tooltip="Chat With Owner"
+                onClick={() => { setShowChat(!showChat); }}
+            >
+                <i className="fal fa-comments-alt" />
+            </div>
+            <Chat
+                sendMessage={sendMessage}
+                conversation={conversation}
+                style={{ display: showChat ? 'block' : 'none' }}
+                ref={messagesEndRef}
+            />
         </div>
     );
 }

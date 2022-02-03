@@ -6,6 +6,7 @@ import reviewApi from '../../../../api/reviewApi';
 import { ReservationStatus } from '../../../../app/constant';
 import Loading from '../../../../components/Loading/Loading';
 import { alertSuccess } from '../../../../@helper/alertComfirm';
+import UserChat from '../../components/UserChat/UserChat';
 
 MyBooking.propTypes = {
 
@@ -67,6 +68,8 @@ function MyBooking(props) {
 
     useEffect(() => {
         fetchMyReservation();
+        window.scrollTo(0, 0);
+
         return () => {
             setReservations([]);
         }
@@ -76,8 +79,8 @@ function MyBooking(props) {
     return (
         <div>
             {loading && <Loading />}
-            <h3 className='h3_title'>Bookings</h3>
-            <div className="dashboard-list-box fl-wrap">
+            <h3 className='h3_title'>My Bookings</h3>
+            <div className="dashboard-list-box fl-wrap" style={{ marginTop: 0 }}>
                 {reservations.map((item, index) => (
                     <UserBookingItem
                         key={index}

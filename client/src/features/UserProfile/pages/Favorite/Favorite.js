@@ -32,6 +32,8 @@ function Favorite(props) {
 
     useEffect(() => {
         fetchListFavorite();
+        window.scrollTo(0, 0);
+
         return () => {
             setListings([]);
         }

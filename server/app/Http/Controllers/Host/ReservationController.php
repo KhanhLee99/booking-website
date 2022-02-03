@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Host;
 
+use App\Http\Controllers\Common\NotificationController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Helper\TotalDateController;
 use App\Listing;
@@ -25,6 +26,7 @@ class ReservationController extends Controller
     public function __construct()
     {
         $this->totalDateController = new TotalDateController();
+        $this->notificationController = new NotificationController();
     }
 
     public function get_host_booking(Request $request, $host_id)
@@ -169,6 +171,8 @@ class ReservationController extends Controller
         try {
             if (Reservation::create($request->all())) {
                 $this->response['status'] = 'success';
+                $this->notificationController->send_notify_user_booking($request->guest_id, $request->listing_id);
+                $this->notificationController->send_notify_booking_success($request->guest_id, $request->listing_id);
                 return response()->json($this->response, $this->success_code);
             }
             return response()->json($this->response, 400);
@@ -242,6 +246,7 @@ class ReservationController extends Controller
             $reservation = Reservation::find($id);
             if ($reservation) {
                 $reservation->update(['reservation_status_id' => $request->reservation_status_id]);
+                $this->notificationController->send_notify_edit_status($request->reservation_status_id, $reservation);
                 $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
             }

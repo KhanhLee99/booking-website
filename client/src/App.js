@@ -4,30 +4,23 @@ import { useDispatch } from 'react-redux';
 import {
   BrowserRouter, Route, Switch
 } from "react-router-dom";
-import ReactTooltip from 'react-tooltip';
 import { getMe } from './app/reducer/guestSlice';
 import { saveDeviceToken } from './app/reducer/userSlice';
-import CommonAddListing from './components/CommonAddListing/CommonAddListing';
-import CommonAdmin from './components/CommonAdmin/CommonAdmin';
 import CommonUserProfile from './components/CommonUserProfile/CommonUserProfile';
 import Loading from './components/Loading/Loading';
 import ReactNotificationComponent from './components/Notification/ReactNotification';
 import { PrivateRouteAddListing, PrivateRouteAdmin, PrivateRouteHost, PrivateRouteMe } from './components/PrivateRoute';
-import { ParentChild } from './components/Test/ParentChild';
 import AdminFeature from './features/Admin';
 import AdminLogin from './features/Admin/pages/AdminLogin/AdminLogin';
 import Home from './features/Home/pages';
 import HostFeature from './features/Host';
 import AddListingFeature from './features/Host/AddListingFeature';
 import HostLogin from './features/Host/pages/HostLogin/HostLogin';
-import HostMessage from './features/Host/pages/HostMessage/HostMessage';
 import MessageHost from './features/Host/pages/Message';
-import Booking from './features/Listings/components/Booking';
-import Chat from './features/Listings/components/Chat/Chat';
 import ListingsLocation from './features/Listings/pages';
 import ListingDetail from './features/Listings/pages/ListingDetail';
 import UserProfileFeature from './features/UserProfile';
-import { messaging, onMessageListener } from './init-fcm';
+import { getToken, onMessageListener } from './init-fcm';
 
 
 // import { getToken } from "./firebase";
@@ -50,7 +43,7 @@ function App() {
     const getFcmToken = async () => {
       let token = '';
       try {
-        token = await messaging.getToken();
+        token = await getToken();
       } catch (err) {
         console.log(err);
       }
@@ -58,6 +51,7 @@ function App() {
       console.log('token: ', token);
     }
     getFcmToken();
+
   }, []);
 
   useEffect(() => {
@@ -75,48 +69,46 @@ function App() {
     })
     .catch((err) => console.log("failed: ", err));
 
-
   return (
-    <HostMessage />
+    // <UserChat />
 
-    // <>
-    //   {show ? (
-    //     <ReactNotificationComponent
-    //       title={notification.title}
-    //       body={notification.body}
-    //     />
-    //   ) : (
-    //     <></>
-    //   )}
-    //   {loading ? <Loading /> :
-    //     <Suspense fallback={<div>Loading ...</div>}>
-    //       <BrowserRouter>
-    //         <Switch>
-    //           <Route path="/" exact component={Home} />
-    //           <Route path="/admin/login" component={AdminLogin} />
-    //           <Route path="/host/login" component={HostLogin} />
-    //           <Route path="/hosting" component={MessageHost} />
 
-    //           <PrivateRouteHost path="/host" component={HostFeature} />
-    //           <PrivateRouteAddListing path="/become-host" component={AddListingFeature} />
-    //           <PrivateRouteAdmin path="/admin" component={AdminFeature} />
-    //           <PrivateRouteMe path="/me" component={UserProfileFeature} layout={CommonUserProfile} />
+    <>
+      {show ? (
+        <ReactNotificationComponent
+          title={notification.title}
+          body={notification.body}
+        />
+      ) : (
+        <></>
+      )}
+      {loading ? <Loading /> :
+        <Suspense fallback={<div>Loading ...</div>}>
+          <BrowserRouter>
+            <Switch>
+              <Route path="/" exact component={Home} />
+              <Route path="/admin/login" component={AdminLogin} />
+              <Route path="/host/login" component={HostLogin} />
+              <Route path="/hosting" component={MessageHost} />
 
-    //           <Route path="/listing/:id" component={ListingDetail} />
-    //           <Route path="/location/:id" exact component={ListingsLocation} />
+              <PrivateRouteHost path="/host" component={HostFeature} />
+              <PrivateRouteAddListing path="/become-host" component={AddListingFeature} />
+              <PrivateRouteAdmin path="/admin" component={AdminFeature} />
+              <PrivateRouteMe path="/me" component={UserProfileFeature} layout={CommonUserProfile} />
 
-    //           {/* <Route path="/login" component={Login} /> */}
-    //           {/* <Redirect exact from='/' to='/login' /> */}
-    //           {/* <PrivateRoute path='/guest' component={GuestFeauture} />
-    //     <Route path="/error" component={MainErrorPage} />
-    //     <Route component={NotFoundPage} /> */}
-    //         </Switch>
-    //       </BrowserRouter>
-    //     </Suspense>
-    //   }
+              <Route path="/listing/:id" component={ListingDetail} />
+              <Route path="/location/:id" exact component={ListingsLocation} />
 
-    // </>
-
+              {/* <Route path="/login" component={Login} /> */}
+              {/* <Redirect exact from='/' to='/login' /> */}
+              {/* <PrivateRoute path='/guest' component={GuestFeauture} />
+        <Route path="/error" component={MainErrorPage} />
+        <Route component={NotFoundPage} /> */}
+            </Switch>
+          </BrowserRouter>
+        </Suspense>
+      }
+    </>
   )
 }
 

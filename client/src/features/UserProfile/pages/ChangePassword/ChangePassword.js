@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './ChangePassword.scss';
 import userProfileApi from '../../../../api/userProfileApi';
@@ -46,6 +46,10 @@ function ChangePassword(props) {
             }
         })
     }
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
 
     return (

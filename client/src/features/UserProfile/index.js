@@ -11,6 +11,7 @@ import EditProfile from './pages/EditProfile/EditProfile';
 import ChangePassword from './pages/ChangePassword/ChangePassword';
 import Favorite from './pages/Favorite/Favorite';
 import MyBooking from './pages/MyBooking/MyBooking';
+import UserMessage from './pages/UserMessage/UserMessage';
 
 UserProfileFeature.propTypes = {
 
@@ -43,6 +44,12 @@ function UserProfileFeature(props) {
                     path={`${match.url}/bookings`}
                     exact
                     component={MyBooking}
+                />
+
+                <Route
+                    path={`${match.url}/inbox`}
+                    exact
+                    component={UserMessage}
                 />
 
             </Switch>

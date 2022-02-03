@@ -20,6 +20,7 @@ import Hosting from './pages/Hosting';
 import ReservationDetail from './pages/ReservationDetail/ReservationDetail';
 import Reviews from './pages/Reviews/Reviews';
 import Booking from '../Listings/components/Booking';
+import HostMessage from './pages/HostMessage/HostMessage';
 
 HostFeature.propTypes = {
 
@@ -64,9 +65,13 @@ function HostFeature(props) {
                 <Route
                     path={`${match.url}/checkout/:id`}
                     exact
-                    component={Booking} />
-
-
+                    component={Booking}
+                />
+                <Route
+                    path={`${match.url}/inbox`}
+                    exact
+                    component={HostMessage}
+                />
 
             </Switch>
         </>

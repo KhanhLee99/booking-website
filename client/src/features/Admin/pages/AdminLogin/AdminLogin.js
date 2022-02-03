@@ -8,6 +8,7 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { adminLogin } from '../../../../app/reducer/userSlice';
 import { unwrapResult } from '@reduxjs/toolkit';
+import useWindowDimensions from '../../../../@use/useWindowDimensions';
 
 AdminLogin.propTypes = {
 
@@ -43,8 +44,11 @@ function AdminLogin(props) {
         }
     }, []);
 
+    const { height } = useWindowDimensions();
+
+
     return (
-        <div className='admin-login-box gray-bg' style={{ minHeight: window.innerHeight }}>
+        <div className='admin-login-box gray-bg' style={{ minHeight: height }}>
 
             <Formik
                 initialValues={{ email: '', password: '' }}

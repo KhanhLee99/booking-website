@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Common\NotificationController;
 use App\Http\Controllers\Controller;
 use App\Listing;
 use Exception;
@@ -13,6 +14,11 @@ class AdminListingController extends Controller
     private $response = [
         'status' => false
     ];
+
+    public function __construct()
+    {
+        $this->notificationController = new NotificationController();
+    }
 
     public function get_listing_pending()
     {
@@ -56,6 +62,7 @@ class AdminListingController extends Controller
             if (Listing::find($id)->update([
                 'is_verified' => true
             ])) {
+                $this->notificationController->send_notify_active_listing($id);
                 $this->response['status'] = true;
                 return response()->json($this->response, $this->success_code);
             }

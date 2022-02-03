@@ -21,7 +21,6 @@ function ListListingsLocation(props) {
                 />
             ))}
         </div >
-
     );
 }
 

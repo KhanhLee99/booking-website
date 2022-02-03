@@ -1,13 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './Dashboard.scss';
 import CommonAdmin from '../../../../components/CommonAdmin/CommonAdmin';
+import adminDashboardApi from '../../../../api/adminDashboardApi';
 
 Dashboard.propTypes = {
 
 };
 
 function Dashboard(props) {
+
+    const [overview, setOverview] = useState([]);
+
+    useEffect(() => {
+
+        const fetchData = async () => {
+            await adminDashboardApi.getOverviewInfo().then(res => {
+                setOverview(res.data.data);
+            })
+        }
+
+        fetchData();
+
+        return () => {
+            setOverview([]);
+        }
+
+    }, []);
+
     return (
         <CommonAdmin>
             <div className="dashboard-title fl-wrap">
@@ -22,7 +42,7 @@ function Dashboard(props) {
                                 <i className="fal fa-home" />
                                 <div className="milestone-counter">
                                     <div className="stats animaper">
-                                        <div className="num" data-content={0} data-num={1054}>1030</div>
+                                        <div className="num" data-content={0} data-num={1054}>{overview.listing_count || 0}</div>
                                     </div>
                                 </div>
                                 <h6>Listings</h6>
@@ -43,7 +63,7 @@ function Dashboard(props) {
                                 <i className="fal fa-user" />
                                 <div className="milestone-counter">
                                     <div className="stats animaper">
-                                        <div className="num" data-content={0} data-num={125}>242</div>
+                                        <div className="num" data-content={0} data-num={125}>{overview.host_count || 0}</div>
                                     </div>
                                 </div>
                                 <h6>Hosts</h6>
@@ -64,7 +84,7 @@ function Dashboard(props) {
                                 <i className="fal fa-comments-alt" />
                                 <div className="milestone-counter">
                                     <div className="stats animaper">
-                                        <div className="num" data-content={0} data-num={2557}>2300</div>
+                                        <div className="num" data-content={0} data-num={2557}>{overview.review_count || 0}</div>
                                     </div>
                                 </div>
                                 <h6>Total Reviews</h6>

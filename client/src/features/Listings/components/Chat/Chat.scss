@@ -1,16 +1,19 @@
-.chat-widget_wrap {
+.chat-w-host {
     position: fixed;
     bottom: 170px;
     right: 50px;
+    box-shadow: 0px 0px 80px 0px rgb(0 0 0 / 20%);
+}
+
+.chat-widget_wrap {
     width: 300px;
     height: 400px;
     z-index: 116;
     background: #fff;
     border-radius: 10px;
-    box-shadow: 0px 0px 80px 0px rgb(0 0 0 / 20%);
     overflow: hidden;
-    // display: none;
     -webkit-transform: translate3d(0, 0, 0);
+    float: left;
 }
 
 .chat-widget_header {
@@ -101,7 +104,7 @@
             padding: 6px 20px;
             background: #f5f6fa;
             border-radius: 0 10px 10px 10px;
-            width: 100%;
+            // width: 100%;
             text-align: left;
             font-size: 11px;
             color: #878c9f;
@@ -119,6 +122,7 @@
         // padding-left: 50;
         // padding-right: 60px;
         width: auto;
+        float: right;
 
         & .dashboard-message-avatar {
             left: inherit;
@@ -146,7 +150,7 @@
 
 .chat-widget_input {
     position: absolute;
-    bottom: 0;
+    bottom: 0px !important;
     left: 0;
     width: 100%;
     z-index: 20;
@@ -155,7 +159,11 @@
     border-top: 1px solid #eee;
     background: #f9f9f9;
 
-    & textarea {
+    & form {
+        height: 100%;
+    }
+
+    & form textarea {
         display: block;
         white-space: pre-wrap;
         width: 100%;
@@ -165,7 +173,7 @@
         padding: 17px 11px 13px;
         overflow: auto;
         -webkit-overflow-scrolling: touch;
-        max-height: 100px;
+        // max-height: 100px;
         resize: none;
     }
 

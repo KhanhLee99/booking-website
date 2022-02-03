@@ -20,7 +20,7 @@ class CreateNotificationTable extends Migration
             $table->string('message');
             $table->boolean('is_read')->default(0);
 
-            $table->unsignedBigInteger('noti_type_id');
+            $table->unsignedBigInteger('noti_type_id')->nullable();
             $table->foreign('noti_type_id')->references('id')->on('notification_type');
 
             $table->unsignedBigInteger('sender_id')->nullable();

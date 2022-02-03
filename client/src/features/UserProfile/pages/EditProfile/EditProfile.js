@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './EditProfile.scss';
 import { useDispatch, useSelector } from 'react-redux';
@@ -75,6 +75,10 @@ function EditProfile(props) {
             setLoading(false)
         })
     }
+
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, []);
 
     return (
         <div>

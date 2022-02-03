@@ -56,12 +56,15 @@ class MessageController extends Controller
     public function get_messages(Request $request, $conversation_id)
     {
         $user_current_id = $request->user('api')->id;
-        return DB::table('messages')
+        $data['conversation_id'] = $conversation_id;
+        $data['conversation'] = DB::table('messages')
             ->where('conversation_id', $conversation_id)
             ->join('users', 'users.id', '=', 'messages.sender_id')
             ->select('users.id', 'users.name', 'users.avatar_url as avatar', 'messages.message', 'messages.created_at as time')
             ->selectRaw('(CASE WHEN users.id = ' . $user_current_id . ' THEN 1 ELSE 0 END) AS isMe')
             ->get();
+
+        return $data;
     }
 
     public function send_message(Request $request)

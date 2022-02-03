@@ -80,12 +80,13 @@ class ConversationController extends Controller
                     ];
                 }
             }
+
             if ($data) {
                 $this->response['status'] = 'success';
                 $this->response['data'] = $data;
                 return response()->json($this->response, $this->success_code);
             }
-            return response()->json($this->response);
+            return response()->json($this->response, 400);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);

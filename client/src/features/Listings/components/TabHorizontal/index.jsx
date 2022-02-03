@@ -13,7 +13,7 @@ const scroll_nav_wrapper = {
     background: '#fff',
     boxShadow: '0 0 65px rgb(0 0 0 / 9%)',
     borderBottom: '1px solid #eee',
-    zIndex: 998,
+    zIndex: 99,
     position: 'relative',
     top: '0px',
 }

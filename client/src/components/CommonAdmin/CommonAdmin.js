@@ -4,6 +4,7 @@ import './CommonAdmin.scss';
 import ReactNotificationComponent from '../Notification/ReactNotification';
 import { Link } from 'react-router-dom';
 import { HeaderAddListing } from '../../features/Host/components/HeaderHost';
+import useWindowDimensions from '../../@use/useWindowDimensions';
 
 CommonAdmin.propTypes = {
 
@@ -31,6 +32,9 @@ function CommonAdmin({ children }) {
         return child;
     });
 
+    const { height } = useWindowDimensions();
+    const heightSection = height - 100;
+
     return (
         <>
             {showNoti && <ReactNotificationComponent
@@ -41,7 +45,7 @@ function CommonAdmin({ children }) {
             <div id=''>
                 <HeaderAddListing />
                 <section className="gray-bg main-dashboard-sec" id="sec1">
-                    <div className="container" style={{ minHeight: window.innerHeight }}>
+                    <div className="container" style={{ minHeight: heightSection }}>
                         {/*  dashboard-menu*/}
                         <div className="col-md-3">
                             <div className="mob-nav-content-btn color2-bg init-dsmen fl-wrap"><i className="fal fa-bars" />

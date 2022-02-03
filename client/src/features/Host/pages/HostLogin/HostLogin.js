@@ -15,6 +15,7 @@ import { loginFacebook, loginGoogle } from '../../../../app/reducer/guestSlice';
 import userApi from '../../../../api/userApi';
 import PulseLoading from '../../../../components/Loading/PulseLoading';
 import './HostLogin.scss';
+import useWindowDimensions from '../../../../@use/useWindowDimensions';
 
 // HostLogin.propTypes = {
 
@@ -329,9 +330,10 @@ function HostLogin(props) {
 
     const { close } = props;
 
+    const { height } = useWindowDimensions();
 
     return (
-        <div id='host-login' className='gray-bg' style={{ width: window.innerWidth, minHeight: window.innerHeight }}>
+        <div id='host-login' className='gray-bg' style={{ width: window.innerWidth, minHeight: height }}>
             <div className="k-main-register-holder tabs-act" style={main_register_holder}>
                 <div className="k-main-register fl-wrap" style={main_register}>
                     <h2 className='host-login-title'>HOST LOGIN</h2>

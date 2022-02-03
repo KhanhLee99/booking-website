@@ -1,7 +1,9 @@
 import { DatePicker } from 'antd';
 import React, { useRef, useState } from 'react';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { getMyNotify, getTotalNoticationsUnread, seenNotifications } from '../../app/reducer/notifySlice';
 import { deleteDeviceToken } from '../../app/reducer/userSlice';
 import LoginModal from '../LoginModal/LoginModal';
 import OutsideAlerter from '../OutsideAlerter/OutsideAlerter';
@@ -196,6 +198,9 @@ function Header(props) {
     const dispatch = useDispatch();
 
     const loggedInUser = useSelector((state) => state.userSlice.current);
+    const notifications = useSelector((state) => state.notifySlice.myNotify || []);
+    const totalNotiUnread = useSelector((state) => state.notifySlice.totalUnread || 0);
+
     const isLoggedIn = !!loggedInUser.id;
 
     const [showPopupProfile, setShowPopupProfile] = useState(false);
@@ -214,13 +219,22 @@ function Header(props) {
         window.location.reload();
     }
 
+    const handleClickBell = () => {
+        setShowPopupNotify(!showPopupNotify);
+        dispatch(seenNotifications());
+    }
+
+    useEffect(() => {
+        dispatch(getTotalNoticationsUnread());
+        dispatch(getMyNotify());
+    }, []);
+
     return (
 
         <header className="k-main-header" style={main_header}>
             <Link to="/" className="k-logo-holder" style={logo_holder}><img src="https://i.ytimg.com/vi/FPtITmtjWhQ/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB3TdlYzQKkXD7XtPbNwCGLGycr2Q" alt="" style={{ width: 'auto', height: '100%' }} /></Link>
 
             <OutsideAlerter closePopup={() => setShowPopupSearch(false)} ref={refSearch}>
-
                 <div
                     className="k-header-search_btn show-search-button"
                     style={header_search_btn}
@@ -272,33 +286,30 @@ function Header(props) {
                         <div
                             className="k-cart-btn"
                             style={cart_btn}
-                            onClick={() => setShowPopupNotify(!showPopupNotify)}
+                            onClick={() => handleClickBell()}
                         >
-                            <i className="fas fa-bell" style={{ width: '12px' }} /><span className="k-cart-counter" style={cart_counter} >4</span>
+                            <i className="fas fa-bell" style={{ width: '12px' }} />
+                            {totalNotiUnread > 0 && <span className="k-cart-counter" style={cart_counter} >{totalNotiUnread}</span>}
                         </div>
 
                         <div className={showPopupNotify ? "header-modal vis-wishlist" : "header-modal"}>
-                            <div className="header-modal-container scrollbar-inner fl-wrap" data-simplebar>
-
+                            <div className="header-modal-container scrollbar-inner fl-wrap">
                                 <div className='notification-title'>
                                     <h3>Notifications</h3>
                                 </div>
 
                                 <div className="notification-list-box fl-wrap">
-
-                                    <NotificationItem />
-                                    <NotificationItem />
-                                    <NotificationItem />
-                                    <NotificationItem />
-                                    <NotificationItem />
-                                    <NotificationItem />
-
+                                    {
+                                        notifications.length > 0 ?
+                                            notifications.map((notify, index) => (
+                                                <NotificationItem
+                                                    key={index}
+                                                    notify={notify}
+                                                />
+                                            ))
+                                            : null
+                                    }
                                 </div>
-                            </div>
-
-                            <div className="header-modal-top fl-wrap">
-                                <h4>Your Wishlist : <span><strong /> Locations</span></h4>
-                                <div className="close-header-modal"><i className="far fa-times" /></div>
                             </div>
                         </div>
                     </OutsideAlerter>
@@ -321,6 +332,7 @@ function Header(props) {
                                 <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/profile" style={header_user_menu_ul_li_a}> Edit profile</Link></li>
                                 <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/bookings" style={header_user_menu_ul_li_a}>  Bookings</Link></li>
                                 <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/favorite" style={header_user_menu_ul_li_a}> Danh sách yêu thích </Link></li>
+                                <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/inbox" style={header_user_menu_ul_li_a}> Tin nhắn</Link></li>
                                 {loggedInUser.role_id === 2 ?
                                     <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/host/listings" style={header_user_menu_ul_li_a}>Quản lý phòng cho thuê</Link></li>
                                     : null}
@@ -339,16 +351,17 @@ function Header(props) {
 }
 export default Header;
 
-function NotificationItem(props) {
-    const { } = props;
+export function NotificationItem(props) {
+    const { notify } = props;
 
     return (
-        <div className="notification-list fl-wrap">
+        <div className="notification-list fl-wrap" style={{ background: notify.is_read ? '' : '#E9F3FE' }}>
             <div className="notification-message">
                 <div className="notification-message-text">
                     <i className="far fa-heart purp-bg"></i>
                     <div>
-                        <p><a href="#">Mark Rose</a> add new Listing Park Central add new Listing Park Central</p>
+                        <p dangerouslySetInnerHTML={{ __html: notify.message }} />
+                        {/* <p><a href="#">Mark Rose</a> {notify.message}</p> */}
                         <p className="notificattion-message-time">28 may 2020</p>
                     </div>
                 </div>

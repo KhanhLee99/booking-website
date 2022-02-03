@@ -13,6 +13,7 @@ import { ReservationFilter, ReservationStatus } from '../../../../app/constant';
 import reservationApi from '../../../../api/reservationApi';
 import Loading from '../../../../components/Loading/Loading';
 import ReactNotificationComponent, { NotificationStattus } from '../../../../components/Notification/ReactNotification';
+import useWindowDimensions from '../../../../@use/useWindowDimensions';
 
 Reservation.propTypes = {
 
@@ -110,6 +111,10 @@ function Reservation(props) {
             setBooking([]);
         }
     }, [currentPage, filter]);
+
+    const { height } = useWindowDimensions();
+
+
     return (
         <div id="wrapper" style={{ background: '#f6f6f6' }}>
             {loading && <Loading />}
@@ -119,7 +124,7 @@ function Reservation(props) {
                 status={noti.status}
             />}
             <HeaderHost />
-            <div className='container' style={{ marginTop: '80px', paddingTop: '20px', minHeight: window.innerHeight }}>
+            <div className='container' style={{ marginTop: '80px', paddingTop: '20px', minHeight: height }}>
                 <div className='reservations-header-title wrap-title-header fl-wrap'>
                     <div style={{ width: '50%', float: 'left', height: '69px', display: 'flex', alignItems: 'center' }}>
                         <h3 className='h3_title'>Reservation</h3>

@@ -1,32 +1,27 @@
 import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import './HostMessage.scss';
-import conversationApi from '../../../../api/conversationApi';
-import moment from 'moment';
-import Loading from '../../../../components/Loading/Loading';
-import ReactTooltip from 'react-tooltip';
-import { useSelector } from 'react-redux';
+import './UserMessage.scss';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useSelector } from 'react-redux';
+import conversationApi from '../../../../api/conversationApi';
+import { Contact, MessageGuest, MessageMe } from '../../../Host/pages/HostMessage/HostMessage';
+import Loading from '../../../../components/Loading/Loading';
 import useWindowDimensions from '../../../../@use/useWindowDimensions';
-import HeaderHost from '../../components/HeaderHost';
 
-HostMessage.propTypes = {
+UserMessage.propTypes = {
 
 };
 
-function HostMessage(props) {
+function UserMessage(props) {
     const messagesEndRef = useRef(null);
 
     const loggedInUser = useSelector((state) => state.userSlice.current);
 
+    const [loading, setLoading] = useState(false);
     const [conversations, setConversations] = useState([]);
     const [conversation, setConversation] = useState([]);
     const [currentConversationId, setCurrentConversationId] = useState(null);
-    const [loading, setLoading] = useState(false);
-
-    const { height, width } = useWindowDimensions();
-    const heightContent = height - 80;
 
     const fetchConversation = async (conversation_id) => {
         try {
@@ -60,6 +55,7 @@ function HostMessage(props) {
                     isMe: 1,
                 }
                 setConversation(oldState => [...oldState, newMessage]);
+                // setConversation(conversation.push(newMessage));
                 resetForm();
             });
         } catch (err) {
@@ -85,9 +81,8 @@ function HostMessage(props) {
         }
 
         fetchListConversation();
+        window.scrollTo(0, 0);
     }, []);
-
-
 
     useEffect(() => {
         const scrollToBottom = () => {
@@ -96,16 +91,17 @@ function HostMessage(props) {
         scrollToBottom();
     }, [conversation]);
 
+    const { height, width } = useWindowDimensions();
 
     return (
-        <div id="wrapper" style={{ background: '#f6f6f6' }}>
+        <div>
             {loading && <Loading />}
-            <HeaderHost />
-            <div id='inbox-wrapper' className="dashboard-list-box fl-wrap" style={{ height: heightContent, width: width, marginTop: '80px', overflowX: 'hidden' }}>
+            <h3 className='h3_title'>Messages</h3>
+            <div id='inbox-wrapper' className="dashboard-list-box fl-wrap" style={{ height: height * 80 / 100, overflowX: 'hidden', border: '1px solid #e5e7f2' }}>
                 <div className="chat-wrapper fl-wrap">
                     <div className="row">
                         <div className="col-sm-4">
-                            <div className="chat-contacts fl-wrap" style={{ height: heightContent }}>
+                            <div className="chat-contacts fl-wrap">
                                 {conversations.map((item, index) => (
                                     <Contact
                                         key={index}
@@ -117,7 +113,7 @@ function HostMessage(props) {
                         </div>
                         {/* chat-box*/}
                         <div className="col-sm-8 conversation-content">
-                            <div className="chat-box fl-wrap" style={{ height: heightContent }}>
+                            <div className="chat-box fl-wrap" style={{ height: height * 80 / 100 }}>
                                 {conversation.map((message, index) => (
                                     message.isMe ?
                                         <MessageMe
@@ -129,9 +125,8 @@ function HostMessage(props) {
                                             key={index}
                                         />
                                 ))}
-                                <div className="chat-message chat-message_user fl-wrap" id='bottom-chat-box' ref={messagesEndRef} />
+                                <div className="chat-message chat-message_user fl-wrap" ref={messagesEndRef} />
                             </div>
-
                             <div className="chat-widget_input fl-wrap">
                                 <Formik
                                     initialValues={{ message: '' }}
@@ -162,58 +157,4 @@ function HostMessage(props) {
     );
 }
 
-export default HostMessage;
-
-export function MessageMe(props) {
-    const { message, avatar, name, time } = props.message;
-
-    return (
-        <div className="chat-message chat-message_user fl-wrap">
-            {/* <div className="dashboard-message-avatar">
-                <img src="https://i.ytimg.com/an_webp/lMe2Uhc5SG0/mqdefault_6s.webp?du=3000&sqp=CNXD4I8G&rs=AOn4CLBPXOcb3dCzZL5YJmZT_IMv5Cm6Sg" alt="" />
-                <span className="chat-message-user-name cmun_sm">Jessie</span>
-            </div> */}
-            <span className="massage-date">{moment(time).format('LL')}  <span>{moment(time).format('LT').replace(':', '.')}</span></span>
-            <br />
-            <p>{message}</p>
-        </div>
-    )
-}
-
-export function MessageGuest(props) {
-    const { message, avatar, name, time } = props.message;
-
-    return (
-        <div className="chat-message chat-message_guest fl-wrap">
-            <div className="dashboard-message-avatar">
-                <img data-tip={name} src={avatar} alt="" />
-                <ReactTooltip place="left" type="dark" effect="float" />
-            </div>
-            <span className="massage-date">{moment(time).format('LL')}  <span>{moment(time).format('LT').replace(':', '.')}</span></span>
-            <br />
-            <p>{message}</p>
-        </div>
-    )
-}
-
-export function Contact(props) {
-    const { lastMessage, fetchConversation } = props;
-
-    const handleClickConversation = (e, conversation_id) => {
-        e.preventDefault();
-        fetchConversation(conversation_id);
-    }
-    return (
-        <a className="chat-contacts-item" href="#" onClick={(e) => { handleClickConversation(e, lastMessage.conversation_id) }}>
-            <div className="dashboard-message-avatar">
-                <img src={lastMessage.receiver.avatar} alt="" />
-            </div>
-            <div className="chat-contacts-item-text">
-                <h4>{lastMessage.receiver.name}</h4>
-                <p>{lastMessage.message}</p>
-                <span>{moment(lastMessage.time).format('ll')} </span>
-            </div>
-        </a>
-    )
-}
-
+export default UserMessage;

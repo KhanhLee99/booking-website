@@ -149,7 +149,7 @@ Route::post('reservation/count-total-price', 'Host\ReservationController@count_t
 
 // Conversation
 Route::post('conversation/add', 'Common\ConversationController@create_conversation');
-Route::get('conversation', 'Common\ConversationController@get_conversations');
+Route::get('conversations', 'Common\ConversationController@get_conversations');
 
 
 // Messages
@@ -190,6 +190,9 @@ Route::put('admin/listing/{id}/lock', 'Admin\AdminListingController@lock_listing
 
 // Notification
 Route::post('notification/add', 'Admin\AdminNotificationController@add');
+Route::get('notification/me', 'Common\NotificationController@get_user_notify');
+Route::get('notification/unread-total', 'Common\NotificationController@get_total_noti_unread');
+Route::put('notification/seen', 'Common\NotificationController@seen_notifications');
 
 
 
@@ -198,3 +201,6 @@ Route::get('listing/{id}/amenities', 'Host\ListingAmenitiesController@get_listin
 
 Route::post('reset-password', 'Auth\ResetPasswordController@sendMail');
 Route::put('reset-password', 'Auth\ResetPasswordController@reset');
+
+// Admin Dashboard
+Route::get('admin/dashboard/overview', 'Admin\AdminDashboardController@index');
