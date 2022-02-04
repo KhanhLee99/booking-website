@@ -6,9 +6,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import AvatarPlaceholder from '../../../../components/Placeholder/AvatarPlaceholder/AvatarPlaceholder';
 import LoginModal from '../../../../components/LoginModal/LoginModal';
 import { deleteDeviceToken } from '../../../../app/reducer/userSlice';
-import { getMyNotify, getTotalNoticationsUnread, seenNotifications } from '../../../../app/reducer/notifySlice';
+import { getMyNotify, getTotalNoticationsUnread, nextPage, seenNotifications } from '../../../../app/reducer/notifySlice';
 import OutsideAlerter from '../../../../components/OutsideAlerter/OutsideAlerter';
-import { NotificationItem } from '../../../../components/Header';
+import { NotificationItem, SkeletonNotificationItem } from '../../../../components/Header';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 HeaderHost.propTypes = {
 
@@ -105,6 +106,8 @@ function HeaderHost(props) {
     const isLoggedIn = !!loggedInUser.id;
     const notifications = useSelector((state) => state.notifySlice.myNotify || []);
     const totalNotiUnread = useSelector((state) => state.notifySlice.totalUnread || 0);
+    const totalPage = useSelector((state) => state.notifySlice.totalPage || 0);
+    const currentPage = useSelector((state) => state.notifySlice.currentPage || 1);
 
     const [showPopupProfile, setShowPopupProfile] = useState(false);
     const [hovered, setHovered] = useState(false);
@@ -128,10 +131,28 @@ function HeaderHost(props) {
         window.location.reload();
     }
 
+    const loadMoreData = async () => {
+        await dispatch(nextPage());
+    }
+
     useEffect(() => {
         dispatch(getTotalNoticationsUnread());
-        dispatch(getMyNotify());
+        dispatch(getMyNotify({
+            page: currentPage,
+            limit: 5
+        }));
     }, []);
+
+    useEffect(() => {
+        if (currentPage > 1) {
+            setTimeout(() => {
+                dispatch(getMyNotify({
+                    page: currentPage,
+                    limit: 5
+                }));
+            }, 1000);
+        }
+    }, [currentPage])
 
     return (
         <header className="k-main-header" style={main_header}>
@@ -153,24 +174,38 @@ function HeaderHost(props) {
                         </div>
 
                         <div className={showPopupNotify ? "header-modal vis-wishlist" : "header-modal"}>
-                            <div className="header-modal-container scrollbar-inner fl-wrap">
-                                <div className='notification-title'>
-                                    <h3>Notifications</h3>
-                                </div>
+                            <InfiniteScroll
+                                dataLength={notifications.length}
+                                next={loadMoreData}
+                                hasMore={currentPage < totalPage ? true : false}
+                                loader={
+                                    <>
+                                        <SkeletonNotificationItem />
+                                        <SkeletonNotificationItem />
+                                    </>
+                                }
+                                height={440}
+                                style={{ background: '#fff' }}
+                            >
+                                <div className="header-modal-container scrollbar-inner fl-wrap">
+                                    <div className='notification-title'>
+                                        <h3>Notifications</h3>
+                                    </div>
 
-                                <div className="notification-list-box fl-wrap">
-                                    {
-                                        notifications.length > 0 ?
-                                            notifications.map((notify, index) => (
-                                                <NotificationItem
-                                                    key={index}
-                                                    notify={notify}
-                                                />
-                                            ))
-                                            : null
-                                    }
+                                    <div className="notification-list-box fl-wrap">
+                                        {
+                                            notifications.length > 0 ?
+                                                notifications.map((notify, index) => (
+                                                    <NotificationItem
+                                                        key={index}
+                                                        notify={notify}
+                                                    />
+                                                ))
+                                                : null
+                                        }
+                                    </div>
                                 </div>
-                            </div>
+                            </InfiniteScroll>
                         </div>
 
                     </OutsideAlerter>

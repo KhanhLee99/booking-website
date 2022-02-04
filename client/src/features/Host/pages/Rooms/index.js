@@ -121,7 +121,10 @@ function Rooms(props) {
 
     return (
         <CommonAddListing>
-            <TabAddListing id={id} />
+            <TabAddListing
+                id={id}
+                rooms={true}
+            />
             <div className='row'>
                 <div className='col-7'>
                     <div id="add-listing">

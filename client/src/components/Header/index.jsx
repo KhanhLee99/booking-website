@@ -3,13 +3,15 @@ import React, { useRef, useState } from 'react';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getMyNotify, getTotalNoticationsUnread, seenNotifications } from '../../app/reducer/notifySlice';
+import { getMyNotify, getTotalNoticationsUnread, nextPage, seenNotifications } from '../../app/reducer/notifySlice';
 import { deleteDeviceToken } from '../../app/reducer/userSlice';
 import LoginModal from '../LoginModal/LoginModal';
 import OutsideAlerter from '../OutsideAlerter/OutsideAlerter';
 import AvatarPlaceholder from '../Placeholder/AvatarPlaceholder/AvatarPlaceholder';
 import './styles.scss';
-
+import InfiniteScroll from 'react-infinite-scroll-component';
+import Skeleton from 'react-loading-skeleton'
+import 'react-loading-skeleton/dist/skeleton.css'
 
 
 const main_header = {
@@ -200,6 +202,9 @@ function Header(props) {
     const loggedInUser = useSelector((state) => state.userSlice.current);
     const notifications = useSelector((state) => state.notifySlice.myNotify || []);
     const totalNotiUnread = useSelector((state) => state.notifySlice.totalUnread || 0);
+    const totalPage = useSelector((state) => state.notifySlice.totalPage || 0);
+    const currentPage = useSelector((state) => state.notifySlice.currentPage || 1);
+
 
     const isLoggedIn = !!loggedInUser.id;
 
@@ -221,13 +226,33 @@ function Header(props) {
 
     const handleClickBell = () => {
         setShowPopupNotify(!showPopupNotify);
-        dispatch(seenNotifications());
+        if (totalNotiUnread > 0) {
+            dispatch(seenNotifications());
+        }
+    }
+
+    const loadMoreData = async () => {
+        await dispatch(nextPage());
     }
 
     useEffect(() => {
         dispatch(getTotalNoticationsUnread());
-        dispatch(getMyNotify());
+        dispatch(getMyNotify({
+            page: currentPage,
+            limit: 5
+        }));
     }, []);
+
+    useEffect(() => {
+        if (currentPage > 1) {
+            setTimeout(() => {
+                dispatch(getMyNotify({
+                    page: currentPage,
+                    limit: 5
+                }));
+            }, 1000);
+        }
+    }, [currentPage])
 
     return (
 
@@ -293,24 +318,38 @@ function Header(props) {
                         </div>
 
                         <div className={showPopupNotify ? "header-modal vis-wishlist" : "header-modal"}>
-                            <div className="header-modal-container scrollbar-inner fl-wrap">
-                                <div className='notification-title'>
-                                    <h3>Notifications</h3>
-                                </div>
+                            <InfiniteScroll
+                                dataLength={notifications.length}
+                                next={loadMoreData}
+                                hasMore={currentPage < totalPage ? true : false}
+                                loader={
+                                    <>
+                                        <SkeletonNotificationItem />
+                                        <SkeletonNotificationItem />
+                                    </>
+                                }
+                                height={440}
+                                style={{ background: '#fff' }}
+                            >
+                                <div className="header-modal-container scrollbar-inner fl-wrap">
+                                    <div className='notification-title'>
+                                        <h3>Notifications</h3>
+                                    </div>
 
-                                <div className="notification-list-box fl-wrap">
-                                    {
-                                        notifications.length > 0 ?
-                                            notifications.map((notify, index) => (
-                                                <NotificationItem
-                                                    key={index}
-                                                    notify={notify}
-                                                />
-                                            ))
-                                            : null
-                                    }
+                                    <div className="notification-list-box fl-wrap">
+                                        {
+                                            notifications.length > 0 ?
+                                                notifications.map((notify, index) => (
+                                                    <NotificationItem
+                                                        key={index}
+                                                        notify={notify}
+                                                    />
+                                                ))
+                                                : null
+                                        }
+                                    </div>
                                 </div>
-                            </div>
+                            </InfiniteScroll>
                         </div>
                     </OutsideAlerter>
 
@@ -361,13 +400,27 @@ export function NotificationItem(props) {
                     <i className="far fa-heart purp-bg"></i>
                     <div>
                         <p dangerouslySetInnerHTML={{ __html: notify.message }} />
-                        {/* <p><a href="#">Mark Rose</a> {notify.message}</p> */}
                         <p className="notificattion-message-time">28 may 2020</p>
                     </div>
                 </div>
             </div>
         </div>
     )
+}
+
+export function SkeletonNotificationItem(props) {
+    return (
+        <div className="notification-list fl-wrap">
+            <div className="notification-message">
+                <div className="notification-message-text" style={{ display: 'flex', alignItems: 'center' }}>
+                    <Skeleton width={"40px"} height={"40px"} style={{ float: "left", borderRadius: '50%' }} />
+                    <div>
+                        <Skeleton height={"20px"} style={{ float: "left", borderRadius: '8px' }} />
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
 
 

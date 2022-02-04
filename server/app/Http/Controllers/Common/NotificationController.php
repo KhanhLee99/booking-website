@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Common;
 use App\Http\Controllers\Controller;
 use App\Listing;
 use App\Models\Notification;
+use App\User;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -21,11 +22,14 @@ class NotificationController extends Controller
     {
         $listing = Listing::find($listing_id);
         try {
-            Notification::create([
-                'title' => 'New reservation',
-                'message' => 'New reservation at' . $listing->name,
-                'receiver_id' => $listing->user_id,
-            ]);
+            $title = 'New reservation';
+            $message = 'New reservation at' . $listing->name;
+            $this->send_notification($title, $message, $listing->user_id);
+            // Notification::create([
+            //     'title' => 'New reservation',
+            //     'message' => 'New reservation at' . $listing->name,
+            //     'receiver_id' => $listing->user_id,
+            // ]);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);
@@ -37,11 +41,14 @@ class NotificationController extends Controller
     {
         $listing = Listing::find($listing_id);
         try {
-            Notification::create([
-                'title' => 'Booking success',
-                'message' => "Your reservation at <a href='#'>" . $listing->name . "</a> success",
-                'receiver_id' => $guest_id,
-            ]);
+            $title = 'Booking success';
+            $message = "Your reservation at <a href='#'>" . $listing->name . "</a> success";
+            $this->send_notification($title, $message, $guest_id);
+            // Notification::create([
+            //     'title' => 'Booking success',
+            //     'message' => "Your reservation at <a href='#'>" . $listing->name . "</a> success",
+            //     'receiver_id' => $guest_id,
+            // ]);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);
@@ -104,19 +111,21 @@ class NotificationController extends Controller
             }
 
             if (strlen($title_host) > 0 && strlen($message_host) > 0) {
-                Notification::create([
-                    'title' => $title_host,
-                    'message' => $message_host,
-                    'receiver_id' => $listing->user_id,
-                ]);
+                $this->send_notification($title_host, $message_host, $listing->user_id);
+                // Notification::create([
+                //     'title' => $title_host,
+                //     'message' => $message_host,
+                //     'receiver_id' => $listing->user_id,
+                // ]);
             }
 
             if (strlen($title_user) > 0 && strlen($message_user) > 0) {
-                Notification::create([
-                    'title' => $title_user,
-                    'message' => $message_user,
-                    'receiver_id' => $reservation->guest_id,
-                ]);
+                $this->send_notification($title_user, $message_user, $reservation->guest_id);
+                // Notification::create([
+                //     'title' => $title_user,
+                //     'message' => $message_user,
+                //     'receiver_id' => $reservation->guest_id,
+                // ]);
             }
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
@@ -129,11 +138,14 @@ class NotificationController extends Controller
     {
         try {
             $listing = Listing::find($listing_id);
-            Notification::create([
-                'title' => 'Active Listing',
-                'message' => "Listing <a href='#'>" . $listing->name . "actived",
-                'receiver_id' => $listing->user_id,
-            ]);
+            $title = 'Active Listing';
+            $message = "Listing <a href='#'>" . $listing->name . "actived";
+            $this->send_notification($title, $message, $listing->user_id);
+            // Notification::create([
+            //     'title' => 'Active Listing',
+            //     'message' => "Listing <a href='#'>" . $listing->name . "actived",
+            //     'receiver_id' => $listing->user_id,
+            // ]);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);
@@ -145,11 +157,14 @@ class NotificationController extends Controller
     {
         try {
             $listing = Listing::find($listing_id);
-            Notification::create([
-                'title' => 'New Review',
-                'message' => "Listing <a href='#'>" . $listing->name . "has new review",
-                'receiver_id' => $listing->user_id,
-            ]);
+            $title = 'New Review';
+            $message = "Listing <a href='#'>" . $listing->name . "has new review";
+            $this->send_notification($title, $message, $listing->user_id);
+            // Notification::create([
+            //     'title' => 'New Review',
+            //     'message' => "Listing <a href='#'>" . $listing->name . "has new review",
+            //     'receiver_id' => $listing->user_id,
+            // ]);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);
@@ -164,7 +179,7 @@ class NotificationController extends Controller
             if ($current_user) {
                 $notifications = Notification::where('receiver_id', $current_user->id)
                     ->orderBy('id', 'desc')
-                    ->get();
+                    ->paginate($request->limit);
                 $this->response = [
                     'status' => true,
                     'data' => $notifications,
@@ -177,8 +192,6 @@ class NotificationController extends Controller
             return response()->json($this->response);
         }
     }
-
-
 
     public function get_total_noti_unread(Request $request)
     {
@@ -221,5 +234,56 @@ class NotificationController extends Controller
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);
         }
+    }
+
+    public function push_notification($title, $body, $user_id)
+    {
+        // $deviceToken = User::whereNotNull('device_key')->pluck('device_key')->all();
+        $deviceToken = User::where('id', $user_id)->whereNotNull('device_token')->pluck('device_token');
+
+        $dataEndCode = json_encode([
+            "registration_ids" => $deviceToken,
+            "notification" => [
+                "title" => $title,
+                "body" => $body,
+                "receiver_id" => $user_id,
+            ]
+        ]);
+
+        $headerRequest = [
+            'Authorization: key=' . env('FIRE_BASE_FCM_KEY'),
+            'Content-Type: application/json'
+        ];
+
+        // CURL
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, env('FIRE_BASE_URL'));
+        //FIRE_BASE_URL = https://fcm.googleapis.com/fcm/send
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headerRequest);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $dataEndCode);
+
+        $output = curl_exec($ch);
+
+        if ($output === FALSE) {
+            log('Curl error: ' . curl_error($ch));
+        }
+        curl_close($ch);
+
+        return response()->json($output);
+    }
+
+    private function send_notification($title, $message, $receiver_id)
+    {
+        Notification::create([
+            'title' => $title,
+            'message' => $message,
+            'receiver_id' => $receiver_id,
+        ]);
+        $this->push_notification($title, $message, $receiver_id);
     }
 }

@@ -44,6 +44,11 @@ const listingApi = {
     getNameCity: (id) => {
         const url = `city/${id}/name`;
         return axiosClient.get(url);
+    },
+
+    getListingPreview: (id) => {
+        const url = `/listing/${id}/preview`;
+        return axiosClient.get(url);
     }
 }
 

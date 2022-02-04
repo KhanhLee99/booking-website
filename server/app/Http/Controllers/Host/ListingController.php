@@ -424,6 +424,41 @@ class ListingController extends Controller
         }
     }
 
+    public function get_listing_preview(Request $request, $id)
+    {
+        try {
+            $listing = Listing::find($id);
+            if ($listing) {
+                $amenities = $listing->Amenities;
+                $tmp = array();
+                foreach ($amenities as $amenity) {
+                    $tmp[$amenity['amenity_type_id']][] = $amenity['id'];
+                }
+                $output = array();
+                $output['listing'] = $listing;
+                ksort($tmp);
+                foreach ($tmp as $amenity_type_id => $ids) {
+                    $output['amenities'][] = array(
+                        'amenity_type' => $this->amenity_type_controller->get_by_id($amenity_type_id)->name,
+                        'amenities' => $this->amenity_controller->get_by_array_id($ids)
+                    );
+                }
+                $output['photos'] = Photo_Listing::where('listing_id', '=', $id)->get();
+
+                $this->response = [
+                    'status' => 'success',
+                    'data' => $output
+                ];
+
+                return response()->json($this->response, $this->success_code);
+            }
+            return response()->json($this->response, 400);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
+    }
+
     function get_listing_by_city_id($id)
     {
         try {

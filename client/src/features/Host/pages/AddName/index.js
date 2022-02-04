@@ -83,7 +83,10 @@ function AddName(props) {
 
     return (
         <CommonAddListing>
-            <TabAddListing id={id} />
+            <TabAddListing
+                id={id}
+                description={true}
+            />
             <div className='row'>
                 <div className='col-8'>
                     <Formik

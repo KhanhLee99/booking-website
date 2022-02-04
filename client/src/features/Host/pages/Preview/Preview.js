@@ -1,202 +1,62 @@
-import moment from 'moment';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import listingApi from '../../../../api/listingApi';
+import { useParams } from 'react-router-dom';
+import CommonAddListing from '../../../../components/CommonAddListing/CommonAddListing';
+import TabAddListing from '../../components/TabAddListing/TabAddListing';
+import { HeaderAddListing } from '../../components/HeaderHost';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
-import { useSelector } from 'react-redux';
-import { useParams } from 'react-router';
-import { getDaysArray } from '../../../../@helper/helper';
-import blockBookingApi from '../../../../api/blockBookingApi';
-import conversationApi from '../../../../api/conversationApi';
-import listingApi from '../../../../api/listingApi';
-import reservationApi from '../../../../api/reservationApi';
-import Header from '../../../../components/Header';
-import Loading from '../../../../components/Loading/Loading';
-import AmenityDetail from '../../components/AmenityDetail/AmenityDetail';
-import BoxBooking from '../../components/BoxBooking';
-import Chat from '../../components/Chat/Chat';
-import ListReview from '../../components/ListReview';
-import Photos from '../../components/Photos';
-import TabHorizontal from '../../components/TabHorizontal';
-import './styles.scss';
+import Photos from '../../../Listings/components/Photos';
+import { title } from '../../../Listings/pages/ListingDetail';
+import AmenityDetail from '../../../Listings/components/AmenityDetail/AmenityDetail';
 
-ListingDetail.propTypes = {
+Preview.propTypes = {
 
 };
 
-export const title = {
-    textAlign: 'left',
-    fontSize: '18px',
-    fontWeight: 600,
-    color: '#566985',
-    fontFamily: "'Nunito', sans-serif",
-}
-
-
-
-function ListingDetail(props) {
+function Preview(props) {
     const { id } = useParams();
-
-    const messagesEndRef = useRef(null);
-
-    const loggedInUser = useSelector((state) => state.userSlice.current);
-    const isLoggedIn = !!loggedInUser.id;
-    const [loadingListingDetail, setLoadingListingDetail] = useState(false);
     const [listingDetail, setListingDetail] = useState({});
     const [amenities, setAmenities] = useState([])
     const [photos, setPhotos] = useState([]);
-    const [reviews, setReviews] = useState([]);
-    const [date, setDate] = useState(moment(moment().toDate()).format('YYYY-MM-DD'));
-    const [reservationDate, setReservationDate] = useState([])
-    const [blockList, setBlockList] = useState([]);
-    const [saved, setSaved] = useState(false);
-    const [showChat, setShowChat] = useState(false);
-    const [conversation, setConversation] = useState([]);
-    const [currentConversationId, setCurrentConversationId] = useState(null);
-
-    const handleSave = async () => {
-        if (isLoggedIn) {
-            const params = {
-                listing_id: id,
-                user_id: loggedInUser.id
-            }
-            setLoadingListingDetail(true);
-            await listingApi.favoriteListing(params).then(res => {
-                setSaved(!saved);
-                setLoadingListingDetail(false);
-            });
-        }
-    }
-
-    const fetchReservation = async () => {
-        try {
-            const params = {
-                month: date
-            }
-            // setLoading(true);
-            await reservationApi.getReservationInMonth(id, params).then(res => {
-                let tmp = [];
-                res.data.data.forEach(item => tmp = tmp.concat(getDaysArray(new Date(item.checkin_date), new Date(item.checkout_date))));
-                setReservationDate(tmp);
-            })
-        } catch (err) {
-            console.log(err.message);
-        }
-    }
-
-    const getBlockInMonth = async () => {
-        try {
-            const params = {
-                month: date
-            }
-            await blockBookingApi.getBlockInMonth(id, params).then(res => {
-                let tmp = [];
-                res.data.data.forEach(item => tmp = tmp.concat(getDaysArray(new Date(item.start_date), new Date(item.end_date))));
-                setBlockList(tmp);
-            })
-        } catch (err) {
-            console.log(err.message)
-        }
-    }
-
-    const getConversationTogether = async () => {
-        try {
-            const params = {
-                host_id: listingDetail.user_id
-            }
-            await conversationApi.getConversationTogether({ params }).then(res => {
-                setConversation(res.data.conversation);
-                setCurrentConversationId(res.data.conversation_id);
-            });
-        } catch (err) {
-            console.log(err.message);
-        }
-    }
-
-    const sendMessage = async (values, resetForm) => {
-        try {
-            const params = {
-                message: values.message,
-                conversation_id: currentConversationId,
-            }
-            await conversationApi.sendMessage(params).then(res => {
-                const newMessage = {
-                    id: loggedInUser.id,
-                    name: loggedInUser.name,
-                    avatar: loggedInUser.avatar,
-                    message: values.message,
-                    time: Date.now(),
-                    isMe: 1,
-                }
-                setConversation(oldState => [...oldState, newMessage]);
-                // setConversation(conversation.push(newMessage));
-                resetForm();
-            });
-        } catch (err) {
-            console.log(err.message);
-        }
-    }
-
+    const [loading, setLoading] = useState(false);
     useEffect(() => {
         const fetchListingDetail = async () => {
-            setLoadingListingDetail(true)
-            await listingApi.getListingById(id).then(res => {
+            await listingApi.getListingPreview(id).then(res => {
                 setListingDetail(res.data.data.listing);
                 setAmenities(res.data.data.amenities);
                 setPhotos(res.data.data.photos);
-                setReviews(res.data.data.reviews);
-                setSaved(res.data.data.saved);
-                setLoadingListingDetail(false)
             });
         }
 
         fetchListingDetail();
-        fetchReservation();
-        getBlockInMonth();
 
         window.scrollTo(0, 0)
 
 
         return () => {
-            setReservationDate([]);
-            setBlockList([]);
         }
     }, []);
-
-    useEffect(() => {
-        if (listingDetail.user_id) {
-            getConversationTogether();
-        }
-    }, [listingDetail]);
-
-    useEffect(() => {
-        const scrollToBottom = () => {
-            messagesEndRef.current.scrollIntoView();
-        }
-        scrollToBottom();
-    }, [conversation]);
-
     return (
         <div id="wrapper listing-detail" style={{ backgroundColor: '#fff', maxWidth: '100%', overflowX: 'hidden' }}>
-            {loadingListingDetail && <Loading />}
-            <Header />
+            <HeaderAddListing />
+            <TabAddListing
+                id={id}
+                preview={true}
+            />
 
             <div className="clearfix" />
             {
-                loadingListingDetail ? <Skeleton height={400} style={{ marginTop: '80px' }} /> :
+                loading ? <Skeleton height={400} style={{ marginTop: '80px' }} /> :
                     <Photos photos={photos} />
             }
-
-            <TabHorizontal
-                isLoggedIn={isLoggedIn}
-                saved={saved}
-                handleSave={handleSave}
-            />
 
             <div className="container">
                 <div className="row sticky-wrapper">
                     <div className="col-lg-8 col-md-8 padding-right-30">
                         {
-                            loadingListingDetail ? <div className='margin-top-75'>
+                            loading ? <div className='margin-top-75'>
                                 <h2><Skeleton width={"100%"} count={2} /></h2>
                                 <a><Skeleton width={"40%"} /></a>
                                 <p><Skeleton width={"70%"} /></p>
@@ -293,37 +153,13 @@ function ListingDetail(props) {
                                 <div className="_npr0qi" style={{ borderTopColor: 'rgb(221, 221, 221)' }} /> */}
 
                                 {/* Reviews */}
-                                <ListReview
-                                    reviews={reviews}
-                                    rating={listingDetail.rating}
-                                    title={title}
-                                />
                             </>
                         }
                     </div>
-
-                    <BoxBooking
-                        loadingListingDetail={loadingListingDetail}
-                        listingDetail={listingDetail}
-                        reservationDate={reservationDate}
-                        blockList={blockList}
-                    />
-
                 </div>
             </div>
-            <div className="chat-widget-button cwb tolt" data-microtip-position="left" data-tooltip="Chat With Owner"
-                onClick={() => { setShowChat(!showChat); }}
-            >
-                <i className="fal fa-comments-alt" />
-            </div>
-            <Chat
-                sendMessage={sendMessage}
-                conversation={conversation}
-                style={{ display: showChat ? 'block' : 'none' }}
-                ref={messagesEndRef}
-            />
         </div>
     );
 }
 
-export default ListingDetail;
+export default Preview;

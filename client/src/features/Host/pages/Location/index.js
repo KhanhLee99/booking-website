@@ -78,7 +78,10 @@ function Location(props) {
 
     return (
         <CommonAddListing>
-            <TabAddListing id={id} />
+            <TabAddListing
+            id={id}
+            location={true}
+            />
             <div className='row'>
                 {loading && <Loading />}
                 <div className='col-8'>

@@ -186,7 +186,10 @@ function BasicInfomation(props) {
 
     return (
         <CommonAddListing>
-            <TabAddListing id={id} />
+            <TabAddListing
+            id={id}
+            basicInfo={true}
+            />
             <div className='row'>
                 {/* {loading && <Loading />} */}
                 <div className='col-8'>

@@ -14,6 +14,7 @@ import Amenity from './pages/Amenity';
 import AddPhotos from './pages/AddPhotos';
 import AddName from './pages/AddName';
 import AddPrice from './pages/AddPrice';
+import Preview from './pages/Preview/Preview';
 
 AddListingFeature.propTypes = {
 
@@ -22,7 +23,6 @@ AddListingFeature.propTypes = {
 function AddListingFeature(props) {
 
     const match = useRouteMatch();
-    console.log(props);
 
     return (
         <>
@@ -73,6 +73,12 @@ function AddListingFeature(props) {
                     path={`${match.url}/:id/price`}
                     exact
                     component={AddPrice}
+                />
+
+                <Route
+                    path={`${match.url}/:id/preview`}
+                    exact
+                    component={Preview}
                 />
             </Switch>
         </>

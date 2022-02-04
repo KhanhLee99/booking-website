@@ -23,5 +23,9 @@
         & .current {
             border-bottom: 3px solid transparent;
         }
+
+        & .no-drop {
+            cursor: no-drop;
+        }
     }
 }

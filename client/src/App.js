@@ -1,6 +1,6 @@
 import firebase from 'firebase';
 import React, { Suspense, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {
   BrowserRouter, Route, Switch
 } from "react-router-dom";
@@ -21,6 +21,9 @@ import ListingsLocation from './features/Listings/pages';
 import ListingDetail from './features/Listings/pages/ListingDetail';
 import UserProfileFeature from './features/UserProfile';
 import { getToken, onMessageListener } from './init-fcm';
+import { unwrapResult } from '@reduxjs/toolkit'
+import userApi from './api/userApi';
+import { fetchMyNotify, getMyNotify, getTotalNoticationsUnread } from './app/reducer/notifySlice';
 
 
 // import { getToken } from "./firebase";
@@ -30,9 +33,13 @@ import { getToken, onMessageListener } from './init-fcm';
 
 function App() {
   const dispatch = useDispatch();
+  const loggedInUser = useSelector((state) => state.userSlice.current);
+  const totalNotiUnread = useSelector((state) => state.notifySlice.totalUnread || 0);
+
   const [show, setShow] = useState(false);
-  const [notification, setNotification] = useState({ title: "", body: "" });
+  const [notification, setNotification] = useState({ title: "", body: "", id: "" });
   const [loading, setLoading] = useState(true);
+  const [deviceToken, setDeviceToken] = useState();
 
   useEffect(() => {
     const unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => { });
@@ -47,24 +54,49 @@ function App() {
       } catch (err) {
         console.log(err);
       }
+      setDeviceToken(token);
       dispatch(saveDeviceToken(token));
       console.log('token: ', token);
     }
+
     getFcmToken();
+
+    dispatch(getMe()).then((res) => {
+      // console.log(unwrapResult(res));
+      setLoading(false);
+    }).catch(err => {
+      setLoading(false);
+      console.log(err);
+    });
 
   }, []);
 
   useEffect(() => {
-    dispatch(getMe()).then(() => setLoading(false));
-  }, []);
+    if (loggedInUser && deviceToken) {
+      userApi.updateDeviceToken({ device_token: deviceToken }, localStorage.getItem('access_token')).then(() => {
+        setLoading(false);
+      }).catch(err => {
+        setLoading(false);
+      });
+    }
+  }, [deviceToken]);
 
   onMessageListener()
     .then((payload) => {
-      setShow(true);
       setNotification({
         title: payload.notification.title,
         body: payload.notification.body,
+        id: payload.fcmMessageId
       });
+      setShow(true);
+      dispatch(getTotalNoticationsUnread());
+      dispatch(fetchMyNotify({
+        limit: 5,
+        page: 1,
+      }));
+      setTimeout(() => {
+        setShow(false);
+      }, 2000);
       console.log(payload);
     })
     .catch((err) => console.log("failed: ", err));
@@ -72,12 +104,12 @@ function App() {
   return (
     // <UserChat />
 
-
     <>
       {show ? (
         <ReactNotificationComponent
           title={notification.title}
           body={notification.body}
+          id={notification.id}
         />
       ) : (
         <></>

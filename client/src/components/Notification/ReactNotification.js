@@ -9,7 +9,7 @@ export const NotificationStattus = {
   ERROR: 'error',
 }
 
-const ReactNotificationComponent = ({ title, body, status }) => {
+const ReactNotificationComponent = ({ title, body, status, id }) => {
   // let hideNotif = title === "";
 
   // if (!hideNotif) {
@@ -17,11 +17,11 @@ const ReactNotificationComponent = ({ title, body, status }) => {
   // }
   if (status == NotificationStattus.SUCCESS) {
     toast.success(<Display />, {
-      toastId: 'success1',
+      toastId: id || 'toast1',
     });
   } else {
     toast.error(<Display />, {
-      toastId: 'success1',
+      toastId: id || 'toast1',
     });
   }
 
@@ -30,7 +30,7 @@ const ReactNotificationComponent = ({ title, body, status }) => {
     return (
       <div>
         <h4>{title}</h4>
-        <p>{body}</p>
+        <p dangerouslySetInnerHTML={{ __html: body }} />
       </div>
     );
   }

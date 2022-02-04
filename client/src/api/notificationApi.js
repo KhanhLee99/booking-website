@@ -6,9 +6,9 @@ const notificationApi = {
         return axiosClient.post(url, params);
     },
 
-    getMyNotications: () => {
+    getMyNotications: (params) => {
         const url = '/notification/me';
-        return axiosClient.get(url);
+        return axiosClient.get(url, { params });
     },
 
     getTotalNoticationsUnread: () => {

@@ -1,8 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import notificationApi from "../../api/notificationApi";
 
-export const getMyNotify = createAsyncThunk('notify/me', async () => {
-    const response = await notificationApi.getMyNotications();
+export const getMyNotify = createAsyncThunk('notify/me', async (payload) => {
+    const response = await notificationApi.getMyNotications(payload);
+    return response;
+});
+
+export const fetchMyNotify = createAsyncThunk('notify/fetch', async (payload) => {
+    const response = await notificationApi.getMyNotications(payload);
     return response;
 });
 
@@ -21,11 +26,32 @@ const notifySlice = createSlice({
     initialState: {
         myNotify: [],
         totalUnread: 0,
+        totalPage: 0,
+        currentPage: 1,
+    },
+
+    reducers: {
+        nextPage(state) {
+            if (state.currentPage < state.totalPage) {
+                state.currentPage += 1;
+                console.log(state.currentPage);
+            }
+        }
     },
 
     extraReducers: {
         [getMyNotify.fulfilled]: (state, action) => {
-            state.myNotify = action.payload.data.data;
+            if (state.currentPage == 1) {
+                state.myNotify = [];
+            }
+            state.myNotify = state.myNotify.concat(action.payload.data.data.data);
+            state.totalPage = action.payload.data.data.last_page;
+        },
+
+        [fetchMyNotify.fulfilled]: (state, action) => {
+            state.myNotify = action.payload.data.data.data;
+            state.totalPage = action.payload.data.data.last_page;
+            state.currentPage = 1;
         },
 
         [getTotalNoticationsUnread.fulfilled]: (state, action) => {
@@ -39,5 +65,5 @@ const notifySlice = createSlice({
 })
 
 const { reducer, actions } = notifySlice;
-export const { } = actions;
+export const { nextPage } = actions;
 export default reducer;

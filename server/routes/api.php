@@ -44,7 +44,6 @@ Route::post('upload-multiple-images', 'UserController@upload_multiple_images');
 
 Route::put('update-device-token', 'UserController@add_device_token');
 Route::put('delete-device-token', 'UserController@delete_device_token');
-Route::post('send-notifications', 'UserController@send_notification');
 
 // Social Provider
 Route::post('social-provider/add', 'Admin\SocialProviderController@add');
@@ -173,6 +172,7 @@ Route::post('listing-rating/filter', 'Common\DetailListingController@filter_by_s
 Route::post('listing/filter', 'Common\DetailListingController@filter_listing');
 
 Route::get('listing/{id}', 'Host\ListingController@get_listing_by_id');
+Route::get('listing/{id}/preview', 'Host\ListingController@get_listing_preview');
 
 Route::get('/greeting', function () {
     return DB::table('users')->get();
@@ -193,6 +193,7 @@ Route::post('notification/add', 'Admin\AdminNotificationController@add');
 Route::get('notification/me', 'Common\NotificationController@get_user_notify');
 Route::get('notification/unread-total', 'Common\NotificationController@get_total_noti_unread');
 Route::put('notification/seen', 'Common\NotificationController@seen_notifications');
+Route::post('send-notifications', 'Common\NotificationController@push_notification');
 
 
 

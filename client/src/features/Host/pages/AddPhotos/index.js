@@ -139,7 +139,10 @@ function AddPhotos(props) {
 
     return (
         <CommonAddListing>
-            <TabAddListing id={id} />
+            <TabAddListing
+                id={id}
+                photo={true}
+            />
             <div className='row'>
                 {loading && <Loading />}
                 <div className='col-8'>
