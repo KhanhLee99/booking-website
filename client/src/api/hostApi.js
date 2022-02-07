@@ -42,6 +42,11 @@ const hostApi = {
             });
     },
 
+    getBedroomDetail: (id) => {
+        const url = `/listing/bedroom-detail/${id}`;
+        return axiosClient.get(url);
+    },
+
     addListingAmenities: (params, id) => {
         const url = `/listing/amenities/${id}`;
         return axiosClient.post(url, params)
@@ -64,6 +69,11 @@ const hostApi = {
             .catch(function (error) {
                 console.log(error);
             });
+    },
+
+    sendListing: (id) => {
+        const url = `/listing/${id}/send-listing`;
+        return axiosClient.put(url);
     }
 };
 

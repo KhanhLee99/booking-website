@@ -28,3 +28,16 @@ export function alertSuccess(title = '', message = '') {
         ],
     });
 }
+
+export function alertSendListingSuccess(title = '', message = '', actionYes) {
+    return confirmAlert({
+        title: title,
+        message: message,
+        buttons: [
+            {
+                label: 'Back to manager page',
+                onClick: actionYes,
+            }
+        ],
+    });
+}

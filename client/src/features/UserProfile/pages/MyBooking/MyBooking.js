@@ -7,6 +7,7 @@ import { ReservationStatus } from '../../../../app/constant';
 import Loading from '../../../../components/Loading/Loading';
 import { alertSuccess } from '../../../../@helper/alertComfirm';
 import UserChat from '../../components/UserChat/UserChat';
+import NoData from '../../../../components/NoData/NoData';
 
 MyBooking.propTypes = {
 
@@ -33,32 +34,59 @@ function MyBooking(props) {
             }
             setLoading(true);
             await reservationApi.editStatusReservation(id, params).then(() => {
-                let tmp = [...reservations];
-                let index = tmp.findIndex(item => item.id == id);
-                if (index != -1) {
-                    tmp[index].reservation_status_id = ReservationStatus.CANCELLED.id;
-                    setReservations(tmp);
-                }
+                handleEditStatus(id, ReservationStatus.CANCELLED.id);
                 setLoading(false);
                 alertSuccess('Success', 'Cancel reservation success');
             }).catch(err => {
-
             });
         } catch (err) {
             console.log(err.message);
         }
     }
 
-    const handleAddReview = async (id, content) => {
+    const handleCheckout = async (id) => {
+        try {
+            const params = {
+                reservation_status_id: ReservationStatus.CHECKOUT.id
+            }
+            setLoading(true);
+            await reservationApi.editStatusReservation(id, params).then(() => {
+                handleEditStatus(id, ReservationStatus.CHECKOUT.id);
+                setLoading(false);
+            }).catch(err => {
+            });
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+
+    const handleEditStatus = (id, ReservationStatusId) => {
+        let tmp = [...reservations];
+        let index = tmp.findIndex(item => item.id == id);
+        if (index != -1) {
+            tmp[index].reservation_status_id = ReservationStatusId;
+            setReservations(tmp);
+        }
+    }
+
+    const handleAddReview = async (id, content, reservation_id) => {
         try {
             const params = {
                 note: content,
                 rating: 5,
             }
+            const params2 = {
+                reservation_status_id: ReservationStatus.REVIEWED.id
+            }
             setLoading(true);
             await reviewApi.addReviewListing(params, id).then(res => {
                 if (res.data.status = 'success') {
-                    setLoading(false);
+                    reservationApi.editStatusReservation(reservation_id, params2).then(() => {
+                        handleEditStatus(reservation_id, ReservationStatus.REVIEWED.id);
+                        setLoading(false);
+                    }).catch(err => {
+                        console.log(err.message);
+                    });
                 }
             })
         } catch (err) {
@@ -81,14 +109,17 @@ function MyBooking(props) {
             {loading && <Loading />}
             <h3 className='h3_title'>My Bookings</h3>
             <div className="dashboard-list-box fl-wrap" style={{ marginTop: 0 }}>
-                {reservations.map((item, index) => (
-                    <UserBookingItem
-                        key={index}
-                        reservation={item}
-                        handleCancel={handleCancel}
-                        handleAddReview={handleAddReview}
-                    />
-                ))}
+                {
+                    reservations.length > 0 ? reservations.map((item, index) => (
+                        <UserBookingItem
+                            key={index}
+                            reservation={item}
+                            handleCancel={handleCancel}
+                            handleCheckout={handleCheckout}
+                            handleAddReview={handleAddReview}
+                        />
+                    )) : <NoData />
+                }
             </div>
         </div>
     );

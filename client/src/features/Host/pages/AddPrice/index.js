@@ -9,10 +9,15 @@ import * as Yup from 'yup';
 import Loading from '../../../../components/Loading/Loading';
 import CommonAddListing from '../../../../components/CommonAddListing/CommonAddListing';
 import TabAddListing from '../../components/TabAddListing/TabAddListing';
+import listingApi from '../../../../api/listingApi';
+import CurrencyInput from 'react-currency-input-field';
+import { parseVNDCurrency } from '../../../../@helper/helper';
 
 AddPrice.propTypes = {
 
 };
+
+// const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
 
 const custom_form_input = {
     float: 'left',
@@ -34,7 +39,10 @@ function AddPrice(props) {
     const history = useHistory();
     const { id } = useParams();
     const [loading, setLoading] = useState(false);
-    const [percent, setPercent] = useState(100 / 3);
+    const [percent, setPercent] = useState(100 / 7 * 5);
+    const [listing, setListing] = useState({ price_per_night_base: 0, price_per_night_weekend: 0, discount_weekly: 0, discount_monthly: 0 });
+    const [price_night_base_real, set_price_night_base_real] = useState(0);
+    const [price_night_weekend_real, set_price_night_weekend_real] = useState(0);
 
     const handleNext = async (values) => {
         try {
@@ -47,9 +55,10 @@ function AddPrice(props) {
                 is_public: 0
             }
             setLoading(true);
-            await hostApi.updateListing(params, id);
-            setLoading(false);
-
+            await hostApi.updateListing(params, id).then(res => {
+                setLoading(false);
+                history.push(`/become-host/${id}/preview`);
+            });
         } catch (err) {
             console.log(err);
         }
@@ -59,7 +68,16 @@ function AddPrice(props) {
         history.push(`/become-host/${id}/title`);
     }
     useEffect(() => {
-        setPercent(100 / 2);
+        const fetchListingDetail = async () => {
+            await listingApi.getListingById(id).then(res => {
+                setListing(res.data.data.listing);
+                set_price_night_base_real(res.data.data.listing.price_per_night_base * 97 / 100)
+                set_price_night_weekend_real(res.data.data.listing.price_per_night_weekend * 97 / 100)
+            });
+        }
+
+        fetchListingDetail();
+        setPercent(100 / 7 * 6);
     }, []);
     return (
         <CommonAddListing>
@@ -71,13 +89,19 @@ function AddPrice(props) {
                 {loading && <Loading />}
                 <div className='col-8'>
                     <Formik
-                        initialValues={{ price_base: '', price_weekend: '', discount_week: '', discount_month: '' }}
+                        enableReinitialize
+                        initialValues={{
+                            price_base: listing.price_per_night_base,
+                            price_weekend: listing.price_per_night_weekend,
+                            discount_week: listing.discount_weekly,
+                            discount_month: listing.discount_monthly
+                        }}
                         validationSchema={Yup.object({
                             price_base: Yup.string()
                                 .required('Required'),
                             price_weekend: Yup.string()
+                                .max(9)
                                 .required('Required'),
-
                             discount_week: Yup.string()
                                 .required('Required'),
                             discount_month: Yup.string()
@@ -112,57 +136,86 @@ function AddPrice(props) {
 
                                                     <label className='custom_form_label'>THỨ 2 - THỨ 5</label>
 
-                                                    <div className="col-md-6">
-                                                        <input
-                                                            type="text"
-                                                            placeholder=""
-                                                            {...formik.getFieldProps('price_base')}
+                                                    <div className="col-md-6" style={{ paddingLeft: 0 }}>
+                                                        <CurrencyInput
+                                                            id="price_base"
+                                                            name="price_base"
+                                                            placeholder="Please enter a number"
+                                                            value={formik.values.price_base}
+                                                            suffix=" đ"
+                                                            defaultValue={listing.price_per_night_base}
+                                                            decimalsLimit={2}
+                                                            onValueChange={(value, name) => {
+                                                                formik.setFieldValue(name, value)
+                                                                set_price_night_base_real(value * 97 / 100)
+                                                            }}
                                                             style={custom_form_input}
                                                             className='custom_form_input'
+                                                            maxLength={9}
                                                         />
                                                     </div>
 
-                                                    <div className="col-md-6">
-                                                        <label className='custom_form_label'>Bạn sẽ nhận 155,307 ₫/đêm</label>
+                                                    <div className="col-md-6" >
+                                                        {price_night_base_real > 0 && <label className='custom_form_label'>Bạn sẽ nhận {parseVNDCurrency(price_night_base_real)}/đêm</label>}
                                                     </div>
 
                                                     <label className='custom_form_label'>THỨ 6 - CHỦ NHẬT</label>
 
-                                                    <div className="col-md-6">
-                                                        <input
-                                                            type="text"
-                                                            placeholder=""
-                                                            {...formik.getFieldProps('price_weekend')}
+                                                    <div className="col-md-6" style={{ paddingLeft: 0 }}>
+                                                        <CurrencyInput
+                                                            id="price_weekend"
+                                                            name="price_weekend"
+                                                            placeholder="Please enter a number"
+                                                            value={formik.values.price_weekend}
+                                                            suffix=" đ"
+                                                            decimalsLimit={2}
+                                                            onValueChange={(value, name) => {
+                                                                formik.setFieldValue(name, value)
+                                                                set_price_night_weekend_real(value * 97 / 100)
+                                                            }}
                                                             style={custom_form_input}
                                                             className='custom_form_input'
+                                                            maxLength={9}
                                                         />
                                                     </div>
 
-                                                    <div className="col-md-6">
-                                                        <label className='custom_form_label'>Bạn sẽ nhận 155,307 ₫/đêm</label>
+                                                    <div className="col-md-6" >
+                                                        {price_night_weekend_real > 0 && <label className='custom_form_label'>Bạn sẽ nhận {parseVNDCurrency(price_night_weekend_real)}/đêm</label>}
                                                     </div>
 
                                                     <label className='custom_form_label'>Giá dài hạn</label>
 
-                                                    <div className="col-md-6">
+                                                    <div className="col-md-6" style={{ paddingLeft: 0 }}>
                                                         <label className='custom_form_label'>GIẢM GIÁ THEO TUẦN</label>
-                                                        <input
-                                                            type="text"
-                                                            placeholder=""
-                                                            {...formik.getFieldProps('discount_week')}
+
+                                                        <CurrencyInput
+                                                            id="discount_week"
+                                                            name="discount_week"
+                                                            placeholder="Please enter a number"
+                                                            value={formik.values.discount_week}
+                                                            suffix=" %"
+                                                            decimalsLimit={2}
+                                                            onValueChange={(value, name) => formik.setFieldValue(name, value)}
                                                             style={custom_form_input}
                                                             className='custom_form_input'
+                                                            maxLength={2}
                                                         />
                                                     </div>
 
                                                     <div className="col-md-6">
                                                         <label className='custom_form_label'>GIẢM GIÁ THEO THÁNG</label>
-                                                        <input
-                                                            type="text"
-                                                            placeholder=""
-                                                            {...formik.getFieldProps('discount_month')}
+
+                                                        <CurrencyInput
+                                                            id="discount_month"
+                                                            name="discount_month"
+                                                            placeholder="Please enter a number"
+                                                            value={formik.values.discount_month}
+                                                            suffix=" %"
+                                                            decimalsLimit={2}
+                                                            onValueChange={(value, name) => formik.setFieldValue(name, value)}
                                                             style={custom_form_input}
                                                             className='custom_form_input'
+                                                            maxLength={2}
                                                         />
                                                     </div>
 
@@ -178,6 +231,7 @@ function AddPrice(props) {
                                         hiddenBackButton={false}
                                         isHandleClick={true}
                                         now={percent}
+                                        title='Preview'
                                     />
                                 </form>)
                         }}

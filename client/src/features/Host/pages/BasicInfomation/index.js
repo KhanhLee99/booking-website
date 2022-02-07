@@ -187,8 +187,8 @@ function BasicInfomation(props) {
     return (
         <CommonAddListing>
             <TabAddListing
-            id={id}
-            basicInfo={true}
+                id={id}
+                basicInfo={true}
             />
             <div className='row'>
                 {/* {loading && <Loading />} */}
@@ -205,6 +205,7 @@ function BasicInfomation(props) {
                                             key={index}
                                             id={type.id}
                                             name={type.name}
+                                            photo={type.url_photo}
                                             selectListingType={selectListingType}
                                             idActive={idActive}
                                         />
@@ -282,6 +283,11 @@ function RightSide(props) {
             <div className='k-property-content'>
                 <h5>{type ? type.name : ''}</h5>
                 <p>{type ? type.description : ''}</p>
+            </div>
+            <div className='k-property-content' style={{ top: '910px' }}>
+                <h5>Sự khác biệt giữa Đặt phòng nhanh và Gửi yêu cầu đặt phòng là gì?</h5>
+                <p>Đặt phòng nhanh dùng cho những chỗ nghỉ không cần có sự xác nhận của chủ nhà. Khách hàng chỉ cần thanh toán là có thể đặt chỗ.
+                    <br /> Gửi yêu cầu đặt phòng dùng cho những chỗ nghỉ mà trước khi thực hiện thành toán, khách hàng cần nhận được sự đồng ý của chủ nhà.</p>
             </div>
         </div>
     )

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Host;
 use App\Favorite;
 use App\Http\Controllers\Admin\AmenityController;
 use App\Http\Controllers\Admin\AmenityTypeController;
+use App\Http\Controllers\Common\NotificationController;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -38,6 +39,7 @@ class ListingController extends Controller
         $this->listing_amenities_controller = new ListingAmenitiesController;
         $this->amenity_controller = new AmenityController;
         $this->amenity_type_controller = new AmenityTypeController;
+        $this->notificationController = new NotificationController();
     }
 
     public function index()
@@ -151,16 +153,21 @@ class ListingController extends Controller
             $status = $request->status;
             switch ($status) {
                 case 'all':
-                    $listings = User::find($user->id)->Listings()->paginate($request->limit);
+                    $listings = User::find($user->id)->Listings()
+                        ->orderBy('id', 'desc')
+                        ->paginate($request->limit);
                     break;
                 case 'unverified':
-                    $listings = User::find($user->id)->Listings()->where('is_verified', 0)->paginate($request->limit);
+                    $listings = User::find($user->id)->Listings()->where('is_verified', 0)
+                        ->orderBy('id', 'desc')
+                        ->paginate($request->limit);
                     break;
                 default:
-                    $listings = User::find($user->id)->Listings()->where('status', $status)->paginate($request->limit);
+                    $listings = User::find($user->id)->Listings()->where('status', $status)
+                        ->orderBy('id', 'desc')
+                        ->paginate($request->limit);
                     break;
             }
-            // $listings = User::find($user->id)->Listings()->paginate($request->limit);
             $listings->makeHidden(['user_id']);
             $this->response = [
                 'status' => 'success',
@@ -506,7 +513,44 @@ class ListingController extends Controller
                 ];
                 return response()->json($this->response, $this->success_code);
             }
+            return response()->json($this->response, 400);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);
+        }
+    }
+
+    public function send_listing($id)
+    {
+        try {
+            if (Listing::where('id', $id)->update(['is_public' => 1])) {
+                $this->notificationController->send_notify_add_listing($id);
+                $this->response['status'] = 'success';
+                return response()->json($this->response, $this->success_code);
+            }
+            return response()->json($this->response, 400);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
+    }
+
+    public function get_beds_listing($id)
+    {
+        try {
+            $data = array();
+            $rooms = Room::where('listing_id', $id)->get();
+            foreach ($rooms as $key1 => $room) {
+                $data[$key1]['room_id'] = $room->id;
+                $beds = Room_Bed_Type::where('room_id', $room->id)->get();
+                foreach ($beds as $key2 => $bed) {
+                    $data[$key1]['beds'][$key2] = [
+                        'bed_type_id' => $bed->bed_type_id,
+                        'bed_count' => $bed->bed_count
+                    ];
+                }
+            }
+            return $data;
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);

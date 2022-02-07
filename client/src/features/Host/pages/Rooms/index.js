@@ -10,6 +10,7 @@ import { useHistory, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import CommonAddListing from '../../../../components/CommonAddListing/CommonAddListing';
 import TabAddListing from '../../components/TabAddListing/TabAddListing';
+import listingApi from '../../../../api/listingApi';
 
 Rooms.propTypes = {
 
@@ -21,6 +22,7 @@ function Rooms(props) {
     const history = useHistory();
     const { id } = useParams();
     const [loading, setLoading] = useState(false);
+    const [listing, setListing] = useState({});
     const [qtyGuests, setQtyGuests] = useState(1);
     const [qtyBedrooms, setQtyBedrooms] = useState(0);
     const [qtyBeds, setQtyBeds] = useState(0);
@@ -42,15 +44,22 @@ function Rooms(props) {
         //             setChildrens(value - 1);
         //         }
         //     }
-        if (type === 'guests') setQtyGuests(qtyGuests - 1);
+        if (type === 'guests') {
+            if (qtyGuests > 1) setQtyGuests(qtyGuests - 1);
+        }
         else if (type === 'bedrooms') {
-            setQtyBedrooms(qtyBedrooms - 1);
+            if (qtyBedrooms > 0)
+                setQtyBedrooms(qtyBedrooms - 1);
             var tmp = bedroomArr;
             tmp.pop();
             setBedroomArr(tmp);
         }
-        else if (type === 'beds') setQtyBeds(qtyBeds - 1);
-        else if (type === 'bathrooms') setQtyBathrooms(qtyBathrooms - 1);
+        else if (type === 'beds') {
+            if (qtyBeds > 0) setQtyBeds(qtyBeds - 1);
+        }
+        else if (type === 'bathrooms') {
+            if (qtyBathrooms > 0) setQtyBathrooms(qtyBathrooms - 1);
+        }
     }
 
     const handleInc = (type) => {
@@ -86,13 +95,15 @@ function Rooms(props) {
             const params = {
                 bedroom_count: qtyBedrooms,
                 bed_count: qtyBeds,
-                rooms: detailRooms
+                rooms: detailRooms,
             }
             setLoading(true);
-            await hostApi.editBedRoom(params, id)
+            await hostApi.editBedRoom(params, id);
             await hostApi.updateListing({
                 standard_guest_count: qtyGuests,
-                bathroom_count: qtyBathrooms
+                bedroom_count: qtyBedrooms,
+                bed_count: qtyBeds,
+                bathroom_count: qtyBathrooms,
             }, id).then(res => {
                 if (res.data.status == 'success') {
                     history.push(`/become-host/${id}/amenities`);
@@ -111,9 +122,19 @@ function Rooms(props) {
     }
 
     useEffect(() => {
-        // console.log(bedTypes);
         // getBedTypes();
-        setPercent(100 / 6)
+        const fetchListingDetail = async () => {
+            await listingApi.getListingById(id).then(res => {
+                setQtyGuests(res.data.data.listing.standard_guest_count);
+                setQtyBedrooms(res.data.data.listing.bedroom_count);
+                setQtyBeds(res.data.data.listing.bed_count);
+                setQtyBathrooms(res.data.data.listing.bathroom_count);
+                setPercent(100 / 7 * 5);
+            });
+        }
+
+        fetchListingDetail();
+        setPercent(100 / 7 * 2)
         return () => {
             // setBedTypes([]);
         }

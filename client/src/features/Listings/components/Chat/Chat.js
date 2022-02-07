@@ -91,7 +91,7 @@ export const Conversation = forwardRef((props, ref) => {
 })
 
 function MessageMe(props) {
-    const { message, avatar, name, time } = props.message;
+    const { message, time } = props.message;
 
     return (
         <div div className="chat-message chat-message_user fl-wrap" >

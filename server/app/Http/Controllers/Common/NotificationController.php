@@ -171,6 +171,21 @@ class NotificationController extends Controller
         }
     }
 
+    // host add new listing - send to admin
+    public function send_notify_add_listing($listing_id)
+    {
+        try {
+            $listing = Listing::find($listing_id);
+            $listing;
+            $title = 'New Listing';
+            $message = "Listing <a href='#'>" . $listing->name . "need to verify";
+            $this->send_notification($title, $message, 2);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
+    }
+
     // get user notification
     public function get_user_notify(Request $request)
     {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import listingApi from '../../../../api/listingApi';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import CommonAddListing from '../../../../components/CommonAddListing/CommonAddListing';
 import TabAddListing from '../../components/TabAddListing/TabAddListing';
 import { HeaderAddListing } from '../../components/HeaderHost';
@@ -10,30 +10,59 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import Photos from '../../../Listings/components/Photos';
 import { title } from '../../../Listings/pages/ListingDetail';
 import AmenityDetail from '../../../Listings/components/AmenityDetail/AmenityDetail';
+import FooterHost from '../../components/FooterHost';
+import hostApi from '../../../../api/hostApi';
+import { alertSendListingSuccess } from '../../../../@helper/alertComfirm';
+import { parseVNDCurrency } from '../../../../@helper/helper';
 
 Preview.propTypes = {
 
 };
 
 function Preview(props) {
+    const history = useHistory();
     const { id } = useParams();
     const [listingDetail, setListingDetail] = useState({});
     const [amenities, setAmenities] = useState([])
     const [photos, setPhotos] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [percent, setPercent] = useState(100 / 7 * 6);
+
+    const handleNext = async () => {
+        try {
+            setLoading(true);
+            await hostApi.sendListing(id).then(res => {
+                setLoading(false);
+                alertSendListingSuccess('Success', 'Please wait for us to verify your listing. Thank you', () => history.push('/host/listings'))
+            });
+        } catch (err) {
+            console.log(err.message);
+            setLoading(false);
+        }
+    }
+
+    const handleBack = () => {
+        history.push(`/become-host/${id}/price`);
+    }
+
     useEffect(() => {
         const fetchListingDetail = async () => {
+            setLoading(true);
             await listingApi.getListingPreview(id).then(res => {
                 setListingDetail(res.data.data.listing);
                 setAmenities(res.data.data.amenities);
                 setPhotos(res.data.data.photos);
+                setLoading(false);
+            }).catch(err => {
+                console.log(err.message);
+                setLoading(false);
             });
         }
 
         fetchListingDetail();
 
-        window.scrollTo(0, 0)
-
+        window.scrollTo(0, 0);
+        setPercent(100 / 7 * 7)
 
         return () => {
         }
@@ -112,11 +141,11 @@ function Preview(props) {
                                         <ul>
                                             <li>
                                                 <p>Thứ hai - Thứ năm</p>
-                                                <span>{parseInt(listingDetail.price_per_night_base).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
+                                                <span>{parseVNDCurrency(listingDetail.price_per_night_base)}</span>
                                             </li>
                                             <li>
                                                 <p>Thứ sáu - Chủ nhật</p>
-                                                <span>{parseInt(listingDetail.price_per_night_weekend).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
+                                                <span>{parseVNDCurrency(listingDetail.price_per_night_weekend)}</span>
                                             </li>
                                             {/* <li>
                                                     <p>Phí trẻ em tăng thêm</p>
@@ -149,15 +178,21 @@ function Preview(props) {
                                         <a href="#" id="streetView">Street View</a>
                                     </div>
                                 </div>
-
-                                <div className="_npr0qi" style={{ borderTopColor: 'rgb(221, 221, 221)' }} /> */}
-
-                                {/* Reviews */}
+                                */}
                             </>
                         }
                     </div>
                 </div>
             </div>
+            <FooterHost
+                loading={loading}
+                handleBack={handleBack}
+                handleNext={handleNext}
+                hiddenBackButton={false}
+                isHandleClick={true}
+                now={percent}
+                title='Send Listing'
+            />
         </div>
     );
 }

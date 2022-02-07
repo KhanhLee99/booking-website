@@ -26,7 +26,7 @@ function Amenity(props) {
     const [amenities, setAmenities] = useState([]);
     const [listAmenityChecked, setListAmenityChecked] = useState([]);
     const [validateErr, setValidateErr] = useState('');
-    const [percent, setPercent] = useState(100 / 6);
+    const [percent, setPercent] = useState(100 / 7 * 2);
 
 
 
@@ -78,7 +78,7 @@ function Amenity(props) {
                 })
                 await amenityApi.getAmenity().then(res => {
                     setAmenities(res.data.data)
-                    setPercent(100 / 5)
+                    setPercent(100 / 7 * 3)
                 })
             } catch (err) {
                 console.log(err.message);

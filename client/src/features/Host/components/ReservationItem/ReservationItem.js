@@ -24,15 +24,66 @@ const ava_size = {
 }
 
 function ReservationItem(props) {
-    const { reservation, handleDecline, handleAccept } = props;
+    const { reservation, handleDecline, handleAccept, handleCancel, handleCheckin } = props;
 
     const accept = (e) => {
         e.preventDefault();
         alertConfirm('Confirm to submit', 'Are you sure to accept this reservation ?', () => handleAccept(reservation.id))
     }
+
     const decline = (e) => {
         e.preventDefault();
         alertConfirm('Confirm to submit', 'Are you sure to decline this reservation ?', () => handleDecline(reservation.id))
+    }
+
+    const cancel = (e) => {
+        e.preventDefault();
+        handleCancel(reservation.id);
+    }
+    const checkin = (e) => {
+        e.preventDefault();
+        handleCheckin(reservation.id);
+    }
+
+    const renderButton = (status) => {
+        switch (status) {
+            case ReservationStatus.REQUEST.id:
+                return <>
+                    <div className='fl-wrap'>
+                        <span className="fw-separator"></span>
+                    </div>
+                    <div className='accept-booking fl-wrap'>
+                        <a href="#" onClick={(e) => { accept(e) }} className="scroll-nav-wrapper-opt-btn" style={scroll_nav_wrapper_opt_btn}>  Accept </a>
+                        <a href="#" onClick={(e) => { decline(e) }} className="scroll-nav-wrapper-opt-btn showshare" style={scroll_nav_wrapper_opt_btn}> Decline </a>
+                    </div>
+                </>
+            case ReservationStatus.ACCEPTED.id:
+                return <>
+                    <div className='fl-wrap'>
+                        <span className="fw-separator"></span>
+                    </div>
+                    <div className='accept-booking fl-wrap'>
+                        <a href="#" onClick={(e) => { cancel(e) }} className="scroll-nav-wrapper-opt-btn" style={scroll_nav_wrapper_opt_btn}>  Cancel </a>
+                    </div>
+                </>
+            case ReservationStatus.PAID.id:
+                var checkout_date = moment(reservation.checkout_date, "YYYY-MM-DD hh:mm:ss");
+                var checkin_date = moment(reservation.checkout_date, "YYYY-MM-DD hh:mm:ss");
+                var now = moment(moment().toDate(), "YYYY-MM-DD hh:mm:ss");
+                if (checkout_date.isSameOrAfter(now) && now.isSameOrBefore(checkin_date)) {
+                    return <>
+                        <div className='fl-wrap'>
+                            <span className="fw-separator"></span>
+                        </div>
+                        <div className='accept-booking fl-wrap'>
+                            <a href="#" onClick={(e) => { checkin(e) }} className="scroll-nav-wrapper-opt-btn" style={scroll_nav_wrapper_opt_btn}>  Checkin </a>
+                        </div>
+                    </>
+                }
+                return;
+            default:
+                return;
+        }
     }
 
     return (
@@ -82,14 +133,7 @@ function ReservationItem(props) {
 
             </div>
 
-            <div className='fl-wrap'>
-                <span className="fw-separator"></span>
-            </div>
-
-            <div className='accept-booking fl-wrap'>
-                <a href="#" onClick={(e) => { accept(e) }} className="scroll-nav-wrapper-opt-btn" style={scroll_nav_wrapper_opt_btn}>  Accept </a>
-                <a href="#" onClick={(e) => { decline(e) }} className="scroll-nav-wrapper-opt-btn showshare" style={scroll_nav_wrapper_opt_btn}> Decline </a>
-            </div>
+            {renderButton(reservation.reservation_status_id)}
         </div>
     );
 }

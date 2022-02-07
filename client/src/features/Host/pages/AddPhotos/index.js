@@ -10,6 +10,7 @@ import listingApi from '../../../../api/listingApi';
 import Loading from '../../../../components/Loading/Loading';
 import TabAddListing from '../../components/TabAddListing/TabAddListing';
 import CommonAddListing from '../../../../components/CommonAddListing/CommonAddListing';
+import { v4 as uuid_v4 } from "uuid";
 
 AddPhotos.propTypes = {
 
@@ -26,26 +27,71 @@ const thumb = {
     display: 'inline-flex',
     borderRadius: 2,
     border: '1px solid #eaeaea',
-    marginBottom: 8,
-    marginRight: 8,
-    width: 100,
-    height: 100,
+    marginBottom: 10,
+    marginRight: 10,
+    width: 'calc(50% - 10px)',
+    height: 140,
     padding: 4,
-    boxSizing: 'border-box'
+    boxSizing: 'border-box',
 };
 
 const thumbInner = {
     display: 'flex',
     minWidth: 0,
-    overflow: 'hidden'
+    overflow: 'hidden',
+    width: '100%',
+    height: '100%',
+    position: 'relative',
 };
 
 const img = {
     display: 'block',
-    width: 'auto',
-    // width: 500,
-    height: '100%'
+    width: '100%',
+    height: '100%',
+    userSelect: 'none',
 };
+
+const div_more_opt = { position: 'absolute', right: 5, top: 5 }
+
+const show_more_snopt = {
+    float: 'left',
+    fontSize: '28px',
+    // marginLeft: '20px',
+    color: '#70778b',
+    cursor: 'pointer',
+    background: '#fff',
+    padding: '0 6px',
+    lineHeight: '0px',
+    borderRadius: '50%',
+    boxShadow: '0 9px 16px rgb(58 87 135 / 20%)',
+};
+
+const show_more_snopt_tooltip = {
+    position: 'absolute',
+    minWidth: '120px',
+    background: '#fff',
+    top: 40,
+    right: 1,
+    borderRadius: '6px',
+    border: '1px solid #eee',
+    transition: 'all 0.2s ease-in-out',
+    padding: '5px 0',
+}
+
+const show_more_snopt_tooltip_a = {
+    display: 'block',
+    color: 'rgb(80, 89, 110)',
+    fontWeight: 500,
+    textAlign: 'left',
+    padding: '6px 15px',
+    fontSize: '13px',
+    marginLeft: '6px',
+    userSelect: 'none',
+}
+
+const isFile = (id) => {
+    return (typeof id == 'string') ? true : false;
+}
 
 function AddPhotos(props) {
     const history = useHistory();
@@ -54,7 +100,8 @@ function AddPhotos(props) {
     const [files, setFiles] = useState([]);
     const [params, setParams] = useState(new FormData());
     const [photos, setPhotos] = useState([]);
-    const [percent, setPercent] = useState(100 / 5);
+    const [percent, setPercent] = useState(100 / 7 * 3);
+    const [avatarListing, setAvatarListing] = useState();
 
     const { getRootProps, getInputProps } = useDropzone({
         accept: 'image/*',
@@ -65,21 +112,41 @@ function AddPhotos(props) {
                     preview: URL.createObjectURL(file)
                 })
             )
-            setFiles(files.concat(uploaders));
+
+            setFiles(files.concat(uploaders.map(item => ({
+                id: uuid_v4(),
+                popup: false,
+                file: item,
+            }))));
         }
     });
 
+    // photos upload
     const thumbs = files.map(file => (
-        <div style={thumb} key={file.name}>
+        <div style={thumb} key={file.id}>
             <div style={thumbInner}>
                 <img
-                    src={file.preview}
+                    src={file.file.preview}
                     style={img}
                 />
+                <div
+                    style={div_more_opt}
+                    onClick={() => { showPopupOpt(file) }}
+                >
+                    <div style={show_more_snopt}><i className="fal fa-ellipsis-h" /></div>
+                </div>
+                <div
+                    style={show_more_snopt_tooltip}
+                    className={file.popup ? '' : 'display-none'}
+                >
+                    <a className='show_more_snopt_tooltip_a' style={show_more_snopt_tooltip_a} href="#" onClick={(e) => { e.preventDefault(); delPhoto(file) }}>Delete</a>
+                    <a className='show_more_snopt_tooltip_a' style={show_more_snopt_tooltip_a} href="#" onClick={(e) => { e.preventDefault(); setAva(file) }}>Set avatar </a>
+                </div>
             </div>
         </div>
     ));
 
+    // photos added
     const defaultThumbs = photos.map(photo => (
         <div style={thumb} key={photo.id}>
             <div style={thumbInner}>
@@ -87,46 +154,110 @@ function AddPhotos(props) {
                     src={photo.photo_url}
                     style={img}
                 />
+                <div
+                    style={div_more_opt}
+                    onClick={() => { showPopupOpt(photo) }}
+                >
+                    <div style={show_more_snopt}><i className="fal fa-ellipsis-h" /></div>
+                </div>
+                <div
+                    style={show_more_snopt_tooltip}
+                    className={photo.popup ? '' : 'display-none'}
+                >
+                    <a className='show_more_snopt_tooltip_a' style={show_more_snopt_tooltip_a} href="#" onClick={(e) => { e.preventDefault(); delPhoto(photo) }}>Delete</a>
+                    <a className='show_more_snopt_tooltip_a' style={show_more_snopt_tooltip_a} href="#" onClick={(e) => { e.preventDefault(); setAva(photo) }}>Set avatar </a>
+                </div>
             </div>
+
         </div>
     ))
 
+    const showPopupOpt = (photo) => {
+        if (isFile(photo.id)) {
+            let tmpFiles = [...files];
+            const index = tmpFiles.findIndex(item => item.id === photo.id);
+            if (index > -1) {
+                tmpFiles[index].popup = !tmpFiles[index].popup;
+                setFiles(tmpFiles);
+            }
+        } else {
+            let tmpPhotos = [...photos];
+            const index = tmpPhotos.findIndex(item => item.id === photo.id);
+            if (index > -1) {
+                tmpPhotos[index].popup = !tmpPhotos[index].popup;
+                setPhotos(tmpPhotos);
+            }
+        }
+    }
 
+    const delPhoto = (photo) => {
+        if (isFile(photo.id)) {
+            setFiles(files.filter(item => item.id != photo.id));
+        } else {
+            deletePhotoApi(photo);
+            setPhotos(photos.filter(item => item.id != photo.id));
+        }
+    }
 
-    useEffect(() => {
-        // Make sure to revoke the data uris to avoid memory leaks
-        files.forEach(file => URL.revokeObjectURL(file.preview));
-    }, [files]);
-
-    useEffect(() => {
-        const fetchListingDetail = async () => {
-            // setLoadingListingDetail(true)
-            await listingApi.getListingById(id).then(res => {
-                setPhotos(res.data.data.photos);
-                setPercent(100 / 4);
+    const setAva = async (photo) => {
+        if (isFile(photo.id)) {
+            const formData = new FormData();
+            formData.append(
+                "file",
+                photo.file,
+            );
+            await uploadApi.uploadThumbnail(formData, id).then(res => {
+                setAvatarListing(photo.file.preview);
+                alert('Done');
             });
+        } else {
+            const params = {
+                avatar_url: photo.photo_url
+            }
+            await listingApi.updateListingAvatar(params, id).then(res => {
+                setAvatarListing(photo.photo_url);
+                alert('Done');
+            })
         }
+    }
 
-        fetchListingDetail();
+    const deletePhotoApi = (photo) => {
+        listingApi.deletePhotoListing(photo.id);
+    }
 
-        return () => {
-            setPhotos([]);
+    const thumbnailPhoto = () => {
+
+        if (avatarListing) {
+            return (
+                <Thumbnail avatarListing={avatarListing} />
+            )
+        } else {
+            if (files.length > 0) {
+                return <Thumbnail avatarListing={files[0].file.preview} />
+            }
         }
-    }, []);
+    }
 
     const handleNext = async () => {
         try {
-            await files.map(file => {
-                setParams(params.append("image[]", file))
-            })
-            setLoading(true);
-            await uploadApi.uploadPhotosListing(params, id).then(res => {
-                setLoading(false);
-                if (res.data.status == 'success') {
+            if ((photos.length + files.length) < 5) {
+                alert('Hãy đăng ít nhất 5 ảnh về phòng của bạn.');
+            } else {
+                if (photos.length > 0 && files.length == 0) {
                     history.push(`/become-host/${id}/title`)
+                } else {
+                    files.map(file => {
+                        setParams(params.append("image[]", file.file))
+                    })
+                    setLoading(true);
+                    await uploadApi.uploadPhotosListing(params, id).then(res => {
+                        setLoading(false);
+                        if (res.data.status == 'success') {
+                            history.push(`/become-host/${id}/title`)
+                        }
+                    });
                 }
-            });
-
+            }
         } catch (err) {
             console.log(err.message)
             setLoading(false)
@@ -137,6 +268,27 @@ function AddPhotos(props) {
         history.push(`/become-host/${id}/amenities`)
     }
 
+    useEffect(() => {
+        // Make sure to revoke the data uris to avoid memory leaks
+        files.forEach(file => URL.revokeObjectURL(file.preview));
+    }, [files]);
+
+    useEffect(() => {
+        const fetchListingDetail = async () => {
+            await listingApi.getListingById(id).then(res => {
+                setPhotos(res.data.data.photos.map(obj => ({ ...obj, popup: false })));
+                setAvatarListing(res.data.data.listing.avatar_url);
+                setPercent(100 / 7 * 4);
+            });
+        }
+
+        fetchListingDetail();
+
+        return () => {
+            setPhotos([]);
+        }
+    }, []);
+
     return (
         <CommonAddListing>
             <TabAddListing
@@ -145,25 +297,26 @@ function AddPhotos(props) {
             />
             <div className='row'>
                 {loading && <Loading />}
-                <div className='col-8'>
+                <div className='col-9'>
                     <div id="add-listing">
                         <h3 className='h3_title'>Gallery</h3>
                         <div className="add-listing-section">
+                            {thumbnailPhoto()}
+                            <h3 className='h3_title'>Gallery</h3>
+                            <p>Hãy đăng ít nhất 5 ảnh về phòng của bạn.</p>
                             <div className="submit-section">
                                 {/* <form action="/file-upload" className="dropzone" /> */}
-                                <div {...getRootProps({ className: 'dropzone' })}>
-                                    <input {...getInputProps()} />
-                                    {
-                                        (files.length == 0) ? <><i className='sl sl-icon-plus'></i> Click here or drop files to upload</> : null
-                                    }
-
-                                    <aside style={thumbsContainer}>
-                                        {defaultThumbs}
-                                        {thumbs}
-                                    </aside>
-                                </div>
+                                <aside style={thumbsContainer}>
+                                    {defaultThumbs}
+                                    {thumbs}
+                                    <div {...getRootProps({ className: 'dropzone' })}>
+                                        <input {...getInputProps()} />
+                                        <i className='fal fa-image' style={{ fontSize: '40px', color: '#d0d0d0' }}></i>
+                                    </div>
+                                </aside>
                             </div>
                         </div>
+
                         <FooterHost
                             loading={loading}
                             handleBack={handleBack}
@@ -184,10 +337,25 @@ export default AddPhotos;
 
 function RightSide(props) {
     return (
-        <div className='col-4 k-right-side'>
+        <div className='col-3 k-right-side'>
             <div className='k-property-content'>
                 <h5>Text</h5>
                 <p>Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recent</p>
+            </div>
+        </div>
+    )
+}
+
+function Thumbnail(props) {
+    const { avatarListing } = props;
+    return (
+        <div style={{ paddingBottom: '20px' }}>
+            <h3 className='h3_title'>Thumbnail</h3>
+            <div style={{ width: 'calc(100% - 10px)', height: '190px', border: '1px solid #eaeaea', padding: 4, boxSizing: 'border-box', }}>
+                <img
+                    src={avatarListing}
+                    style={img}
+                />
             </div>
         </div>
     )

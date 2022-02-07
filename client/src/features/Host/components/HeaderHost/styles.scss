@@ -7,7 +7,7 @@
     opacity: 0;
     visibility: hidden;
     position: absolute;
-    min-width: 150px;
+    min-width: 200px;
     top: 50px;
     left: 0;
     z-index: 1;
@@ -17,6 +17,10 @@
     border: 1px solid #eee;
     transition: all 0.2s ease-in-out;
     list-style: none;
+}
+
+.nav-holder ul .nav_holder_nav_li_ul li:not(:last-child) {
+    border-bottom: 1px solid rgb(246, 246, 246);
 }
 
 .nav-holder ul .nav_holder_nav_li_ul.hu-menu-vis {

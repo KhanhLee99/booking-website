@@ -51,7 +51,7 @@ function EditProfile(props) {
         }
         setLoading(true)
         if (avatarImg) {
-            await setFile(file.append("file", avatarImg))
+            setFile(file.append("file", avatarImg))
         }
 
         await userProfileApi.editProfile(params).then(res => {
@@ -61,6 +61,7 @@ function EditProfile(props) {
                     dispatch(updateProfile(res.data.data));
                     setLoading(false);
                     setAvatarImg(null);
+                    setFile(new FormData());
                     setMessageSuccess('Cập nhật thành công');
                 }).catch(err => {
                     console.log(err.message)
@@ -103,7 +104,7 @@ function EditProfile(props) {
                                     <div className="edit-profile-photo k-edit-avatar">
                                         {
                                             avatarImg ?
-                                                <img src={URL.createObjectURL(avatarImg)} alt="" />
+                                                <img src={URL.createObjectURL(avatarImg)} alt="" style={ava_size} />
                                                 :
                                                 <AvatarPlaceholder
                                                     avatar_url={loggedInUser.avatar_url}

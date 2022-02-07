@@ -1,3 +1,11 @@
 OneSignal
 Fcm
 Pusher
+
+concat multiple Object
+Object.assign({}, o1, o2, o3)
+
+https://blog.logrocket.com/react-drag-and-drop/
+
+offset
+element.getBoundingClientRect();

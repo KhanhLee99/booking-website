@@ -25,6 +25,30 @@ function AddBeds(props) {
         setIsHidden(!isHidden);
     }
 
+    const handleDec = (type) => {
+        const bed_type_item = {
+            room: `Bed room ${number}`,
+            detail: {
+                bed_type_id: type,
+                bed_count: 0
+            }
+        }
+
+        if (type == 1) {
+            bed_type_item.detail.bed_count = qtyDouble - 1;
+            setQtyDouble(qtyDouble - 1);
+        } else if (type == 2) {
+            bed_type_item.detail.bed_count = qtyQueen - 1;
+            setQtyQueen(qtyQueen - 1);
+        } else if (type == 3) {
+            bed_type_item.detail.bed_count = qtySingle - 1;
+            setQtySingle(qtySingle - 1);
+        } else if (type == 4) {
+            bed_type_item.detail.bed_count = qtySofa - 1;
+            setQtySofa(qtySofa - 1);
+        }
+    }
+
     const handleInc = (type) => {
         const bed_type_item = {
             room: `Bed room ${number}`,
@@ -93,6 +117,7 @@ function AddBeds(props) {
                                         qtyValue(index + 1)
                                     }
                                     handleInc={handleInc}
+                                    handleDec={handleDec}
                                 />
                             )
                         }
@@ -100,8 +125,6 @@ function AddBeds(props) {
                     }
                 </div>
             ) : null}
-
-            {/* <div className="_npr1df" /> */}
 
         </div>
     );

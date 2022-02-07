@@ -12,6 +12,7 @@ import './styles.scss';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
+import { header_user_menu_ul_li_a } from '../../features/Host/components/HeaderHost';
 
 
 const main_header = {
@@ -180,14 +181,14 @@ const header_user_menu_ul_li = {
     padding: '0px 0',
 }
 
-const header_user_menu_ul_li_a = {
-    color: '#50596e',
-    float: 'left',
-    width: '100%',
-    fontWeight: 500,
-    textAlign: 'left',
-    padding: '10px 15px',
-}
+// const header_user_menu_ul_li_a = {
+//     color: '#50596e',
+//     float: 'left',
+//     width: '100%',
+//     fontWeight: 500,
+//     textAlign: 'left',
+//     padding: '10px 15px',
+// }
 
 const { RangePicker } = DatePicker;
 
@@ -212,7 +213,6 @@ function Header(props) {
     const [showPopupSearch, setShowPopupSearch] = useState(false);
     const [showPopupNotify, setShowPopupNotify] = useState(false);
 
-
     const handleLogout = async (e) => {
         e.preventDefault();
         await dispatch(deleteDeviceToken()).then(() => {
@@ -236,11 +236,13 @@ function Header(props) {
     }
 
     useEffect(() => {
-        dispatch(getTotalNoticationsUnread());
-        dispatch(getMyNotify({
-            page: currentPage,
-            limit: 5
-        }));
+        if (isLoggedIn) {
+            dispatch(getTotalNoticationsUnread());
+            dispatch(getMyNotify({
+                page: currentPage,
+                limit: 5
+            }));
+        }
     }, []);
 
     useEffect(() => {

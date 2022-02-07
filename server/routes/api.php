@@ -86,9 +86,11 @@ Route::post('listing/amenities/{id}', 'Host\ListingController@add_listing_amenit
 Route::get('listing/city/{id}', 'Host\ListingController@get_listing_by_city_id');
 Route::get('listing/newest', 'Host\ListingController@get_last_listing');
 Route::get('listing/{id}/base-infomation', 'Host\ListingController@get_base_infomation_listing');
+Route::put('listing/{id}/send-listing', 'Host\ListingController@send_listing');
 
 // Room
 Route::put('listing/edit-bedroom/{id}', 'Host\ListingController@edit_bed_room');
+Route::get('listing/bedroom-detail/{id}', 'Host\ListingController@get_beds_listing');
 
 // City
 Route::get('city', 'Admin\CityController@index');
@@ -114,6 +116,11 @@ Route::put('price-special/{id}', 'Host\ListingPriceSpecialController@edit');
 
 // Photo Listing
 Route::post('photo-listing/upload/{id}', 'Host\PhotoListingController@upload');
+Route::post('photo-listing/upload-photo/{id}', 'Host\PhotoListingController@upload_photo');
+Route::post('photo-listing/add', 'Host\PhotoListingController@add_photo_listing');
+Route::post('photo-listing/upload-thumbnail/{id}', 'Host\PhotoListingController@upload_photo_thumbnail');
+Route::put('photo-listing/update-images-listing/{id}', 'Host\PhotoListingController@update_images_listing');
+Route::put('photo-listing/update-avatar-listing/{id}', 'Host\PhotoListingController@update_photo_url_thumbnail');
 Route::delete('photo-listing/{id}', 'Host\PhotoListingController@delete');
 Route::delete('photo-listing/all/{id}', 'Host\PhotoListingController@delete_all_photo_listing');
 

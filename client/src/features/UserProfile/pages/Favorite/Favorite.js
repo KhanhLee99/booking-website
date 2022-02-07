@@ -4,6 +4,7 @@ import Header from '../../../../components/Header';
 import ListListingsLocation from '../../../Listings/components/ListListingsLocation';
 import userProfileApi from '../../../../api/userProfileApi';
 import { useSelector } from 'react-redux';
+import NoData from '../../../../components/NoData/NoData';
 
 Favorite.propTypes = {
 
@@ -43,12 +44,17 @@ function Favorite(props) {
     return (
         <div>
             <h3 className='h3_title'>Yêu thích</h3>
-            <ListListingsLocation
-                listings={listings}
-                loading={loading}
-                isLoggedIn={isLoggedIn}
-                loggedInUser={loggedInUser}
-            />
+            {listings.length > 0 ?
+                <ListListingsLocation
+                    listings={listings}
+                    loading={loading}
+                    isLoggedIn={isLoggedIn}
+                    loggedInUser={loggedInUser}
+                />
+                :
+                <NoData />
+            }
+
         </div>
     );
 }

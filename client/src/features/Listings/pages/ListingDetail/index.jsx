@@ -4,7 +4,7 @@ import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
-import { getDaysArray } from '../../../../@helper/helper';
+import { getDaysArray, parseVNDCurrency } from '../../../../@helper/helper';
 import blockBookingApi from '../../../../api/blockBookingApi';
 import conversationApi from '../../../../api/conversationApi';
 import listingApi from '../../../../api/listingApi';
@@ -163,7 +163,7 @@ function ListingDetail(props) {
     }, []);
 
     useEffect(() => {
-        if (listingDetail.user_id) {
+        if (isLoggedIn && listingDetail.user_id) {
             getConversationTogether();
         }
     }, [listingDetail]);
@@ -252,11 +252,11 @@ function ListingDetail(props) {
                                         <ul>
                                             <li>
                                                 <p>Thứ hai - Thứ năm</p>
-                                                <span>{parseInt(listingDetail.price_per_night_base).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
+                                                <span>{parseVNDCurrency(listingDetail.price_per_night_base)}</span>
                                             </li>
                                             <li>
                                                 <p>Thứ sáu - Chủ nhật</p>
-                                                <span>{parseInt(listingDetail.price_per_night_weekend).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' })}</span>
+                                                <span>{parseVNDCurrency(listingDetail.price_per_night_weekend)}</span>
                                             </li>
                                             {/* <li>
                                                     <p>Phí trẻ em tăng thêm</p>

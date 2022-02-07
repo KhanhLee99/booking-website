@@ -42,11 +42,16 @@ class ReservationController extends Controller
                 ->select('reservation.*', 'listing.name as listing_name', 'listing.street_address', 'listing.avatar_url as thumb_img', 'users.name as user_name', 'users.avatar_url as user_avatar_url', 'users.email as user_email', 'users.phone_number as user_phone', 'reservation_status.name as status');
             switch ($filter) {
                 case 'request':
-                    $request->where('reservation_status_id', 1);
+                    $query->where('reservation.reservation_status_id', 1);
                     break;
                 case 'upcoming':
+                    $query->where('reservation.reservation_status_id', 3)
+                        ->whereBetween('reservation.checkin_date', [Carbon::now()->addDay(), Carbon::now()->addDays(7)]);
                     break;
-                case 'today':
+                case 'checkin':
+                    $query->where('reservation.reservation_status_id', 3)
+                        ->where('reservation.checkin_date', '<=', Carbon::now())
+                        ->where('reservation.checkout_date', '>=', Carbon::now());
                     break;
                 default:
                     break;

@@ -36,7 +36,6 @@ function Dashboard(props) {
             <div className="list-single-facts fl-wrap">
                 <div className="row">
                     <div className="col-md-4">
-                        {/* inline-facts */}
                         <div className="dashboard_inline-facts-wrap gradient-bg" style={{ height: '112px' }}>
                             <div className="inline-facts">
                                 <i className="fal fa-home" />

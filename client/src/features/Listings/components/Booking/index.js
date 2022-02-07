@@ -138,16 +138,16 @@ function Booking(props) {
                             {
                                 listing && listing.reservation_form == 'quick' ?
                                     <ul id="booking_progressbar" className="no-list-style">
-                                        <li className={activeBookingInfo && "active"}><span className="tolt" data-microtip-position="top" data-tooltip="Booking Info">01.</span></li>
-                                        <li className={activePersonalInfo && "active"}><span className="tolt" data-microtip-position="top" data-tooltip="Personal Info">02.</span></li>
-                                        <li className={activePayment && "active"}><span className="tolt" data-microtip-position="top" data-tooltip="Payment Method">03.</span></li>
-                                        <li className={activeConfirm && "active"}><span className="tolt" data-microtip-position="top" data-tooltip="Confirm">04.</span></li>
+                                        <li className={activeBookingInfo ? 'active' : ''}><span className="tolt" data-microtip-position="top" data-tooltip="Booking Info">01.</span></li>
+                                        <li className={activePersonalInfo ? 'active' : ''}><span className="tolt" data-microtip-position="top" data-tooltip="Personal Info">02.</span></li>
+                                        <li className={activePayment ? 'active' : ''}><span className="tolt" data-microtip-position="top" data-tooltip="Payment Method">03.</span></li>
+                                        <li className={activeConfirm ? 'active' : ''}><span className="tolt" data-microtip-position="top" data-tooltip="Confirm">04.</span></li>
                                     </ul>
                                     :
                                     <ul id="booking_progressbar" className="no-list-style">
-                                        <li className={activeBookingInfo && "active"}><span className="tolt" data-microtip-position="top" data-tooltip="Booking Info">01.</span></li>
-                                        <li className={activePersonalInfo && "active"} style={{ width: '50%' }}><span className="tolt" data-microtip-position="top" data-tooltip="Personal Info">02.</span></li>
-                                        <li className={activeConfirm && "active"} style={{ width: '50%' }}><span className="tolt" data-microtip-position="top" data-tooltip="Confirm">03.</span></li>
+                                        <li className={activeBookingInfo ? 'active' : ''}><span className="tolt" data-microtip-position="top" data-tooltip="Booking Info">01.</span></li>
+                                        <li className={activePersonalInfo ? 'active' : ''} style={{ width: '50%' }}><span className="tolt" data-microtip-position="top" data-tooltip="Personal Info">02.</span></li>
+                                        <li className={activeConfirm ? 'active' : ''} style={{ width: '50%' }}><span className="tolt" data-microtip-position="top" data-tooltip="Confirm">03.</span></li>
                                     </ul>
                             }
 

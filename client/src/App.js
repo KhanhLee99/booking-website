@@ -23,8 +23,9 @@ import UserProfileFeature from './features/UserProfile';
 import { getToken, onMessageListener } from './init-fcm';
 import { unwrapResult } from '@reduxjs/toolkit'
 import userApi from './api/userApi';
-import { fetchMyNotify, getMyNotify, getTotalNoticationsUnread } from './app/reducer/notifySlice';
-
+import { fetchMyNotify, getTotalNoticationsUnread } from './app/reducer/notifySlice';
+import DragHorizontal1 from './components/Test/DragHorizontal1';
+import DragHorizonImage from './components/Test/DragHorizonImage';
 
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
@@ -102,7 +103,7 @@ function App() {
     .catch((err) => console.log("failed: ", err));
 
   return (
-    // <UserChat />
+    // <DragHorizonImage />
 
     <>
       {show ? (

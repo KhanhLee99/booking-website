@@ -17,9 +17,9 @@ HeaderHost.propTypes = {
 
 const nav_holder = {
     float: 'left',
-    // position: 'relative',
+    position: 'relative',
     // right: 0,
-    top: '18px',
+    top: '0px',
     marginLeft: '40px',
     width: '50%',
     display: 'flex',
@@ -52,23 +52,6 @@ const nav_holder_nav_li_a = {
     transition: 'all 100ms linear',
 }
 
-const nav_holder_nav_li_ul = {
-    margin: '30px 0 0 0',
-    opacity: 0,
-    visibility: 'hidden',
-    position: 'absolute',
-    minWidth: '150px',
-    top: '50px',
-    left: 0,
-    zIndex: 1,
-    padding: '10px 0',
-    background: '#fff',
-    borderRadius: '6px',
-    border: '1px solid #eee',
-    transition: 'all 0.2s ease-in-out',
-    listStyle: 'none',
-}
-
 const nav_holder_nav_li_a_i = {
     paddingLeft: '6px',
     transition: 'all 200ms linear',
@@ -79,7 +62,6 @@ const nav_holder_nav_li_ul_li = {
     float: 'left',
     height: 'auto',
     position: 'relative',
-    marginLeft: '6px',
 }
 
 const nav_holder_nav_li_ul_a = {
@@ -95,11 +77,13 @@ const nav_holder_nav_li_ul_a = {
     lineHeight: '25px',
     letterSpacing: '0px',
     transition: 'all 100ms linear',
-
+    marginLeft: '6px',
 }
 
 function HeaderHost(props) {
     const refNotify = useRef(null);
+    const refProfile = useRef(null);
+    const refMenu = useRef(null);
     const dispatch = useDispatch();
 
     const loggedInUser = useSelector((state) => state.userSlice.current);
@@ -110,10 +94,10 @@ function HeaderHost(props) {
     const currentPage = useSelector((state) => state.notifySlice.currentPage || 1);
 
     const [showPopupProfile, setShowPopupProfile] = useState(false);
-    const [hovered, setHovered] = useState(false);
+    const [showMenu, setShowMenu] = useState(false);
     const [showPopupNotify, setShowPopupNotify] = useState(false);
 
-    const toggleHover = () => setHovered(!hovered);
+    // const toggleHover = () => setHovered(!hovered);
 
     const handleLogout = async (e) => {
         e.preventDefault();
@@ -158,110 +142,112 @@ function HeaderHost(props) {
         <header className="k-main-header" style={main_header}>
             <Link to="/" className="k-logo-holder" style={logo_holder}><img src="https://i.ytimg.com/vi/FPtITmtjWhQ/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB3TdlYzQKkXD7XtPbNwCGLGycr2Q" alt="" style={{ width: 'auto', height: '100%' }} /></Link>
             {/* header opt */}
-            {
-                isLoggedIn ? <>
-                    <OutsideAlerter
-                        closePopup={() => setShowPopupNotify(false)}
-                        ref={refNotify}
+
+            <OutsideAlerter
+                closePopup={() => setShowPopupNotify(false)}
+                ref={refNotify}
+            >
+                <div
+                    className="k-cart-btn"
+                    style={cart_btn}
+                    onClick={() => handleClickBell()}
+                >
+                    <i className="fas fa-bell" style={{ width: '12px' }} />
+                    {totalNotiUnread > 0 && <span className="k-cart-counter" style={cart_counter} >{totalNotiUnread}</span>}
+                </div>
+
+                <div className={showPopupNotify ? "header-modal vis-wishlist" : "header-modal"}>
+                    <InfiniteScroll
+                        dataLength={notifications.length}
+                        next={loadMoreData}
+                        hasMore={currentPage < totalPage ? true : false}
+                        loader={
+                            <>
+                                <SkeletonNotificationItem />
+                                <SkeletonNotificationItem />
+                            </>
+                        }
+                        height={440}
+                        style={{ background: '#fff' }}
                     >
-                        <div
-                            className="k-cart-btn"
-                            style={cart_btn}
-                            onClick={() => handleClickBell()}
-                        >
-                            <i className="fas fa-bell" style={{ width: '12px' }} />
-                            {totalNotiUnread > 0 && <span className="k-cart-counter" style={cart_counter} >{totalNotiUnread}</span>}
-                        </div>
+                        <div className="header-modal-container scrollbar-inner fl-wrap">
+                            <div className='notification-title'>
+                                <h3>Notifications</h3>
+                            </div>
 
-                        <div className={showPopupNotify ? "header-modal vis-wishlist" : "header-modal"}>
-                            <InfiniteScroll
-                                dataLength={notifications.length}
-                                next={loadMoreData}
-                                hasMore={currentPage < totalPage ? true : false}
-                                loader={
-                                    <>
-                                        <SkeletonNotificationItem />
-                                        <SkeletonNotificationItem />
-                                    </>
+                            <div className="notification-list-box fl-wrap">
+                                {
+                                    notifications.length > 0 ?
+                                        notifications.map((notify, index) => (
+                                            <NotificationItem
+                                                key={index}
+                                                notify={notify}
+                                            />
+                                        ))
+                                        : null
                                 }
-                                height={440}
-                                style={{ background: '#fff' }}
-                            >
-                                <div className="header-modal-container scrollbar-inner fl-wrap">
-                                    <div className='notification-title'>
-                                        <h3>Notifications</h3>
-                                    </div>
-
-                                    <div className="notification-list-box fl-wrap">
-                                        {
-                                            notifications.length > 0 ?
-                                                notifications.map((notify, index) => (
-                                                    <NotificationItem
-                                                        key={index}
-                                                        notify={notify}
-                                                    />
-                                                ))
-                                                : null
-                                        }
-                                    </div>
-                                </div>
-                            </InfiniteScroll>
+                            </div>
                         </div>
+                    </InfiniteScroll>
+                </div>
 
-                    </OutsideAlerter>
+            </OutsideAlerter>
 
-                    <div className="header-user-menu hu-menu-visdec" style={header_user_menu}>
-                        <div
-                            className="header-user-name"
-                            style={header_user_name}
-                            onClick={() => setShowPopupProfile(!showPopupProfile)}
-                        >
-                            <span style={header_user_name_span}>
-                                <AvatarPlaceholder
-                                    avatar_url={loggedInUser.avatar_url}
-                                    style={header_user_name_span_img}
-                                />
-                            </span>
-                            {loggedInUser.name}
-                        </div>
-
-                        <ul className={showPopupProfile ? 'hu-menu-vis' : ''}>
-                            <li style={header_user_menu_ul_li}><Link to="/me/profile" style={header_user_menu_ul_li_a}> Edit profile</Link></li>
-                            <li style={header_user_menu_ul_li}><Link to="/me/bookings" style={header_user_menu_ul_li_a}>  Bookings</Link></li>
-                            <li style={header_user_menu_ul_li}><Link to="/me/favorite" style={header_user_menu_ul_li_a}> Danh sách yêu thích </Link></li>
-                            {loggedInUser.role_id === 2 ?
-                                <li style={header_user_menu_ul_li}><Link to="/host/listings" style={header_user_menu_ul_li_a}>Quản lý nhà/phòng cho thuê</Link></li>
-                                : null}
-                            <li style={header_user_menu_ul_li}><a href="#" style={header_user_menu_ul_li_a} onClick={(e) => handleLogout(e)}> Log Out</a></li>
-                        </ul>
+            <div className="header-user-menu hu-menu-visdec" style={header_user_menu}>
+                <OutsideAlerter
+                    closePopup={() => { setShowPopupProfile(false) }}
+                    ref={refProfile}
+                >
+                    <div
+                        className="header-user-name"
+                        style={header_user_name}
+                        onClick={() => setShowPopupProfile(!showPopupProfile)}
+                    >
+                        <span style={header_user_name_span}>
+                            <AvatarPlaceholder
+                                avatar_url={loggedInUser.avatar_url}
+                                style={header_user_name_span_img}
+                            />
+                        </span>
+                        {loggedInUser.name}
                     </div>
-                </> :
-                    <LoginModal>
-                        <div className="k-show-reg-form modal-open avatar-img" data-srcav="images/avatar/3.jpg" style={show_reg_form}><i className="fal fa-user" style={{ color: '#4DB7F', marginRight: '14px' }} />Sign In</div>
-                    </LoginModal>
-            }
+
+                    <ul className={showPopupProfile ? 'popup-user-nav hu-menu-vis' : 'popup-user-nav'}>
+                        <li style={header_user_menu_ul_li}><Link to="/me/profile" style={header_user_menu_ul_li_a}> Edit profile</Link></li>
+                        <li style={header_user_menu_ul_li}><a href="#" style={header_user_menu_ul_li_a} onClick={(e) => handleLogout(e)}> Log Out</a></li>
+                    </ul>
+                </OutsideAlerter>
+            </div>
+
 
             {/*  navigation */}
             <div className="nav-holder main-menu" style={nav_holder}>
-                <nav style={nav_holder_nav}>
-                    <ul className="no-list-style">
-                        <li style={nav_holder_nav_li}><a href="#" style={nav_holder_nav_li_a}>Hôm nay </a></li>
-                        <li style={nav_holder_nav_li}><Link to="/host/inbox" className="act-link" style={nav_holder_nav_li_a}>Tin nhắn</Link></li>
-                        <li style={nav_holder_nav_li}><a href="blog.html" style={nav_holder_nav_li_a}>Thông tin phân tích</a></li>
-                        <li style={nav_holder_nav_li}
-                            onClick={toggleHover}
-                        >
-                            <a href="#" style={nav_holder_nav_li_a}>Menu<i className="fa fa-caret-down" style={nav_holder_nav_li_a_i} /></a>
-                            <ul className={hovered ? 'nav_holder_nav_li_ul hu-menu-vis' : 'nav_holder_nav_li_ul'}>
-                                <li style={nav_holder_nav_li_ul_li}><Link to="/host/listings" style={nav_holder_nav_li_ul_a}>Nhà/phòng cho thuê</Link></li>
-                                <li style={nav_holder_nav_li_ul_li}><Link to="/host/booking" style={nav_holder_nav_li_ul_a}>Đặt phòng</Link></li>
-                                <li style={nav_holder_nav_li_ul_li}><Link to="/host/reviews" style={nav_holder_nav_li_ul_a}>Reviews</Link></li>
-                                <li style={nav_holder_nav_li_ul_li}><Link to="/become-host/basic-infomation" style={nav_holder_nav_li_ul_a}>Tạo mục cho thuê mới</Link></li>
-                                <li style={nav_holder_nav_li_ul_li}><a href="dashboard-wallet.html" style={nav_holder_nav_li_ul_a}>Lịch sử giao dịch</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </nav>
+                <OutsideAlerter
+                    closePopup={() => { setShowMenu(false) }}
+                    ref={refMenu}
+                >
+                    <nav style={nav_holder_nav}>
+
+                        <ul className="no-list-style">
+                            <li style={nav_holder_nav_li}><a href="#" style={nav_holder_nav_li_a}>Hôm nay </a></li>
+                            <li style={nav_holder_nav_li}><Link to="/host/inbox" className="act-link" style={nav_holder_nav_li_a}>Tin nhắn</Link></li>
+                            <li style={nav_holder_nav_li}><a href="blog.html" style={nav_holder_nav_li_a}>Thông tin phân tích</a></li>
+
+                            <li style={nav_holder_nav_li}
+                                onClick={() => setShowMenu(!showMenu)}
+                            >
+                                <a href="#" style={nav_holder_nav_li_a}>Menu<i className="fa fa-caret-down" style={nav_holder_nav_li_a_i} /></a>
+                                <ul className={showMenu ? 'nav_holder_nav_li_ul hu-menu-vis' : 'nav_holder_nav_li_ul'}>
+                                    <li style={nav_holder_nav_li_ul_li}><Link to="/host/listings" style={nav_holder_nav_li_ul_a}>Nhà/phòng cho thuê</Link></li>
+                                    <li style={nav_holder_nav_li_ul_li}><Link to="/host/booking" style={nav_holder_nav_li_ul_a}>Đặt phòng</Link></li>
+                                    <li style={nav_holder_nav_li_ul_li}><Link to="/host/reviews" style={nav_holder_nav_li_ul_a}>Reviews</Link></li>
+                                    <li style={nav_holder_nav_li_ul_li}><Link to="/become-host/basic-infomation" style={nav_holder_nav_li_ul_a}>Tạo mục cho thuê mới</Link></li>
+                                    <li style={nav_holder_nav_li_ul_li}><a href="dashboard-wallet.html" style={nav_holder_nav_li_ul_a}>Lịch sử giao dịch</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </nav>
+                </OutsideAlerter>
             </div>
         </header >
     );
@@ -364,16 +350,17 @@ const header_user_menu_ul_li = {
     float: 'left',
     width: '100%',
     padding: '0px 0',
-    borderBottom: '1px solid #f6f6f6',
 }
 
-const header_user_menu_ul_li_a = {
+export const header_user_menu_ul_li_a = {
     color: '#50596e',
     float: 'left',
     width: '100%',
     fontWeight: 500,
     textAlign: 'left',
     padding: '6px 15px',
+    fontSize: '13px',
+    marginLeft: '6px',
 }
 
 export function HeaderAddListing(props) {
@@ -402,13 +389,6 @@ export function HeaderAddListing(props) {
             {/* header opt */}
             {
                 isLoggedIn ? <>
-
-                    {/* <div
-                        className="k-cart-btn"
-                        style={cart_btn}
-                    >
-                        <i className="fas fa-bell" style={{ width: '12px' }} /><span className="k-cart-counter" style={cart_counter} >4</span>
-                    </div> */}
 
                     <div className="header-user-menu hu-menu-visdec" style={header_user_menu}>
                         <div

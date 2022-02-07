@@ -7,13 +7,19 @@ FooterHost.propTypes = {
 
 };
 
+FooterHost.defaultProps = {
+    title: 'Next'
+}
+
 function FooterHost(props) {
     const handleClick = () => {
         if (isHandleClick) {
             handleNext();
         }
     }
-    const { loading, handleBack, handleNext, hiddenBackButton, isHandleClick, now } = props;
+
+    const { loading, handleBack, handleNext, hiddenBackButton, isHandleClick, now, title } = props;
+
     return (
         <div className='k-footer'>
             <ProgressBar now={now} />
@@ -21,7 +27,7 @@ function FooterHost(props) {
                 <div className='row'>
                     <div className='col-6 k-back-div'>
                         {hiddenBackButton ? null : (
-                            <a href='#' className='k-back' onClick={(e) => handleBack(e)}>Quay lại</a>
+                            <a href='#' className='k-back' onClick={(e) => handleBack(e)}>Back</a>
                         )}
 
                     </div>
@@ -32,7 +38,7 @@ function FooterHost(props) {
                             disabled={loading ? true : false}
                             onClick={() => handleClick()}
                         >
-                            {loading ? <PulseLoading /> : "Tiếp theo"}
+                            {loading ? <PulseLoading /> : title}
                         </button>
                     </div>
                 </div>

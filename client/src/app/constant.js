@@ -10,7 +10,7 @@ export const ReservationFilter = {
     ALL: 'all',
     REQUEST: 'request',
     UPCOMING: 'upcoming',
-    TODAY: 'today',
+    CHECKIN: 'checkin',
 }
 
 export const UserListingFilter = {
@@ -26,4 +26,5 @@ export const ReservationStatus = {
     CHECKIN: { id: 5, name: 'checkin', color: '#f6cf48' },
     CHECKOUT: { id: 6, name: 'checkout', color: '#b53e4e' },
     DECLINE: { id: 7, name: 'decline', color: '#50596e' },
+    REVIEWED: { id: 8, name: 'reviewed', color: '#50596e' },
 }

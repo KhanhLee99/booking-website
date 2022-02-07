@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import './styles.scss';
 import FooterHost from '../../components/FooterHost';
@@ -17,10 +17,6 @@ import TabAddListing from '../../components/TabAddListing/TabAddListing';
 AddName.propTypes = {
 
 };
-
-const disable_resize = {
-    resize: 'none'
-}
 
 const custom_form_input = {
     float: 'left',
@@ -43,7 +39,7 @@ function AddName(props) {
     const [loading, setLoading] = useState(false);
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
-    const [percent, setPercent] = useState(100 / 4);
+    const [percent, setPercent] = useState(100 / 7 * 4);
 
     const handleNext = async (values) => {
         try {
@@ -74,7 +70,7 @@ function AddName(props) {
             await listingApi.getListingById(id).then(res => {
                 setName(res.data.data.listing.name);
                 setDescription(res.data.data.listing.description);
-                setPercent(100 / 3);
+                setPercent(100 / 7 * 5);
             });
         }
 
@@ -91,11 +87,12 @@ function AddName(props) {
                 <div className='col-8'>
                     <Formik
                         enableReinitialize
-                        initialValues={{ title: name, description: description }}
+                        initialValues={{ title: name || '', description: description }}
                         validationSchema={Yup.object({
                             title: Yup.string()
                                 // .max(15, 'Must be 15 characters or less')
-                                .required('Required'),
+                                .required('Required')
+                                .max(50),
 
                             // description: Yup.string()
                             //     .required('Required'),
@@ -112,25 +109,25 @@ function AddName(props) {
                                         <div className="row with-forms">
                                             <div className="col-md-12">
                                                 <label className='custom_form_label'>Tên chỗ nghỉ của bạn là:</label>
-                                                <p>Hãy thu hút khách hàng bằng cách đặt tiêu đề chỗ nghỉ của bạn trở nên đặc biệt.</p>
-                                                <input
+                                                {/* <p>Hãy thu hút khách hàng bằng cách đặt tiêu đề chỗ nghỉ của bạn trở nên đặc biệt.</p> */}
+                                                <textarea
                                                     type="text"
                                                     placeholder="Listing title"
                                                     {...formik.getFieldProps('title')}
-                                                // style={custom_form_input}
+                                                    style={{ resize: 'none', minHeight: '120px', marginBottom: '5px' }}
                                                 />
+                                                <label className='custom_form_label' style={{ color: formik.errors.title ? 'red' : '' }}>{formik.values.title.length}/50</label>
                                             </div>
 
-                                            <div className="col-md-12">
+                                            <div className="col-md-12 mt-3">
                                                 <label className='custom_form_label'>Mô tả:</label>
-                                                <p>Chia sẻ với khách hàng một vài thông tin ngắn gọn và nổi bật về chỗ nghỉ này của bạn.</p>
+                                                {/* <p>Chia sẻ với khách hàng một vài thông tin ngắn gọn và nổi bật về chỗ nghỉ này của bạn.</p> */}
 
                                                 <CKEditor
 
                                                     editor={ClassicEditor}
                                                     data={description == null ? '' : `${description}`}
                                                     onReady={editor => {
-                                                        // You can store the "editor" and use when it is needed.
                                                         console.log('Editor is ready to use!', editor);
                                                     }}
                                                     onChange={(event, editor) => {
@@ -162,11 +159,9 @@ function AddName(props) {
 
                             </form>
                         )}
-
                     </Formik>
                 </div>
                 <RightSide />
-
             </div>
         </CommonAddListing>
     );
@@ -174,13 +169,17 @@ function AddName(props) {
 
 export default AddName;
 
-function RightSide(props) {
+const RightSide = ((props) => {
     return (
         <div className='col-4 k-right-side'>
             <div className='k-property-content'>
-                <h5>Text</h5>
-                <p>Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recent</p>
+                <h5>Title</h5>
+                <p>Hãy thu hút khách hàng bằng cách đặt tiêu đề chỗ nghỉ của bạn trở nên đặc biệt.</p>
+            </div>
+            <div className='k-property-content' style={{ top: '280px' }}>
+                <h5>Description</h5>
+                <p>Chia sẻ với khách hàng một vài thông tin ngắn gọn và nổi bật về chỗ nghỉ này của bạn.</p>
             </div>
         </div>
     )
-}
+})

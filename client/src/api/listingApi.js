@@ -49,7 +49,33 @@ const listingApi = {
     getListingPreview: (id) => {
         const url = `/listing/${id}/preview`;
         return axiosClient.get(url);
+    },
+
+    updateImages: (params, id) => {
+        const url = `/photo-listing/update-images-listing/${id}`;
+        return axiosClient.put(url, params);
+    },
+
+    addPhotoListing: (params) => {
+        const url = '/photo-listing/add';
+        return axiosClient.post(url, params);
+    },
+
+    deleteAllPhotoListing: (id) => {
+        const url = `/photo-listing/all/${id}`;
+        return axiosClient.delete(url);
+    },
+
+    deletePhotoListing: (id) => {
+        const url = `/photo-listing/${id}`;
+        return axiosClient.delete(url);
+    },
+
+    updateListingAvatar: (params, id) => {
+        const url = `/photo-listing/update-avatar-listing/${id}`;
+        return axiosClient.put(url, params);
     }
 }
 
 export default listingApi;
+// Route::put('photo-listing/update-avatar-listing/{id}', 'Host\PhotoListingController@update_photo_url_thumbnail');

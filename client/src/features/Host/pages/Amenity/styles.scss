@@ -1,0 +1,9 @@
+.checkboxes input[type="checkbox"]:checked + label:before {
+    background-color: rgb(77, 183, 254);
+    border-color: rgb(77, 183, 254);
+}
+// .checkboxes input[type="checkbox"]:checked + label:before {
+//     content: "\f00c";
+//     background-color: #66676b;
+//     border: 2px solid #66676b;
+// }

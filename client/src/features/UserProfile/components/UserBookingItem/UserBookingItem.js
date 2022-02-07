@@ -52,6 +52,11 @@ export const color_reservation_status = (status_id) => {
                 borderColor: ReservationStatus.DECLINE.color,
                 color: ReservationStatus.DECLINE.color,
             }
+        case ReservationStatus.REVIEWED.id:
+            return {
+                borderColor: ReservationStatus.REVIEWED.color,
+                color: ReservationStatus.REVIEWED.color,
+            }
         default:
             return;
     }
@@ -73,6 +78,8 @@ export const statusText = (status_id) => {
             return ReservationStatus.CHECKOUT.name
         case ReservationStatus.DECLINE.id:
             return ReservationStatus.DECLINE.name
+        case ReservationStatus.REVIEWED.id:
+            return ReservationStatus.REVIEWED.name
         default:
             return;
     }
@@ -86,57 +93,107 @@ const ava_size = {
 
 function UserBookingItem(props) {
 
-    const { reservation, handleCancel, handleAddReview } = props;
+    const { reservation, handleCancel, handleAddReview, handleCheckout, handlePayment } = props;
 
     const cancelReservation = (e) => {
         e.preventDefault();
         alertConfirm('Confirm to submit', 'Are you sure to cancel this reservation ?', () => handleCancel(reservation.id));
     }
 
-    const checkBtnCancel = () => {
-        let arr = [ReservationStatus.CANCELLED.id, ReservationStatus.DECLINE.id, ReservationStatus.CHECKOUT.id];
-
-        if (arr.includes(reservation.reservation_status_id) == false) {
-            return <a href='#' className='cancel-reservation-btn' onClick={(e) => cancelReservation(e)}>Huỷ đặt phòng</a>
-        }
-        return null;
+    const checkout = (e) => {
+        e.preventDefault();
+        handleCheckout(reservation.id);
     }
 
-    const checkBtnReview = () => {
-        try {
-            var now = moment(moment().toDate(), "YYYY-MM-DD hh:mm:ss");
-            var checkout = moment(reservation.checkout_date, "YYYY-MM-DD hh:mm:ss");
-            var { _data } = moment.duration(now.diff(checkout));
-            if (_data.days >= 0 && _data.days <= 14) {
+    const payment = (e) => {
+        e.preventDefault();
+        handlePayment(reservation.id);
+    }
+
+    const renderButton = () => {
+        switch (reservation.reservation_status_id) {
+            case ReservationStatus.REQUEST.id:
                 return <>
                     <div className='fl-wrap'>
                         <span className="fw-separator"></span>
                     </div>
 
                     <div className='review-btn fl-wrap'>
-                        <Popup
-                            trigger={<a href='#' onClick={e => e.preventDefault()}>Đánh giá</a>}
-                            position="center"
-                            modal
-                            nested
-                            closeOnDocumentClick
-                            className='popup-content'
-                        >
-                            {close => (
-                                <AddReview
-                                    id={reservation.listing_id}
-                                    name={reservation.listing_name}
-                                    handleAddReview={handleAddReview}
-                                    close={close}
-                                />
-                            )}
-                        </Popup >
+                        <a href='#' onClick={(e) => cancelReservation(e)}>Cancel</a>
                     </div>
                 </>
-            }
-            return null;
-        } catch (err) {
-            console.log(err.message)
+
+            case ReservationStatus.ACCEPTED.id:
+                return <>
+                    <div className='fl-wrap'>
+                        <span className="fw-separator"></span>
+                    </div>
+                    <div className='review-btn fl-wrap'>
+                        <a href='#' style={{ marginLeft: 10 }} onClick={(e) => payment(e)}>Payment</a>
+                        <a href='#' onClick={(e) => cancelReservation(e)}>Cancel</a>
+                    </div>
+                </>
+            case ReservationStatus.PAID.id:
+                return <>
+                    <div className='fl-wrap'>
+                        <span className="fw-separator"></span>
+                    </div>
+
+                    <div className='review-btn fl-wrap'>
+                        <a href='#' onClick={(e) => cancelReservation(e)}>Cancel</a>
+                    </div>
+                </>
+            case ReservationStatus.CHECKIN.id:
+                var checkout_date = moment(reservation.checkout_date, "YYYY-MM-DD hh:mm:ss");
+                var expired_date = moment(reservation.checkout_date, "YYYY-MM-DD hh:mm:ss").add(5, 'days');
+                var now = moment(moment().toDate(), "YYYY-MM-DD hh:mm:ss");
+                if (now.isAfter(checkout_date) && expired_date.isAfter(now)) {
+                    return <>
+                        <div className='fl-wrap'>
+                            <span className="fw-separator"></span>
+                        </div>
+
+                        <div className='review-btn fl-wrap'>
+                            <a href='#' onClick={(e) => checkout(e)}>Checkout</a>
+                        </div>
+                    </>
+                }
+                return;
+            case ReservationStatus.CHECKOUT.id:
+                var checkout_date = moment(reservation.checkout_date, "YYYY-MM-DD hh:mm:ss");
+                var expired_date = moment(reservation.checkout_date, "YYYY-MM-DD hh:mm:ss").add(5, 'days');
+                var now = moment(moment().toDate(), "YYYY-MM-DD hh:mm:ss");
+                if (now.isAfter(checkout_date) && expired_date.isAfter(now)) {
+                    return <>
+                        <div className='fl-wrap'>
+                            <span className="fw-separator"></span>
+                        </div>
+
+                        <div className='review-btn fl-wrap'>
+                            <Popup
+                                trigger={<a href='#' onClick={e => e.preventDefault()}>Đánh giá</a>}
+                                position="center"
+                                modal
+                                nested
+                                closeOnDocumentClick
+                                className='popup-content'
+                            >
+                                {close => (
+                                    <AddReview
+                                        id={reservation.listing_id}
+                                        name={reservation.listing_name}
+                                        reservation_id={reservation.id}
+                                        handleAddReview={handleAddReview}
+                                        close={close}
+                                    />
+                                )}
+                            </Popup >
+                        </div>
+                    </>
+                }
+                return;
+            default:
+                return;
         }
     }
 
@@ -152,7 +209,6 @@ function UserBookingItem(props) {
                 </div>
 
                 <div className="k-booking-status">
-                    {checkBtnCancel()}
                     <span className='status-text' style={color_reservation_status(reservation.reservation_status_id)}>
                         {statusText(reservation.reservation_status_id)}
                     </span>
@@ -182,7 +238,8 @@ function UserBookingItem(props) {
                 </div>
             </div>
 
-            {checkBtnReview()}
+            {renderButton()}
+
         </div>
     );
 }

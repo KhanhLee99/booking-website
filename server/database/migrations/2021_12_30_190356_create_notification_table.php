@@ -17,7 +17,7 @@ class CreateNotificationTable extends Migration
             $table->id();
 
             $table->string('title');
-            $table->string('message');
+            $table->longText('message');
             $table->boolean('is_read')->default(0);
 
             $table->unsignedBigInteger('noti_type_id')->nullable();

@@ -1,0 +1,350 @@
+.dropzone {
+    min-height: 140px !important;
+    width: calc(50% - 10px);
+    position: relative;
+    top: -5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.show_more_snopt_tooltip_a:hover {
+    background-color: #f7f7f7;
+}
+.show_more_snopt_tooltip_a:not(:last-child) {
+    border-bottom: 1px solid #f6f6f6;
+}
+
+.display-none {
+    display: none;
+}
+
+// import React, { useEffect, useState } from 'react';
+// import PropTypes from 'prop-types';
+// import { useHistory, useParams } from 'react-router-dom';
+// import { useDropzone } from 'react-dropzone'
+
+// import './styles.scss';
+// import uploadApi from '../../../../api/uploadApi';
+// import FooterHost from '../../components/FooterHost';
+// import listingApi from '../../../../api/listingApi';
+// import Loading from '../../../../components/Loading/Loading';
+// import TabAddListing from '../../components/TabAddListing/TabAddListing';
+// import CommonAddListing from '../../../../components/CommonAddListing/CommonAddListing';
+// import { v4 as uuid_v4 } from "uuid";
+
+// AddPhotos.propTypes = {
+
+// };
+
+// const thumbsContainer = {
+//     display: 'flex',
+//     flexDirection: 'row',
+//     flexWrap: 'wrap',
+//     marginTop: 16
+// };
+
+// const thumb = {
+//     display: 'inline-flex',
+//     borderRadius: 2,
+//     border: '1px solid #eaeaea',
+//     marginBottom: 10,
+//     marginRight: 10,
+//     width: 120,
+//     height: 140,
+//     padding: 4,
+//     boxSizing: 'border-box'
+// };
+
+// const thumbInner = {
+//     display: 'flex',
+//     minWidth: 0,
+//     overflow: 'hidden'
+// };
+
+// const img = {
+//     display: 'block',
+//     width: 'auto',
+//     height: '100%',
+//     userSelect: 'none',
+// };
+
+// const isFile = (id) => {
+//     return (typeof id == 'string') ? true : false;
+// }
+
+// const MOVE = {
+//     LEFT: 'left',
+//     RIGHT: 'right',
+// }
+
+// const CASE_ADD_PHOTO = {
+//     POST: 'post',
+//     UPDATE: 'update',
+// }
+
+// function AddPhotos(props) {
+//     const history = useHistory();
+//     const [loading, setLoading] = useState(false);
+//     const { id } = useParams();
+//     const [files, setFiles] = useState([]);
+//     const [params, setParams] = useState(new FormData());
+//     const [photos, setPhotos] = useState([]);
+//     const [percent, setPercent] = useState(100 / 7 * 3);
+//     const [arrDel, setArrDel] = useState([]);
+//     const [caseAddPhoto, setCaseAddPhoto] = useState(CASE_ADD_PHOTO.POST);
+
+//     const { getRootProps, getInputProps } = useDropzone({
+//         accept: 'image/*',
+//         onDrop: acceptedFiles => {
+
+//             const uploaders = acceptedFiles.map(file =>
+//                 Object.assign(file, {
+//                     preview: URL.createObjectURL(file)
+//                 })
+//             )
+
+//             setPhotos(photos.concat(uploaders.map(item => ({
+//                 id: uuid_v4(),
+//                 file: item
+//             }))));
+//         }
+//     });
+
+//     // const swapPhoto = (photo, move) => {
+//     //     let tmpPhotos = [...photos];
+//     //     const index = tmpPhotos.findIndex(item => item.id === photo.id);
+//     //     if (index != -1) {
+//     //         if (move == MOVE.LEFT) {
+//     //             if (index == 0) {
+//     //                 [tmpPhotos[index], tmpPhotos[tmpPhotos.length - 1]] = [tmpPhotos[tmpPhotos.length - 1], tmpPhotos[index]];
+//     //                 swapId(index, tmpPhotos.length - 1, tmpPhotos);
+//     //             } else {
+//     //                 [tmpPhotos[index], tmpPhotos[index - 1]] = [tmpPhotos[index - 1], tmpPhotos[index]];
+//     //                 swapId(index, index - 1, tmpPhotos);
+//     //             }
+//     //         } else {
+//     //             if (index == tmpPhotos.length - 1) {
+//     //                 [tmpPhotos[index], tmpPhotos[0]] = [tmpPhotos[0], tmpPhotos[index]];
+//     //                 swapId(index, 0, tmpPhotos);
+//     //             } else {
+//     //                 [tmpPhotos[index], tmpPhotos[index + 1]] = [tmpPhotos[index + 1], tmpPhotos[index]];
+//     //                 swapId(index, index + 1, tmpPhotos);
+//     //             }
+//     //         }
+//     //         setPhotos(tmpPhotos);
+//     //     }
+//     // }
+
+//     // const swapId = (a, b, list) => {
+//     //     var id = list[a].id;
+//     //     list[a].id = list[b].id;
+//     //     list[b].id = id;
+//     // }
+
+//     // push photo id to arrDel
+//     const delPhoto = (photo) => {
+//         let tmpPhotos = [...photos];
+//         // let tmpArrDel = [...arrDel];
+//         const index = tmpPhotos.findIndex(item => item.id === photo.id);
+//         if (index > -1) {
+//             tmpPhotos.splice(index, 1);
+//             // tmpArrDel.push(photo.id)
+//             // if (!isFile(photo.id)) {
+//             //     setArrDel(tmpArrDel);
+//             // }
+//             setPhotos(tmpPhotos);
+//         }
+//     }
+
+//     // photos added
+//     const defaultThumbs = photos.map(photo => (
+//         isFile(photo.id) ?
+//             <div style={thumb} key={photo.id}>
+//                 <div style={thumbInner}>
+//                     <img
+//                         src={photo.file.preview}
+//                         style={img}
+//                     />
+//                 </div>
+//                 {/* <button onClick={() => swapPhoto(photo, MOVE.LEFT)}>lef</button>
+//                 <button onClick={() => swapPhoto(photo, MOVE.RIGHT)}>rig</button> */}
+//                 <button onClick={() => delPhoto(photo)}>del</button>
+//             </div>
+//             :
+//             <div style={thumb} key={photo.id}>
+//                 <div style={thumbInner}>
+//                     <img
+//                         src={photo.photo_url}
+//                         style={img}
+//                     />
+//                 </div>
+//                 {/* <button onClick={() => swapPhoto(photo, MOVE.LEFT)}>lef</button>
+//                 <button onClick={() => swapPhoto(photo, MOVE.RIGHT)}>rig</button> */}
+//                 <button onClick={() => delPhoto(photo)}>del</button>
+//             </div>
+//     ))
+
+//     const thumbnailPhoto = () => {
+//         if (photos.length > 0) {
+//             return (
+//                 <>
+//                     <h3 className='h3_title'>Thumbnail</h3>
+//                     <div style={thumb} key={photos[0].id}>
+//                         <div style={thumbInner}>
+//                             <img
+//                                 src={isFile(photos[0].id) ? photos[0].file.preview : photos[0].photo_url}
+//                                 style={img}
+//                             />
+//                         </div>
+//                     </div>
+//                 </>
+//             )
+//         }
+//     }
+
+//     const filterPhoto = () => {
+//         switch (caseAddPhoto) {
+//             case CASE_ADD_PHOTO.UPDATE:
+//                 let tmpFile = [];
+//                 let tmpPhotos = [...photos];
+
+//                 tmpFile = tmpPhotos.filter(photo => isFile(photo.id));
+//                 tmpPhotos = tmpPhotos.filter(photo => !isFile(photo.id));
+
+//                 setFiles(tmpFile);
+//                 setPhotos(tmpPhotos);
+//                 break;
+//             default: // CASE_ADD_PHOTO.POST
+//                 break;
+//         }
+//     }
+
+//     const handleNext = async () => {
+//         try {
+//             // filterPhoto();
+//             switch (caseAddPhoto) {
+//                 case CASE_ADD_PHOTO.UPDATE:
+//                     // await listingApi.updateImages({ photos: photos }, id).then(res => {
+//                     //     setLoading(false);
+//                     //     console.log(res);
+//                     // })
+//                     await listingApi.deleteAllPhotoListing(id);
+//                     photos.forEach(photo => {
+//                         if (isFile(photo.id)) {
+//                             setParams(params.append("file", photo.file));
+//                             uploadApi.uploadPhoto(params, id).then(() => setParams(new FormData()));
+//                         } else {
+//                             listingApi.addPhotoListing({
+//                                 'listing_id': id,
+//                                 'photo_url': photo.photo_url,
+//                             });
+//                         }
+//                     })
+//                     break;
+//                 default: // CASE_ADD_PHOTO.POST
+//                     if (photos.length > 5) {
+//                         photos.map(file => {
+//                             setParams(params.append("image[]", file.file))
+//                         })
+//                         setLoading(true);
+//                         await uploadApi.uploadPhotosListing(params, id).then(res => {
+//                             setLoading(false);
+//                         });
+//                     }
+//                     break;
+//             }
+
+//             //     history.push(`/become-host/${id}/title`)
+//         } catch (err) {
+//             console.log(err.message)
+//             setLoading(false)
+//         }
+//     }
+
+//     const handleBack = () => {
+//         // history.push(`/become-host/${id}/amenities`)
+//         // console.log(photoSwap);
+//     }
+
+//     useEffect(() => {
+//         // Make sure to revoke the data uris to avoid memory leaks
+//         photos.forEach(file => {
+//             isFile(file.id) && URL.revokeObjectURL(file.preview)
+//         });
+//     }, [photos]);
+
+//     useEffect(() => {
+//         const fetchListingDetail = async () => {
+//             await listingApi.getListingById(id).then(res => {
+//                 if (res.data.data.photos.length > 0) {
+//                     setPhotos(res.data.data.photos);
+//                     setCaseAddPhoto(CASE_ADD_PHOTO.UPDATE);
+//                 }
+//                 setPercent(100 / 7 * 4);
+//             });
+//         }
+
+//         fetchListingDetail();
+
+//         return () => {
+//             setPhotos([]);
+//         }
+//     }, []);
+
+//     return (
+//         <CommonAddListing>
+//             <TabAddListing
+//                 id={id}
+//                 photo={true}
+//             />
+//             <div className='row'>
+//                 {loading && <Loading />}
+//                 <div className='col-8'>
+//                     <div id="add-listing">
+//                         <h3 className='h3_title'>Gallery</h3>
+//                         <div className="add-listing-section">
+//                             <h3 className='h3_title'>Gallery</h3>
+//                             <div className="submit-section">
+//                                 {/* <form action="/file-upload" className="dropzone" /> */}
+//                                 <aside style={thumbsContainer}>
+//                                     {defaultThumbs}
+//                                     {/* {thumbs} */}
+//                                     <div {...getRootProps({ className: 'dropzone' })}>
+//                                         <input {...getInputProps()} />
+//                                         <i className='fal fa-image' style={{ fontSize: '40px', color: '#d0d0d0' }}></i>
+//                                     </div>
+//                                 </aside>
+//                             </div>
+//                             {thumbnailPhoto()}
+//                         </div>
+//                         <button>Save</button>
+
+//                         <FooterHost
+//                             loading={loading}
+//                             handleBack={handleBack}
+//                             handleNext={handleNext}
+//                             hiddenBackButton={false}
+//                             isHandleClick={true}
+//                             now={percent}
+//                         />
+//                     </div>
+//                 </div>
+//                 <RightSide />
+//             </div>
+//         </CommonAddListing>
+//     );
+// }
+
+// export default AddPhotos;
+
+// function RightSide(props) {
+//     return (
+//         <div className='col-4 k-right-side'>
+//             <div className='k-property-content'>
+//                 <h5>Text</h5>
+//                 <p>Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recent</p>
+//             </div>
+//         </div>
+//     )
+// }

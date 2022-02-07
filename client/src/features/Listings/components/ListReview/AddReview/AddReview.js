@@ -37,12 +37,12 @@ const btn_i = {
 function AddReview(props) {
     const [isEmpty, setIsEmpty] = useState(false);
     const textRef = useRef();
-    const { handleAddReview, name, id, close } = props;
+    const { handleAddReview, name, id, close, reservation_id } = props;
 
     const addReview = () => {
         if (textRef.current.value) {
             setIsEmpty(false)
-            handleAddReview(id, textRef.current.value);
+            handleAddReview(id, textRef.current.value, reservation_id);
             close();
         } else {
             setIsEmpty(true)

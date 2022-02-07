@@ -14,6 +14,8 @@ import reservationApi from '../../../../api/reservationApi';
 import Loading from '../../../../components/Loading/Loading';
 import ReactNotificationComponent, { NotificationStattus } from '../../../../components/Notification/ReactNotification';
 import useWindowDimensions from '../../../../@use/useWindowDimensions';
+import { Empty } from 'antd';
+import NoData from '../../../../components/NoData/NoData';
 
 Reservation.propTypes = {
 
@@ -46,47 +48,49 @@ function Reservation(props) {
     const handleAccept = async (id) => {
         setLoading(true);
         await reservationApi.editStatusReservation(id, { reservation_status_id: ReservationStatus.ACCEPTED.id }).then(res => {
-            setNoti(prevState => ({
-                ...prevState,
-                title: 'Success',
-                body: 'Accepted'
-            }));
-            let tmp = [...booking];
-            let index = tmp.findIndex(item => item.id == id);
-            if (index != -1) {
-                tmp[index].reservation_status_id = ReservationStatus.ACCEPTED.id;
-                setBooking(tmp);
-            }
-            setShowNoti(true);
             setLoading(false);
+            handleEditStatus(id, ReservationStatus.ACCEPTED.id);
         }).catch(err => {
             setNoti({ title: 'Error', body: 'Error', status: NotificationStattus.ERROR });
             setLoading(false);
-            setShowNoti(true);
         });
     }
 
     const handleDecline = async (id) => {
         setLoading(true);
         await reservationApi.editStatusReservation(id, { reservation_status_id: ReservationStatus.DECLINE.id }).then(() => {
-            setNoti(prevState => ({
-                ...prevState,
-                title: 'Success',
-                body: 'DECLINE'
-            }));
-            let tmp = [...booking];
-            let index = tmp.findIndex(item => item.id == id);
-            if (index != -1) {
-                tmp[index].reservation_status_id = ReservationStatus.DECLINE.id;
-                setBooking(tmp);
-            }
-            setShowNoti(true);
+            handleEditStatus(id, ReservationStatus.DECLINE.id);
             setLoading(false);
         }).catch(err => {
             setNoti({ title: 'Error', body: 'Error', status: NotificationStattus.ERROR });
             setLoading(false);
-            setShowNoti(true);
         });
+    }
+
+    const handleCancel = async (id) => {
+        setLoading(true);
+        await reservationApi.editStatusReservation(id, { reservation_status_id: ReservationStatus.CANCELLED.id }).then(() => {
+            handleEditStatus(id, ReservationStatus.CANCELLED.id);
+            setLoading(false);
+        })
+    }
+
+    const handleCheckin = async (id) => {
+        setLoading(true);
+        await reservationApi.editStatusReservation(id, { reservation_status_id: ReservationStatus.CHECKIN.id }).then(() => {
+            handleEditStatus(id, ReservationStatus.CHECKIN.id);
+            setLoading(false);
+        })
+    }
+
+    const handleEditStatus = (id, ReservationStatusId) => {
+        let tmp = [...booking];
+        let index = tmp.findIndex(item => item.id == id);
+        if (index != -1) {
+            tmp[index].reservation_status_id = ReservationStatusId;
+            setBooking(tmp);
+        }
+        setLoading(false);
     }
 
     useEffect(() => {
@@ -118,45 +122,74 @@ function Reservation(props) {
     return (
         <div id="wrapper" style={{ background: '#f6f6f6' }}>
             {loading && <Loading />}
-            {showNoti && <ReactNotificationComponent
+            {/* {showNoti && <ReactNotificationComponent
                 title={noti.title}
                 body={noti.body}
                 status={noti.status}
-            />}
+            />} */}
             <HeaderHost />
             <div className='container' style={{ marginTop: '80px', paddingTop: '20px', minHeight: height }}>
                 <div className='reservations-header-title wrap-title-header fl-wrap'>
                     <div style={{ width: '50%', float: 'left', height: '69px', display: 'flex', alignItems: 'center' }}>
-                        <h3 className='h3_title'>Reservation</h3>
+                        <h3 className='h3_title' style={{ marginBottom: 0 }}>Thống kê tình hình kinh doanh</h3>
                     </div>
-                    <div className='filter-host-listing'>
+                </div>
+
+                <div className='h-20 fl-wrap' />
+
+                <div className='row'>
+                    <StatisticalItem
+                        title={'Tổng doanh thu'}
+                    />
+                    <StatisticalItem
+                        title={'Tổng số booking'}
+                    />
+                    <StatisticalItem
+                        title={'Lượt đánh giá'}
+                    />
+                    <StatisticalItem
+                        title={'Lượt xem'}
+                    />
+                </div>
+
+                <div className='h-20 fl-wrap' />
+
+                <div className='reservations-header-title wrap-title-header fl-wrap'>
+                    <div style={{ width: '50%', float: 'left', height: '69px', display: 'flex', alignItems: 'center' }}>
+                        <h3 className='h3_title' style={{ marginBottom: 0 }}>Reservation</h3>
+                    </div>
+                    <div style={{ float: 'right', height: 69, display: 'flex', alignItems: 'center' }}>
                         <div className='dropdown'>
-                            <select value={ReservationFilter.ALL} className="no-search-select" onChange={handleChange}>
+                            <select defaultValue={ReservationFilter.ALL} className="no-search-select" onChange={handleChange}>
                                 <option value={ReservationFilter.ALL}>Tất cả</option>
                                 <option value={ReservationFilter.REQUEST}>Yêu cầu xác nhận</option>
                                 <option value={ReservationFilter.UPCOMING}>Sắp đến</option>
-                                <option value={ReservationFilter.TODAY}>Hôm nay</option>
+                                <option value={ReservationFilter.CHECKIN}>Đang tiếp đón</option>
                             </select>
-                        </div>
-
-                        <div className='search'>
-                            <input type='text' placeholder='Tìm kiếm' />
                         </div>
                     </div>
                 </div>
+
                 <div className="dashboard-list-box fl-wrap">
                     {
-                        booking.map((item, index) => (
+                        booking.length > 0 ? booking.map((item, index) => (
                             <ReservationItem
                                 key={index}
                                 reservation={item}
                                 handleAccept={handleAccept}
                                 handleDecline={handleDecline}
+                                handleCancel={handleCancel}
+                                handleCheckin={handleCheckin}
                             />
-                        ))
+                        )) : <NoData
+                            description='No reservations yet'
+                        />
                     }
                 </div>
-                {totalPages > 0 ? <ReactPaginate
+
+                <div className='h-20 fl-wrap' />
+
+                {(totalPages > 0 && booking.length > 0) ? <ReactPaginate
                     previousLabel={
                         <MdArrowBackIosNew />
                     }
@@ -189,3 +222,30 @@ function Reservation(props) {
 }
 
 export default Reservation;
+
+Reservation.propTypes = {
+    title: PropTypes.string,
+};
+
+StatisticalItem.defaultProps = {
+    title: ''
+}
+
+function StatisticalItem(props) {
+    const { title } = props;
+    return (
+        <div className="col-md-3">
+            <div className="dashboard_inline-facts-wrap gradient-bg" style={{ height: '112px' }}>
+                <div className="inline-facts">
+                    <i className="fal fa-home" />
+                    <div className="milestone-counter">
+                        <div className="stats animaper">
+                            <div className="num" data-content={0} data-num={1054}>{1054}</div>
+                        </div>
+                    </div>
+                    <h6>{title}</h6>
+                </div>
+            </div>
+        </div>
+    )
+}

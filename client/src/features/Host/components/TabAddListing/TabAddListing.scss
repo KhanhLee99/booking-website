@@ -3,7 +3,7 @@
     left: 0;
     right: 0;
     top: 80px;
-    z-index: 999;
+    z-index: 99;
 
     & .tabs-menu {
         padding-left: 0;
@@ -26,6 +26,11 @@
 
         & .no-drop {
             cursor: no-drop;
+            color: rgb(219 219 219);
+        }
+
+        & .color-tab-active {
+            color: #7d93b2;
         }
     }
 }
