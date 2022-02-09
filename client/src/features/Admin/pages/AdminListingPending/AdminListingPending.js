@@ -6,6 +6,8 @@ import GuestListingPending from '../../components/GuestListingPending/GuestListi
 import ReactNotificationComponent from '../../../../components/Notification/ReactNotification';
 import Loading from '../../../../components/Loading/Loading';
 import CommonAdmin from '../../../../components/CommonAdmin/CommonAdmin';
+import NoData from '../../../../components/NoData/NoData';
+import { Link } from 'react-router-dom';
 
 AdminListingPending.propTypes = {
 
@@ -14,6 +16,8 @@ AdminListingPending.propTypes = {
 function AdminListingPending(props) {
 
     const [listingPending, setListingPending] = useState([]);
+    const [totalPending, setTotalPending] = useState(0);
+    const [totalActive, setTotalActive] = useState(0);
     const [loading, setLoading] = useState(false);
 
     const removeListingActive = (id) => {
@@ -22,8 +26,6 @@ function AdminListingPending(props) {
             setListingPending(listingPending.filter(item => item.id != id));
         }
     }
-
-
 
     useEffect(() => {
         const fetchListingPending = async () => {
@@ -39,6 +41,19 @@ function AdminListingPending(props) {
             }
         }
 
+        const getCountListing = () => {
+            try {
+                adminListing.getCountListingFilter().then(res => {
+                    setTotalPending(res.data.total_pending);
+                    setTotalActive(res.data.total_active);
+                })
+            } catch (err) {
+                console.log(err.message);
+                setLoading(false);
+            }
+        }
+
+        getCountListing();
         fetchListingPending();
 
         return () => {
@@ -51,6 +66,8 @@ function AdminListingPending(props) {
             {loading && <Loading />}
             <Child
                 listingPending={listingPending}
+                totalActive={totalActive}
+                totalPending={totalPending}
                 removeListingActive={removeListingActive}
                 setLoading={setLoading}
                 title='Title'
@@ -80,17 +97,21 @@ function Child(props) {
         }
     }
 
-    const { showNotification, title, body, listingPending, removeListingActive, setLoading } = props;
+    const { showNotification, title, body, listingPending, removeListingActive, setLoading, totalActive, totalPending } = props;
 
     return (
         <>
             <div className="dashboard-title fl-wrap">
                 <h3>Listings</h3>
+                <ul className='filter-admin-listing'>
+                    <li style={{ border: '1px solid #dddddd' }}><Link to='/admin/listing/active'>Active ({totalActive})</Link></li>
+                    <li style={{ border: '1.5px solid black' }}><Link to='/admin/listing/pending'>Pending ({totalPending})</Link></li>
+                </ul>
             </div>
-            <GuestListingPending
+            {listingPending.length > 0 ? <GuestListingPending
                 list={listingPending}
                 handlePublicListing={handlePublicListing}
-            />
+            /> : <NoData />}
         </>
     )
 }

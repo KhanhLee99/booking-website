@@ -26,6 +26,8 @@ import userApi from './api/userApi';
 import { fetchMyNotify, getTotalNoticationsUnread } from './app/reducer/notifySlice';
 import DragHorizontal1 from './components/Test/DragHorizontal1';
 import DragHorizonImage from './components/Test/DragHorizonImage';
+import Pay from './features/UserProfile/pages/Payment/Pay';
+import AdminPayment from './features/Admin/pages/AdminPayment/AdminPayment';
 
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
@@ -103,7 +105,7 @@ function App() {
     .catch((err) => console.log("failed: ", err));
 
   return (
-    // <DragHorizonImage />
+    // <AdminPayment />
 
     <>
       {show ? (
@@ -123,6 +125,7 @@ function App() {
               <Route path="/admin/login" component={AdminLogin} />
               <Route path="/host/login" component={HostLogin} />
               <Route path="/hosting" component={MessageHost} />
+              <Route path="/payment/:id" component={Pay} />
 
               <PrivateRouteHost path="/host" component={HostFeature} />
               <PrivateRouteAddListing path="/become-host" component={AddListingFeature} />

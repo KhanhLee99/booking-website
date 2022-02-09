@@ -8,12 +8,16 @@ import Loading from '../../../../components/Loading/Loading';
 import { alertSuccess } from '../../../../@helper/alertComfirm';
 import UserChat from '../../components/UserChat/UserChat';
 import NoData from '../../../../components/NoData/NoData';
+import { useHistory } from 'react-router-dom';
 
 MyBooking.propTypes = {
 
 };
 
 function MyBooking(props) {
+
+    const history = useHistory();
+
     const [reservations, setReservations] = useState([]);
     const [loading, setLoading] = useState(false);
 
@@ -94,6 +98,10 @@ function MyBooking(props) {
         }
     }
 
+    const handlePay = (id) => {
+        history.push(`/payment/${id}`);
+    }
+
     useEffect(() => {
         fetchMyReservation();
         window.scrollTo(0, 0);
@@ -116,6 +124,7 @@ function MyBooking(props) {
                             reservation={item}
                             handleCancel={handleCancel}
                             handleCheckout={handleCheckout}
+                            handlePay={handlePay}
                             handleAddReview={handleAddReview}
                         />
                     )) : <NoData />

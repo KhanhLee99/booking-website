@@ -191,6 +191,7 @@ Route::post('/upload-file', 'FileUploadController@upload');
 // Admin Listing
 Route::get('admin/listing/pending', 'Admin\AdminListingController@get_listing_pending');
 Route::get('admin/listing/active', 'Admin\AdminListingController@get_listing_active');
+Route::get('admin/listing/count', 'Admin\AdminListingController@cout_listing_filter');
 Route::put('admin/listing/{id}/active', 'Admin\AdminListingController@active_listing');
 Route::put('admin/listing/{id}/lock', 'Admin\AdminListingController@lock_listing');
 
@@ -212,3 +213,9 @@ Route::put('reset-password', 'Auth\ResetPasswordController@reset');
 
 // Admin Dashboard
 Route::get('admin/dashboard/overview', 'Admin\AdminDashboardController@index');
+Route::get('admin/dashboard/chart', 'Admin\AdminDashboardController@get_chart_data');
+
+
+// Payment
+Route::post('admin/payment/add', 'Admin\AdminPaymentController@add');
+Route::get('admin/payment', 'Admin\AdminPaymentController@index');

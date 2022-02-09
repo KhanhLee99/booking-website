@@ -24,6 +24,11 @@ const adminListing = {
     getHostBooking: (host_id, params) => {
         const url = `/reservation/host/${host_id}`;
         return axiosClient.get(url, params);
+    },
+
+    getCountListingFilter: () => {
+        const url = '/admin/listing/count';
+        return axiosClient.get(url);
     }
 }
 

@@ -18,7 +18,7 @@ class CreateListingPriceSpecialTable extends Migration
             $table->string('title');
             $table->dateTime('start_date');
             $table->dateTime('end_date');
-            $table->float('price');
+            $table->decimal('price', 10, 2);
             $table->unsignedBigInteger('listing_id');
             $table->foreign('listing_id')->references('id')->on('listing')->onDelete('cascade');
             $table->timestamps();

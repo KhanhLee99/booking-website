@@ -15,7 +15,7 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import { header_user_menu_ul_li_a } from '../../features/Host/components/HeaderHost';
 
 
-const main_header = {
+export const main_header = {
     position: 'fixed',
     width: '100%',
     left: 0,
@@ -26,14 +26,14 @@ const main_header = {
     padding: '0 40px',
 }
 
-const logo_holder = {
+export const logo_holder = {
     float: 'left',
     height: '30px',
     position: 'relative',
     top: '20px',
 }
 
-const header_search_btn = {
+export const header_search_btn = {
     float: 'left',
     marginLeft: '170px',
     width: '200px',
@@ -49,7 +49,7 @@ const header_search_btn = {
     textAlign: 'center'
 }
 
-const cart_btn = {
+export const cart_btn = {
     float: 'right',
     position: 'relative',
     color: '#fff',
@@ -59,7 +59,7 @@ const cart_btn = {
     fontSize: '18px',
 }
 
-const cart_counter = {
+export const cart_counter = {
     position: 'absolute',
     bottom: '-1px',
     width: '14px',
@@ -75,7 +75,7 @@ const cart_counter = {
     textAlign: 'center'
 }
 
-const show_reg_form = {
+export const show_reg_form = {
     float: 'right',
     color: '#fff',
     cursor: 'pointer',
@@ -86,14 +86,14 @@ const show_reg_form = {
     fontSize: '12px',
 }
 
-const header_search_input = {
+export const header_search_input = {
     width: '32%',
     float: 'left',
     padding: '0 4px',
     position: 'relative',
 }
 
-const header_search_input_label = {
+export const header_search_input_label = {
     position: 'absolute',
     left: '20px',
     top: '14px',
@@ -101,7 +101,7 @@ const header_search_input_label = {
     fontSize: '14px',
 }
 
-const header_search_input_input = {
+export const header_search_input_input = {
     float: 'left',
     border: 'none',
     background: 'rgba(255, 255, 255, 0.11)',
@@ -116,13 +116,13 @@ const header_search_input_input = {
     borderBottom: '2px solid rgba(255, 255, 255, 0)',
 }
 
-const header_search_selectinpt = {
+export const header_search_selectinpt = {
     float: 'left',
     width: '36%',
     padding: '0 4px',
 }
 
-const header_user_menu = {
+export const header_user_menu = {
     float: 'right',
     position: 'relative',
     top: '20px',
@@ -130,7 +130,7 @@ const header_user_menu = {
     marginRight: '40px',
 }
 
-const header_user_name = {
+export const header_user_name = {
     position: 'relative',
     float: 'left',
     cursor: 'pointer',
@@ -142,7 +142,7 @@ const header_user_name = {
     fontWeight: 600,
 }
 
-const header_user_name_span = {
+export const header_user_name_span = {
     position: 'absolute',
     width: '38px',
     height: '38px',
@@ -153,12 +153,12 @@ const header_user_name_span = {
     fontWeight: 400,
 }
 
-const header_user_name_span_img = {
+export const header_user_name_span_img = {
     width: '100%',
     height: '100%',
 }
 
-const header_user_menu_ul = {
+export const header_user_menu_ul = {
     margin: '10px 0 0 0',
     opacity: 0,
     listStyle: 'none',
@@ -175,7 +175,7 @@ const header_user_menu_ul = {
     transition: 'all 0.2s ease-in-out',
 }
 
-const header_user_menu_ul_li = {
+export const header_user_menu_ul_li = {
     float: 'left',
     width: '100%',
     padding: '0px 0',
@@ -231,8 +231,8 @@ function Header(props) {
         }
     }
 
-    const loadMoreData = async () => {
-        await dispatch(nextPage());
+    const loadMoreData = () => {
+        dispatch(nextPage());
     }
 
     useEffect(() => {
@@ -330,7 +330,7 @@ function Header(props) {
                                         <SkeletonNotificationItem />
                                     </>
                                 }
-                                height={440}
+                                // maxHeight={440}
                                 style={{ background: '#fff' }}
                             >
                                 <div className="header-modal-container scrollbar-inner fl-wrap">

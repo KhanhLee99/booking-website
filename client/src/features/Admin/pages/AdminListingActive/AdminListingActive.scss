@@ -1,0 +1,40 @@
+.filter-admin-listing {
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+
+    & li {
+        float: left;
+        text-align: center !important;
+
+        margin-left: 0;
+        margin-right: 10px;
+        padding: 14px 16px;
+
+        cursor: pointer !important;
+        outline: none !important;
+
+        line-height: 18px !important;
+        font-size: 14px !important;
+        border-radius: 20px !important;
+
+        // border: 1px solid black !important;
+        background-color: #ffffff !important;
+        // border-color: #dddddd !important;
+        color: #222222 !important;
+
+        position: relative !important;
+        transition-duration: 0.15s !important;
+
+        & a {
+            color: #566985;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 18px;
+        }
+
+        // &:hover {
+        //     border: 1px solid black !important;
+        // }
+    }
+}

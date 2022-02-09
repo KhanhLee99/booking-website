@@ -33,7 +33,7 @@ function AdminLogin(props) {
             if (res.payload === undefined) {
                 console.log('cannot login');
             } else {
-                history.push('/admin/listing/pending');
+                history.push('/admin/dashboard');
             }
         });
     }

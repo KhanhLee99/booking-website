@@ -26,8 +26,8 @@ class CreateListingTable extends Migration
             $table->integer('bedroom_count')->default(0);
             $table->integer('bathroom_count')->default(0);
             $table->integer('bed_count')->default(0);
-            $table->double('price_per_night_base')->default(0);
-            $table->double('price_per_night_weekend')->default(0);
+            $table->decimal('price_per_night_base', 10, 2)->default(0);
+            $table->decimal('price_per_night_weekend', 10, 2)->default(0);
             $table->float('discount_weekly')->default(0);
             $table->float('discount_monthly')->default(0);
             $table->double('extra_per_adult')->default(0);

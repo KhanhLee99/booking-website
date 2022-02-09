@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 import { parseVNDCurrency } from '../../../../@helper/helper';
 import LoginModal from '../../../../components/LoginModal/LoginModal';
 import Loading from '../../../../components/Loading/Loading';
+import adminPaymentApi from '../../../../api/adminPaymentApi';
 
 var fx = require('money');
 
@@ -22,7 +23,7 @@ Booking.propTypes = {
 
 };
 
-const CURRENT_FORM = {
+export const CURRENT_FORM = {
     BOOKING_INFO: 'booking',
     PERSONAL_INFO: 'personal',
     PAYMENT: 'payment',
@@ -62,6 +63,7 @@ function Booking(props) {
             setActiveConfirm(true);
             setCurrentForm(CURRENT_FORM.CONFIRM);
         }).catch(err => console.log(err.message));
+        await adminPaymentApi.add(params);
     }
 
     const handleSendRequest = async () => {
@@ -155,13 +157,15 @@ function Booking(props) {
                                 <div className="list-single-main-item fl-wrap hidden-section tr-sec">
                                     <div className="profile-edit-container">
                                         <div className="_custom_form">
-                                            <BookingInfo
+                                            {totalPrice && <BookingInfo
                                                 checkin_date={query.get('checkin')}
                                                 checkout_date={query.get('checkout')}
                                                 isLoggedIn={isLoggedIn}
                                                 bookingFormSubmit={() => { setActivePersonalInfo(true); setCurrentForm(CURRENT_FORM.PERSONAL_INFO) }}
                                                 currentForm={currentForm}
-                                            />
+                                                nights={totalPrice.nights}
+                                            />}
+
                                             <PersonalInfo
                                                 loggedInUser={loggedInUser}
                                                 currentForm={currentForm}
@@ -187,11 +191,16 @@ function Booking(props) {
                         </div>
                         {/* <div className="col-1"></div> */}
                         <div className="col-lg-4 col-md-4 margin-top-0 margin-bottom-60">
-                            <LeftSide
-                                listing={listing}
-                                totalPrice={totalPrice}
+                            {(totalPrice && listing) && <LeftSide
+                                total_price={totalPrice.total_price}
+                                rental_price={totalPrice.rental_price}
+                                nights={totalPrice.nights}
                                 id={id}
-                            />
+                                avatar_url={listing.avatar_url}
+                                street_address={listing.street_address}
+                                name={listing.name}
+                            />}
+
                         </div>
                     </div>
                 </div>
@@ -202,8 +211,16 @@ function Booking(props) {
 
 export default Booking;
 
-function BookingInfo(props) {
-    const { checkin_date, checkout_date, isLoggedIn, bookingFormSubmit, currentForm } = props;
+BookingInfo.propTypes = {
+    isLoggedIn: PropTypes.bool,
+};
+
+BookingInfo.defaultProps = {
+    isLoggedIn: false
+}
+
+export function BookingInfo(props) {
+    const { checkin_date, checkout_date, nights, isLoggedIn, bookingFormSubmit, currentForm } = props;
     return (
         <fieldset className="fl-wrap" style={{ display: currentForm == CURRENT_FORM.BOOKING_INFO ? 'block' : 'none' }}>
             <div className="list-single-main-item-title fl-wrap">
@@ -217,7 +234,7 @@ function BookingInfo(props) {
                 </div>
                 <div className="col-sm-6">
                     <label className="vis-label">Nights <i className="far fa-moon" /></label>
-                    <input type="text" defaultValue={'1 nights'} disabled />
+                    <input type="text" defaultValue={`${nights || 1} nights`} disabled />
                 </div>
 
                 <div className="col-sm-6">
@@ -248,7 +265,7 @@ function BookingInfo(props) {
     );
 }
 
-function PersonalInfo(props) {
+export function PersonalInfo(props) {
     const { loggedInUser, currentForm, handleBack, handleNext } = props;
     return (
         <fieldset className="fl-wrap" style={{ display: currentForm == CURRENT_FORM.PERSONAL_INFO ? 'block' : 'none' }}>
@@ -282,7 +299,7 @@ function PersonalInfo(props) {
     )
 }
 
-function Payment(props) {
+export function Payment(props) {
     const { total_usd, currentForm, handleBack, handleNext } = props;
     return (
         <fieldset className="fl-wrap" style={{ display: currentForm == CURRENT_FORM.PAYMENT ? 'block' : 'none' }}>
@@ -303,7 +320,7 @@ function Payment(props) {
     )
 }
 
-function Confirmation(props) {
+export function Confirmation(props) {
     const { currentForm, handleNext } = props;
     return (
         <fieldset className="fl-wrap" style={{ display: currentForm == CURRENT_FORM.CONFIRM ? 'block' : 'none', left: '0%', opacity: 1, position: 'relative' }}>
@@ -326,19 +343,19 @@ function Confirmation(props) {
     )
 }
 
-function LeftSide(props) {
+export function LeftSide(props) {
 
-    const { listing, totalPrice, id } = props;
+    const { total_price, rental_price, nights, id, avatar_url, street_address, name } = props;
 
     return (
         <div id="booking-widget-anchor" className="boxed-widget booking-widget" style={{ padding: '18px' }}>
             <div className="with-forms">
                 <div className="checkup__header">
                     <div className="cart-booking-header">
-                        <Link to={`/listing/${id}`} className="widget-posts-img"><img src={listing.avatar_url} alt="" /></Link>
+                        <Link to={`/listing/${id}`} className="widget-posts-img"><img src={avatar_url} alt="" /></Link>
                         <div className="widget-posts-descr">
-                            <h4><Link to={`/listing/${id}`}>{listing.name}</Link></h4>
-                            <div className="geodir-category-location fl-wrap"><a href="#">{listing.street_address}</a></div>
+                            <h4><Link to={`/listing/${id}`}>{name}</Link></h4>
+                            <div className="geodir-category-location fl-wrap"><a href="#">{street_address}</a></div>
                             <div className="widget-posts-descr-link"><a href="listing.html">Restaurants </a></div>
                         </div>
                     </div>
@@ -348,9 +365,9 @@ function LeftSide(props) {
                     <div className="checkup__price fadeIn border-1">
                         <div className="is-flex middle-xs between-xs cart-list">
                             <div className="is-flex align-center">
-                                <span className="pr--6">Giá thuê {totalPrice ? ` ${totalPrice.nights}` : 1} đêm</span>
+                                <span className="pr--6">Giá thuê {nights ? ` ${nights}` : 1} đêm</span>
                             </div>
-                            <span>{totalPrice ? parseVNDCurrency(totalPrice.rental_price) : ''}</span>
+                            <span>{rental_price ? parseVNDCurrency(rental_price) : ''}</span>
                         </div>
 
                         <div className="is-flex middle-xs between-xs cart-list">
@@ -364,7 +381,7 @@ function LeftSide(props) {
                             <div>
                                 <span className="extra-bold">Tổng tiền</span>
                             </div>
-                            <span className="extra-bold">{totalPrice ? parseVNDCurrency(totalPrice.total_price) : ''}</span>
+                            <span className="extra-bold">{total_price ? parseVNDCurrency(total_price) : ''}</span>
                         </div>
                     </div>
                 </div>

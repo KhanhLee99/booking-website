@@ -21,3 +21,9 @@ env EDITOR=nano crontab -e
 attach: tao data cho bang trung gian
 
 create seeder => php artisan make:seeder BedTypeSeeder
+php artisan db:seed --class=WebInfoSeeder
+php artisan migrate:fresh --seed
+
+Date: https://www.php.net/manual/en/function.date.php
+Carbon: https://viblo.asia/p/xu-ly-datetime-de-dang-hon-voi-thu-vien-carbon-trong-laravel-6J3ZgOmWZmB
+Collection: https://viblo.asia/p/nhung-method-thong-dung-cua-collection-trong-laravel-ban-da-su-dung-het-chua-07LKXOzp5V4

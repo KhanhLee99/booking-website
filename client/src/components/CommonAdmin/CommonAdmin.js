@@ -5,6 +5,7 @@ import ReactNotificationComponent from '../Notification/ReactNotification';
 import { Link } from 'react-router-dom';
 import { HeaderAddListing } from '../../features/Host/components/HeaderHost';
 import useWindowDimensions from '../../@use/useWindowDimensions';
+import HeaderAdmin from '../../features/Admin/components/HeaderAdmin';
 
 CommonAdmin.propTypes = {
 
@@ -43,7 +44,7 @@ function CommonAdmin({ children }) {
             />}
 
             <div id=''>
-                <HeaderAddListing />
+                <HeaderAdmin />
                 <section className="gray-bg main-dashboard-sec" id="sec1">
                     <div className="container" style={{ minHeight: heightSection }}>
                         {/*  dashboard-menu*/}
@@ -58,8 +59,9 @@ function CommonAdmin({ children }) {
                                         <ul className="no-list-style">
                                             <li><Link to="/admin/dashboard"><i className="fal fa-chart-line" />Dashboard</Link>
                                             </li>
-                                            <li><Link to="#"><i className="fal fa-rss" />Your Feed
-                                                <span>7</span></Link></li>
+                                            <li><Link to="/admin/payout"><i className="fal fa-money-check" />Payout
+                                                {/* <span>7</span> */}
+                                            </Link></li>
                                             {/* <li><a href="dashboard-myprofile.html"><i className="fal fa-user-edit" /> Edit profile</a></li> */}
                                             {/* <li><a href="dashboard-messages.html"><i className="fal fa-envelope" /> Messages <span>3</span></a></li> */}
                                             {/* <li><a href="dashboard-password.html"><i className="fal fa-key" />Change Password</a></li> */}
@@ -69,7 +71,7 @@ function CommonAdmin({ children }) {
                                         <h3>Listings</h3>
                                         <ul className="no-list-style">
                                             <li><Link to="/admin/listing/pending" className="user-profile-act"><i className="fal fa-th-list" />Listigs </Link></li>
-                                            {/* <li><Link to="#"> <i className="fal fa-calendar-check" />Bookings <span>2</span></Link></li> */}
+                                            <li><Link to="/admin/booking"> <i className="fal fa-calendar-check" />Bookings <span>2</span></Link></li>
                                             <li><Link to="#"><i className="fal fa-comments-alt" />Reviews </Link></li>
                                             {/* <li><a href="dashboard-add-listing.html"><i className="fal fa-file-plus" />Add New</a></li> */}
                                         </ul>
@@ -80,7 +82,7 @@ function CommonAdmin({ children }) {
                             <div className="clearfix" />
                         </div>
 
-                        <div className="col-md-9">
+                        <div className="col-xl-9 col-md-12">
                             {childrenWithProps}
                         </div>
                     </div>

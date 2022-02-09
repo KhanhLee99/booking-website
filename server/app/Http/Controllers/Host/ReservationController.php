@@ -162,9 +162,18 @@ class ReservationController extends Controller
         }
     }
 
-    public function index()
+    public function get_reservation_by_id($id)
     {
         try {
+            $reservation = Reservation::find($id);
+            if ($reservation) {
+                $this->response = [
+                    'status' => 'success',
+                    'data' => $reservation,
+                ];
+                return response()->json($this->response, $this->success_code);
+            }
+            return response()->json($this->response);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);
@@ -229,7 +238,7 @@ class ReservationController extends Controller
                 ->join('listing', 'listing.id', '=', 'reservation.listing_id')
                 ->orderBy('reservation.id', 'desc')
                 ->join('reservation_status', 'reservation_status.id', '=', 'reservation.reservation_status_id')
-                ->select('reservation.*', 'listing.name as listing_name', 'listing.street_address', 'listing.avatar_url as thumb_img', 'users.name as user_name', 'users.avatar_url as user_avatar_url', 'reservation_status.name as status')
+                ->select('reservation.*', 'listing.name as listing_name', 'listing.street_address', 'listing.avatar_url as thumb_img', 'listing.price_per_night_base', 'users.name as user_name', 'users.avatar_url as user_avatar_url', 'reservation_status.name as status')
                 ->get();
             if ($data) {
                 $this->response = [
@@ -283,7 +292,7 @@ class ReservationController extends Controller
                 $data = [
                     'nights' => $number_weekend_days + $number_normal_days,
                     'rental_price' => $total_price,
-                    'total_price' => $total_price
+                    'total_price' => $total_price,
                 ];
 
                 $this->response = [

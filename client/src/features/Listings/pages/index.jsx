@@ -284,8 +284,6 @@ function ListingsLocation(props) {
                     </div>
                 </div>
             </div>
-
-
         </div>
     );
 }

@@ -11,6 +11,8 @@ import AdminListingPending from './pages/AdminListingPending/AdminListingPending
 import AdminListingActive from './pages/AdminListingActive/AdminListingActive';
 import AdminLogin from './pages/AdminLogin/AdminLogin';
 import Dashboard from './pages/Dashboard/Dashboard';
+import AdminFeed from './pages/AdminFeed/AdminFeed';
+import AdminPayment from './pages/AdminPayment/AdminPayment';
 
 AdminFeature.propTypes = {
 
@@ -39,11 +41,11 @@ function AdminFeature(props) {
                     component={Dashboard}
                 />
 
-                {/* <Route
-                    path={`${match.url}/login`}
+                <Route
+                    path={`${match.url}/payout`}
                     exact
-                    component={AdminLogin}
-                /> */}
+                    component={AdminPayment}
+                />
             </Switch>
         </>
     );

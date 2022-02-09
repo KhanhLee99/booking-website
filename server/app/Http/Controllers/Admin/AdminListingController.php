@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Listing;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class AdminListingController extends Controller
 {
@@ -83,6 +84,38 @@ class AdminListingController extends Controller
                 return response()->json($this->response, $this->success_code);
             }
             return response()->json($this->response);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
+    }
+
+    public function cout_listing_filter()
+    {
+        // public function monthlyRegisteredUsers()
+        // {
+        //     $counts = User::select(DB::raw('MONTH(created_at) month, count(*) as count'))
+        //         ->whereYear('created_at', Carbon::now()->format('Y'))
+        //         ->groupBy(DB::raw('MONTH(created_at)'))
+        //         ->pluck('count', 'month')
+        //         ->toArray();
+        //     return array_map(function ($month) use ($counts) {
+        //         return Arr::get($counts, $month, 0);
+        //     }, range(1, 12));
+        // }
+        try {
+            $counts = Listing::select('is_verified', DB::raw('count(*) as total'))->groupBy('is_verified')
+                ->get();
+            $data = [];
+            foreach ($counts as $item) {
+                if ($item->is_verified == 0) {
+                    $data['total_pending'] = $item->total;
+                }
+                if ($item->is_verified == 1) {
+                    $data['total_active'] = $item->total;
+                }
+            }
+            return $data;
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);

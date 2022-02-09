@@ -16,9 +16,7 @@ class UsersTableSeeder extends Seeder
         //
         $faker = Faker\Factory::create();
 
-        $limit = 10;
-
-
+        $limit = 400;
 
         $list_user = [
             [
@@ -35,16 +33,17 @@ class UsersTableSeeder extends Seeder
                 'role_id' => 1,
             ],
         ];
-        foreach ($list_user as $user) {
-            DB::table('users')->insert([
-                'name' => $user['name'],
-                'email' => $user['email'],
-                'password' => $user['password'],
-                'role_id' => $user['role_id'],
-                'phone_number' => $faker->phoneNumber,
-                'avatar_url' => "https://picsum.photos/id/" . rand(1, 1000) . "/400/300",
-            ]);
-        }
+
+        // foreach ($list_user as $user) {
+        //     DB::table('users')->insert([
+        //         'name' => $user['name'],
+        //         'email' => $user['email'],
+        //         'password' => $user['password'],
+        //         'role_id' => $user['role_id'],
+        //         'phone_number' => $faker->phoneNumber,
+        //         'avatar_url' => "https://picsum.photos/id/" . rand(1, 1000) . "/400/300",
+        //     ]);
+        // }
 
         for ($i = 0; $i < $limit; $i++) {
             DB::table('users')->insert([
@@ -54,6 +53,7 @@ class UsersTableSeeder extends Seeder
                 'password' => Hash::make('khanh'),
                 'role_id' => 3,
                 'avatar_url' => "https://picsum.photos/id/" . rand(1, 1000) . "/400/300",
+                'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null)->format('Y-m-d H:i:s')
             ]);
         }
 
@@ -65,6 +65,7 @@ class UsersTableSeeder extends Seeder
                 'password' => Hash::make('khanh'),
                 'role_id' => 2,
                 'avatar_url' => "https://picsum.photos/id/" . rand(1, 1000) . "/400/300",
+                'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null)->format('Y-m-d H:i:s')
             ]);
         }
     }

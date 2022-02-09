@@ -17,7 +17,7 @@ class CreateReservationTable extends Migration
             $table->id();
             $table->dateTime('checkin_date');
             $table->dateTime('checkout_date');
-            $table->float('total_price');
+            $table->decimal('total_price', 10, 2);
             $table->integer('adult_count')->default(0);
             $table->integer('child_count')->default(0);
             $table->integer('infant_count')->default(0);

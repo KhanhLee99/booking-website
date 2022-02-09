@@ -93,7 +93,7 @@ const ava_size = {
 
 function UserBookingItem(props) {
 
-    const { reservation, handleCancel, handleAddReview, handleCheckout, handlePayment } = props;
+    const { reservation, handleCancel, handleAddReview, handleCheckout, handlePay } = props;
 
     const cancelReservation = (e) => {
         e.preventDefault();
@@ -107,7 +107,7 @@ function UserBookingItem(props) {
 
     const payment = (e) => {
         e.preventDefault();
-        handlePayment(reservation.id);
+        handlePay(reservation.id);
     }
 
     const renderButton = () => {
