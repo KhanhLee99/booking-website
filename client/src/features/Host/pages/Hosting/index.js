@@ -12,8 +12,9 @@ import useQuery from '../../../../@use/useQuery';
 import ReactPaginate from 'react-paginate';
 import { MdArrowBackIosNew, MdArrowForwardIos } from 'react-icons/md';
 import { useHistory } from 'react-router-dom';
-import { ListingStatus } from '../../../../app/constant';
+import { HostTab, ListingStatus } from '../../../../app/constant';
 import queryString from 'query-string';
+import NoData from '../../../../components/NoData/NoData';
 
 
 Hosting.propTypes = {
@@ -83,7 +84,9 @@ function Hosting(props) {
 
     return (
         <div id="wrapper">
-            <HeaderHost />
+            <HeaderHost
+                currentTab={HostTab.LISTINGS}
+            />
             <div className="clearfix" />
             <div className="k-content">
                 <div className='k-listing-info'>
@@ -93,7 +96,7 @@ function Hosting(props) {
                     <div className='filter-host-listing'>
                         <div className='dropdown'>
                             <select value={status} className="no-search-select" onChange={handleChange}>
-                                <option value={ListingStatus.ALL}>Tất cả chỗ nghỉ</option>
+                                <option value={ListingStatus.ALL}>All</option>
                                 <option value={ListingStatus.UNVERIFIED}>Chưa xác thực</option>
                                 <option value={ListingStatus.ACTIVE}>Đang hoạt động</option>
                                 <option value={ListingStatus.STOP_PUBLIC}>Dừng hiển thị</option>
@@ -102,21 +105,24 @@ function Hosting(props) {
                         </div>
 
                         <div className='search'>
-                            <input type='text' placeholder='Tìm kiếm' />
+                            <input type='text' placeholder='Search' />
                         </div>
                     </div>
                 </div>
-
-                <table className="table">
+                {listings.length > 0 ? <table className="table" style={{
+                    boxShadow: '0 0.46875rem 2.1875rem rgb(4 9 20 / 3%), 0 0.9375rem 1.40625rem rgb(4 9 20 / 3%), 0 0.25rem 0.53125rem rgb(4 9 20 / 5%), 0 0.125rem 0.1875rem rgb(4 9 20 / 3%)',
+                    borderRadius: 4,
+                }}>
                     <thead>
                         <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col" className='k-title-name-th'>Nhà/phòng cho thuê</th>
-                            <th scope="col">ĐỊA ĐIỂM</th>
-                            <th scope="col">TRẠNG THÁI</th>
-                            <th scope="col">XÁC THỰC</th>
-                            <th scope="col">LỊCH</th>
-                            <th scope="col">HÀNH ĐỘNG</th>
+                            <th scope="col" className='text-center'>#ID</th>
+                            <th scope="col" className='k-title-name-th'>LISTING</th>
+                            <th scope="col">STREET ADDRESS</th>
+                            <th scope="col">PROPERTY TYPE</th>
+                            {/* <th scope="col" className='text-center'>STATUS</th> */}
+                            <th scope="col" className='text-center'>VERIFIED</th>
+                            {/* <th scope="col">Calendar</th> */}
+                            <th scope="col" className='text-center'>ACTION</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -129,8 +135,9 @@ function Hosting(props) {
                             ))
                         }
                     </tbody>
-                </table>
-                {totalPages > 0 ? <ReactPaginate
+                </table> : <NoData />}
+
+                {(totalPages > 0 && listings.length > 0) ? <ReactPaginate
                     previousLabel={
                         <MdArrowBackIosNew />
                     }

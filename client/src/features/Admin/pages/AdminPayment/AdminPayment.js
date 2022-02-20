@@ -10,8 +10,9 @@ import moment from 'moment';
 import queryString from 'query-string';
 import useQuery from '../../../../@use/useQuery';
 import ReactPaginate from 'react-paginate';
-import { MdArrowBackIosNew, MdArrowForwardIos } from 'react-icons/md';
 import { useHistory } from 'react-router-dom';
+import { MdArrowBackIosNew, MdArrowForwardIos } from 'react-icons/md';
+import { AdminTab } from '../../../../app/constant';
 
 AdminPayment.propTypes = {
 
@@ -25,7 +26,7 @@ function AdminPayment(props) {
     const [payout, setPayout] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(() => { return qs.page || 0 });
-    const [postsPerPage] = useState(() => { return qs.limit || 20 });
+    const [postsPerPage] = useState(() => { return qs.limit || 15 });
     const [totalPages, setTotalPages] = useState(0);
 
     const handlePageClick = (event) => {
@@ -55,6 +56,24 @@ function AdminPayment(props) {
     }, [currentPage])
     return (
         <CommonAdmin>
+            <Child
+            loading={loading}
+            payout={payout}
+            totalPages={totalPages}
+            query={query}
+            handlePageClick={handlePageClick}
+            currentTab={AdminTab.PAYOUT}
+            />
+        </CommonAdmin>
+    );
+}
+
+export default AdminPayment;
+
+const Child = (props) => {
+    const {loading, payout, totalPages, query, handlePageClick} = props;
+    return (
+        <>
             {loading && <Loading />}
             <div className="dashboard-title fl-wrap">
                 <h3>Payout</h3>
@@ -122,11 +141,9 @@ function AdminPayment(props) {
                 breakLinkClassName={"page-link"}
                 activeClassName={"active"}
             /> : null}
-        </CommonAdmin>
-    );
+        </>
+    )
 }
-
-export default AdminPayment;
 
 const PayoutItem = (props) => {
     const { id, hostIncome, webFee, reservation_id, user_name, user_email, user_avatar, created_at } = props;
@@ -134,7 +151,7 @@ const PayoutItem = (props) => {
         <tr>
             {/* <td className="text-center text-muted">#{id}</td> */}
             <td className='text-center'>
-                <div class="badge badge-warning">#{reservation_id}</div>
+                <div className="badge badge-warning">#{reservation_id}</div>
             </td>
             <td>
                 <div className="widget-content p-0"><div className="widget-content-wrapper">
@@ -158,10 +175,10 @@ const PayoutItem = (props) => {
                 </div>
             </td>
             <td className='text-center'>
-                <div class="badge badge-success">{parseVNDCurrency(hostIncome)}</div>
+                <div className="badge badge-success">{parseVNDCurrency(hostIncome)}</div>
             </td>
             <td className='text-center'>
-                <div class="badge badge-info">{parseVNDCurrency(webFee)}</div></td>
+                <div className="badge badge-info">{parseVNDCurrency(webFee)}</div></td>
 
             <td className='text-center'>{moment(created_at, "YYYY-MM-DD hh:mm:ss").format('LL')}</td>
         </tr>

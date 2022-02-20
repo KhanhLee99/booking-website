@@ -59,16 +59,22 @@ class AdminPaymentController extends Controller
 
     public  function index(Request $request)
     {
-        $data = Payment::join('reservation', 'reservation.id', '=', 'payment.reservation_id')
-            ->join('users', 'users.id', '=', 'reservation.guest_id')
-            ->orderBy('payment.created_at', 'desc')
-            ->select('payment.*', 'users.name as user_name', 'users.email as user_email', 'users.avatar_url as user_avatar')
-            ->paginate($request->limit);
+        try {
 
-        $this->response = [
-            'status' => true,
-            'data' => $data,
-        ];
-        return response()->json($this->response, $this->success_code);
+            $data = Payment::join('reservation', 'reservation.id', '=', 'payment.reservation_id')
+                ->join('users', 'users.id', '=', 'reservation.guest_id')
+                ->orderBy('payment.created_at', 'desc')
+                ->select('payment.*', 'users.name as user_name', 'users.email as user_email', 'users.avatar_url as user_avatar')
+                ->paginate($request->limit);
+
+            $this->response = [
+                'status' => true,
+                'data' => $data,
+            ];
+            return response()->json($this->response, $this->success_code);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
     }
 }

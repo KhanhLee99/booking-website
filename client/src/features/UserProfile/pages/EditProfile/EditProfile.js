@@ -10,6 +10,8 @@ import { updateProfile } from '../../../../app/reducer/userSlice';
 import uploadApi from '../../../../api/uploadApi';
 import Header from '../../../../components/Header';
 import AvatarPlaceholder from '../../../../components/Placeholder/AvatarPlaceholder/AvatarPlaceholder';
+import CommonUserProfile from '../../../../components/CommonUserProfile/CommonUserProfile';
+import { UserProfileTab } from '../../../../app/constant';
 
 EditProfile.propTypes = {
 
@@ -28,6 +30,7 @@ const custom_form_input = {
     overflow: 'hidden',
     zIndex: 1,
     boxShadow: 'none',
+    height: '50px',
 }
 
 const ava_size = {
@@ -82,7 +85,9 @@ function EditProfile(props) {
     }, []);
 
     return (
-        <div>
+        <CommonUserProfile
+            currentTab={UserProfileTab.USER_PROFILE}
+        >
             <h3 className='h3_title'>User Profile</h3>
             <div className="add-listing-section">
                 <div className="row with-forms">
@@ -175,7 +180,7 @@ function EditProfile(props) {
                     </div>
                 </div>
             </div>
-        </div>
+        </CommonUserProfile>
     );
 }
 

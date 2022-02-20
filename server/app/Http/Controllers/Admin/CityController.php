@@ -19,7 +19,7 @@ class CityController extends Controller
     public function index(Request $request)
     {
         try {
-            $cities = City::orderBy('id', 'asc')->select('id', 'name')->paginate($request->limit);
+            $cities = City::orderBy('id', 'asc')->select('id as value', 'name as label')->get();
             if ($cities) {
                 $this->response = [
                     'status' => 'success',
@@ -27,7 +27,7 @@ class CityController extends Controller
                 ];
                 return response()->json($this->response, $this->success_code);
             }
-            return response()->json($this->response);
+            return response()->json($this->response, 400);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);

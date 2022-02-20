@@ -16,7 +16,7 @@
 .table th {
     padding: 0.75rem !important;
     vertical-align: top;
-    border-top: 1px solid #dee2e6;
+    border-top: none !important;
 }
 
 .table-card .card-block .table tr td:last-child {
@@ -106,4 +106,8 @@ tbody tr:hover {
 .badge-warning {
     color: #212529;
     background-color: #f7b924;
+}
+.badge-danger {
+    color: #fff;
+    background-color: #ff5370;
 }

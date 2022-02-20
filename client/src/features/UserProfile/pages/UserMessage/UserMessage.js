@@ -8,6 +8,9 @@ import conversationApi from '../../../../api/conversationApi';
 import { Contact, MessageGuest, MessageMe } from '../../../Host/pages/HostMessage/HostMessage';
 import Loading from '../../../../components/Loading/Loading';
 import useWindowDimensions from '../../../../@use/useWindowDimensions';
+import CommonUserProfile from '../../../../components/CommonUserProfile/CommonUserProfile';
+import { UserProfileTab } from '../../../../app/constant';
+
 
 UserMessage.propTypes = {
 
@@ -94,7 +97,9 @@ function UserMessage(props) {
     const { height, width } = useWindowDimensions();
 
     return (
-        <div>
+        <CommonUserProfile
+            currentTab={UserProfileTab.MESSAGE}
+        >
             {loading && <Loading />}
             <h3 className='h3_title'>Messages</h3>
             <div id='inbox-wrapper' className="dashboard-list-box fl-wrap" style={{ height: height * 80 / 100, overflowX: 'hidden', border: '1px solid #e5e7f2' }}>
@@ -153,7 +158,7 @@ function UserMessage(props) {
                     </div>
                 </div>
             </div>
-        </div>
+        </CommonUserProfile>
     );
 }
 

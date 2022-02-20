@@ -3,12 +3,13 @@ import PropTypes from 'prop-types';
 import UserBookingItem from '../../components/UserBookingItem/UserBookingItem';
 import reservationApi from '../../../../api/reservationApi';
 import reviewApi from '../../../../api/reviewApi';
-import { ReservationStatus } from '../../../../app/constant';
+import { ReservationStatus, UserProfileTab } from '../../../../app/constant';
 import Loading from '../../../../components/Loading/Loading';
 import { alertSuccess } from '../../../../@helper/alertComfirm';
 import UserChat from '../../components/UserChat/UserChat';
 import NoData from '../../../../components/NoData/NoData';
 import { useHistory } from 'react-router-dom';
+import CommonUserProfile from '../../../../components/CommonUserProfile/CommonUserProfile';
 
 MyBooking.propTypes = {
 
@@ -113,7 +114,9 @@ function MyBooking(props) {
 
 
     return (
-        <div>
+        <CommonUserProfile
+            currentTab={UserProfileTab.BOOKINGS}
+        >
             {loading && <Loading />}
             <h3 className='h3_title'>My Bookings</h3>
             <div className="dashboard-list-box fl-wrap" style={{ marginTop: 0 }}>
@@ -130,7 +133,7 @@ function MyBooking(props) {
                     )) : <NoData />
                 }
             </div>
-        </div>
+        </CommonUserProfile>
     );
 }
 

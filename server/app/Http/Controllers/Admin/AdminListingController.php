@@ -21,10 +21,10 @@ class AdminListingController extends Controller
         $this->notificationController = new NotificationController();
     }
 
-    public function get_listing_pending()
+    public function get_listing_pending(Request $request)
     {
         try {
-            $listing_pending = Listing::where('is_verified', 0)->orderBy('id', 'desc')->get();
+            $listing_pending = Listing::where('is_verified', 0)->orderBy('id', 'desc')->paginate($request->limit);
             if ($listing_pending) {
                 $this->response = [
                     'status' => true,
@@ -39,10 +39,10 @@ class AdminListingController extends Controller
         }
     }
 
-    public function get_listing_active()
+    public function get_listing_active(Request $request)
     {
         try {
-            $listing_active = Listing::where('is_verified', 1)->orderBy('id', 'desc')->get();
+            $listing_active = Listing::where('is_verified', 1)->orderBy('id', 'desc')->paginate($request->limit);
             if ($listing_active) {
                 $this->response = [
                     'status' => true,

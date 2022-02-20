@@ -10,6 +10,7 @@ import AvatarPlaceholder from '../../../../components/Placeholder/AvatarPlacehol
 import { header_user_menu_ul_li_a } from '../../../Host/components/HeaderHost';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoginModal from '../../../../components/LoginModal/LoginModal';
+import Logo from '../../../../assets/bookingdo/image/logos/fun-trip-logo.png'
 
 HeaderAdmin.propTypes = {
 
@@ -74,10 +75,11 @@ function HeaderAdmin(props) {
                 }));
             }, 1000);
         }
-    }, [currentPage])
+    }, [currentPage]);
+
     return (
         <header className="k-main-header" style={main_header}>
-            <Link to="/" className="k-logo-holder" style={logo_holder}><img src="https://i.ytimg.com/vi/FPtITmtjWhQ/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB3TdlYzQKkXD7XtPbNwCGLGycr2Q" alt="" style={{ width: 'auto', height: '100%' }} /></Link>
+            <Link to="/" className="k-logo-holder" style={logo_holder}><img src={Logo} alt="" style={{ width: 'auto', height: '45px', width: '55px', background: '#fff', borderRadius: 8 }} /></Link>
 
             {
                 isLoggedIn ? <>
@@ -146,12 +148,6 @@ function HeaderAdmin(props) {
                             </div>
                             <ul className={showPopupProfile ? 'popup-user-nav hu-menu-vis' : 'popup-user-nav'}>
                                 <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/profile" style={header_user_menu_ul_li_a}> Edit profile</Link></li>
-                                <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/bookings" style={header_user_menu_ul_li_a}>  Bookings</Link></li>
-                                <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/favorite" style={header_user_menu_ul_li_a}> Danh sách yêu thích </Link></li>
-                                <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/inbox" style={header_user_menu_ul_li_a}> Tin nhắn</Link></li>
-                                {loggedInUser.role_id === 2 ?
-                                    <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/host/listings" style={header_user_menu_ul_li_a}>Quản lý phòng cho thuê</Link></li>
-                                    : null}
                                 <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><a href="#" style={header_user_menu_ul_li_a} onClick={(e) => handleLogout(e)}> Log Out</a></li>
                             </ul>
                         </OutsideAlerter>

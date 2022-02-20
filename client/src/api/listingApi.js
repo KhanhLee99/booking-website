@@ -74,6 +74,11 @@ const listingApi = {
     updateListingAvatar: (params, id) => {
         const url = `/photo-listing/update-avatar-listing/${id}`;
         return axiosClient.put(url, params);
+    },
+
+    getCity: () => {
+        const url = '/city';
+        return axiosClient.get(url);
     }
 }
 

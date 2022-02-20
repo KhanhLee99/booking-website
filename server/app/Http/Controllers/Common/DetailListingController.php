@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Common;
 use App\Http\Controllers\Controller;
 use App\Listing;
 use App\Models\City;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\DB;
@@ -218,6 +219,9 @@ class DetailListingController extends Controller
             $list_type_id = $request->list_type_id;
             $sort = $request->sort;
             $user_login = $request->user('api');
+
+            // $checkin_date = Carbon::createFromFormat('Y-m-d', $request->checkin_date)->addDay();
+            // $checkout_date = $request->checkout_date;
             // if (count($rate) > 0 && count($list_type_id) == 0) {
             //     return $this->filter_by_star($request);
             // } else if (count($rate) == 0 && count($list_type_id) > 0) {
@@ -231,6 +235,21 @@ class DetailListingController extends Controller
                 ->where('city_id', $request->city_id)
                 ->join('listing_type', 'listing.listing_type_id', '=', 'listing_type.id')
                 ->select('listing.id as listing_id', 'listing.name', 'listing.street_address', 'listing.avatar_url as listing_img', 'listing.bedroom_count', 'listing.price_per_night_base as price_per_night', 'listing.rating', 'listing_type.name as listing_type');
+
+            if ($request->checkin_date &&  $request->checkout_date) {
+                $data = DB::table('listing')
+                    ->join('reservation', 'listing.id', '=', 'reservation.listing_id')
+                    ->where([
+                        ['listing.city_id', '=', $request->city_id],
+                        ['reservation.checkin_date', '<=', $request->checkout_date],
+                        ['reservation.checkout_date', '>=', $request->checkin_date],
+                        ['reservation.checkout_date', '>', Carbon::now()],
+                    ])
+                    ->select(DB::raw('listing.id'))
+                    ->groupBy('listing.id')
+                    ->pluck('listing.id');
+                $query->whereNotIn('listing.id', $data);
+            }
 
             if ($rate) {
                 switch (count($rate)) {

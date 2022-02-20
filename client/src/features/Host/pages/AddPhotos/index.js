@@ -11,6 +11,7 @@ import Loading from '../../../../components/Loading/Loading';
 import TabAddListing from '../../components/TabAddListing/TabAddListing';
 import CommonAddListing from '../../../../components/CommonAddListing/CommonAddListing';
 import { v4 as uuid_v4 } from "uuid";
+import { MdLightbulb } from 'react-icons/md';
 
 AddPhotos.propTypes = {
 
@@ -140,7 +141,7 @@ function AddPhotos(props) {
                     className={file.popup ? '' : 'display-none'}
                 >
                     <a className='show_more_snopt_tooltip_a' style={show_more_snopt_tooltip_a} href="#" onClick={(e) => { e.preventDefault(); delPhoto(file) }}>Delete</a>
-                    <a className='show_more_snopt_tooltip_a' style={show_more_snopt_tooltip_a} href="#" onClick={(e) => { e.preventDefault(); setAva(file) }}>Set avatar </a>
+                    <a className='show_more_snopt_tooltip_a' style={show_more_snopt_tooltip_a} href="#" onClick={(e) => { e.preventDefault(); setAva(file) }}>Set thumbnail </a>
                 </div>
             </div>
         </div>
@@ -165,7 +166,7 @@ function AddPhotos(props) {
                     className={photo.popup ? '' : 'display-none'}
                 >
                     <a className='show_more_snopt_tooltip_a' style={show_more_snopt_tooltip_a} href="#" onClick={(e) => { e.preventDefault(); delPhoto(photo) }}>Delete</a>
-                    <a className='show_more_snopt_tooltip_a' style={show_more_snopt_tooltip_a} href="#" onClick={(e) => { e.preventDefault(); setAva(photo) }}>Set avatar </a>
+                    <a className='show_more_snopt_tooltip_a' style={show_more_snopt_tooltip_a} href="#" onClick={(e) => { e.preventDefault(); setAva(photo) }}>Set thumbnail </a>
                 </div>
             </div>
 
@@ -240,8 +241,8 @@ function AddPhotos(props) {
 
     const handleNext = async () => {
         try {
-            if ((photos.length + files.length) < 5) {
-                alert('Hãy đăng ít nhất 5 ảnh về phòng của bạn.');
+            if ((photos.length + files.length) < 8) {
+                alert('Hãy đăng ít nhất 8 ảnh về phòng của bạn.');
             } else {
                 if (photos.length > 0 && files.length == 0) {
                     history.push(`/become-host/${id}/title`)
@@ -299,11 +300,11 @@ function AddPhotos(props) {
                 {loading && <Loading />}
                 <div className='col-9'>
                     <div id="add-listing">
-                        <h3 className='h3_title'>Gallery</h3>
+                        <h3 className='h3_title'>Photos</h3>
                         <div className="add-listing-section">
                             {thumbnailPhoto()}
                             <h3 className='h3_title'>Gallery</h3>
-                            <p>Hãy đăng ít nhất 5 ảnh về phòng của bạn.</p>
+                            {/* <p>Hãy đăng ít nhất 5 ảnh về phòng của bạn.</p> */}
                             <div className="submit-section">
                                 {/* <form action="/file-upload" className="dropzone" /> */}
                                 <aside style={thumbsContainer}>
@@ -339,8 +340,8 @@ function RightSide(props) {
     return (
         <div className='col-3 k-right-side'>
             <div className='k-property-content'>
-                <h5>Text</h5>
-                <p>Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recent</p>
+                <h5><MdLightbulb fontSize={30} color='#4db7fe' /></h5>
+                <p style={{ fontWeight: 500, color: '#7d93b2', fontSize: 13 }}>Every listing need at least 8 photos. Including photos of all the spaces imagine staying at your place. Show your customers all of your spaces.</p>
             </div>
         </div>
     )

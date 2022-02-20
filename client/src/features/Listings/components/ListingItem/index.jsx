@@ -432,7 +432,7 @@ function ListingItem(props) {
                 <div className="k-geodir-category-content fl-wrap" style={{ zIndex: 2 }}>
                     <div className="k-geodir-category-content-title fl-wrap" style={geodir_category_content_title}>
                         <div className="geodir-category-content-title-item" style={geodir_category_content_title_item}>
-                            <p className="k-small-text" style={geodir_category_content_p}>{listing.listing_type} - {listing.bedroom_count} phòng ngủ</p>
+                            <p className="k-small-text" style={geodir_category_content_p}>{listing.listing_type} - {listing.bedroom_count} bedrooms</p>
 
 
                             <h3 className="title-sin_map" style={geodir_category_content_h3}>
@@ -459,7 +459,7 @@ function ListingItem(props) {
                     <div className="k-geodir-category-footer fl-wrap" style={geodir_category_footer}>
                         <a className="listing-item-category-wrap" style={{ float: 'left', position: 'relative' }}>
                             {/* <div className="k-listing-item-category" style={listing_item_category}></div> */}
-                            <span style={listing_item_category_wrap_span}>{parseVNDCurrency(listing.price_per_night)} /đêm</span>
+                            <span style={listing_item_category_wrap_span}>{parseVNDCurrency(listing.price_per_night)} /night</span>
                         </a>
                         <div className="k-geodir-opt-list" style={geodir_opt_list}>
                             <ul style={{ listStyle: 'none' }}>

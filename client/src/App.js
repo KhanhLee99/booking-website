@@ -8,7 +8,7 @@ import { getMe } from './app/reducer/guestSlice';
 import { saveDeviceToken } from './app/reducer/userSlice';
 import CommonUserProfile from './components/CommonUserProfile/CommonUserProfile';
 import Loading from './components/Loading/Loading';
-import ReactNotificationComponent from './components/Notification/ReactNotification';
+import ReactNotificationComponent, { NotificationStattus } from './components/Notification/ReactNotification';
 import { PrivateRouteAddListing, PrivateRouteAdmin, PrivateRouteHost, PrivateRouteMe } from './components/PrivateRoute';
 import AdminFeature from './features/Admin';
 import AdminLogin from './features/Admin/pages/AdminLogin/AdminLogin';
@@ -28,6 +28,26 @@ import DragHorizontal1 from './components/Test/DragHorizontal1';
 import DragHorizonImage from './components/Test/DragHorizonImage';
 import Pay from './features/UserProfile/pages/Payment/Pay';
 import AdminPayment from './features/Admin/pages/AdminPayment/AdminPayment';
+import Select from 'react-select';
+
+const options = [
+  { value: 'chocolate', label: 'Chocolate' },
+  { value: 'strawberry', label: 'Strawberry' },
+  { value: 'vanilla', label: 'Vanilla' }
+]
+
+const customStyles = {
+  control: base => ({
+    ...base,
+    height: '70px',
+    background: 'rgb(249, 249, 249)',
+    // border: 'none',
+    color: 'rgb(125, 147, 178)',
+    fontSize: '16px',
+    // padding: '0px 7px',
+    // marginBottom: '20px',
+  })
+};
 
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
@@ -43,11 +63,6 @@ function App() {
   const [notification, setNotification] = useState({ title: "", body: "", id: "" });
   const [loading, setLoading] = useState(true);
   const [deviceToken, setDeviceToken] = useState();
-
-  useEffect(() => {
-    const unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => { });
-    return () => unregisterAuthObserver(); // Make sure we un-register Firebase observers when the component unmounts.
-  }, []);
 
   useEffect(() => {
     const getFcmToken = async () => {
@@ -105,6 +120,8 @@ function App() {
     .catch((err) => console.log("failed: ", err));
 
   return (
+    // <Select options={options} styles={customStyles} />
+
     // <AdminPayment />
 
     <>
@@ -113,6 +130,7 @@ function App() {
           title={notification.title}
           body={notification.body}
           id={notification.id}
+          status={NotificationStattus.SUCCESS}
         />
       ) : (
         <></>
@@ -130,7 +148,7 @@ function App() {
               <PrivateRouteHost path="/host" component={HostFeature} />
               <PrivateRouteAddListing path="/become-host" component={AddListingFeature} />
               <PrivateRouteAdmin path="/admin" component={AdminFeature} />
-              <PrivateRouteMe path="/me" component={UserProfileFeature} layout={CommonUserProfile} />
+              <PrivateRouteMe path="/me" component={UserProfileFeature} />
 
               <Route path="/listing/:id" component={ListingDetail} />
               <Route path="/location/:id" exact component={ListingsLocation} />

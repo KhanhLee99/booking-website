@@ -5,6 +5,8 @@ import userProfileApi from '../../../../api/userProfileApi';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import PulseLoading from '../../../../components/Loading/PulseLoading';
+import CommonUserProfile from '../../../../components/CommonUserProfile/CommonUserProfile';
+import { UserProfileTab } from '../../../../app/constant';
 
 ChangePassword.propTypes = {
 
@@ -23,6 +25,7 @@ const custom_form_input = {
     overflow: 'hidden',
     zIndex: 1,
     boxShadow: 'none',
+    height: '50px',
 }
 
 function ChangePassword(props) {
@@ -53,7 +56,9 @@ function ChangePassword(props) {
 
 
     return (
-        <div>
+        <CommonUserProfile
+            currentTab={UserProfileTab.CHANGE_PASSWORD}
+        >
             <h3 className='h3_title'>Change Password</h3>
 
             <div className="add-listing-section">
@@ -127,7 +132,7 @@ function ChangePassword(props) {
                     </div>
                 </div>
             </div>
-        </div>
+        </CommonUserProfile>
     );
 }
 

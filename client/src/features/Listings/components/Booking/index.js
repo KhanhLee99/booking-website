@@ -230,26 +230,26 @@ export function BookingInfo(props) {
             <div className="row">
                 <div className="col-sm-6">
                     <label className="vis-label">Guests <i className="far fa-user" /></label>
-                    <input type="text" defaultValue={'1 guests'} disabled />
+                    <input type="text" defaultValue={'1 guests'} disabled style={{ height: 51 }} />
                 </div>
                 <div className="col-sm-6">
                     <label className="vis-label">Nights <i className="far fa-moon" /></label>
-                    <input type="text" defaultValue={`${nights || 1} nights`} disabled />
+                    <input type="text" defaultValue={`${nights || 1} nights`} disabled style={{ height: 51 }} />
                 </div>
 
                 <div className="col-sm-6">
                     <label className="vis-label">Checkin<i className="far fa-calendar" /></label>
-                    <input type="text" defaultValue={checkin_date} disabled />
+                    <input type="text" defaultValue={checkin_date} disabled style={{ height: 51 }} />
                 </div>
 
                 <div className="col-sm-6">
                     <label className="vis-label">Checkout<i className="far fa-calendar" /></label>
-                    <input type="text" defaultValue={checkout_date} disabled />
+                    <input type="text" defaultValue={checkout_date} disabled style={{ height: 51 }} />
                 </div>
 
                 <div className="col-sm-12">
                     <label className="vis-label">Mã khuyến mãi <i className="far fa-user" /></label>
-                    <input type="text" defaultValue={'1 guests'} />
+                    <input type="text" defaultValue={'1 guests'} style={{height: 51}}/>
                 </div>
             </div>
 
@@ -276,17 +276,17 @@ export function PersonalInfo(props) {
             <div className="row">
                 <div className="col-sm-12">
                     <label className="vis-label">Full Name <i className="far fa-user" /></label>
-                    <input type="text" placeholder="Your Name" defaultValue={loggedInUser.name} disabled />
+                    <input type="text" placeholder="Your Name" defaultValue={loggedInUser.name} disabled style={{height: 51}}/>
                 </div>
 
                 <div className="col-sm-6">
                     <label className="vis-label">Email Address<i className="far fa-envelope" /></label>
-                    <input type="text" placeholder="yourmail@domain.com" defaultValue={loggedInUser.email} disabled />
+                    <input type="text" placeholder="yourmail@domain.com" defaultValue={loggedInUser.email} disabled style={{height: 51}}/>
                 </div>
 
                 <div className="col-sm-6">
                     <label className="vis-label">Phone<i className="far fa-phone" /></label>
-                    <input type="text" placeholder={'Your Phone Number'} defaultValue={loggedInUser.phone_number} />
+                    <input type="text" placeholder={'Your Phone Number'} defaultValue={loggedInUser.phone_number}style={{height: 51}} />
                 </div>
             </div>
 
@@ -365,7 +365,7 @@ export function LeftSide(props) {
                     <div className="checkup__price fadeIn border-1">
                         <div className="is-flex middle-xs between-xs cart-list">
                             <div className="is-flex align-center">
-                                <span className="pr--6">Giá thuê {nights ? ` ${nights}` : 1} đêm</span>
+                                <span className="pr--6">Giá thuê {nights ? ` ${nights}` : 1} night</span>
                             </div>
                             <span>{rental_price ? parseVNDCurrency(rental_price) : ''}</span>
                         </div>

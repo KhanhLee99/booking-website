@@ -3,6 +3,7 @@ PHP. array_intersect — Computes the intersection of arrays (giao nhau của c�
 explode - Split a string by a string
 array_udiff - Xác định các object khác biệt trong 2 array
 array_uintersect
+array_column - Returns an array of values representing a single column from the input array.
 
 LARAVEL. toArray()
 
@@ -11,6 +12,8 @@ run multiple commands: https://stackoverflow.com/questions/61872499/custom-artis
 php artisan migrate:refresh
 php artisan passport:install
 php artisan db:seed
+
+custom => php artisan refresh:db
 
 drop all table => php artisan db:wipe
 performance query
@@ -27,3 +30,5 @@ php artisan migrate:fresh --seed
 Date: https://www.php.net/manual/en/function.date.php
 Carbon: https://viblo.asia/p/xu-ly-datetime-de-dang-hon-voi-thu-vien-carbon-trong-laravel-6J3ZgOmWZmB
 Collection: https://viblo.asia/p/nhung-method-thong-dung-cua-collection-trong-laravel-ban-da-su-dung-het-chua-07LKXOzp5V4
+
+refresh migration => php artisan migrate:refresh --path=/database/migrations/fileName.php

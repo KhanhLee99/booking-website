@@ -1,0 +1,109 @@
+.process-wrap {
+    & p {
+        text-align: center;
+        color: #7d93b2;
+        font-size: 13px;
+        line-height: 22px;
+    }
+
+    & li {
+        float: left;
+        width: 33.3%;
+        padding: 0 30px;
+        position: relative;
+        text-align: center;
+
+        & i {
+            margin: 0 auto;
+            font-size: 59px;
+        }
+
+        & h4 {
+            text-align: center;
+            float: left;
+            width: 100%;
+            margin-bottom: 12px;
+            font-weight: 600;
+            font-size: 18px;
+            color: #566985;
+        }
+    }
+
+    & .process-item {
+        float: left;
+        width: 100%;
+        position: relative;
+        border: 1px solid #eee;
+        padding: 30px 20px 50px;
+        border-radius: 6px;
+        z-index: 20;
+        background: #f9f9f9;
+    }
+
+    & .process-count {
+        position: absolute;
+        z-index: 10;
+        font-size: 14px;
+        font-weight: bold;
+        left: 50%;
+        margin-left: -25px;
+        bottom: -25px;
+        background: #fff;
+        border-radius: 100%;
+        width: 50px;
+        height: 50px;
+        line-height: 50px;
+        border: 1px solid #eee;
+        box-shadow: 0 9px 16px rgb(58 87 135 / 15%);
+        text-align: center;
+        color: #4db7fe;
+    }
+
+    & .time-line-icon {
+        position: relative;
+        margin-bottom: 20px;
+        background: url(../../../../assets/townhub/images/clouds.png) no-repeat center;
+    }
+
+    & .pr-dec {
+        position: absolute;
+        top: 50%;
+        right: -50px;
+        width: 150px;
+        height: 1px;
+        border-bottom: 1px solid #e2e2e2;
+    }
+
+    & .process-end {
+        display: inline-block;
+        margin-top: 60px;
+        position: relative;
+
+        &:before {
+            content: "";
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            width: 1px;
+            height: 70px;
+            background: #e2e2e2;
+            z-index: -1;
+        }
+
+        & i {
+            width: 60px;
+            height: 60px;
+            line-height: 60px;
+            background: #fff;
+            border-radius: 100%;
+            z-index: 3;
+            background: #5ecfb1;
+            border-radius: 100%;
+            font-size: 20px;
+            color: #fff;
+            border-radius: 100%;
+            box-shadow: 0px 0px 0px 10px #f7f7f7;
+            text-align: center;
+        }
+    }
+}

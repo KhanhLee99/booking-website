@@ -9,13 +9,13 @@ import ReactPaginate from 'react-paginate';
 import { MdArrowBackIosNew, MdArrowForwardIos } from 'react-icons/md';
 import useQuery from '../../../../@use/useQuery';
 import { useHistory } from 'react-router-dom';
-import { ReservationFilter, ReservationStatus } from '../../../../app/constant';
+import { HostTab, ReservationFilter, ReservationStatus } from '../../../../app/constant';
 import reservationApi from '../../../../api/reservationApi';
 import Loading from '../../../../components/Loading/Loading';
 import ReactNotificationComponent, { NotificationStattus } from '../../../../components/Notification/ReactNotification';
 import useWindowDimensions from '../../../../@use/useWindowDimensions';
-import { Empty } from 'antd';
 import NoData from '../../../../components/NoData/NoData';
+import CountUp from 'react-countup';
 
 Reservation.propTypes = {
 
@@ -127,11 +127,13 @@ function Reservation(props) {
                 body={noti.body}
                 status={noti.status}
             />} */}
-            <HeaderHost />
+            <HeaderHost
+                currentTab={HostTab.RESERVATIONS}
+            />
             <div className='container' style={{ marginTop: '80px', paddingTop: '20px', minHeight: height }}>
                 <div className='reservations-header-title wrap-title-header fl-wrap'>
                     <div style={{ width: '50%', float: 'left', height: '69px', display: 'flex', alignItems: 'center' }}>
-                        <h3 className='h3_title' style={{ marginBottom: 0 }}>Thống kê tình hình kinh doanh</h3>
+                        <h3 className='h3_title' style={{ marginBottom: 0 }}>Business situation statistics</h3>
                     </div>
                 </div>
 
@@ -139,17 +141,51 @@ function Reservation(props) {
 
                 <div className='row'>
                     <StatisticalItem
-                        title={'Tổng doanh thu'}
-                    />
+                        title={'Revenue'}
+                        icon={'fal fa-envelope-open-dollar'}
+                        count={2347}
+                    >
+                        <div className="stat-wave">
+                            <svg viewBox="0 0 100 25">
+                                <path fill="#fff" d="M0 30 V12 Q30 17 45 8 T100 11 V30z" />
+                            </svg>
+                        </div>
+                    </StatisticalItem>
                     <StatisticalItem
-                        title={'Tổng số booking'}
-                    />
+                        title={'Listings'}
+                        icon={'fal fa-home'}
+                        count={5}
+                    >
+                        <div className="stat-wave">
+                            <svg viewBox="0 0 100 25">
+                                <path fill="#fff" d="M0 30 V12 Q30 12 55 5 T100 11 V30z" />
+                            </svg>
+                        </div>
+                    </StatisticalItem>
                     <StatisticalItem
-                        title={'Lượt đánh giá'}
-                    />
+                        title={'Reservations'}
+                        icon={'fal fa-calendar-check'}
+                        count={235000}
+                    >
+                        <div className="stat-wave">
+                            <svg viewBox="0 0 100 25">
+                                <path fill="#fff" d="M0 30 V12 Q30 17 55 12 T100 11 V30z" />
+                            </svg>
+                        </div>
+                    </StatisticalItem>
                     <StatisticalItem
-                        title={'Lượt xem'}
-                    />
+                        title={'Reviews'}
+                        icon={'fal fa-comments'}
+                        count={200}
+                    >
+                        <div className="stat-wave">
+                            <svg viewBox="0 0 100 25">
+                                <path fill="#fff" d="M0 30 V12 Q30 17 55 2 T100 11 V30z" />
+                            </svg>
+                        </div>
+                    </StatisticalItem>
+
+
                 </div>
 
                 <div className='h-20 fl-wrap' />
@@ -229,20 +265,28 @@ StatisticalItem.defaultProps = {
 }
 
 function StatisticalItem(props) {
-    const { title } = props;
+    const { title, icon, count } = props;
     return (
         <div className="col-md-3">
             <div className="dashboard_inline-facts-wrap gradient-bg" style={{ height: '112px' }}>
                 <div className="inline-facts">
-                    <i className="fal fa-home" />
+                    <i className={icon} />
                     <div className="milestone-counter">
                         <div className="stats animaper">
-                            <div className="num" data-content={0} data-num={1054}>{1054}</div>
+                            <CountUp
+                                start={0}
+                                end={count}
+                                className="num"
+                                duration={1}
+                            />
+                            {/* <div className="num" data-content={0} data-num={1054}>{1054}</div> */}
                         </div>
                     </div>
                     <h6>{title}</h6>
                 </div>
             </div>
+            {props.children}
         </div>
     )
 }
+

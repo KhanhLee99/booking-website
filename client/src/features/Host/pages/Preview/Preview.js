@@ -101,7 +101,7 @@ function Preview(props) {
                                                 <i className="fas fa-map-marker-alt" style={{ color: '#4DB7FE', fontSize: 12 }} />{listingDetail.street_address}
                                             </a>
                                         </span>
-                                        <p style={{ fontSize: '14px', fontWeight: 600, color: '#878c9f' }}>{listingDetail.rental_form === 'shared_room' ? 'Phòng chung' : listingDetail.rental_form === 'private_room' ? 'Phòng riêng' : 'Toàn bộ nhà'} · {listingDetail.bathroom_count} Phòng tắm · {listingDetail.bed_count} giường · {listingDetail.bedroom_count} phòng ngủ · {listingDetail.standard_guest_count} khách</p>
+                                        <p style={{ fontSize: '14px', fontWeight: 600, color: '#878c9f' }}>{listingDetail.rental_form === 'shared_room' ? 'Phòng chung' : listingDetail.rental_form === 'private_room' ? 'Phòng riêng' : 'Toàn bộ nhà'} · {listingDetail.bathroom_count} Phòng tắm · {listingDetail.bed_count} giường · {listingDetail.bedroom_count} bedrooms · {listingDetail.standard_guest_count} khách</p>
                                     </div>
                                 </div>
 

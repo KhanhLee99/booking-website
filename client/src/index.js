@@ -7,6 +7,8 @@ import reportWebVitals from './reportWebVitals';
 import { Provider } from 'react-redux';
 import store from './app/store';
 import * as serviceWorker from './serviceWorker';
+import { SnackbarProvider } from "notistack";
+
 
 
 ReactDOM.render(
@@ -15,7 +17,17 @@ ReactDOM.render(
   // </React.StrictMode>
 
   <Provider store={store}>
-    <App />
+    <SnackbarProvider
+      persist="true"
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      autoHideDuration={2500}
+      anchororigintopright={{ marginTop: '50px' }}
+      maxSnack={3}>
+      <App />
+    </SnackbarProvider>
   </Provider>
 
   , document.getElementById("root"));

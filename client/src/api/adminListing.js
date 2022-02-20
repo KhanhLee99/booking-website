@@ -1,14 +1,14 @@
 import axiosClient from "../utils/axiosClient";
 
 const adminListing = {
-    getListingPending: () => {
+    getListingPending: (params) => {
         const url = '/admin/listing/pending';
-        return axiosClient.get(url);
+        return axiosClient.get(url, params);
     },
 
-    getListingActive: () => {
+    getListingActive: (params) => {
         const url = '/admin/listing/active';
-        return axiosClient.get(url);
+        return axiosClient.get(url, params);
     },
 
     activeListing: (id) => {

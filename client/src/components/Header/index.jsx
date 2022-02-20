@@ -13,6 +13,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { header_user_menu_ul_li_a } from '../../features/Host/components/HeaderHost';
+import Logo from '../../assets/bookingdo/image/logos/fun-trip-logo.png';
 
 
 export const main_header = {
@@ -237,11 +238,15 @@ function Header(props) {
 
     useEffect(() => {
         if (isLoggedIn) {
-            dispatch(getTotalNoticationsUnread());
-            dispatch(getMyNotify({
-                page: currentPage,
-                limit: 5
-            }));
+            try {
+                dispatch(getTotalNoticationsUnread());
+                dispatch(getMyNotify({
+                    page: currentPage,
+                    limit: 5
+                }));
+            } catch (err) {
+                console.log(err.message);
+            }
         }
     }, []);
 
@@ -259,7 +264,7 @@ function Header(props) {
     return (
 
         <header className="k-main-header" style={main_header}>
-            <Link to="/" className="k-logo-holder" style={logo_holder}><img src="https://i.ytimg.com/vi/FPtITmtjWhQ/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB3TdlYzQKkXD7XtPbNwCGLGycr2Q" alt="" style={{ width: 'auto', height: '100%' }} /></Link>
+            <Link to="/" className="k-logo-holder" style={logo_holder}><img src={Logo} alt="" style={{ width: 'auto', height: '45px', width: '55px', background: '#fff', borderRadius: 8 }} /></Link>
 
             <OutsideAlerter closePopup={() => setShowPopupSearch(false)} ref={refSearch}>
                 <div
@@ -372,8 +377,8 @@ function Header(props) {
                             <ul className={showPopupProfile ? 'popup-user-nav hu-menu-vis' : 'popup-user-nav'}>
                                 <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/profile" style={header_user_menu_ul_li_a}> Edit profile</Link></li>
                                 <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/bookings" style={header_user_menu_ul_li_a}>  Bookings</Link></li>
-                                <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/favorite" style={header_user_menu_ul_li_a}> Danh sách yêu thích </Link></li>
-                                <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/inbox" style={header_user_menu_ul_li_a}> Tin nhắn</Link></li>
+                                <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/favorite" style={header_user_menu_ul_li_a}> Favorite </Link></li>
+                                <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/me/inbox" style={header_user_menu_ul_li_a}> Message</Link></li>
                                 {loggedInUser.role_id === 2 ?
                                     <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/host/listings" style={header_user_menu_ul_li_a}>Quản lý phòng cho thuê</Link></li>
                                     : null}
@@ -396,17 +401,19 @@ export function NotificationItem(props) {
     const { notify } = props;
 
     return (
-        <div className="notification-list fl-wrap" style={{ background: notify.is_read ? '' : '#E9F3FE' }}>
-            <div className="notification-message">
-                <div className="notification-message-text">
-                    <i className="far fa-heart purp-bg"></i>
-                    <div>
-                        <p dangerouslySetInnerHTML={{ __html: notify.message }} />
-                        <p className="notificattion-message-time">28 may 2020</p>
+        <Link to={notify.url_redirect || '#'}>
+            <div className="notification-list fl-wrap" style={{ background: notify.is_read ? '' : '#E9F3FE', cursor: 'pointer' }}>
+                <div className="notification-message">
+                    <div className="notification-message-text">
+                        <i className="far fa-heart purp-bg"></i>
+                        <div>
+                            <p dangerouslySetInnerHTML={{ __html: notify.message }} />
+                            <p className="notificattion-message-time">28 may 2020</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </Link>
     )
 }
 

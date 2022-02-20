@@ -9,3 +9,5 @@ https://blog.logrocket.com/react-drag-and-drop/
 
 offset
 element.getBoundingClientRect();
+
+web travel: https://www.freepik.com/photos/travel/2

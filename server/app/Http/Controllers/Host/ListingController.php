@@ -18,9 +18,10 @@ use App\Http\Controllers\Host\RoomController;
 use App\Http\Controllers\Host\RoomBedTypeController;
 use App\Listing_Amenities;
 use App\Photo_Listing;
+use App\Reservation;
+use Carbon\Carbon;
 use Exception;
-
-
+use PhpParser\Node\Expr\List_;
 
 class ListingController extends Controller
 {
@@ -151,24 +152,23 @@ class ListingController extends Controller
         try {
             $user = $request->user('api');
             $status = $request->status;
+            $query = DB::table('listing')->join('listing_type', 'listing.listing_type_id', '=', 'listing_type.id')->where('listing.user_id', $user->id)
+                ->where('status', '!=', 'block_activity');
+            // $query = User::find($user->id)->Listings();
             switch ($status) {
                 case 'all':
-                    $listings = User::find($user->id)->Listings()
-                        ->orderBy('id', 'desc')
-                        ->paginate($request->limit);
                     break;
                 case 'unverified':
-                    $listings = User::find($user->id)->Listings()->where('is_verified', 0)
-                        ->orderBy('id', 'desc')
-                        ->paginate($request->limit);
+                    $query->where('listing.is_verified', 0);
                     break;
                 default:
-                    $listings = User::find($user->id)->Listings()->where('status', $status)
-                        ->orderBy('id', 'desc')
-                        ->paginate($request->limit);
+                    $query->where('listing.status', $status);
                     break;
             }
-            $listings->makeHidden(['user_id']);
+            $listings = $query->orderBy('listing.id', 'desc')
+                ->select('listing.*', 'listing_type.name as type')
+                ->paginate($request->limit);
+            // $listings->makeHidden(['user_id']);
             $this->response = [
                 'status' => 'success',
                 'data' => $listings,
@@ -551,6 +551,41 @@ class ListingController extends Controller
                 }
             }
             return $data;
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
+    }
+
+    public function search_listing(Request $request)
+    {
+        try {
+            $city_id = $request->city_id;
+            $checkin_date = $request->checkin_date;
+            $checkout_date = $request->checkout_date;
+
+            // Listing TB => city_id
+            // Reservation => -----today ---|--- checkin -----|---- checkout ---|--- after checkout ----|---
+            //                           checkin1        checkout1
+            //                                           checkin1           checkout1
+            //                           checkin2                           checkout2
+            //                      checkin1-checkout1                                ===> OK
+            //                                                          checkin1-checkout1 ===> OK
+            // ===> today  < (checkout1) <= checkin_date
+            // ===> (checkin1) >= checkout_date
+            // vi pham: checkin1 <= checkin < checkout1 <= checkout
+
+            // where not: (StartDate1 <= EndDate2) and (StartDate2 <= EndDate1)
+
+            $data = DB::table('listing')
+                ->join('reservation', 'listing.id', '=', 'reservation.listing_id')
+                ->whereNot([
+                    ['checkin_date', '<=', $checkout_date],
+                    [$checkin_date, '<=', 'checkout_date']
+                ])
+                ->select(DB::raw('listing.id, listing.name, count(*) as count'))
+                ->groupBy('listing.id')
+                ->get();
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);

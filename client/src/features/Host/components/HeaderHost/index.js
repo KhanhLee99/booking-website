@@ -10,6 +10,9 @@ import { getMyNotify, getTotalNoticationsUnread, nextPage, seenNotifications } f
 import OutsideAlerter from '../../../../components/OutsideAlerter/OutsideAlerter';
 import { NotificationItem, SkeletonNotificationItem } from '../../../../components/Header';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { red } from '@material-ui/core/colors';
+import { HostTab } from '../../../../app/constant';
+import Logo from '../../../../assets/bookingdo/image/logos/fun-trip-logo.png'
 
 HeaderHost.propTypes = {
 
@@ -21,7 +24,7 @@ const nav_holder = {
     // right: 0,
     top: '0px',
     marginLeft: '40px',
-    width: '50%',
+    width: '60%',
     display: 'flex',
     justifyContent: 'center',
 }
@@ -40,16 +43,17 @@ const nav_holder_nav_li = {
 }
 
 const nav_holder_nav_li_a = {
-    float: 'left',
-    padding: '10px',
-    fontSize: '13px',
-    fontStyle: 'normal',
-    fontWeight: 600,
-    textTransform: 'none',
-    lineHeight: '25px',
-    letterSpacing: '0px',
-    color: '#fff',
-    transition: 'all 100ms linear',
+    // float: 'left',
+    // padding: '15px 10px 5px',
+    // fontSize: '13px',
+    // fontStyle: 'normal',
+    // fontWeight: 600,
+    // textTransform: 'none',
+    // lineHeight: '25px',
+    // letterSpacing: '0px',
+    // color: '#fff',
+    // transition: 'all 100ms linear',
+    // margin: '0 15px',
 }
 
 const nav_holder_nav_li_a_i = {
@@ -78,6 +82,10 @@ const nav_holder_nav_li_ul_a = {
     letterSpacing: '0px',
     transition: 'all 100ms linear',
     marginLeft: '6px',
+}
+
+HeaderHost.defaultProps = {
+    currentTab: ''
 }
 
 function HeaderHost(props) {
@@ -116,15 +124,19 @@ function HeaderHost(props) {
     }
 
     const loadMoreData = async () => {
-        await dispatch(nextPage());
+        dispatch(nextPage());
     }
 
     useEffect(() => {
-        dispatch(getTotalNoticationsUnread());
-        dispatch(getMyNotify({
-            page: currentPage,
-            limit: 5
-        }));
+        try {
+            dispatch(getTotalNoticationsUnread());
+            dispatch(getMyNotify({
+                page: currentPage,
+                limit: 5
+            }));
+        } catch (err) {
+            console.log(err.message);
+        }
     }, []);
 
     useEffect(() => {
@@ -136,12 +148,13 @@ function HeaderHost(props) {
                 }));
             }, 1000);
         }
-    }, [currentPage])
+    }, [currentPage]);
+
+    const { currentTab } = props;
 
     return (
         <header className="k-main-header" style={main_header}>
-            <Link to="/" className="k-logo-holder" style={logo_holder}><img src="https://i.ytimg.com/vi/FPtITmtjWhQ/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB3TdlYzQKkXD7XtPbNwCGLGycr2Q" alt="" style={{ width: 'auto', height: '100%' }} /></Link>
-            {/* header opt */}
+            <Link to="/" className="k-logo-holder" style={logo_holder}><img src={Logo} alt="" style={{ width: 'auto', height: '45px', width: '55px', background: '#fff', borderRadius: 8 }} /></Link>
 
             <OutsideAlerter
                 closePopup={() => setShowPopupNotify(false)}
@@ -229,11 +242,13 @@ function HeaderHost(props) {
                     <nav style={nav_holder_nav}>
 
                         <ul className="no-list-style">
-                            <li style={nav_holder_nav_li}><a href="#" style={nav_holder_nav_li_a}>Hôm nay </a></li>
-                            <li style={nav_holder_nav_li}><Link to="/host/inbox" className="act-link" style={nav_holder_nav_li_a}>Tin nhắn</Link></li>
-                            <li style={nav_holder_nav_li}><a href="blog.html" style={nav_holder_nav_li_a}>Thông tin phân tích</a></li>
+                            <li style={nav_holder_nav_li} className={currentTab == HostTab.INBOX ? 'active' : ''}><Link to="/host/inbox">Inbox</Link></li>
+                            <li style={nav_holder_nav_li} className={currentTab == HostTab.LISTINGS ? 'active' : ''}><Link to="/host/listings" style={nav_holder_nav_li_a}>Listings</Link></li>
+                            <li style={nav_holder_nav_li} className={currentTab == HostTab.RESERVATIONS ? 'active' : ''}><Link to="/host/booking" style={nav_holder_nav_li_a}>Reservations</Link></li>
+                            {/* <li style={nav_holder_nav_li}><Link to="/host/reviews" style={nav_holder_nav_li_a}>Reviews</Link></li> */}
+                            <li style={nav_holder_nav_li} className={currentTab == HostTab.ADD_LISTING ? 'active' : ''}><Link to="/become-host/basic-infomation" style={nav_holder_nav_li_a}>Add Listing</Link></li>
 
-                            <li style={nav_holder_nav_li}
+                            {/* <li style={nav_holder_nav_li}
                                 onClick={() => setShowMenu(!showMenu)}
                             >
                                 <a href="#" style={nav_holder_nav_li_a}>Menu<i className="fa fa-caret-down" style={nav_holder_nav_li_a_i} /></a>
@@ -244,7 +259,7 @@ function HeaderHost(props) {
                                     <li style={nav_holder_nav_li_ul_li}><Link to="/become-host/basic-infomation" style={nav_holder_nav_li_ul_a}>Tạo mục cho thuê mới</Link></li>
                                     <li style={nav_holder_nav_li_ul_li}><a href="dashboard-wallet.html" style={nav_holder_nav_li_ul_a}>Lịch sử giao dịch</a></li>
                                 </ul>
-                            </li>
+                            </li> */}
                         </ul>
                     </nav>
                 </OutsideAlerter>
@@ -385,7 +400,7 @@ export function HeaderAddListing(props) {
 
     return (
         <header className="k-main-header relative" style={main_header}>
-            <Link to="/" className="k-logo-holder" style={logo_holder}><img src="https://i.ytimg.com/vi/FPtITmtjWhQ/hqdefault.jpg?sqp=-oaymwEcCPYBEIoBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLB3TdlYzQKkXD7XtPbNwCGLGycr2Q" alt="" style={{ width: 'auto', height: '100%' }} /></Link>
+            <Link to="/" className="k-logo-holder" style={logo_holder}><img src={Logo} alt="" style={{ width: 'auto', height: '45px', width: '55px', background: '#fff', borderRadius: 8 }} /></Link>
             {/* header opt */}
             {
                 isLoggedIn ? <>
@@ -406,6 +421,7 @@ export function HeaderAddListing(props) {
                         </div>
                         <ul className={showPopupProfile ? 'hu-menu-vis' : ''}>
                             <li style={header_user_menu_ul_li}><Link to="/me/profile" style={header_user_menu_ul_li_a}> Edit profile</Link></li>
+                            <li style={header_user_menu_ul_li} onClick={() => { setShowPopupProfile(!showPopupProfile) }}><Link to="/host/listings" style={header_user_menu_ul_li_a}>Quản lý phòng cho thuê</Link></li>
                             {/* <li style={header_user_menu_ul_li}><Link to="/me/bookings" style={header_user_menu_ul_li_a}>  Bookings</Link></li> */}
                             {/* <li style={header_user_menu_ul_li}><Link to="/me/favorite" style={header_user_menu_ul_li_a}> Danh sách yêu thích </Link></li> */}
                             <li style={header_user_menu_ul_li}><a href="#" style={header_user_menu_ul_li_a} onClick={(e) => handleLogout(e)}> Log Out</a></li>

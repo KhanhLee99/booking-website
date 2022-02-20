@@ -34,18 +34,18 @@ class UsersTableSeeder extends Seeder
             ],
         ];
 
-        // foreach ($list_user as $user) {
-        //     DB::table('users')->insert([
-        //         'name' => $user['name'],
-        //         'email' => $user['email'],
-        //         'password' => $user['password'],
-        //         'role_id' => $user['role_id'],
-        //         'phone_number' => $faker->phoneNumber,
-        //         'avatar_url' => "https://picsum.photos/id/" . rand(1, 1000) . "/400/300",
-        //     ]);
-        // }
+        foreach ($list_user as $user) {
+            DB::table('users')->insert([
+                'name' => $user['name'],
+                'email' => $user['email'],
+                'password' => $user['password'],
+                'role_id' => $user['role_id'],
+                'phone_number' => $faker->phoneNumber,
+                'avatar_url' => "https://picsum.photos/id/" . rand(1, 1000) . "/400/300",
+            ]);
+        }
 
-        for ($i = 0; $i < $limit; $i++) {
+        for ($i = 0; $i < $limit / 2; $i++) {
             DB::table('users')->insert([
                 'name' => $faker->name,
                 'email' => $faker->unique()->email,

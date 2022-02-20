@@ -10,6 +10,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import useWindowDimensions from '../../../../@use/useWindowDimensions';
 import HeaderHost from '../../components/HeaderHost';
+import { HostTab } from '../../../../app/constant';
 
 HostMessage.propTypes = {
 
@@ -100,7 +101,9 @@ function HostMessage(props) {
     return (
         <div id="wrapper" style={{ background: '#f6f6f6' }}>
             {loading && <Loading />}
-            <HeaderHost />
+            <HeaderHost
+                currentTab={HostTab.INBOX}
+            />
             <div id='inbox-wrapper' className="dashboard-list-box fl-wrap" style={{ height: heightContent, width: width, marginTop: '80px', overflowX: 'hidden' }}>
                 <div className="chat-wrapper fl-wrap">
                     <div className="row">

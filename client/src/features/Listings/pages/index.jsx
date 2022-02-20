@@ -13,7 +13,7 @@ import ListingSort from '../components/ListListingsLocation/ListingSort/ListingS
 import './style.scss';
 import queryString from 'query-string';
 import Loading from '../../../components/Loading/Loading';
-import { UserListingFilter } from '../../../app/constant';
+import { listing_types, UserListingFilter } from '../../../app/constant';
 
 
 
@@ -33,15 +33,15 @@ const main = {
 }
 
 function ListingsLocation(props) {
-    const listing_types = [
-        { id: 1, name: 'Homestay', value: 'type-1' },
-        { id: 2, name: 'Nhà riêng', value: 'type-2' },
-        { id: 3, name: 'Biệt thự', value: 'type-3' },
-        { id: 4, name: 'Chung cư', value: 'type-4' },
-        { id: 5, name: 'Studio', value: 'type-5' },
-        { id: 6, name: 'Căn hộ dịch vụ', value: 'type-6' },
-        { id: 7, name: 'Nhà tập thể/ Cư xá', value: 'type-7' },
-    ];
+    // const listing_types = [
+    //     { id: 1, name: 'Homestay', value: 'type-1' },
+    //     { id: 2, name: 'Nhà riêng', value: 'type-2' },
+    //     { id: 3, name: 'Biệt thự', value: 'type-3' },
+    //     { id: 4, name: 'Chung cư', value: 'type-4' },
+    //     { id: 5, name: 'Studio', value: 'type-5' },
+    //     { id: 6, name: 'Căn hộ dịch vụ', value: 'type-6' },
+    //     { id: 7, name: 'Nhà tập thể/ Cư xá', value: 'type-7' },
+    // ];
 
     const star = [
         { id: 1, name: '1 star', value: 'star-1' },
@@ -72,6 +72,12 @@ function ListingsLocation(props) {
         }
         return s;
     });
+    const [checkin_date, set_checkin_date] = useState(() => {
+        return qs.checkin_date || null;
+    });
+    const [checkout_date, set_checkout_date] = useState(() => {
+        return qs.checkout_date || null;
+    });
 
     const [filterType, setFilterType] = useState(() => {
         let initFilterType = [];
@@ -100,7 +106,7 @@ function ListingsLocation(props) {
 
     const handlePageClick = (event) => {
         setCurrentPage(event.selected + 1);
-        historyReplace({ pt: filterType, st: filterStar, sort: sort, page: event.selected + 1 });
+        historyReplace({ pt: filterType, st: filterStar, sort: sort, page: event.selected + 1, checkin_date: checkin_date, checkout_date: checkout_date });
     };
 
     const handleFilter = (e, type) => {
@@ -111,12 +117,12 @@ function ListingsLocation(props) {
                 if (e.target.checked) {
                     let tmpPTCheck = [...filterType, parseInt(e.target.id)];
                     setFilterType(tmpPTCheck);
-                    historyReplace({ pt: tmpPTCheck, st: filterStar, sort: sort, page: 1 });
+                    historyReplace({ pt: tmpPTCheck, st: filterStar, sort: sort, page: 1, checkin_date: checkin_date, checkout_date: checkout_date });
                     filterListing(filterStar, tmpPTCheck, sort);
                 } else {
                     const ids = filterType.filter((id) => id !== parseInt(e.target.id));
                     setFilterType(ids);
-                    historyReplace({ pt: ids, st: filterStar, sort: sort, page: 1 });
+                    historyReplace({ pt: ids, st: filterStar, sort: sort, page: 1, checkin_date: checkin_date, checkout_date: checkout_date });
                     filterListing(filterStar, ids, sort)
                 }
                 break;
@@ -124,12 +130,12 @@ function ListingsLocation(props) {
                 if (e.target.checked) {
                     let tmpPTStar = [...filterStar, parseInt(e.target.id)];
                     setFilterStar(tmpPTStar);
-                    historyReplace({ pt: filterType, st: tmpPTStar, sort: sort, page: 1 });
+                    historyReplace({ pt: filterType, st: tmpPTStar, sort: sort, page: 1, checkin_date: checkin_date, checkout_date: checkout_date });
                     filterListing(tmpPTStar, filterType, sort)
                 } else {
                     const stars = filterStar.filter((id) => id !== parseInt(e.target.id));
                     setFilterStar(stars);
-                    historyReplace({ pt: filterType, st: stars, sort: sort, page: 1 })
+                    historyReplace({ pt: filterType, st: stars, sort: sort, page: 1, checkin_date: checkin_date, checkout_date: checkout_date })
                     filterListing(stars, filterType, sort)
                 }
                 break;
@@ -147,6 +153,8 @@ function ListingsLocation(props) {
                 list_type_id: list_type_id,
                 page: page,
                 sort: sort,
+                checkin_date: checkin_date,
+                checkout_date: checkout_date,
             }
             setLoading(true);
             await listingApi.filterListing(params).then(res => {
@@ -162,9 +170,9 @@ function ListingsLocation(props) {
     }
 
     const handleChange = e => {
-        historyReplace({ pt: filterType, st: filterStar, sort: e.target.value, page: 1 });
-        filterListing(filterStar, filterType, e.target.value);
-        setSort(e.target.value);
+        historyReplace({ pt: filterType, st: filterStar, sort: e.value, page: 1, checkin_date: checkin_date, checkout_date: checkout_date });
+        filterListing(filterStar, filterType, e.value);
+        setSort(e.value);
     }
 
     const historyReplace = (params) => {
@@ -254,7 +262,7 @@ function ListingsLocation(props) {
                             isLoggedIn={isLoggedIn}
                             listings={listings}
                         />
-                        {totalPages > 0 ? <ReactPaginate
+                        {(totalPages > 0 && listings.length > 0) ? <ReactPaginate
                             previousLabel={
                                 <MdArrowBackIosNew />
                             }
@@ -262,8 +270,6 @@ function ListingsLocation(props) {
                                 <MdArrowForwardIos />
                             }
 
-                            // initialPage={1}
-                            // initialPage={currentPage}
                             forcePage={(query.get('page') != undefined) ? query.get('page') - 1 : 0}
                             breakLabel={"..."}
                             pageCount={totalPages}

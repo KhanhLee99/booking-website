@@ -121,11 +121,11 @@ section.main-dashboard-sec {
     text-align: left;
     float: left;
     border-bottom: 1px solid #eee;
-    padding-left: 15px;
+    // padding-left: 15px;
 }
 
 .user-profile-menu li a {
-    font-weight: 700;
+    font-weight: 800;
     color: #7d93b2;
     position: relative;
     display: block;
@@ -187,12 +187,12 @@ section.main-dashboard-sec {
     top: 30px;
     z-index: 10;
     padding: 10px 20px;
-    // background: #f9f9f9;
-    // border: 1px solid #eee;
+    background: #f9f9f9;
+    border: 1px solid #eee;
     border-right: none;
     box-sizing: border-box;
     border-radius: 38px 0 0 38px;
-    // box-shadow: 0 10px 15px rgb(0 0 0 / 3%);
+    box-shadow: 0 10px 15px rgb(0 0 0 / 3%);
 }
 
 .booking-list-contr a {
@@ -275,4 +275,21 @@ h4 {
 #dash_menu {
     // position: fixed;
     // width: 18%;
+}
+
+.user-profile-menu li a.active:before {
+    content: "";
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 10px;
+    background: #4db7fe;
+}
+.user-profile-menu li a.active {
+    background: #f9f9f9;
+}
+
+.user-profile-menu li a:hover {
+    background: #f9f9f9;
 }

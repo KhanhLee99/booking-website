@@ -32,6 +32,7 @@ const custom_form_input = {
     overflow: 'hidden',
     zIndex: 1,
     boxShadow: 'none',
+    height: 50,
 }
 
 function AddPrice(props) {
@@ -180,7 +181,7 @@ function AddPrice(props) {
                                                     </div>
 
                                                     <div className="col-md-6" >
-                                                        {price_night_weekend_real > 0 && <label className='custom_form_label'>Bạn sẽ nhận {parseVNDCurrency(price_night_weekend_real)}/đêm</label>}
+                                                        {price_night_weekend_real > 0 && <label className='custom_form_label'>Bạn sẽ nhận {parseVNDCurrency(price_night_weekend_real)}/night</label>}
                                                     </div>
 
                                                     <label className='custom_form_label'>Giá dài hạn</label>

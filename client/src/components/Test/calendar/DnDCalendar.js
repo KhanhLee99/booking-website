@@ -129,8 +129,7 @@ function DnDCalendarr(props) {
     return (
         <div id="wrapper" style={{ background: '#f6f6f6' }}>
             <HeaderHost />
-            <div className='container' style={{ marginTop: '80px' }}>
-                <button onClick={() => setLoading(!loading)}>Show Price</button>
+            <div className='container' style={{ marginTop: '100px' }}>
                 {/* {loading ?
                     // <DnDCalendar
                     //     localizer={localizer}

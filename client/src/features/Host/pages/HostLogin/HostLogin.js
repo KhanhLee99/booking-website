@@ -174,6 +174,7 @@ const custom_form_input = {
     overflow: 'hidden',
     zIndex: 1,
     boxShadow: 'none',
+    height: 50,
     // marginBottom: 12,
 }
 
@@ -284,7 +285,7 @@ function HostLogin(props) {
             await dispatch(hostLogin(params)).then(() => {
                 resetForm();
                 setLoading(false);
-                history.push('/host/listings');
+                history.push('/host/booking');
             });
         } catch (err) {
             console.log(err.message)

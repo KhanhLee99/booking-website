@@ -2,8 +2,12 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import notificationApi from "../../api/notificationApi";
 
 export const getMyNotify = createAsyncThunk('notify/me', async (payload) => {
-    const response = await notificationApi.getMyNotications(payload);
-    return response;
+    try {
+        const response = await notificationApi.getMyNotications(payload);
+        return response;
+    } catch (err) {
+        console.log(err.message);
+    }
 });
 
 export const fetchMyNotify = createAsyncThunk('notify/fetch', async (payload) => {
@@ -41,17 +45,25 @@ const notifySlice = createSlice({
 
     extraReducers: {
         [getMyNotify.fulfilled]: (state, action) => {
-            if (state.currentPage == 1) {
-                state.myNotify = [];
+            try {
+                if (state.currentPage == 1) {
+                    state.myNotify = [];
+                }
+                state.myNotify = state.myNotify.concat(action.payload.data.data.data);
+                state.totalPage = action.payload.data.data.last_page;
+            } catch (err) {
+                console.log(err.message);
             }
-            state.myNotify = state.myNotify.concat(action.payload.data.data.data);
-            state.totalPage = action.payload.data.data.last_page;
         },
 
         [fetchMyNotify.fulfilled]: (state, action) => {
-            state.myNotify = action.payload.data.data.data;
-            state.totalPage = action.payload.data.data.last_page;
-            state.currentPage = 1;
+            try {
+                state.myNotify = action.payload.data.data.data;
+                state.totalPage = action.payload.data.data.last_page;
+                state.currentPage = 1;
+            } catch (err) {
+                console.log(err.message);
+            }
         },
 
         [getTotalNoticationsUnread.fulfilled]: (state, action) => {

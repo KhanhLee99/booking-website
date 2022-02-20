@@ -208,7 +208,7 @@ function BoxBooking(props) {
                                 fontFamily: "Roboto",
                                 color: '#566985',
 
-                            }}> /{totalPrice ? ` ${totalPrice.nights} ` : null}đêm</span>
+                            }}> /{totalPrice ? ` ${totalPrice.nights} ` : null}night</span>
                         </span>
 
                         <div className="row with-forms margin-top-20">
@@ -254,7 +254,7 @@ function BoxBooking(props) {
                             checkAvailableDate()
                         }
 
-                        <a onClick={handleBooking} href="#" className="button book-now fullwidth margin-top-5" style={{ borderRadius: "8px", padding: "14px 24px", background: "rgb(46, 63, 110)" }}>{totalPrice ? 'Đặt ngay' : 'Kiểm tra tình trạng còn phòng'}</a>
+                        <a onClick={handleBooking} href="#" className="button book-now fullwidth margin-top-5" style={{ borderRadius: "8px", padding: "14px 24px", background: "rgb(46, 63, 110)" }}>{totalPrice ? 'Booking now' : 'Check available'}</a>
                     </div>
             }
         </div >
@@ -278,7 +278,7 @@ function TotalPrice(props) {
             <div className="checkup__price fadeIn border-1">
                 <div className="is-flex middle-xs between-xs cart-list">
                     <div className="is-flex align-center">
-                        <span className="pr--6">Giá thuê {nights} đêm</span>
+                        <span className="pr--6">Giá thuê {nights} night</span>
                     </div>
                     <span>{parseVNDCurrency(rentalPrice)}</span>
                 </div>

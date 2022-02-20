@@ -9,7 +9,7 @@ export const NotificationStattus = {
   ERROR: 'error',
 }
 
-const ReactNotificationComponent = ({ title, body, status, id }) => {
+const ReactNotificationComponent = ({ title, body, id, status }) => {
   // let hideNotif = title === "";
 
   // if (!hideNotif) {

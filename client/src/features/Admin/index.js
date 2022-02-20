@@ -13,6 +13,9 @@ import AdminLogin from './pages/AdminLogin/AdminLogin';
 import Dashboard from './pages/Dashboard/Dashboard';
 import AdminFeed from './pages/AdminFeed/AdminFeed';
 import AdminPayment from './pages/AdminPayment/AdminPayment';
+import AdminBooking from './pages/AdminBooking/AdminBooking';
+import AdminUser from './pages/AdminUser/AdminUser';
+import AdminHost from './pages/AdminHost/AdminHost';
 
 AdminFeature.propTypes = {
 
@@ -46,6 +49,25 @@ function AdminFeature(props) {
                     exact
                     component={AdminPayment}
                 />
+
+                <Route
+                    path={`${match.url}/booking`}
+                    exact
+                    component={AdminBooking}
+                />
+
+                <Route
+                    path={`${match.url}/users`}
+                    exact
+                    component={AdminUser}
+                />
+
+                <Route
+                    path={`${match.url}/hosts`}
+                    exact
+                    component={AdminHost}
+                />
+
             </Switch>
         </>
     );

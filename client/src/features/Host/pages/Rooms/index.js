@@ -169,7 +169,7 @@ function Rooms(props) {
                                         <h5 style={title}>How many bedrooms can guest use ?</h5>
 
                                         <IncDecFormQty
-                                            title='Phòng ngủ'
+                                            title='Bedrooms'
                                             type='bedrooms'
                                             qty={qtyBedrooms}
                                             handleInc={handleInc}

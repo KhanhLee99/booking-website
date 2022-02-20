@@ -63,7 +63,7 @@ function FilterItem(props) {
         <li style={filter_tags_li}>
             {checkFiltered()}
             <label htmlFor={item.value} style={title}>{item.name}</label>
-            <span className='_4abc4c3d5'>85</span>
+            {/* <span className='_4abc4c3d5'>85</span> */}
         </li>
     );
 }

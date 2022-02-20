@@ -24,12 +24,8 @@ class NotificationController extends Controller
         try {
             $title = 'New reservation';
             $message = 'New reservation at' . $listing->name;
-            $this->send_notification($title, $message, $listing->user_id);
-            // Notification::create([
-            //     'title' => 'New reservation',
-            //     'message' => 'New reservation at' . $listing->name,
-            //     'receiver_id' => $listing->user_id,
-            // ]);
+            $url_redirect = '/host/booking';
+            $this->send_notification($title, $message, $listing->user_id, $url_redirect);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);
@@ -292,12 +288,13 @@ class NotificationController extends Controller
         return response()->json($output);
     }
 
-    private function send_notification($title, $message, $receiver_id)
+    private function send_notification($title, $message, $receiver_id, $url_redirect = '')
     {
         Notification::create([
             'title' => $title,
             'message' => $message,
             'receiver_id' => $receiver_id,
+            'url_redirect' => $url_redirect,
         ]);
         $this->push_notification($title, $message, $receiver_id);
     }

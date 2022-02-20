@@ -81,7 +81,7 @@ function TabHorizontal(props) {
                         <li style={scroll_nav_li}><a className="act-scrlink" href="#sec1" style={scroll_nav_li_a}><i className="fal fa-images" style={scroll_nav_li_a_i} /> Gallery</a></li>
                         <li style={scroll_nav_li}><a href="#sec2" style={scroll_nav_li_a}><i className="fal fa-info" style={scroll_nav_li_a_i} />Details</a></li>
                         <li style={scroll_nav_li}><a href="#sec3" style={scroll_nav_li_a}><i className="fal fa-video" style={scroll_nav_li_a_i} />Video </a></li>
-                        <li style={scroll_nav_li}><a href="#sec4" style={scroll_nav_li_a}><i className="fal fa-bed" style={scroll_nav_li_a_i} />Rooms</a></li>
+                        {/* <li style={scroll_nav_li}><a href="#sec4" style={scroll_nav_li_a}><i className="fal fa-bed" style={scroll_nav_li_a_i} />Rooms</a></li> */}
                         <li style={scroll_nav_li}><a href="#sec5" style={scroll_nav_li_a}><i className="fal fa-comments-alt" style={scroll_nav_li_a_i} />Reviews</a></li>
                     </ul>
                 </nav>
@@ -93,10 +93,10 @@ function TabHorizontal(props) {
                         :
                         <a href="#" onClick={handleFavorite} className={saved ? 'scroll-nav-wrapper-opt-btn' : ''} style={scroll_nav_wrapper_opt_btn}> <i className="fas fa-heart" style={{ marginRight: '6px' }} /> Save </a>
                     }
-                    <a href="#" className="showshare" style={scroll_nav_wrapper_opt_btn}> <i className="fas fa-share" style={{ marginRight: '6px' }} /> Share </a>
+                    {/* <a href="#" className="showshare" style={scroll_nav_wrapper_opt_btn}> <i className="fas fa-share" style={{ marginRight: '6px' }} /> Share </a>
                     <div className="share-holder hid-share">
                         <div className="share-container  isShare" />
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>

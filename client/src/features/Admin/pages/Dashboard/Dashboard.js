@@ -6,6 +6,7 @@ import adminDashboardApi from '../../../../api/adminDashboardApi';
 import ChartLine from '../../components/Chart/ChartLine';
 import ChartBar from '../../components/Chart/ChartBar';
 import ChartLineEarnings from '../../components/Chart/ChartLineEarnings';
+import { AdminTab } from '../../../../app/constant';
 
 Dashboard.propTypes = {
 
@@ -46,7 +47,27 @@ function Dashboard(props) {
     }, []);
 
     return (
-        <CommonAdmin>
+        <CommonAdmin
+            currentTab={AdminTab.DASHBOARD}
+        >
+            <Child
+                overview={overview}
+                chartEarnings={chartEarnings}
+                chartUsers={chartUsers}
+                chartHosts={chartHosts}
+                chartReservations={chartReservations}
+                currentTab={AdminTab.DASHBOARD}
+            />
+        </CommonAdmin>
+    );
+}
+
+export default Dashboard;
+
+function Child(props) {
+    const { overview, chartEarnings, chartUsers, chartHosts, chartReservations } = props;
+    return (
+        <>
             <div className="dashboard-title fl-wrap">
                 <h3>Dashboard</h3>
             </div>
@@ -144,8 +165,6 @@ function Dashboard(props) {
                     <div className='h-20 fl-wrap' />
                 </div>
             </div>
-        </CommonAdmin>
-    );
+        </>
+    )
 }
-
-export default Dashboard;

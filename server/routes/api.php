@@ -216,6 +216,17 @@ Route::get('admin/dashboard/overview', 'Admin\AdminDashboardController@index');
 Route::get('admin/dashboard/chart', 'Admin\AdminDashboardController@get_chart_data');
 
 
-// Payment
+//admin Payment
 Route::post('admin/payment/add', 'Admin\AdminPaymentController@add');
 Route::get('admin/payment', 'Admin\AdminPaymentController@index');
+
+// Admin Bookings
+Route::get('admin/bookings', 'Admin\AdminBookingController@index');
+
+// Admin User
+Route::get('admin/user/all', 'Admin\AdminUserController@get_all_user');
+Route::get('admin/host/all', 'Admin\AdminUserController@get_all_host');
+
+// Test
+Route::get('city/all', 'TestController@read_file_json');
+Route::get('test2', 'TestController@test_2');

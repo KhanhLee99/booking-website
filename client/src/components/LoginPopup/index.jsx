@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import StyledFirebaseAuth from 'react-firebaseui/StyledFirebaseAuth';
 import firebase from 'firebase';
 import 'firebaseui/dist/firebaseui.css'
 import './styles.scss';
-import { Formik } from 'formik';
+import { Formik, getIn } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch, useSelector } from 'react-redux';
 import { login, loginFacebook, loginGoogle } from '../../app/reducer/userSlice';
@@ -14,6 +14,9 @@ import { useHistory } from 'react-router';
 import userApi from '../../api/userApi';
 import { MdKeyboardBackspace } from "react-icons/md";
 import { Spinner } from 'react-bootstrap';
+import { Input } from 'reactstrap';
+import Loading from '../Loading/Loading';
+import { useSnackbar } from 'notistack';
 
 LoginPopup.propTypes = {
 
@@ -138,6 +141,7 @@ const custom_form_input = {
     overflow: 'hidden',
     zIndex: 1,
     boxShadow: 'none',
+    height: 50,
     // marginBottom: 12,
 }
 
@@ -198,6 +202,8 @@ function LoginPopup(props) {
     const [tabLogin, setTabLogin] = useState(true);
     const [isForgot, setIsForgot] = useState(false);
     const [messageSuccess, setMessageSuccess] = useState('');
+    const [isSignIn, setIsSignIn] = useState(false);
+    const { enqueueSnackbar } = useSnackbar();
 
     const dispatch = useDispatch();
     const history = useHistory();
@@ -211,6 +217,10 @@ function LoginPopup(props) {
         ],
         callbacks: {
             signInSuccessWithAuthResult: (authResult) => {
+                firebase.auth().signOut().then(() => {
+                    setIsSignIn(true);
+                });
+
                 // console.log(authResult);
                 const signInMethod = authResult.credential.signInMethod;
                 authResult.user.getIdToken().then(function (accessToken) {
@@ -227,11 +237,30 @@ function LoginPopup(props) {
             const params = {
                 social_token: token
             }
-            const actionResult = await dispatch((signInMethod === 'google.com') ? loginGoogle(params) : loginFacebook(params));
-            const currentUser = unwrapResult(actionResult).then(() => {
-                refreshPage();
-            });
-            console.log(currentUser.data);
+            // const actionResult = dispatch((signInMethod === 'google.com') ? loginGoogle(params) : loginFacebook(params));
+            // const currentUser = unwrapResult(actionResult).then(() => {
+            //     console.log('dfjkshfkasdh');
+            //     refreshPage();
+            // });
+            // console.log(currentUser.data);
+            // setLoading(true);
+            if (signInMethod === 'google.com') {
+                await userApi.loginGoogle(params).then(res => {
+                    localStorage.setItem('access_token', res.data.access_token);
+                    localStorage.setItem('user', JSON.stringify(res.data.user));
+                    refreshPage();
+                }).catch(err => {
+                    console.log(err);
+                    enqueueSnackbar('Email already exists', { variant: "error" });
+                })
+            } else {
+                await userApi.loginFacebook(params).then(res => {
+
+                }).catch(err => {
+
+                })
+            }
+            // console.log(unwrapResult(actionResult));
         } catch (err) {
             console.log(err);
             setLoading(false);
@@ -299,15 +328,27 @@ function LoginPopup(props) {
 
     const { close } = props;
 
+    useEffect(() => {
+        const unregisterAuthObserver = firebase.auth().onAuthStateChanged(user => {
+            // setDisplay(false);
+        });
+        return () => unregisterAuthObserver(); // Make sure we un-register Firebase observers when the component unmounts.
+    }, []);
+
+    useEffect(() => {
+        if (isSignIn) {
+            setIsSignIn(false);
+        }
+    }, [isSignIn]);
+
 
     return (
-
         <div className="k-main-register-holder tabs-act" style={main_register_holder}>
             <div className="k-main-register fl-wrap" style={main_register}>
                 {/* <div className="k-main-register_title" style={main_register_title}>Welcome to <span style={{ textTransform: 'uppercase', fontWeight: 800 }}><strong style={{ color: '#4DB7FE' }}>Town</strong>Hub<strong style={{ color: '#4DB7FE' }}>.</strong></span></div> */}
                 <div className="k-main-register_title" style={main_register_title}>Welcome </div>
                 <div className='close-tag' style={close_reg} onClick={close}><i className="fal fa-times" /></div>
-                <ul className={isForgot ? "tabs-menu fl-wrap display-none" : "tabs-menu fl-wrap"} style={{ padding: '0 30px', listStyle: 'none', background: 'white', marginBottom: 5 }}>
+                <ul className={(isForgot) ? "tabs-menu fl-wrap display-none" : "tabs-menu fl-wrap"} style={{ padding: '0 30px', listStyle: 'none', background: 'white', marginBottom: 5 }}>
                     <li className={tabLogin ? 'current' : ''} style={tabs_menu_li} onClick={e => { e.preventDefault(); setTabLogin(true) }}><a href="#tab-1" style={tabs_menu_li_a}><i className="fal fa-sign-in-alt" style={{ color: '#4DB7FE' }} /> Login</a></li>
                     <li className={tabLogin ? '' : 'current'} style={tabs_menu_li} onClick={e => { e.preventDefault(); setTabLogin(false) }}><a href="#tab-2" style={tabs_menu_li_a}><i className="fal fa-user-plus" style={{ color: '#4DB7FE' }} /> Register</a></li>
                 </ul>
@@ -321,6 +362,7 @@ function LoginPopup(props) {
                             loading={loading}
                             showForgotBox={() => setIsForgot(true)}
                             uiConfig={uiConfig}
+                            isSignIn={isSignIn}
                         />
 
                         {/* TAB REGISTER */}
@@ -346,7 +388,6 @@ function LoginPopup(props) {
                         messageSuccess={messageSuccess}
                         loading={loading}
                     />
-
                 </div>
             </div>
         </div >
@@ -356,7 +397,7 @@ function LoginPopup(props) {
 export default LoginPopup;
 
 function TabLogin(props) {
-    const { tabLogin, handleLogin, loading, showForgotBox, uiConfig } = props;
+    const { tabLogin, handleLogin, loading, showForgotBox, uiConfig, isSignIn } = props;
     return (
         <div id="tab-1" className={tabLogin ? '' : 'current-content'}>
             <div className="k-custom-form" style={custom_form}>
@@ -376,6 +417,7 @@ function TabLogin(props) {
                     {formik => (
                         <form onSubmit={formik.handleSubmit}>
                             <label style={custom_form_label}>Email Address <span>*</span> </label>
+
                             <input
                                 type="text"
                                 {...formik.getFieldProps('email')}
@@ -413,8 +455,11 @@ function TabLogin(props) {
             </div>
 
             {/* LOGIN SOCIAL */}
-            <SocialLogin uiConfig={uiConfig} />
-        </div>
+            <SocialLogin
+                uiConfig={uiConfig}
+                isSignIn={isSignIn}
+            />
+        </div >
     );
 }
 
@@ -429,15 +474,15 @@ function TabRegister(props) {
                         initialValues={{ name: '', email: '', password: '', confirm_password: '' }}
                         validationSchema={
                             Yup.object({
-                                name: Yup.string().required('Name is required').max(255).min(6),
+                                name: Yup.string().required('Name is required').max(255).min(6, 'Name must be at least 6 characters'),
                                 email: Yup.string().email('Invalid email address').required('Email is required').max(255),
                                 password: Yup.string()
-                                    .min(6, 'Must be 6 characters or more')
+                                    .min(6, 'Password must be least 6 characters')
                                     .required('Password is required'),
                                 confirm_password: Yup.string()
-                                    .min(6, 'Vui lòng nhập Xác nhận mật khẩu mới')
+                                    .min(6, 'Confirm password is required')
                                     .required('Confirm password is required')
-                                    .oneOf([Yup.ref('password'), null], 'Xác nhận mật khẩu mới khác với Mật khẩu')
+                                    .oneOf([Yup.ref('password'), null], 'Please make sure your passwords match')
                             })}
                         onSubmit={(values, { resetForm }) => {
                             handleRegister(values, resetForm);
@@ -497,13 +542,14 @@ function TabRegister(props) {
 }
 
 function SocialLogin(props) {
-    const { uiConfig } = props;
+    const { uiConfig, isSignIn } = props;
     return (
         <>
             <div className="k-log-separator fl-wrap" style={{ textAlign: 'center', padding: '20px 0' }}><span style={log_separator_span}>or</span></div>
             <div className="soc-log fl-wrap">
                 <div className='social-login'>
-                    <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />
+                    {!isSignIn && <StyledFirebaseAuth uiConfig={uiConfig} firebaseAuth={firebase.auth()} />}
+
                 </div>
             </div>
 

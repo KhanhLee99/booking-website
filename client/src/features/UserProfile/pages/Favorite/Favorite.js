@@ -5,6 +5,8 @@ import ListListingsLocation from '../../../Listings/components/ListListingsLocat
 import userProfileApi from '../../../../api/userProfileApi';
 import { useSelector } from 'react-redux';
 import NoData from '../../../../components/NoData/NoData';
+import CommonUserProfile from '../../../../components/CommonUserProfile/CommonUserProfile';
+import { UserProfileTab } from '../../../../app/constant';
 
 Favorite.propTypes = {
 
@@ -42,7 +44,9 @@ function Favorite(props) {
     }, []);
 
     return (
-        <div>
+        <CommonUserProfile
+            currentTab={UserProfileTab.FAVORITE}
+        >
             <h3 className='h3_title'>Yêu thích</h3>
             {listings.length > 0 ?
                 <ListListingsLocation
@@ -55,7 +59,7 @@ function Favorite(props) {
                 <NoData />
             }
 
-        </div>
+        </CommonUserProfile>
     );
 }
 

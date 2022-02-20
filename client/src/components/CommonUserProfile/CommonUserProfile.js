@@ -1,17 +1,23 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './CommonUserProfile.scss'
 import { Link } from 'react-router-dom';
 import Header from '../Header';
 import useWindowDimensions from '../../@use/useWindowDimensions';
+import { UserProfileTab } from '../../app/constant';
 
 CommonUserProfile.propTypes = {
 
 };
 
+CommonUserProfile.defaultProps = {
+    currentTab: ''
+}
+
 function CommonUserProfile(props) {
     const { height } = useWindowDimensions();
     const heightSection = height - 100;
+    const { currentTab } = props;
 
     return (
         <div style={{ background: '#f6f6f6' }}>
@@ -27,12 +33,12 @@ function CommonUserProfile(props) {
                             <div className="user-profile-menu-wrap fl-wrap block_box pd-0">
                                 <div className="user-profile-menu no-border">
                                     <ul className="no-list-style">
-                                        <li className='pl-0'><Link to="/me/profile"><i className="fal fa-user-edit" />Thông tin cá nhân</Link></li>
-                                        <li className='pl-0'><Link to="/me/change-password"><i className="fal fa-key" />Thay đổi mật khẩu</Link></li>
-                                        <li className='pl-0'><a href="dashboard-myprofile.html"><i className="fal fa-money-check" />Thanh toán</a></li>
-                                        <li className='pl-0'><Link to="/me/favorite"><i className="fal fa-heart" />Danh sách yêu thích</Link></li>
-                                        <li className='pl-0'><Link to="/me/bookings"><i className="fal fa-calendar-check" />Bookings</Link></li>
-                                        <li className='pl-0'><Link to="/me/inbox"><i className="fal fa-envelope" />Tin nhắn</Link></li>
+                                        <li className='pl-0'><Link to="/me/profile" className={currentTab == UserProfileTab.USER_PROFILE ? 'active' : ''}><i className="fal fa-user-edit" />User Profile</Link></li>
+                                        <li className='pl-0'><Link to="/me/change-password" className={currentTab == UserProfileTab.CHANGE_PASSWORD ? 'active' : ''}><i className="fal fa-key" />Change Password</Link></li>
+                                        {/* <li className='pl-0'><a href="dashboard-myprofile.html"><i className="fal fa-money-check" />Thanh toán</a></li> */}
+                                        <li className='pl-0'><Link to="/me/favorite" className={currentTab == UserProfileTab.FAVORITE ? 'active' : ''}><i className="fal fa-heart" />Favorite</Link></li>
+                                        <li className='pl-0'><Link to="/me/bookings" className={currentTab == UserProfileTab.BOOKINGS ? 'active' : ''}><i className="fal fa-calendar-check" />Bookings</Link></li>
+                                        <li className='pl-0'><Link to="/me/inbox" className={currentTab == UserProfileTab.MESSAGE ? 'active' : ''}><i className="fal fa-envelope" />Message</Link></li>
                                     </ul>
                                 </div>
 

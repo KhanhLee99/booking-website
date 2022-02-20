@@ -11,6 +11,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import css
 import { ReservationStatus } from '../../../../app/constant';
 import { alertConfirm } from '../../../../@helper/alertComfirm';
 import { color_reservation_status, statusText } from '../../../UserProfile/components/UserBookingItem/UserBookingItem';
+import { parseVNDCurrency } from '../../../../@helper/helper';
 
 
 ReservationItem.propTypes = {
@@ -94,7 +95,7 @@ function ReservationItem(props) {
                     <span className='status-text' style={color_reservation_status(reservation.reservation_status_id)}>
                         {statusText(reservation.reservation_status_id)}
                     </span>
-                    <p className='booking-price'>{parseInt(reservation.total_price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }).replace('.', ',')}</p>
+                    <p className='booking-price'>{parseVNDCurrency(reservation.total_price)}</p>
                 </div>
                 <div className="dashboard-message-text" style={{ width: '50%' }}>
                     <Link to={`/listing/${reservation.listing_id}`}>

@@ -18,13 +18,11 @@ class ListingSeeder extends Seeder
 
         $faker = Faker\Factory::create();
 
-        $limit = 20;
+        $limit = 200;
 
-        $this->create_listing($faker, $limit, 1);
-        $this->create_listing($faker, $limit, 2);
-        $this->create_listing($faker, $limit, 3);
-        $this->create_listing($faker, $limit, 4);
-        $this->create_listing($faker, $limit, 5);
+        for ($i = 1; $i <= 63; $i++) {
+            $this->create_listing($faker, $limit, $i);
+        }
     }
 
     function create_listing($faker, $limit, $city_id)
@@ -37,12 +35,12 @@ class ListingSeeder extends Seeder
                 'standard_guest_count' => $faker->numberBetween($min = 2, $max = 10),
                 'listing_type_id' => $faker->numberBetween($min = 1, $max = 7),
                 'city_id' => $city_id,
-                'user_id' => rand(15, 20),
+                'user_id' => rand(210, 500),
                 'bedroom_count' => $faker->numberBetween($min = 1, $max = 5),
                 'bed_count' => $faker->numberBetween($min = 1, $max = 5),
                 'bathroom_count' => $faker->numberBetween($min = 1, $max = 5),
-                'price_per_night_base' => $faker->randomFloat($nbMaxDecimals = NULL, $min = 100000, $max = 200000),
-                'price_per_night_weekend' => $faker->randomFloat($nbMaxDecimals = NULL, $min = 200000, $max = 250000),
+                'price_per_night_base' => $faker->randomFloat($nbMaxDecimals = NULL, $min = 350000, $max = 500000),
+                'price_per_night_weekend' => $faker->randomFloat($nbMaxDecimals = NULL, $min = 500000, $max = 1000000),
                 'avatar_url' => "https://picsum.photos/id/" . rand(1, 1000) . "/400/300",
                 'rental_form' => $faker->randomElement(['entire_place', 'private_room', 'shared_room']),
                 'reservation_form' => $faker->randomElement(['quick', 'request']),

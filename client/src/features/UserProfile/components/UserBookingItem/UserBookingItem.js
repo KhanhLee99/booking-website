@@ -9,6 +9,7 @@ import AddReview from '../../../Listings/components/ListReview/AddReview/AddRevi
 import AvatarPlaceholder from '../../../../components/Placeholder/AvatarPlaceholder/AvatarPlaceholder';
 import { ReservationStatus } from '../../../../app/constant';
 import { alertConfirm } from '../../../../@helper/alertComfirm';
+import { parseVNDCurrency } from '../../../../@helper/helper';
 
 
 UserBookingItem.propTypes = {
@@ -221,7 +222,7 @@ function UserBookingItem(props) {
 
             <div className="dashboard-message user-booking">
                 <div className="k-booking-price">
-                    <p className='booking-price'>{parseInt(reservation.total_price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }).replace('.', ',')}</p>
+                    <p className='booking-price'>{parseVNDCurrency(reservation.total_price)}</p>
                 </div>
 
                 <div className="dashboard-message-text">

@@ -6,6 +6,7 @@ use App\Http\Controllers\Common\NotificationController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Helper\TotalDateController;
 use App\Listing;
+use App\Models\Reservation_Timeline;
 use Illuminate\Http\Request;
 use Exception;
 use App\Reservation;
@@ -257,9 +258,15 @@ class ReservationController extends Controller
     public function edit_status(Request $request, $id)
     {
         try {
+            $user_current = $request->user('api');
             $reservation = Reservation::find($id);
             if ($reservation) {
                 $reservation->update(['reservation_status_id' => $request->reservation_status_id]);
+                Reservation_Timeline::create([
+                    'reservation_id' => $id,
+                    'reservation_status_id' =>$request->reservation_status_id,
+                    'user_id' => $user_current->id,
+                ]);
                 $this->notificationController->send_notify_edit_status($request->reservation_status_id, $reservation);
                 $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
