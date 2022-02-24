@@ -46,37 +46,37 @@ class AuthController extends Controller
 
     public function login_google(Request $request)
     {
-        return $this->check_google($request->social_token);
+        return $this->check_google($request->social_token, $request->role);
     }
 
     public function login_facebook(Request $request)
     {
-        return $this->checkFacebook($request->social_token);
+        return $this->checkFacebook($request->social_token, $request->role);
     }
 
-    public function check_google($social_token)
+    public function check_google($social_token, $role)
     {
         try {
             $verifiedIdToken = $this->auth->verifyIdToken($social_token);
             $uid = $verifiedIdToken->getClaim('sub');
-            return $this->check_user_UID($uid);
+            return $this->check_user_UID($uid, $role);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()], 401);
         }
     }
 
-    public function checkFacebook($social_token)
+    public function checkFacebook($social_token, $role)
     {
         try {
             $verifiedIdToken = $this->auth->verifyIdToken($social_token);
             $uid = $verifiedIdToken->getClaim('sub');
-            return $this->check_user_UID($uid);
+            return $this->check_user_UID($uid, $role);
         } catch (\Exception $e) {
             return response()->json(['message' => $e->getMessage()]);
         }
     }
 
-    private function check_user_UID($uid)
+    private function check_user_UID($uid, $role)
     {
         $user = User::where('firebaseUID', $uid)->first();
         if (!$user) {
@@ -90,10 +90,15 @@ class AuthController extends Controller
                     'phone_number' => $user_information->phoneNumber,
                     'firebaseUID' => $user_information->uid,
                     'avatar_url' => $user_information->photoUrl,
+                    'role_id' => $role,
                 ]);
             } else {
                 return response()->json(['message' => 'Email already exists'], 401);
             }
+        }
+        if ($user->role_id == 3) {
+            $user->role_id = 2;
+            $user->save();
         }
         $token = $user->createToken('Personal Access Client')->accessToken;
         return response()->json([

@@ -17,11 +17,19 @@ import LoginModal from '../../../../components/LoginModal/LoginModal';
 import Loading from '../../../../components/Loading/Loading';
 import adminPaymentApi from '../../../../api/adminPaymentApi';
 
-var fx = require('money');
-
 Booking.propTypes = {
 
 };
+
+export const h2_header = {
+    textAlign: 'left',
+    fontWeight: 600,
+    fontSize: '18px',
+    float: 'left',
+    color: '#566985',
+    margin: 0,
+    padding: 0,
+}
 
 export const CURRENT_FORM = {
     BOOKING_INFO: 'booking',
@@ -44,7 +52,7 @@ function Booking(props) {
     const [activePayment, setActivePayment] = useState(false);
     const [activeConfirm, setActiveConfirm] = useState(false);
     const [currentForm, setCurrentForm] = useState(CURRENT_FORM.BOOKING_INFO);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
 
     const handlePay = async () => {
@@ -52,8 +60,8 @@ function Booking(props) {
             checkin_date: query.get('checkin'),
             checkout_date: query.get('checkout'),
             total_price: totalPrice.total_price,
-            adult_count: 1,
-            child_count: 0,
+            adult_count: query.get('adults'),
+            child_count: query.get('childrens'),
             reservation_status_id: 3, // 3: Paid
             guest_id: loggedInUser.id,
             listing_id: id
@@ -94,6 +102,12 @@ function Booking(props) {
         }
     }
 
+    const defaultValueGuests = (adults, childrens) => {
+        let s = adults + ' adults ';
+        s += childrens > 0 ? '- ' + childrens + ' childrens' : '';
+        return s;
+    }
+
     useEffect(() => {
         const getListing = async () => {
             await listingApi.getBaseInfoListing(id).then(res => {
@@ -111,6 +125,7 @@ function Booking(props) {
                 }
                 await reservationApi.countTotalPrice(params).then(res => {
                     setTotalPrice(res.data.data);
+                    setLoading(false);
                 })
             } catch (err) {
                 console.log(err.message);
@@ -119,6 +134,7 @@ function Booking(props) {
 
         getListing();
         countPrice();
+
         return () => {
 
         }
@@ -131,9 +147,10 @@ function Booking(props) {
             <Header />
 
             <div className="container" style={{ marginTop: '150px' }}>
-                <div className="booking_form fl-wrap" style={{ float: 'left', position: 'relative' }}>
-                    <h2>Booking form for : <span>{listing.name}</span></h2>
+                <div className="breadcrumbs inline-breadcrumbs fl-wrap block-breadcrumbs">
+                    <h2 style={h2_header}>Booking form for : <span style={{ color: '#4DB7FE' }}>{listing.name}</span></h2>
                 </div>
+
                 <div className="fl-wrap">
                     <div className="row">
                         <div className="col-lg-8 col-md-8 padding-right-30">
@@ -158,12 +175,15 @@ function Booking(props) {
                                     <div className="profile-edit-container">
                                         <div className="_custom_form">
                                             {totalPrice && <BookingInfo
+                                                adults={query.get('adults')}
+                                                childrens={query.get('childrens')}
                                                 checkin_date={query.get('checkin')}
                                                 checkout_date={query.get('checkout')}
                                                 isLoggedIn={isLoggedIn}
                                                 bookingFormSubmit={() => { setActivePersonalInfo(true); setCurrentForm(CURRENT_FORM.PERSONAL_INFO) }}
                                                 currentForm={currentForm}
                                                 nights={totalPrice.nights}
+                                                defaultValueGuests={defaultValueGuests}
                                             />}
 
                                             <PersonalInfo
@@ -199,6 +219,9 @@ function Booking(props) {
                                 avatar_url={listing.avatar_url}
                                 street_address={listing.street_address}
                                 name={listing.name}
+                                checkin_date={query.get('checkin')}
+                                checkout_date={query.get('checkout')}
+                                defaultValueGuests={defaultValueGuests(query.get('adults'), query.get('childrens'))}
                             />}
 
                         </div>
@@ -220,7 +243,8 @@ BookingInfo.defaultProps = {
 }
 
 export function BookingInfo(props) {
-    const { checkin_date, checkout_date, nights, isLoggedIn, bookingFormSubmit, currentForm } = props;
+    const { adults, childrens, checkin_date, checkout_date, nights, isLoggedIn, bookingFormSubmit, currentForm, defaultValueGuests } = props;
+
     return (
         <fieldset className="fl-wrap" style={{ display: currentForm == CURRENT_FORM.BOOKING_INFO ? 'block' : 'none' }}>
             <div className="list-single-main-item-title fl-wrap">
@@ -230,7 +254,7 @@ export function BookingInfo(props) {
             <div className="row">
                 <div className="col-sm-6">
                     <label className="vis-label">Guests <i className="far fa-user" /></label>
-                    <input type="text" defaultValue={'1 guests'} disabled style={{ height: 51 }} />
+                    <input type="text" defaultValue={defaultValueGuests(adults, childrens)} disabled style={{ height: 51 }} />
                 </div>
                 <div className="col-sm-6">
                     <label className="vis-label">Nights <i className="far fa-moon" /></label>
@@ -247,10 +271,10 @@ export function BookingInfo(props) {
                     <input type="text" defaultValue={checkout_date} disabled style={{ height: 51 }} />
                 </div>
 
-                <div className="col-sm-12">
+                {/* <div className="col-sm-12">
                     <label className="vis-label">Mã khuyến mãi <i className="far fa-user" /></label>
-                    <input type="text" defaultValue={'1 guests'} style={{height: 51}}/>
-                </div>
+                    <input type="text" defaultValue={'1 guests'} style={{ height: 51 }} />
+                </div> */}
             </div>
 
             <span className="fw-separator" />
@@ -276,17 +300,17 @@ export function PersonalInfo(props) {
             <div className="row">
                 <div className="col-sm-12">
                     <label className="vis-label">Full Name <i className="far fa-user" /></label>
-                    <input type="text" placeholder="Your Name" defaultValue={loggedInUser.name} disabled style={{height: 51}}/>
+                    <input type="text" placeholder="Your Name" defaultValue={loggedInUser.name} disabled style={{ height: 51 }} />
                 </div>
 
                 <div className="col-sm-6">
                     <label className="vis-label">Email Address<i className="far fa-envelope" /></label>
-                    <input type="text" placeholder="yourmail@domain.com" defaultValue={loggedInUser.email} disabled style={{height: 51}}/>
+                    <input type="text" placeholder="yourmail@domain.com" defaultValue={loggedInUser.email} disabled style={{ height: 51 }} />
                 </div>
 
                 <div className="col-sm-6">
                     <label className="vis-label">Phone<i className="far fa-phone" /></label>
-                    <input type="text" placeholder={'Your Phone Number'} defaultValue={loggedInUser.phone_number}style={{height: 51}} />
+                    <input type="text" placeholder={'Your Phone Number'} defaultValue={loggedInUser.phone_number} style={{ height: 51 }} />
                 </div>
             </div>
 
@@ -345,47 +369,68 @@ export function Confirmation(props) {
 
 export function LeftSide(props) {
 
-    const { total_price, rental_price, nights, id, avatar_url, street_address, name } = props;
+    const { total_price, rental_price, nights, id, avatar_url, street_address, name, defaultValueGuests, checkin_date, checkout_date, } = props;
 
     return (
-        <div id="booking-widget-anchor" className="boxed-widget booking-widget" style={{ padding: '18px' }}>
-            <div className="with-forms">
-                <div className="checkup__header">
-                    <div className="cart-booking-header">
-                        <Link to={`/listing/${id}`} className="widget-posts-img"><img src={avatar_url} alt="" /></Link>
-                        <div className="widget-posts-descr">
-                            <h4><Link to={`/listing/${id}`}>{name}</Link></h4>
-                            <div className="geodir-category-location fl-wrap"><a href="#">{street_address}</a></div>
-                            <div className="widget-posts-descr-link"><a href="listing.html">Restaurants </a></div>
+        <>
+            <div className="cart-details-item-header">
+                <h3> Your Booking</h3>
+            </div>
+            <div id="booking-widget-anchor" className="boxed-widget booking-widget" style={{ padding: '18px 18px 0' }}>
+                <div className="with-forms">
+                    <div className="checkup__header">
+                        <div className="cart-booking-header">
+                            <Link to={`/listing/${id}`} className="widget-posts-img"><img src={avatar_url} alt="" /></Link>
+                            <div className="widget-posts-descr">
+                                <h4><Link to={`/listing/${id}`}>{name}</Link></h4>
+                                <div className="geodir-category-location fl-wrap"><a href="#">{street_address}</a></div>
+                                <div className="widget-posts-descr-link"><a href="listing.html">Restaurants </a></div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div>
-                    <div className="checkup__price fadeIn border-1">
-                        <div className="is-flex middle-xs between-xs cart-list">
-                            <div className="is-flex align-center">
-                                <span className="pr--6">Giá thuê {nights ? ` ${nights}` : 1} night</span>
-                            </div>
-                            <span>{rental_price ? parseVNDCurrency(rental_price) : ''}</span>
-                        </div>
+                    <div>
+                        <div className="checkup__price fadeIn border-1">
 
-                        <div className="is-flex middle-xs between-xs cart-list">
-                            <div className="is-relative">
-                                <span>Phí dịch vụ</span>
+                            <div className="is-flex middle-xs between-xs cart-list">
+                                <div className="is-relative">
+                                    <span>Checkin date</span>
+                                </div>
+                                <span>{checkin_date}</span>
                             </div>
-                            <span>102,000₫</span>
-                        </div>
 
-                        <div className="is-flex middle-xs between-xs cart-list">
-                            <div>
-                                <span className="extra-bold">Tổng tiền</span>
+                            <div className="is-flex middle-xs between-xs cart-list">
+                                <div className="is-relative">
+                                    <span>Checkout date</span>
+                                </div>
+                                <span>{checkout_date}</span>
                             </div>
-                            <span className="extra-bold">{total_price ? parseVNDCurrency(total_price) : ''}</span>
+
+                            <div className="is-flex middle-xs between-xs cart-list">
+                                <div className="is-relative">
+                                    <span>Guest</span>
+                                </div>
+                                <span>{defaultValueGuests}</span>
+                            </div>
+
+                            <div className="is-flex middle-xs between-xs cart-list">
+                                <div className="is-flex align-center">
+                                    <span className="pr--6">Giá thuê {nights ? ` ${nights}` : 1} night</span>
+                                </div>
+                                <span>{rental_price ? parseVNDCurrency(rental_price) : ''}</span>
+                            </div>
+
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <div className="cart-total color2-bg fl-wrap">
+                <span className="cart-total_item_title">Total Cost</span>
+                <strong>{total_price ? parseVNDCurrency(total_price) : ''}</strong>
+            </div>
+        </>
+
+
+
     );
 }

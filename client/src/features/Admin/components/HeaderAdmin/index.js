@@ -11,6 +11,7 @@ import { header_user_menu_ul_li_a } from '../../../Host/components/HeaderHost';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import LoginModal from '../../../../components/LoginModal/LoginModal';
 import Logo from '../../../../assets/bookingdo/image/logos/fun-trip-logo.png'
+import { refreshPage } from '../../../../@helper/helper';
 
 HeaderAdmin.propTypes = {
 
@@ -39,10 +40,6 @@ function HeaderAdmin(props) {
         await dispatch(deleteDeviceToken()).then(() => {
             refreshPage();
         })
-    }
-
-    const refreshPage = () => {
-        window.location.reload();
     }
 
     const handleClickBell = () => {

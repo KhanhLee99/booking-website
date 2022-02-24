@@ -99,6 +99,7 @@ function BoxBooking(props) {
     const handleChangeDebut = range => {
         const startDate = range[0].format("YYYY/MM/DD");
         const endDate = range[1].format("YYYY/MM/DD");
+        console.log(startDate, endDate);
         history.push(`/listing/${listingDetail.id}?checkin=${startDate.replaceAll('/', '-')}&checkout=${endDate.replaceAll('/', '-')}`);
         setCheckin(startDate);
         setCheckout(endDate);
@@ -107,7 +108,7 @@ function BoxBooking(props) {
     const handleBooking = (e) => {
         e.preventDefault();
         if (totalPrice) {
-            history.push(`/host/checkout/${listingDetail.id}?checkin=${checkin.replaceAll('/', '-')}&checkout=${checkout.replaceAll('/', '-')}&guests=${adults + childrens}`);
+            history.push(`/host/checkout/${listingDetail.id}?checkin=${checkin.replaceAll('/', '-')}&checkout=${checkout.replaceAll('/', '-')}&adults=${adults}&childrens=${childrens}`);
         }
     }
 
@@ -139,9 +140,26 @@ function BoxBooking(props) {
         }
     }
 
+    // in out null
+    // loading neu co 1 trong 2 in hoac out
+    // neu ca in out khac null - nhap in => out null
+    // --------------------------nhap out => in null
+
     useEffect(() => {
-        countPrice();
-    }, [checkin, checkout]);
+        var checkin_date = moment(checkin, "YYYY-MM-DD hh:mm:ss");
+        var checkout_date = moment(checkout, "YYYY-MM-DD hh:mm:ss");
+        if (checkout_date.isAfter(checkin_date)) {
+            countPrice();
+        } else {
+            // alert('sai', () => {
+            //     console.log('sf')
+            // });
+        }
+    }, [checkin]);
+
+    useEffect(() => {
+
+    }, [checkout]);
 
     useEffect(() => {
         if (adults === 1 && childrens === 0) {
@@ -282,15 +300,15 @@ function TotalPrice(props) {
                     </div>
                     <span>{parseVNDCurrency(rentalPrice)}</span>
                 </div>
-                <div className="is-flex middle-xs between-xs cart-list">
+                {/* <div className="is-flex middle-xs between-xs cart-list">
                     <div className="is-relative">
                         <span>Phí dịch vụ</span>
                     </div>
                     <span>{servicePrice}</span>
-                </div>
+                </div> */}
                 <div className="is-flex middle-xs between-xs cart-list">
                     <div>
-                        <span className="extra-bold">Tổng tiền</span>
+                        <span className="extra-bold">Total cost</span>
                     </div>
                     <span className="extra-bold">{parseVNDCurrency(totalPrice)}</span>
                 </div>

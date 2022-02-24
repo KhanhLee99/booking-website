@@ -16,6 +16,7 @@ import userApi from '../../../../api/userApi';
 import PulseLoading from '../../../../components/Loading/PulseLoading';
 import './HostLogin.scss';
 import useWindowDimensions from '../../../../@use/useWindowDimensions';
+import { refreshPage } from '../../../../@helper/helper';
 
 // HostLogin.propTypes = {
 
@@ -323,10 +324,6 @@ function HostLogin(props) {
         } catch (err) {
             console.log(err.message);
         }
-    }
-
-    const refreshPage = () => {
-        window.location.reload();
     }
 
     const { close } = props;

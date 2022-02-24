@@ -14,6 +14,7 @@ import Skeleton from 'react-loading-skeleton'
 import 'react-loading-skeleton/dist/skeleton.css'
 import { header_user_menu_ul_li_a } from '../../features/Host/components/HeaderHost';
 import Logo from '../../assets/bookingdo/image/logos/fun-trip-logo.png';
+import { refreshPage } from '../../@helper/helper';
 
 
 export const main_header = {
@@ -221,10 +222,6 @@ function Header(props) {
         })
     }
 
-    const refreshPage = () => {
-        window.location.reload();
-    }
-
     const handleClickBell = () => {
         setShowPopupNotify(!showPopupNotify);
         if (totalNotiUnread > 0) {
@@ -264,7 +261,14 @@ function Header(props) {
     return (
 
         <header className="k-main-header" style={main_header}>
-            <Link to="/" className="k-logo-holder" style={logo_holder}><img src={Logo} alt="" style={{ width: 'auto', height: '45px', width: '55px', background: '#fff', borderRadius: 8 }} /></Link>
+            <Link to="/" className="k-logo-holder" style={logo_holder}><img src={Logo} alt="" style={{
+                width: 'auto',
+                height: '45px',
+                width: '55px',
+                background: '#fff',
+                borderRadius: 8,
+                // boxShadow: 'rgb(255 255 255 / 20%) 0px 0px 0px 2px',
+            }} /></Link>
 
             <OutsideAlerter closePopup={() => setShowPopupSearch(false)} ref={refSearch}>
                 <div

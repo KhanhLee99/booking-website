@@ -130,6 +130,8 @@ class AdminDashboardController extends Controller
         return $total;
     }
 
+
+
     // public function monthlyRegisteredUsers()
     // {
     //     $counts = User::select(DB::raw('MONTH(created_at) month, count(*) as count'))

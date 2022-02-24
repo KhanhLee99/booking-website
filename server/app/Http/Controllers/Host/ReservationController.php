@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Host;
 
 use App\Http\Controllers\Common\NotificationController;
+use App\Http\Controllers\Common\ReservationTimelineController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Helper\TotalDateController;
 use App\Listing;
@@ -28,6 +29,7 @@ class ReservationController extends Controller
     {
         $this->totalDateController = new TotalDateController();
         $this->notificationController = new NotificationController();
+        $this->reservationTimelineController = new ReservationTimelineController();
     }
 
     public function get_host_booking(Request $request, $host_id)
@@ -203,6 +205,7 @@ class ReservationController extends Controller
             $reservation = Reservation::find($id);
             if ($reservation) {
                 $reservation->update($request->all());
+                $this->reservationTimelineController->add();
                 $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
             }
@@ -264,7 +267,7 @@ class ReservationController extends Controller
                 $reservation->update(['reservation_status_id' => $request->reservation_status_id]);
                 Reservation_Timeline::create([
                     'reservation_id' => $id,
-                    'reservation_status_id' =>$request->reservation_status_id,
+                    'reservation_status_id' => $request->reservation_status_id,
                     'user_id' => $user_current->id,
                 ]);
                 $this->notificationController->send_notify_edit_status($request->reservation_status_id, $reservation);

@@ -216,6 +216,10 @@ Route::get('admin/dashboard/overview', 'Admin\AdminDashboardController@index');
 Route::get('admin/dashboard/chart', 'Admin\AdminDashboardController@get_chart_data');
 
 
+// Host Dashboard
+Route::get('host/dashboard/overview', 'Host\HostDashboardController@overview');
+
+
 //admin Payment
 Route::post('admin/payment/add', 'Admin\AdminPaymentController@add');
 Route::get('admin/payment', 'Admin\AdminPaymentController@index');

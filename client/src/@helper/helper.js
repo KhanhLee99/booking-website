@@ -19,3 +19,7 @@ export const getDaysArray = function (start, end) {
 export const parseVNDCurrency = (price) => {
     return parseInt(price).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' }).replaceAll('.', ',');
 }
+
+export const refreshPage = () => {
+    window.location.reload();
+}

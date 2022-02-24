@@ -152,7 +152,9 @@ class ListingController extends Controller
         try {
             $user = $request->user('api');
             $status = $request->status;
-            $query = DB::table('listing')->join('listing_type', 'listing.listing_type_id', '=', 'listing_type.id')->where('listing.user_id', $user->id)
+            $query = DB::table('listing')
+                ->whereNull('deleted_at')
+                ->join('listing_type', 'listing.listing_type_id', '=', 'listing_type.id')->where('listing.user_id', $user->id)
                 ->where('status', '!=', 'block_activity');
             // $query = User::find($user->id)->Listings();
             switch ($status) {

@@ -13,6 +13,7 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { red } from '@material-ui/core/colors';
 import { HostTab } from '../../../../app/constant';
 import Logo from '../../../../assets/bookingdo/image/logos/fun-trip-logo.png'
+import { refreshPage } from '../../../../@helper/helper';
 
 HeaderHost.propTypes = {
 
@@ -117,10 +118,6 @@ function HeaderHost(props) {
     const handleClickBell = () => {
         setShowPopupNotify(!showPopupNotify);
         dispatch(seenNotifications());
-    }
-
-    const refreshPage = () => {
-        window.location.reload();
     }
 
     const loadMoreData = async () => {
@@ -393,11 +390,7 @@ export function HeaderAddListing(props) {
             refreshPage();
         })
     }
-
-    const refreshPage = () => {
-        window.location.reload();
-    }
-
+    
     return (
         <header className="k-main-header relative" style={main_header}>
             <Link to="/" className="k-logo-holder" style={logo_holder}><img src={Logo} alt="" style={{ width: 'auto', height: '45px', width: '55px', background: '#fff', borderRadius: 8 }} /></Link>

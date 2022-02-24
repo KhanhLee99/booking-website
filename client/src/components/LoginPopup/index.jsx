@@ -17,6 +17,8 @@ import { Spinner } from 'react-bootstrap';
 import { Input } from 'reactstrap';
 import Loading from '../Loading/Loading';
 import { useSnackbar } from 'notistack';
+import { refreshPage } from '../../@helper/helper';
+import { ROLE } from '../../app/constant';
 
 LoginPopup.propTypes = {
 
@@ -235,7 +237,8 @@ function LoginPopup(props) {
     const handleSocialLogin = async (token, signInMethod) => {
         try {
             const params = {
-                social_token: token
+                social_token: token,
+                role: ROLE.USER.id
             }
             // const actionResult = dispatch((signInMethod === 'google.com') ? loginGoogle(params) : loginFacebook(params));
             // const currentUser = unwrapResult(actionResult).then(() => {
@@ -280,12 +283,12 @@ function LoginPopup(props) {
                     setLoading(false);
                     refreshPage();
                 }).catch(err => {
-                    setLoading(false);
                 });
             });
             resetForm();
         } catch (err) {
             console.log(err.message)
+            enqueueSnackbar('Your login attempt was not successful. Please try again.', { variant: "error" });
             setLoading(false);
         }
     }
@@ -320,10 +323,6 @@ function LoginPopup(props) {
         } catch (err) {
             console.log(err.message);
         }
-    }
-
-    const refreshPage = () => {
-        window.location.reload();
     }
 
     const { close } = props;
@@ -584,6 +583,9 @@ function ForgotForm(props) {
                                 {...formik.getFieldProps('email')}
                                 style={custom_form_input}
                             />
+                            {formik.touched.email && formik.errors.email ? (
+                                <label className='custom_form_label' style={errorLogin}>{formik.errors.email}</label>
+                            ) : null}
                         </div>
                         {messageSuccess && <p>{messageSuccess}</p>}
                         <div className="">

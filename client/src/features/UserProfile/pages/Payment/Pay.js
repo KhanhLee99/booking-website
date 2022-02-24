@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './Pay.scss';
 import { useHistory, useParams } from 'react-router-dom';
 import reservationApi from '../../../../api/reservationApi';
-import { BookingInfo, Confirmation, CURRENT_FORM, LeftSide, Payment } from '../../../Listings/components/Booking';
+import { BookingInfo, Confirmation, CURRENT_FORM, h2_header, LeftSide, Payment } from '../../../Listings/components/Booking';
 import Loading from '../../../../components/Loading/Loading';
 import Header from '../../../../components/Header';
 import { useSelector } from 'react-redux';
@@ -24,7 +24,7 @@ function Pay(props) {
     const isLoggedIn = !!loggedInUser.id;
 
     const [reservation, setReservation] = useState({});
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const [activeBookingInfo] = useState(true);
     const [currentForm, setCurrentForm] = useState(CURRENT_FORM.BOOKING_INFO);
@@ -50,6 +50,12 @@ function Pay(props) {
             console.log(err.message);
         }
 
+    }
+
+    const defaultValueGuests = (adults, childrens) => {
+        let s = adults + ' adults ';
+        s += childrens > 0 ? '- ' + childrens + ' childrens' : '';
+        return s;
     }
 
     useEffect(() => {
@@ -91,8 +97,8 @@ function Pay(props) {
             <Header />
 
             <div className="container" style={{ marginTop: '150px' }}>
-                <div className="booking_form fl-wrap" style={{ float: 'left', position: 'relative' }}>
-                    <h2>Booking form for : <span>{reservation.listing_name}</span></h2>
+                <div className="breadcrumbs inline-breadcrumbs fl-wrap block-breadcrumbs">
+                    <h2 style={h2_header}>Booking form for : <span style={{ color: '#4DB7FE' }}>{reservation.listing_name}</span></h2>
                 </div>
                 <div className="fl-wrap">
                     <div className="row">
@@ -108,14 +114,16 @@ function Pay(props) {
                                     <div className="profile-edit-container">
                                         <div className="_custom_form">
                                             {(reservation && totalPrice) && <BookingInfo
-                                                checkin_date={reservation.checkin_date}
-                                                checkout_date={reservation.checkout_date}
+                                                adults={reservation.adult_count}
+                                                childrens={reservation.child_count}
+                                                checkin_date={reservation.checkin_date.split(' ')[0]}
+                                                checkout_date={reservation.checkout_date.split(' ')[0]}
                                                 nights={totalPrice.nights}
                                                 isLoggedIn={isLoggedIn}
                                                 bookingFormSubmit={() => { setActivePayment(true); setCurrentForm(CURRENT_FORM.PAYMENT) }}
                                                 currentForm={currentForm}
+                                                defaultValueGuests={defaultValueGuests}
                                             />
-
                                             }
 
                                             {reservation && <Payment
@@ -143,6 +151,9 @@ function Pay(props) {
                                 avatar_url={reservation.thumb_img}
                                 street_address={reservation.street_address}
                                 name={reservation.listing_name}
+                                checkin_date={reservation.checkin_date.split(' ')[0]}
+                                checkout_date={reservation.checkout_date.split(' ')[0]}
+                                defaultValueGuests={defaultValueGuests(reservation.adult_count, reservation.child_count)}
                             />}
 
                         </div>

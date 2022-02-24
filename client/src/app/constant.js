@@ -62,3 +62,9 @@ export const listing_types = [
     { id: 6, name: 'Căn hộ dịch vụ', value: 'type-6', badge: 'badge badge-info' },
     { id: 7, name: 'Nhà tập thể/ Cư xá', value: 'type-7', badge: 'badge badge-dark' },
 ];
+
+export const ROLE = {
+    USER: { id: 3, name: 'User' },
+    HOST: { id: 2, name: 'Host' },
+    ADMIN: { id: 1, name: 'Admin' },
+};
