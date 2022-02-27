@@ -104,3 +104,82 @@ hr {
 #booking-widget-anchor .with-forms input {
     margin-bottom: 0;
 }
+
+.box-widget-item-header {
+    position: relative;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    padding: 18px 20px;
+    border-radius: 10px 10px 0 0;
+
+    & h3 {
+        text-align: left;
+        font-size: 15px;
+        font-weight: 600;
+        color: #566985;
+        font-family: "Nunito", sans-serif;
+        margin-bottom: 0 !important;
+    }
+}
+
+.bwc-nopad {
+    padding: 25px px 0 0;
+}
+
+.box-widget-content {
+    float: left;
+    width: 100%;
+    position: relative;
+    // padding: 25px 30px 30px;
+
+    & .list-author-widget-contacts.list-item-widget-contacts {
+        margin-top: 0;
+        border-bottom: 0;
+        padding-bottom: 0;
+        float: left;
+        width: 100%;
+
+        & ul {
+            padding-left: 0 !important;
+        }
+
+        & li:last-child {
+            border-bottom: none;
+        }
+
+        & li {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+            padding-top: 15px;
+            float: left;
+            width: 100%;
+            // margin-bottom: 15px;
+
+            & span {
+                min-width: 80px;
+                float: left;
+                text-align: left;
+                font-weight: 500;
+
+                & i {
+                    color: #4db7fe;
+                    margin-right: 7px;
+                    font-size: 14px;
+                }
+            }
+
+            & a {
+                margin-left: 10px;
+                color: #878c9f;
+                float: left;
+                text-align: left;
+                font-weight: 500;
+            }
+        }
+    }
+
+    & .bwc-padside {
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}

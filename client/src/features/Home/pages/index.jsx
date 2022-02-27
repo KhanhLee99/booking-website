@@ -30,26 +30,46 @@ function Home(props) {
     const isLoggedIn = !!loggedInUser.id;
     const [loading, setLoading] = useState(true);
     const [citiesOption, setCitiesOption] = useState([]);
+    const [listingType, setListingType] = useState([]);
 
     useEffect(() => {
+        const fetchListingType = async () => {
+            try {
+                await listingApi.getOptionListingType().then(res => {
+                    setListingType(res.data.data);
+                })
+            } catch (err) {
+                console.log(err.message);
+                setLoading(false);
+            }
+        }
+
         const fetchAllCity = async () => {
             try {
                 await listingApi.getCity().then(res => {
                     setCitiesOption(res.data.data);
-                    setLoading(false);
+
                 })
             } catch (err) {
                 console.log(err.message);
+                setLoading(false);
             }
         }
-
+        fetchListingType();
         fetchAllCity();
         window.scrollTo(0, 0);
 
         return () => {
             setCitiesOption([]);
+            setListingType([]);
         }
     }, []);
+
+    useEffect(() => {
+        if (citiesOption.length > 0 && listingType.length > 0) {
+            setLoading(false);
+        }
+    }, [citiesOption, listingType]);
 
     return (
         <div>
@@ -61,6 +81,7 @@ function Home(props) {
                 />
             </div>
             <MainSearch
+                listingType={listingType}
                 options={citiesOption}
                 customStyles={customStyles}
             />

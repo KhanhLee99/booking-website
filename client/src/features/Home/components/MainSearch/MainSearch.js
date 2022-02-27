@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import TestSlice from '../../../../components/Test/TestSlice';
 import './MainSearch.scss';
@@ -7,6 +7,7 @@ import { DatePicker } from 'antd';
 import Select from 'react-select';
 import { useHistory } from 'react-router-dom';
 import moment from 'moment';
+import Typed from "typed.js";
 
 
 MainSearch.propTypes = {
@@ -19,11 +20,12 @@ function MainSearch(props) {
 
     const history = useHistory();
 
-    const { customStyles, options } = props;
+    const { customStyles, options, listingType } = props;
 
     const [checkin, setCheckin] = useState(null);
     const [checkout, setCheckout] = useState(null);
     const [city_id, set_city_id] = useState();
+    const [listing_type, set_listing_type] = useState([]);
 
     const disabledDate = current => {
         if (current && current < moment().endOf('day')) return true;
@@ -39,12 +41,49 @@ function MainSearch(props) {
     }
 
     const handleSearch = () => {
-        if (checkin && checkout) {
-            history.push(`/location/${city_id}?checkin_date=${checkin.replaceAll('/', '-')}&checkout_date=${checkout.replaceAll('/', '-')}`);
+        if (city_id) {
+            let searchParams = '';
+            let tmpStr = '';
+            if (listing_type.length > 0) {
+                listing_type.map(item => tmpStr += `&pt=${item}`);
+            }
+            if (checkin && checkout && listing_type.length > 0) {
+                searchParams += `?checkin_date=${checkin.replaceAll('/', '-')}&checkout_date=${checkout.replaceAll('/', '-')}${tmpStr}`;
+                history.push(`/location/${city_id}${searchParams}`);
+            } else if (checkin && checkout) {
+                searchParams += `?checkin_date=${checkin.replaceAll('/', '-')}&checkout_date=${checkout.replaceAll('/', '-')}`;
+                history.push(`/location/${city_id}${searchParams}`);
+            } else if (listing_type.length > 0) {
+                history.push(`/location/${city_id}/?checkin_date&checkout_date${tmpStr}`)
+            } else {
+                history.push(`/location/${city_id}`);
+            }
         } else {
-            history.push(`/location/${city_id}`);
+            alert('Select Location');
         }
     }
+    const el = useRef(null);
+
+    useEffect(() => {
+        var typed = new Typed(el.current, {
+            strings: ["Homestays", "Apartments", "Hotels"],
+            typeSpeed: 80,
+            backSpeed: 80,
+            backDelay: 4000,
+            startDelay: 1000,
+            loop: true,
+            showCursor: true
+        });
+        //     startDelay: 300,
+        //     typeSpeed: 100,
+        //     backSpeed: 100,
+        //     backDelay: 100
+
+        // Destropying
+        return () => {
+            typed.destroy();
+        };
+    }, []);
 
     return (
         <div className="main-search-container plain-color fl-wrap">
@@ -62,8 +101,9 @@ function MainSearch(props) {
                                     fontFamily: "'Raleway', sans-serif",
                                     zIndex: 6,
                                 }}>
-                                    Find HomeStay
-                                    <span className="typed-words" />
+                                    Find Best
+                                    <span> </span>
+                                    <span className="typed-words" ref={el} />
                                 </h2>
                                 <h4 style={{
                                     color: '#fff',
@@ -83,16 +123,21 @@ function MainSearch(props) {
                             >
                                 <div style={input_wrap}>
                                     <Select
-                                        options={options}
-                                        name="color"
+                                        isMulti
+                                        isSearchable={false}
+                                        options={listingType}
+                                        name="listing_type"
                                         styles={customStyles}
                                         placeholder='What are you looking for?'
+                                        onChange={option => {
+                                            set_listing_type(option.map(item => item.value));
+                                        }}
                                     />
                                 </div>
                                 <div style={input_wrap}>
                                     <Select
                                         options={options}
-                                        name="color"
+                                        name="city"
                                         styles={customStyles}
                                         placeholder='Location'
                                         onChange={option => set_city_id(option.value)}

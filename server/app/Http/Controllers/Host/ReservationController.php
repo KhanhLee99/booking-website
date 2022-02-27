@@ -187,9 +187,9 @@ class ReservationController extends Controller
     {
         try {
             if (Reservation::create($request->all())) {
-                $this->response['status'] = 'success';
                 $this->notificationController->send_notify_user_booking($request->guest_id, $request->listing_id);
                 $this->notificationController->send_notify_booking_success($request->guest_id, $request->listing_id);
+                $this->response['status'] = 'success';
                 return response()->json($this->response, $this->success_code);
             }
             return response()->json($this->response, 400);

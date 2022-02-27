@@ -28,7 +28,8 @@ class ListingTypeController extends Controller
         }
     }
 
-    public function index() {
+    public function index()
+    {
         try {
             $listing_types = Listing_Type::get();
             if ($listing_types) {
@@ -36,10 +37,26 @@ class ListingTypeController extends Controller
                 $this->response['data'] = $listing_types;
                 return response()->json($this->response, $this->success_code);
             }
-            return response()->json($this->response);
+            return response()->json($this->response, 400);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
-            return response()->json($this->response);
+            return response()->json($this->response, 400);
+        }
+    }
+
+    public function get_option_listing_type()
+    {
+        try {
+            $listing_types = Listing_Type::select('id as value', 'name as label')->get();
+            if ($listing_types) {
+                $this->response['status'] = 'success';
+                $this->response['data'] = $listing_types;
+                return response()->json($this->response, $this->success_code);
+            }
+            return response()->json($this->response, 400);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response, 400);
         }
     }
 }

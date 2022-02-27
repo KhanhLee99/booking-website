@@ -209,71 +209,106 @@ function BoxBooking(props) {
         <div className="col-lg-4 col-md-4 margin-top-75 sticky" >
             {
                 loadingListingDetail ? <Skeleton height={300} borderRadius={12} /> :
-                    <div id="booking-widget-anchor" className="boxed-widget booking-widget">
-                        <span style={{ marginBottom: "20px" }}>
-                            <span style={{
-                                fontSize: "30px",
-                                fontWeight: "600",
-                                fontFamily: "Roboto",
-                                color: '#566985',
-                            }}>
-                                {totalPrice ? parseVNDCurrency(totalPrice.total_price) : parseVNDCurrency(listingDetail.price_per_night_base * nights)
-                                }
+                    <>
+
+
+                        <div id="booking-widget-anchor" className="boxed-widget booking-widget">
+                            <span style={{ marginBottom: "20px" }}>
+                                <span style={{
+                                    fontSize: "30px",
+                                    fontWeight: "600",
+                                    fontFamily: "Roboto",
+                                    color: '#566985',
+                                }}>
+                                    {totalPrice ? parseVNDCurrency(totalPrice.total_price) : parseVNDCurrency(listingDetail.price_per_night_base * nights)
+                                    }
+                                </span>
+                                <span style={{
+                                    fontSize: "16px",
+                                    fontWeight: "400",
+                                    fontFamily: "Roboto",
+                                    color: '#566985',
+
+                                }}> /{totalPrice ? ` ${totalPrice.nights} ` : null}night</span>
                             </span>
-                            <span style={{
-                                fontSize: "16px",
-                                fontWeight: "400",
-                                fontFamily: "Roboto",
-                                color: '#566985',
 
-                            }}> /{totalPrice ? ` ${totalPrice.nights} ` : null}night</span>
-                        </span>
+                            <div className="row with-forms margin-top-20">
+                                <div className="col-lg-12">
+                                    <RangePicker
+                                        disabledDate={disabledDate}
+                                        format="DD/MM/YYYY"
+                                        placeholder={['dd/mm/yyyy', 'dd/mm/yyyy']}
+                                        suffixIcon
+                                        inputReadOnly
+                                        onChange={handleChangeDebut}
+                                        defaultValue={[query.get('checkin') == null ? null : moment(query.get('checkin')), query.get('checkout') == null ? null : moment(query.get('checkout'))]}
+                                        style={rangePicker}
+                                    />
+                                </div>
+                                <div className="col-lg-12">
+                                    <OutsideAlerter
+                                        closePopup={() => setActive(false)}
+                                        ref={refQty}
+                                    >
+                                        <div className={active ? "panel-dropdown active" : "panel-dropdown"}>
+                                            <a href="#" onClick={handleShowDropDown}>Guests <span className="qtyTotal" name="qtyTotal" style={{ background: "rgb(66, 89, 152)" }}>{adults + childrens}</span></a>
 
-                        <div className="row with-forms margin-top-20">
-                            <div className="col-lg-12">
-                                <RangePicker
-                                    disabledDate={disabledDate}
-                                    format="DD/MM/YYYY"
-                                    placeholder={['dd/mm/yyyy', 'dd/mm/yyyy']}
-                                    suffixIcon
-                                    inputReadOnly
-                                    onChange={handleChangeDebut}
-                                    defaultValue={[query.get('checkin') == null ? null : moment(query.get('checkin')), query.get('checkout') == null ? null : moment(query.get('checkout'))]}
-                                    style={rangePicker}
-                                />
-                            </div>
-                            <div className="col-lg-12">
-                                <OutsideAlerter
-                                    closePopup={() => setActive(false)}
-                                    ref={refQty}
-                                >
-                                    <div className={active ? "panel-dropdown active" : "panel-dropdown"}>
-                                        <a href="#" onClick={handleShowDropDown}>Guests <span className="qtyTotal" name="qtyTotal" style={{ background: "rgb(66, 89, 152)" }}>{adults + childrens}</span></a>
-
-                                        <div className="panel-dropdown-content" style={{ width: "100%" }}>
-                                            <div className="qtyButtons">
-                                                <div className="qtyTitle">Adults</div>
-                                                <div onClick={() => handleDec('adults', adults)} className="qtyDec" style={isDisableDecAdult ? disableClick : enableClick} />
-                                                <input type="text" name="qtyInput" defaultValue={adults} value={adults} />
-                                                <div onClick={() => handleInc('adults', adults)} className="qtyInc" style={isDisableIncAdult ? disableClick : enableClick} />
-                                            </div>
-                                            <div className="qtyButtons">
-                                                <div className="qtyTitle">Childrens</div>
-                                                <div onClick={() => handleDec('childrens', childrens)} className="qtyDec" style={isDisableDecChildren ? disableClick : enableClick} />
-                                                <input type="text" name="qtyInput" defaultValue={childrens} value={childrens} />
-                                                <div onClick={() => handleInc('childrens', childrens)} className="qtyInc" style={isDisableIncChildren ? disableClick : enableClick} />
+                                            <div className="panel-dropdown-content" style={{ width: "100%" }}>
+                                                <div className="qtyButtons">
+                                                    <div className="qtyTitle">Adults</div>
+                                                    <div onClick={() => handleDec('adults', adults)} className="qtyDec" style={isDisableDecAdult ? disableClick : enableClick} />
+                                                    <input type="text" name="qtyInput" defaultValue={adults} value={adults} />
+                                                    <div onClick={() => handleInc('adults', adults)} className="qtyInc" style={isDisableIncAdult ? disableClick : enableClick} />
+                                                </div>
+                                                <div className="qtyButtons">
+                                                    <div className="qtyTitle">Childrens</div>
+                                                    <div onClick={() => handleDec('childrens', childrens)} className="qtyDec" style={isDisableDecChildren ? disableClick : enableClick} />
+                                                    <input type="text" name="qtyInput" defaultValue={childrens} value={childrens} />
+                                                    <div onClick={() => handleInc('childrens', childrens)} className="qtyInc" style={isDisableIncChildren ? disableClick : enableClick} />
+                                                </div>
                                             </div>
                                         </div>
+                                    </OutsideAlerter>
+                                </div>
+                            </div>
+                            {
+                                checkAvailableDate()
+                            }
+
+                            <a onClick={handleBooking} href="#" className="button book-now fullwidth margin-top-5" style={{ borderRadius: "8px", padding: "14px 24px", background: "rgb(46, 63, 110)" }}>{totalPrice ? 'Booking now' : 'Check available'}</a>
+                        </div>
+
+                        <div className="fl-wrap block_box" style={{marginTop: 20}}>
+                            <div className="box-widget-item-header">
+                                <h3>Location / Contacts</h3>
+                            </div>
+                            <div>
+                                {/* <div className="map-container">
+                                    <div id="singleMap" data-latitude="40.7427837" data-longitude="-73.11445617675781" data-maptitle="Our Location" />
+                                </div> */}
+                                <div className="box-widget-content bwc-nopad">
+                                    <div className="list-author-widget-contacts list-item-widget-contacts bwc-padside">
+                                        <ul className="no-list-style">
+                                            <li><span><i className="fal fa-map-marker" /> Adress :</span> <a href="#">USA 27TH Brooklyn NY</a></li>
+                                            <li><span><i className="fal fa-phone" /> Phone :</span> <a href="#">+7(123)987654</a></li>
+                                            <li><span><i className="fal fa-envelope" /> Mail :</span> <a href="#">AlisaNoory@domain.com</a></li>
+                                            <li><span><i className="fal fa-browser" /> Website :</span> <a href="#">themeforest.net</a></li>
+                                        </ul>
                                     </div>
-                                </OutsideAlerter>
+                                    {/* <div className="list-widget-social bottom-bcw-box  fl-wrap">
+                                        <ul className="no-list-style">
+                                            <li><a href="#" target="_blank"><i className="fab fa-facebook-f" /></a></li>
+                                            <li><a href="#" target="_blank"><i className="fab fa-twitter" /></a></li>
+                                            <li><a href="#" target="_blank"><i className="fab fa-vk" /></a></li>
+                                            <li><a href="#" target="_blank"><i className="fab fa-instagram" /></a></li>
+                                        </ul>
+                                        <div className="bottom-bcw-box_link"><a href="#" className="show-single-contactform tolt" data-microtip-position="top" data-tooltip="Write Message"><i className="fal fa-envelope" /></a></div>
+                                    </div> */}
+                                </div>
                             </div>
                         </div>
-                        {
-                            checkAvailableDate()
-                        }
 
-                        <a onClick={handleBooking} href="#" className="button book-now fullwidth margin-top-5" style={{ borderRadius: "8px", padding: "14px 24px", background: "rgb(46, 63, 110)" }}>{totalPrice ? 'Booking now' : 'Check available'}</a>
-                    </div>
+                    </>
             }
         </div >
 

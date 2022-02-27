@@ -167,6 +167,7 @@ Route::get('messages/with/host', 'Common\MessageController@get_conversation_two_
 // Listing Type
 Route::post('listing-type/add', 'Admin\ListingTypeController@add');
 Route::get('listing-type', 'Admin\ListingTypeController@index');
+Route::get('option-listing-type', 'Admin\ListingTypeController@get_option_listing_type');
 
 // });
 

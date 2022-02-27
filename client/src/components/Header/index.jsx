@@ -15,7 +15,9 @@ import 'react-loading-skeleton/dist/skeleton.css'
 import { header_user_menu_ul_li_a } from '../../features/Host/components/HeaderHost';
 import Logo from '../../assets/bookingdo/image/logos/fun-trip-logo.png';
 import { refreshPage } from '../../@helper/helper';
-
+import Select from 'react-select';
+import { useHistory } from 'react-router-dom';
+import listingApi from '../../api/listingApi';
 
 export const main_header = {
     position: 'fixed',
@@ -183,18 +185,21 @@ export const header_user_menu_ul_li = {
     padding: '0px 0',
 }
 
-// const header_user_menu_ul_li_a = {
-//     color: '#50596e',
-//     float: 'left',
-//     width: '100%',
-//     fontWeight: 500,
-//     textAlign: 'left',
-//     padding: '10px 15px',
-// }
+const styleSlectHeader = {
+    control: base => ({
+        ...base,
+        height: '50px',
+        border: 'none',
+        fontSize: '16px',
+        background: 'rgba(255, 255, 255, 0.11)',
+        color: '#fff',
+    })
+}
 
 const { RangePicker } = DatePicker;
 
 function Header(props) {
+    const history = useHistory();
 
     const refProfile = useRef(null);
     const refSearch = useRef(null);
@@ -215,6 +220,14 @@ function Header(props) {
     const [showPopupSearch, setShowPopupSearch] = useState(false);
     const [showPopupNotify, setShowPopupNotify] = useState(false);
 
+    const [citiesOption, setCitiesOption] = useState([]);
+    const [listingType, setListingType] = useState([]);
+
+    const [checkin, setCheckin] = useState(null);
+    const [checkout, setCheckout] = useState(null);
+    const [city_id, set_city_id] = useState();
+    const [listing_type, set_listing_type] = useState([]);
+
     const handleLogout = async (e) => {
         e.preventDefault();
         await dispatch(deleteDeviceToken()).then(() => {
@@ -233,6 +246,38 @@ function Header(props) {
         dispatch(nextPage());
     }
 
+    const handleChangeDebut = range => {
+        const startDate = range[0].format("YYYY/MM/DD");
+        const endDate = range[1].format("YYYY/MM/DD");
+        setCheckin(startDate);
+        setCheckout(endDate);
+    }
+
+    const handleSearch = () => {
+        if (city_id) {
+            let searchParams = '';
+            let tmpStr = '';
+            if (listing_type.length > 0) {
+                listing_type.map(item => tmpStr += `&pt=${item}`);
+            }
+            if (checkin && checkout && listing_type.length > 0) {
+                searchParams += `?checkin_date=${checkin.replaceAll('/', '-')}&checkout_date=${checkout.replaceAll('/', '-')}${tmpStr}`;
+                history.push(`/location/${city_id}${searchParams}`);
+            } else if (checkin && checkout) {
+                searchParams += `?checkin_date=${checkin.replaceAll('/', '-')}&checkout_date=${checkout.replaceAll('/', '-')}`;
+                history.push(`/location/${city_id}${searchParams}`);
+            } else if (listing_type.length > 0) {
+                history.push(`/location/${city_id}/?checkin_date&checkout_date${tmpStr}`)
+            } else {
+                history.push(`/location/${city_id}`);
+            }
+        } else {
+            alert('Select Location');
+        }
+    }
+
+    // const { customStyles, options, listingType } = props;
+
     useEffect(() => {
         if (isLoggedIn) {
             try {
@@ -244,6 +289,36 @@ function Header(props) {
             } catch (err) {
                 console.log(err.message);
             }
+        }
+    }, []);
+
+    useEffect(() => {
+        const fetchListingType = async () => {
+            try {
+                await listingApi.getOptionListingType().then(res => {
+                    setListingType(res.data.data);
+                })
+            } catch (err) {
+                console.log(err.message);
+            }
+        }
+
+        const fetchAllCity = async () => {
+            try {
+                await listingApi.getCity().then(res => {
+                    setCitiesOption(res.data.data);
+
+                })
+            } catch (err) {
+                console.log(err.message);
+            }
+        }
+        fetchListingType();
+        fetchAllCity();
+
+        return () => {
+            setCitiesOption([]);
+            setListingType([]);
         }
     }, []);
 
@@ -283,16 +358,31 @@ function Header(props) {
                 <div className={showPopupSearch ? "k-header-search_container vis-head-search" : "k-header-search_container"}>
                     <div className="container small-container" style={{ maxWidth: '1024px', width: '92%', margin: '0 auto', position: 'relative', zIndex: 5 }}>
                         <div className="header-search-input-wrap fl-wrap" style={{ padding: '0 199px 0 0' }}>
+                            <div className="k-header-search-input" style={header_search_input}>
+                                <Select
+                                    isMulti
+                                    isSearchable={false}
+                                    options={listingType}
+                                    name="listing_type"
+                                    styles={styleSlectHeader}
+                                    placeholder='What are you looking for?'
+                                    onChange={option => {
+                                        set_listing_type(option.map(item => item.value));
+                                    }}
+                                />
+                            </div>
 
                             <div className="k-header-search-input location autocomplete-container" style={header_search_input}>
-                                <label style={header_search_input_label}><i className="fal fa-map-marker" style={{ color: '#4DB7FE' }} /></label>
-                                <input type="text" placeholder="Location..." className="autocomplete-input" id="autocompleteid2" style={header_search_input_input} />
+                                <Select
+                                    options={citiesOption}
+                                    name="city"
+                                    styles={styleSlectHeader}
+                                    placeholder='Location'
+                                    onChange={option => set_city_id(option.value)}
+                                />
                             </div>
 
-                            <div className="k-header-search-input" style={header_search_input}>
-                                <label style={header_search_input_label}><i className="fal fa-keyboard" style={{ color: '#4DB7FE' }} /></label>
-                                <input type="text" placeholder="What are you looking for ?" style={header_search_input_input} />
-                            </div>
+
 
                             <div className="k-header-search-input" style={header_search_input}>
                                 <label style={header_search_input_label}><i className="fal fa-keyboard" style={{ color: '#4DB7FE' }} /></label>
@@ -300,13 +390,13 @@ function Header(props) {
                                     format="DD/MM/YYYY"
                                     placeholder={['Checkin', 'Checkout']}
                                     suffixIcon
-                                    // onChange={handleChangeDebut}
+                                    onChange={handleChangeDebut}
                                     style={header_search_input_input}
                                     inputReadOnly
                                 />
                             </div>
 
-                            <button className="header-search-button green-bg" onClick="window.location.href='listing.html'"><i className="far fa-search" /> Search </button>
+                            <button className="header-search-button green-bg" onClick={handleSearch}><i className="far fa-search" /> Search </button>
                         </div>
                     </div>
                 </div>
@@ -356,7 +446,7 @@ function Header(props) {
                                                         notify={notify}
                                                     />
                                                 ))
-                                                : null
+                                                : <span style={{ marginBottom: 20, width: '100%', textAlign: 'center', display: 'block' }}>No announcements</span>
                                         }
                                     </div>
                                 </div>

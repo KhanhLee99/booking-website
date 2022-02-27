@@ -29,25 +29,7 @@ import DragHorizonImage from './components/Test/DragHorizonImage';
 import Pay from './features/UserProfile/pages/Payment/Pay';
 import AdminPayment from './features/Admin/pages/AdminPayment/AdminPayment';
 import Select from 'react-select';
-
-const options = [
-  { value: 'chocolate', label: 'Chocolate' },
-  { value: 'strawberry', label: 'Strawberry' },
-  { value: 'vanilla', label: 'Vanilla' }
-]
-
-const customStyles = {
-  control: base => ({
-    ...base,
-    height: '70px',
-    background: 'rgb(249, 249, 249)',
-    // border: 'none',
-    color: 'rgb(125, 147, 178)',
-    fontSize: '16px',
-    // padding: '0px 7px',
-    // marginBottom: '20px',
-  })
-};
+import { useSnackbar } from 'notistack';
 
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
@@ -63,6 +45,8 @@ function App() {
   const [notification, setNotification] = useState({ title: "", body: "", id: "" });
   const [loading, setLoading] = useState(true);
   const [deviceToken, setDeviceToken] = useState();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   useEffect(() => {
     const getFcmToken = async () => {
@@ -112,9 +96,9 @@ function App() {
         limit: 5,
         page: 1,
       }));
-      setTimeout(() => {
-        setShow(false);
-      }, 2000);
+      // setTimeout(() => {
+      //   setShow(false);
+      // }, 2000);
       console.log(payload);
     })
     .catch((err) => console.log("failed: ", err));
@@ -126,12 +110,13 @@ function App() {
 
     <>
       {show ? (
-        <ReactNotificationComponent
-          title={notification.title}
-          body={notification.body}
-          id={notification.id}
-          status={NotificationStattus.SUCCESS}
-        />
+        // <ReactNotificationComponent
+        //   title={notification.title}
+        //   body={notification.body}
+        //   id={notification.id}
+        //   status={NotificationStattus.SUCCESS}
+        // />
+        enqueueSnackbar(<span dangerouslySetInnerHTML={{ __html: notification.body }} />, { variant: "success" })
       ) : (
         <></>
       )}

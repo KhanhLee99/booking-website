@@ -79,6 +79,11 @@ const listingApi = {
     getCity: () => {
         const url = '/city';
         return axiosClient.get(url);
+    },
+
+    getOptionListingType: () => {
+        const url = '/option-listing-type';
+        return axiosClient.get(url);
     }
 }
 

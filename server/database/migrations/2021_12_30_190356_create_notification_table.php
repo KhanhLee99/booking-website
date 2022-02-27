@@ -29,6 +29,8 @@ class CreateNotificationTable extends Migration
             $table->unsignedBigInteger('receiver_id');
             $table->foreign('receiver_id')->references('id')->on('users');
 
+            $table->string('url_redirect')->nullable();
+
             $table->timestamps();
         });
     }

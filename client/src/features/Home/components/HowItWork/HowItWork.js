@@ -8,7 +8,7 @@ HowItWork.propTypes = {
 
 function HowItWork(props) {
     return (
-        <section data-scrollax-parent="true">
+        <section data-scrollax-parent="true" className='gray-bg particles-wrapper' style={{ textAlign: 'center' }}>
             <div className="container">
                 <div className="section-title">
                     <h2>How it works</h2>
@@ -19,9 +19,21 @@ function HowItWork(props) {
                 </div>
                 <div className="process-wrap fl-wrap">
                     <ul className="no-list-style">
-                        <Item />
-                        <Item />
-                        <Item />
+                        <Item
+                            title={'Find Interesting Place'}
+                            icon={'fal fa-map-marker-alt'}
+                            number={'01'}
+                        />
+                        <Item
+                            title={'Contact a Few Owners'}
+                            icon={'fal fa-mail-bulk'}
+                            number={'02'}
+                        />
+                        <Item
+                            title={'Make a Listing'}
+                            icon={'fal fa-layer-plus'}
+                            number={'03'}
+                        />
                         {/* <li>
                             <div className="process-item">
                                 <span className="process-count">01 </span>
@@ -63,12 +75,13 @@ function HowItWork(props) {
 export default HowItWork;
 
 function Item(props) {
+    const { title, icon, number } = props;
     return (
         <li>
             <div className="process-item">
-                <span className="process-count">03</span>
-                <div className="time-line-icon"><i className="fal fa-layer-plus" /></div>
-                <h4> Make a Listing</h4>
+                <span className="process-count">{number}</span>
+                <div className="time-line-icon"><i className={icon} /></div>
+                <h4>{title}</h4>
                 <p>Maecenas pulvinar, risus in facilisis dignissim, quam nisi hendrerit nulla,
                     id vestibulum metus nullam viverra porta.</p>
             </div>

@@ -11,3 +11,5 @@ offset
 element.getBoundingClientRect();
 
 web travel: https://www.freepik.com/photos/travel/2
+
+git remote add heroku https://git.heroku.com/<your project>.git

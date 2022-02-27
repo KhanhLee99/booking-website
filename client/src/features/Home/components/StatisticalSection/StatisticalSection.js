@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import './StatisticalSection.scss';
+import CountUp from 'react-countup';
 
 StatisticalSection.propTypes = {
 
@@ -31,7 +32,14 @@ function StatisticalItem(props) {
             <div className="inline-facts">
                 <div className="milestone-counter">
                     <div className="stats animaper">
-                        <div className="num" data-content={0} data-num={732}>732</div>
+                        <div className="num" data-content={0} data-num={732}>
+                            <CountUp
+                                start={0}
+                                end={732}
+                                className="num"
+                                duration={1}
+                            />
+                        </div>
                     </div>
                 </div>
                 <h6>New Listing Every Week</h6>
