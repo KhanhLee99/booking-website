@@ -278,7 +278,7 @@ function BoxBooking(props) {
                             <a onClick={handleBooking} href="#" className="button book-now fullwidth margin-top-5" style={{ borderRadius: "8px", padding: "14px 24px", background: "rgb(46, 63, 110)" }}>{totalPrice ? 'Booking now' : 'Check available'}</a>
                         </div>
 
-                        <div className="fl-wrap block_box" style={{marginTop: 20}}>
+                        <div className="fl-wrap block_box" style={{ marginTop: 20 }}>
                             <div className="box-widget-item-header">
                                 <h3>Location / Contacts</h3>
                             </div>
@@ -307,7 +307,6 @@ function BoxBooking(props) {
                                 </div>
                             </div>
                         </div>
-
                     </>
             }
         </div >

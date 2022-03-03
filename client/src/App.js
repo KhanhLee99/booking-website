@@ -30,6 +30,7 @@ import Pay from './features/UserProfile/pages/Payment/Pay';
 import AdminPayment from './features/Admin/pages/AdminPayment/AdminPayment';
 import Select from 'react-select';
 import { useSnackbar } from 'notistack';
+import NotFoundPage from './features/Error/NotFoundPage';
 
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
@@ -140,9 +141,9 @@ function App() {
 
               {/* <Route path="/login" component={Login} /> */}
               {/* <Redirect exact from='/' to='/login' /> */}
-              {/* <PrivateRoute path='/guest' component={GuestFeauture} />
-        <Route path="/error" component={MainErrorPage} />
-        <Route component={NotFoundPage} /> */}
+              {/* <PrivateRoute path='/guest' component={GuestFeauture} /> */}
+              {/* <Route path="/error" component={MainErrorPage} /> */}
+              <Route path="/not-found" component={NotFoundPage} />
             </Switch>
           </BrowserRouter>
         </Suspense>

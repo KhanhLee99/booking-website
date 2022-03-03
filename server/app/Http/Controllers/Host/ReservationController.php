@@ -240,9 +240,15 @@ class ReservationController extends Controller
                 ->join('users', 'users.id', '=', 'reservation.guest_id')
                 ->where('reservation.id', $id)
                 ->join('listing', 'listing.id', '=', 'reservation.listing_id')
+                ->join('listing_type', 'listing_type.id', '=', 'listing.listing_type_id')
+                ->join('users as hosts', 'hosts.id', '=', 'listing.user_id')
                 ->orderBy('reservation.id', 'desc')
                 ->join('reservation_status', 'reservation_status.id', '=', 'reservation.reservation_status_id')
-                ->select('reservation.*', 'listing.name as listing_name', 'listing.street_address', 'listing.avatar_url as thumb_img', 'listing.price_per_night_base', 'users.name as user_name', 'users.avatar_url as user_avatar_url', 'reservation_status.name as status')
+                ->select('reservation.*', 'listing.name as listing_name', 'listing.street_address', 'listing.avatar_url as thumb_img', 'listing.price_per_night_base',
+                'users.name as user_name', 'users.avatar_url as user_avatar_url', 'users.email as user_email', 'users.phone_number as user_phone_number',
+                'reservation_status.name as status',
+                'hosts.name as host_name', 'hosts.id as host_id', 'hosts.avatar_url as host_avatar_url', 'hosts.phone_number as host_phone_number', 'hosts.email as host_email',
+                'listing_type.name as listing_type', 'listing.price_per_night_base')
                 ->get();
             if ($data) {
                 $this->response = [

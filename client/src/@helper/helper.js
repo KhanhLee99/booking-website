@@ -23,3 +23,9 @@ export const parseVNDCurrency = (price) => {
 export const refreshPage = () => {
     window.location.reload();
 }
+
+export const defaultValueGuests = (adults, childrens) => {
+    let s = adults + ' adults ';
+    s += childrens > 0 ? '- ' + childrens + ' childrens' : '';
+    return s;
+}

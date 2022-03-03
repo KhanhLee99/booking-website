@@ -36,15 +36,7 @@ const scroll_nav_wrapper_opt_btn = {
 function ReservationDetail(props) {
     const { id } = useParams();
     const [reservation, setReservation] = useState({});
-    const fetchReservation = async () => {
-        try {
-            await reservationApi.getDetailReservation(id).then(res => {
-                setReservation(res.data.data);
-            })
-        } catch (err) {
-            console.log(err.message)
-        }
-    }
+
     const handleAccept = async (e) => {
         e.preventDefault();
         await reservationApi.editStatusReservation(id, { reservation_status_id: ReservationStatus.ACCEPTED.id });
@@ -56,6 +48,16 @@ function ReservationDetail(props) {
         await reservationApi.editStatusReservation(id, { reservation_status_id: ReservationStatus.DECLINE.id });
     }
     useEffect(() => {
+        const fetchReservation = async () => {
+            try {
+                await reservationApi.getDetailReservation(id).then(res => {
+                    setReservation(res.data.data);
+                })
+            } catch (err) {
+                console.log(err.message)
+            }
+        }
+
         fetchReservation();
     }, []);
     return (

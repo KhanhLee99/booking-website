@@ -10,6 +10,7 @@ import UserChat from '../../components/UserChat/UserChat';
 import NoData from '../../../../components/NoData/NoData';
 import { useHistory } from 'react-router-dom';
 import CommonUserProfile from '../../../../components/CommonUserProfile/CommonUserProfile';
+import { useSnackbar } from 'notistack';
 
 MyBooking.propTypes = {
 
@@ -21,6 +22,8 @@ function MyBooking(props) {
 
     const [reservations, setReservations] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    const { enqueueSnackbar } = useSnackbar();
 
     const fetchMyReservation = async () => {
         try {
@@ -74,11 +77,11 @@ function MyBooking(props) {
         }
     }
 
-    const handleAddReview = async (id, content, reservation_id) => {
+    const handleAddReview = async (id, content, rating, reservation_id) => {
         try {
             const params = {
                 note: content,
-                rating: 5,
+                rating: rating,
             }
             const params2 = {
                 reservation_status_id: ReservationStatus.REVIEWED.id
@@ -89,6 +92,7 @@ function MyBooking(props) {
                     reservationApi.editStatusReservation(reservation_id, params2).then(() => {
                         handleEditStatus(reservation_id, ReservationStatus.REVIEWED.id);
                         setLoading(false);
+                        enqueueSnackbar('Thank You For Your Review.', { variant: "success" })
                     }).catch(err => {
                         console.log(err.message);
                     });

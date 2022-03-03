@@ -12,6 +12,7 @@ import ChangePassword from './pages/ChangePassword/ChangePassword';
 import Favorite from './pages/Favorite/Favorite';
 import MyBooking from './pages/MyBooking/MyBooking';
 import UserMessage from './pages/UserMessage/UserMessage';
+import DetailReservation from './pages/DetailReservation/DetailReservation';
 
 UserProfileFeature.propTypes = {
 
@@ -52,7 +53,11 @@ function UserProfileFeature(props) {
                     component={UserMessage}
                 />
 
-
+                <Route
+                    path={`${match.url}/reservation/detail/:id`}
+                    exact
+                    component={DetailReservation}
+                />
 
             </Switch>
         </>

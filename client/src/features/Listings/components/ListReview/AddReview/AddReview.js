@@ -1,6 +1,8 @@
 import React, { useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import './AddReview.scss';
+import Rating from 'react-rating';
+import { MdStarOutline, MdStar } from 'react-icons/md';
 
 AddReview.propTypes = {
 
@@ -36,16 +38,28 @@ const btn_i = {
 
 function AddReview(props) {
     const [isEmpty, setIsEmpty] = useState(false);
+    const [isRated, setIsRated] = useState(false);
+    const [rating, setRating] = useState(0);
     const textRef = useRef();
     const { handleAddReview, name, id, close, reservation_id } = props;
 
     const addReview = () => {
-        if (textRef.current.value) {
-            setIsEmpty(false)
-            handleAddReview(id, textRef.current.value, reservation_id);
+        if (textRef.current.value && rating) {
+            setIsEmpty(false);
+            setIsRated(false);
+            handleAddReview(id, textRef.current.value, rating, reservation_id);
             close();
         } else {
-            setIsEmpty(true)
+            if (rating == 0) {
+                setIsRated(true);
+            } else {
+                setIsRated(false);
+            }
+            if (!textRef.current.value) {
+                setIsEmpty(true);
+            } else {
+                setIsEmpty(false);
+            }
         }
     }
 
@@ -53,6 +67,13 @@ function AddReview(props) {
     return (
         <div className='add-review-box'>
             <h3>Hãy để lại đánh giá về trải nghiệm ở của bạn <span className='listing-name'>{name}</span></h3>
+            <Rating
+                initialRating={rating}
+                emptySymbol={<MdStarOutline size={33} />}
+                fullSymbol={<MdStar color='#F6C344' size={33} />}
+                onChange={value => setRating(value)}
+            />
+            {isRated && <p className='text-error'> Vui lòng đánh giá sao</p>}
             <textarea
                 placeholder='Your Review:'
                 style={{ resize: 'none' }}

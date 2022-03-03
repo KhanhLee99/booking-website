@@ -85,6 +85,7 @@ function Home(props) {
                 options={citiesOption}
                 customStyles={customStyles}
             />
+
             <main>
                 <BestCity
                     cities={cities}

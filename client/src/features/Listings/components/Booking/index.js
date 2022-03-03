@@ -165,8 +165,12 @@ function Booking(props) {
                                     :
                                     <ul id="booking_progressbar" className="no-list-style">
                                         <li className={activeBookingInfo ? 'active' : ''}><span className="tolt" data-microtip-position="top" data-tooltip="Booking Info">01.</span></li>
-                                        <li className={activePersonalInfo ? 'active' : ''} style={{ width: '50%' }}><span className="tolt" data-microtip-position="top" data-tooltip="Personal Info">02.</span></li>
-                                        <li className={activeConfirm ? 'active' : ''} style={{ width: '50%' }}><span className="tolt" data-microtip-position="top" data-tooltip="Confirm">03.</span></li>
+                                        <li className={activePersonalInfo ? 'active' : ''} style={{ width: '50%' }}>
+                                            <span className="tolt" data-microtip-position="top" data-tooltip="Personal Info">02.</span>
+                                        </li>
+                                        <li className={activeConfirm ? 'active' : ''} style={{ width: '50%' }}>
+                                            <span className="tolt" data-microtip-position="top" data-tooltip="Confirm">03.</span>
+                                        </li>
                                     </ul>
                             }
 
@@ -429,8 +433,5 @@ export function LeftSide(props) {
                 <strong>{total_price ? parseVNDCurrency(total_price) : ''}</strong>
             </div>
         </>
-
-
-
     );
 }
