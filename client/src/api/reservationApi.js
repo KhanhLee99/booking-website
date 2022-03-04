@@ -29,6 +29,11 @@ const reservationApi = {
     countTotalPrice: (params) => {
         const url = '/reservation/count-total-price';
         return axiosClient.post(url, params);
+    },
+
+    getTimeline: (id) => {
+        const url = `/timeline/${id}`;
+        return axiosClient.get(url);
     }
 }
 

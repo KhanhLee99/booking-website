@@ -394,6 +394,7 @@ class ListingController extends Controller
                 }
                 $output = array();
                 $output['listing'] = $listing;
+                $output['host'] = User::find($listing->user_id);
                 ksort($tmp);
                 foreach ($tmp as $amenity_type_id => $ids) {
                     $output['amenities'][] = array(
@@ -408,6 +409,7 @@ class ListingController extends Controller
                     ->orderBy('review_listing.id', 'DESC')
                     ->select('review_listing.id', 'review_listing.note', 'review_listing.rating', 'review_listing.created_at', 'users.name', 'users.avatar_url')
                     ->get();
+
                 if ($user_login = $request->user('api')) {
                     $favorite = Favorite::where([
                         ["user_id", $user_login->id],

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import './DetailReservation.scss';
 import Header from '../../../../components/Header';
 import useWindowDimensions from '../../../../@use/useWindowDimensions';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useHistory, useParams } from 'react-router-dom';
 import { defaultValueGuests, parseVNDCurrency } from '../../../../@helper/helper';
 import { Chrono } from "react-chrono";
 import data from "../../../../app/data/timeline_data";
@@ -18,9 +18,11 @@ DetailReservation.propTypes = {
 function DetailReservation(props) {
 
     const { id } = useParams();
+    const history = useHistory();
 
     const [reservation, setReservation] = useState({ id: 0 });
     const [loading, setLoading] = useState(true);
+    const [timeline, setTimeline] = useState([]);
 
     const { height } = useWindowDimensions();
     const heightSection = height - 100;
@@ -36,6 +38,17 @@ function DetailReservation(props) {
             }
         }
 
+        const getTimeline = async () => {
+            try {
+                await reservationApi.getTimeline(id).then(res => {
+                    setTimeline(res.data.data);
+                })
+            } catch (err) {
+                console.log(err.message);
+            }
+        }
+
+        getTimeline();
         fetchReservation();
     }, []);
 
@@ -54,14 +67,34 @@ function DetailReservation(props) {
                     <div className="container" style={{ minHeight: heightSection }}>
                         <div className='col-md-12 reservation-timeline-container'>
                             <div className='reservation-timeline fl-wrap block_box'>
-                                <Chrono items={data} mode="VERTICAL"
+                                <Chrono items={timeline} mode="VERTICAL"
                                     disableNavOnKey
                                 />
                             </div>
                         </div>
                         <div className='col-xl-8 col-md-12'>
+                            <ReservationInfo
+                                checkin={reservation.checkin_date.split(' ')[0]}
+                                checkout={reservation.checkout_date.split(' ')[0]}
+                                user_name={reservation.user_name}
+                                adult_count={reservation.adult_count}
+                                child_count={reservation.child_count}
+                            />
+                        </div>
+                        <div className='col-xl-4 col-md-12'>
+
+                            <Owner
+                                host_phone_number={reservation.host_phone_number}
+                                host_email={reservation.host_email}
+                                host_avatar_url={reservation.host_avatar_url}
+                                host_name={reservation.host_name}
+                            />
+                        </div>
+                        <div className='h-30 fl-wrap' />
+                        <div className='col-xl-8 col-md-12'>
+
                             <div className='fl-wrap'>
-                                <div className="cart-details-item-header">
+                                <div className="cart-details-item-header bb-none mb-0">
                                     <h3>CHI TIẾT CHỖ Ở</h3>
                                 </div>
                                 <div className='block_box reservation-info'>
@@ -80,28 +113,13 @@ function DetailReservation(props) {
                                 name={reservation.listing_name}
                                 listing_type={reservation.listing_type}
                             />
-
-                        </div>
-                        <div className='h-30 fl-wrap' />
-                        <div className='col-xl-8 col-md-12'>
-                            <ReservationInfo
-                                checkin={reservation.checkin_date.split(' ')[0]}
-                                checkout={reservation.checkout_date.split(' ')[0]}
-                                user_name={reservation.user_name}
-                                adult_count={reservation.adult_count}
-                                child_count={reservation.child_count}
-                            />
-                        </div>
-                        <div className='col-xl-4 col-md-12'>
-                            <Owner
-                                host_phone_number={reservation.host_phone_number}
-                                host_email={reservation.host_email}
-                                host_avatar_url={reservation.host_avatar_url}
-                                host_name={reservation.host_name}
-                            />
                         </div>
                         <div className='col-md-12'>
-                            <button className="logout_btn color2-bg" style={{ marginLeft: 0, marginBottom: 10 }}>Booking listing again <i className="fas fa-sign-out" /></button>
+                            <button
+                                className="logout_btn color2-bg"
+                                style={{ marginLeft: 0, marginBottom: 10 }}
+                                onClick={() => history.push(`/listing/${reservation.listing_id}`)}
+                            >Booking listing again <i className="fas fa-sign-out" /></button>
                         </div>
 
                     </div>
@@ -120,7 +138,7 @@ function Listing(props) {
 
     return (
         <>
-            <div className="cart-details-item-header">
+            <div className="cart-details-item-header bb-none mb-0">
                 <h3>CHI TIẾT CHỖ Ở</h3>
             </div>
             <div id="booking-widget-anchor" className="boxed-widget booking-widget" style={{ padding: '18px 18px 0' }}>
@@ -145,7 +163,7 @@ function Owner(props) {
     const { host_phone_number, host_email, host_avatar_url, host_name } = props;
     return (
         <>
-            <div className="cart-details-item-header">
+            <div className="cart-details-item-header bb-none mb-0">
                 <h3>CHI TIẾT CHỖ Ở</h3>
             </div>
             <div className="fl-wrap block_box">
@@ -161,7 +179,6 @@ function Owner(props) {
                                 /></span> <a href="#" style={{ lineHeight: '50px', fontWeight: 'bold' }}>{host_name}</a></li>
                                 <li><span><i className="fal fa-phone" /> Phone :</span> <a href="#">{host_phone_number}</a></li>
                                 <li><span><i className="fal fa-envelope" /> Mail :</span> <a href="#">{host_email}</a></li>
-                                {/* <li><span><i className="fal fa-browser" /> Website :</span> <a href="#">themeforest.net</a></li> */}
                             </ul>
                         </div>
                     </div>
@@ -206,7 +223,7 @@ function ReservationInfo(props) {
     const { checkin, checkout, user_name, adult_count, child_count } = props;
     return (
         <div className='fl-wrap'>
-            <div className="cart-details-item-header">
+            <div className="cart-details-item-header bb-none mb-0">
                 <h3>CHI TIẾT CHỖ Ở</h3>
             </div>
             <div className='block_box reservation-info' style={{ padding: 10 }}>
@@ -228,7 +245,6 @@ function ReservationInfo(props) {
                     </div>
                     <div className='col-md-12' style={{ marginTop: 15 }}>
                         <h4 style={{ color: 'rgba(0, 0, 0, 0.85)', paddingBottom: 5, fontSize: 16 }}>Guests : {defaultValueGuests(adult_count, child_count)}</h4>
-                        {/* <h4 style={{ color: 'rgba(0, 0, 0, 0.85)', fontSize: 16 }}>Guests : 1</h4> */}
                     </div>
                 </div>
             </div>

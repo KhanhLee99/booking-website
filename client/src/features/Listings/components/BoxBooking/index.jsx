@@ -4,7 +4,7 @@ import './BoxBooking.scss';
 import QtyPerson from '../../../Home/components/QtyPerson';
 import Skeleton from 'react-loading-skeleton';
 import 'antd/dist/antd.css';
-import { DatePicker } from 'antd';
+import { DatePicker, Space } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { useEffect } from 'react';
 import moment from 'moment';
@@ -12,6 +12,8 @@ import useQuery from '../../../../@use/useQuery';
 import reservationApi from '../../../../api/reservationApi';
 import { parseVNDCurrency } from '../../../../@helper/helper';
 import OutsideAlerter from '../../../../components/OutsideAlerter/OutsideAlerter';
+import { MdOutlineEast } from 'react-icons/md';
+
 
 BoxBooking.propTypes = {
 
@@ -63,13 +65,29 @@ function BoxBooking(props) {
     const [isDisableDecAdult, setIsDisableDecAdult] = useState(true);
     const [isDisableDecChildren, setIsDisableDecChildren] = useState(true);
     const [totalPrice, setTotalPrice] = useState();
+    const [checkoutNull, setCheckoutNull] = useState(true);
+    const [minDate, setMinDate] = useState(null);
+    const [maxDate, setMaxDate] = useState(null);
 
-    const { loadingListingDetail, listingDetail, reservationDate, blockList } = props;
+    const { loadingListingDetail, listingDetail, reservationDate, blockList, host } = props;
 
     const disabledDate = current => {
         if (current && current < moment().endOf('day')) return true;
         if (reservationDate.findIndex(item => (item.getDate() === current._d.getDate() && item.getFullYear() === current._d.getFullYear() && item.getMonth() === current._d.getMonth())) != -1) return true;
-        if (blockList.findIndex(item => (item.getDate() === current._d.getDate() && item.getFullYear() === current._d.getFullYear() && item.getMonth() === current._d.getMonth())) != -1) return true;
+        // if (blockList.findIndex(item => (item.getDate() === current._d.getDate() && item.getFullYear() === current._d.getFullYear() && item.getMonth() === current._d.getMonth())) != -1) return true;
+        return false;
+    }
+
+    const disabledCheckoutDate = current => {
+        if (current && current < moment().endOf('day')) return true;
+        if (reservationDate.findIndex(item => (item.getDate() === current._d.getDate() && item.getFullYear() === current._d.getFullYear() && item.getMonth() === current._d.getMonth())) != -1) return true;
+        if (minDate) {
+            if (current && current < moment(minDate).endOf('day')) return true;
+        }
+        if (maxDate) {
+            console.log(maxDate);
+            if (current && current > moment(maxDate).endOf('day')) return true;
+        }
         return false;
     }
 
@@ -97,12 +115,32 @@ function BoxBooking(props) {
     }
 
     const handleChangeDebut = range => {
-        const startDate = range[0].format("YYYY/MM/DD");
-        const endDate = range[1].format("YYYY/MM/DD");
-        console.log(startDate, endDate);
-        history.push(`/listing/${listingDetail.id}?checkin=${startDate.replaceAll('/', '-')}&checkout=${endDate.replaceAll('/', '-')}`);
-        setCheckin(startDate);
-        setCheckout(endDate);
+        // const startDate = range[0].format("YYYY/MM/DD");
+        // const endDate = range[1].format("YYYY/MM/DD");
+        // console.log(startDate, endDate);
+        // history.push(`/listing/${listingDetail.id}?checkin=${startDate.replaceAll('/', '-')}&checkout=${endDate.replaceAll('/', '-')}`);
+        // setCheckin(startDate);
+        // setCheckout(endDate);
+    }
+
+    const onChangeCheckin = date => {
+        setMaxDate(null);
+        setMinDate(date);
+        setCheckin(date.format("YYYY/MM/DD"));
+        setCheckout(null);
+
+        const sortedArray = reservationDate.sort((a, b) => new moment(a).format('YYYYMMDD') - new moment(b).format('YYYYMMDD'))
+        for (let i = 0; i < sortedArray.length; i++) {
+            if (date < sortedArray[i]) {
+                setMaxDate(sortedArray[i]);
+                break;
+            }
+        }
+    }
+
+    const onChangeCheckout = date => {
+        console.log(date.format("YYYY/MM/DD"));
+        setCheckout(date.format("YYYY/MM/DD"));
     }
 
     const handleBooking = (e) => {
@@ -146,19 +184,21 @@ function BoxBooking(props) {
     // --------------------------nhap out => in null
 
     useEffect(() => {
+        setCheckoutNull(true);
+    }, [checkin]);
+
+    useEffect(() => {
+        if (checkout != null) {
+            console.log(checkout)
+            setCheckoutNull(false);
+        }
         var checkin_date = moment(checkin, "YYYY-MM-DD hh:mm:ss");
         var checkout_date = moment(checkout, "YYYY-MM-DD hh:mm:ss");
         if (checkout_date.isAfter(checkin_date)) {
             countPrice();
         } else {
-            // alert('sai', () => {
-            //     console.log('sf')
-            // });
+
         }
-    }, [checkin]);
-
-    useEffect(() => {
-
     }, [checkout]);
 
     useEffect(() => {
@@ -210,8 +250,6 @@ function BoxBooking(props) {
             {
                 loadingListingDetail ? <Skeleton height={300} borderRadius={12} /> :
                     <>
-
-
                         <div id="booking-widget-anchor" className="boxed-widget booking-widget">
                             <span style={{ marginBottom: "20px" }}>
                                 <span style={{
@@ -234,7 +272,7 @@ function BoxBooking(props) {
 
                             <div className="row with-forms margin-top-20">
                                 <div className="col-lg-12">
-                                    <RangePicker
+                                    {/* <RangePicker
                                         disabledDate={disabledDate}
                                         format="DD/MM/YYYY"
                                         placeholder={['dd/mm/yyyy', 'dd/mm/yyyy']}
@@ -243,7 +281,43 @@ function BoxBooking(props) {
                                         onChange={handleChangeDebut}
                                         defaultValue={[query.get('checkin') == null ? null : moment(query.get('checkin')), query.get('checkout') == null ? null : moment(query.get('checkout'))]}
                                         style={rangePicker}
-                                    />
+                                    /> */}
+                                    <Space direction="horizontal">
+                                        <DatePicker
+                                            onChange={onChangeCheckin}
+                                            disabledDate={disabledDate}
+                                            placeholder='dd/mm/yyyy'
+                                            style={rangePicker}
+                                            format="DD/MM/YYYY"
+                                            inputReadOnly
+                                            suffixIcon
+                                        // defaultValue={moment(checkin, "YYYY/MM/DD")}
+                                        />
+                                        <MdOutlineEast
+                                            style={{
+                                                margin: '0 20px',
+                                            }}
+                                        />
+                                        {checkoutNull ? <DatePicker
+                                            onChange={onChangeCheckout}
+                                            disabledDate={disabledCheckoutDate}
+                                            placeholder='dd/mm/yyyy'
+                                            format="DD/MM/YYYY"
+                                            inputReadOnly
+                                            suffixIcon
+                                            style={rangePicker}
+                                        /> : <DatePicker
+                                            onChange={onChangeCheckout}
+                                            disabledDate={disabledCheckoutDate}
+                                            placeholder='dd/mm/yyyy'
+                                            style={rangePicker}
+                                            format="DD/MM/YYYY"
+                                            inputReadOnly
+                                            suffixIcon
+                                            value={moment(checkout, "YYYY/MM/DD")}
+                                        />}
+                                    </Space>
+
                                 </div>
                                 <div className="col-lg-12">
                                     <OutsideAlerter
@@ -289,21 +363,12 @@ function BoxBooking(props) {
                                 <div className="box-widget-content bwc-nopad">
                                     <div className="list-author-widget-contacts list-item-widget-contacts bwc-padside">
                                         <ul className="no-list-style">
-                                            <li><span><i className="fal fa-map-marker" /> Adress :</span> <a href="#">USA 27TH Brooklyn NY</a></li>
-                                            <li><span><i className="fal fa-phone" /> Phone :</span> <a href="#">+7(123)987654</a></li>
-                                            <li><span><i className="fal fa-envelope" /> Mail :</span> <a href="#">AlisaNoory@domain.com</a></li>
-                                            <li><span><i className="fal fa-browser" /> Website :</span> <a href="#">themeforest.net</a></li>
+                                            <li><span><i className="fal fa-browser" /> Host :</span> <a href="#">{host.name}</a></li>
+                                            <li><span><i className="fal fa-map-marker" /> Adress :</span> <a href="#">{listingDetail.street_address}</a></li>
+                                            <li><span><i className="fal fa-phone" /> Phone :</span> <a href="#">{host.phone_number}</a></li>
+                                            <li><span><i className="fal fa-envelope" /> Mail :</span> <a href="#">{host.email}</a></li>
                                         </ul>
                                     </div>
-                                    {/* <div className="list-widget-social bottom-bcw-box  fl-wrap">
-                                        <ul className="no-list-style">
-                                            <li><a href="#" target="_blank"><i className="fab fa-facebook-f" /></a></li>
-                                            <li><a href="#" target="_blank"><i className="fab fa-twitter" /></a></li>
-                                            <li><a href="#" target="_blank"><i className="fab fa-vk" /></a></li>
-                                            <li><a href="#" target="_blank"><i className="fab fa-instagram" /></a></li>
-                                        </ul>
-                                        <div className="bottom-bcw-box_link"><a href="#" className="show-single-contactform tolt" data-microtip-position="top" data-tooltip="Write Message"><i className="fal fa-envelope" /></a></div>
-                                    </div> */}
                                 </div>
                             </div>
                         </div>

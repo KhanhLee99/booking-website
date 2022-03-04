@@ -42,6 +42,7 @@ function ListingDetail(props) {
     const isLoggedIn = !!loggedInUser.id;
     const [loadingListingDetail, setLoadingListingDetail] = useState(false);
     const [listingDetail, setListingDetail] = useState({});
+    const [host, setHost] = useState({});
     const [amenities, setAmenities] = useState([])
     const [photos, setPhotos] = useState([]);
     const [reviews, setReviews] = useState([]);
@@ -141,6 +142,7 @@ function ListingDetail(props) {
             setLoadingListingDetail(true)
             await listingApi.getListingById(id).then(res => {
                 setListingDetail(res.data.data.listing);
+                setHost(res.data.data.host);
                 setAmenities(res.data.data.amenities);
                 setPhotos(res.data.data.photos);
                 setReviews(res.data.data.reviews);
@@ -304,6 +306,7 @@ function ListingDetail(props) {
                     <BoxBooking
                         loadingListingDetail={loadingListingDetail}
                         listingDetail={listingDetail}
+                        host={host}
                         reservationDate={reservationDate}
                         blockList={blockList}
                     />
