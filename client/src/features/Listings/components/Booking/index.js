@@ -16,6 +16,7 @@ import { parseVNDCurrency } from '../../../../@helper/helper';
 import LoginModal from '../../../../components/LoginModal/LoginModal';
 import Loading from '../../../../components/Loading/Loading';
 import adminPaymentApi from '../../../../api/adminPaymentApi';
+import { PersonPinCircleSharp } from '@material-ui/icons';
 
 Booking.propTypes = {
 
@@ -110,10 +111,15 @@ function Booking(props) {
 
     useEffect(() => {
         const getListing = async () => {
-            await listingApi.getBaseInfoListing(id).then(res => {
-                console.log(res.data);
-                setListing(res.data.data)
-            });
+            try {
+                await listingApi.getBaseInfoListing(id).then(res => {
+                    console.log(res.data);
+                    setListing(res.data.data)
+                });
+            } catch (err) {
+                console.log(err.message)
+            }
+
         }
 
         const countPrice = async () => {
@@ -131,7 +137,7 @@ function Booking(props) {
                 console.log(err.message);
             }
         }
-
+        window.scrollTo(0, 0);
         getListing();
         countPrice();
 
@@ -226,8 +232,10 @@ function Booking(props) {
                                 checkin_date={query.get('checkin')}
                                 checkout_date={query.get('checkout')}
                                 defaultValueGuests={defaultValueGuests(query.get('adults'), query.get('childrens'))}
+                                discount={totalPrice.discount}
+                                discount_weekly={totalPrice.discount_weekly}
+                                discount_mothly={totalPrice.discount_mothly}
                             />}
-
                         </div>
                     </div>
                 </div>
@@ -361,7 +369,7 @@ export function Confirmation(props) {
                     <h4>Thank you. Your reservation has been received.</h4>
                     <div className="clearfix" />
                     <p>Your payment has been processed successfully.</p>
-                    <a href="invoice.html" target="_blank">View Invoice</a>
+                    <Link to="/me/bookings" target="_blank">View Your Bookings</Link>
                 </div>
             </div>
             <span className="fw-separator" />
@@ -373,7 +381,8 @@ export function Confirmation(props) {
 
 export function LeftSide(props) {
 
-    const { total_price, rental_price, nights, id, avatar_url, street_address, name, defaultValueGuests, checkin_date, checkout_date, } = props;
+    const { total_price, rental_price, nights, id, avatar_url, street_address, name, defaultValueGuests,
+        checkin_date, checkout_date, discount, discount_weekly, discount_mothly } = props;
 
     return (
         <>
@@ -395,34 +404,30 @@ export function LeftSide(props) {
 
                     <div>
                         <div className="checkup__price fadeIn border-1">
+                            <Item
+                                title={'Checkin date'}
+                                content={checkin_date}
+                            />
 
-                            <div className="is-flex middle-xs between-xs cart-list">
-                                <div className="is-relative">
-                                    <span>Checkin date</span>
-                                </div>
-                                <span>{checkin_date}</span>
-                            </div>
+                            <Item
+                                title={'Checkout date'}
+                                content={checkout_date}
+                            />
 
-                            <div className="is-flex middle-xs between-xs cart-list">
-                                <div className="is-relative">
-                                    <span>Checkout date</span>
-                                </div>
-                                <span>{checkout_date}</span>
-                            </div>
+                            <Item
+                                title={'Guest'}
+                                content={defaultValueGuests}
+                            />
 
-                            <div className="is-flex middle-xs between-xs cart-list">
-                                <div className="is-relative">
-                                    <span>Guest</span>
-                                </div>
-                                <span>{defaultValueGuests}</span>
-                            </div>
+                            <Item
+                                title={`Giá thuê ${nights ? ` ${nights}` : 1} night`}
+                                content={rental_price ? parseVNDCurrency(rental_price) : ''}
+                            />
 
-                            <div className="is-flex middle-xs between-xs cart-list">
-                                <div className="is-flex align-center">
-                                    <span className="pr--6">Giá thuê {nights ? ` ${nights}` : 1} night</span>
-                                </div>
-                                <span>{rental_price ? parseVNDCurrency(rental_price) : ''}</span>
-                            </div>
+                            {(discount_weekly || discount_mothly) && <Item
+                                title={'Discount'}
+                                content={`-${parseVNDCurrency(discount)}`}
+                            />}
 
                         </div>
                     </div>
@@ -434,4 +439,16 @@ export function LeftSide(props) {
             </div>
         </>
     );
+}
+
+function Item(props) {
+    const { title, content } = props;
+    return (
+        <div className="is-flex middle-xs between-xs cart-list">
+            <div className="is-flex align-center">
+                <span className="pr--6">{title}</span>
+            </div>
+            <span>{content}</span>
+        </div>
+    )
 }

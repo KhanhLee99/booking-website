@@ -48,6 +48,7 @@ axiosClient.interceptors.response.use(
 		try {
 			const { config, status, data } = error.response;
 			console.log({ config, status, data })
+			// window.location.href = '/error';
 
 			if (config.url === '/auth/register' && status === 400) {
 				const errorMessage = data.message;

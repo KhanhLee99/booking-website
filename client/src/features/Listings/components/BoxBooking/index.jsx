@@ -13,6 +13,7 @@ import reservationApi from '../../../../api/reservationApi';
 import { parseVNDCurrency } from '../../../../@helper/helper';
 import OutsideAlerter from '../../../../components/OutsideAlerter/OutsideAlerter';
 import { MdOutlineEast } from 'react-icons/md';
+import PulseLoading from '../../../../components/Loading/PulseLoading';
 
 
 BoxBooking.propTypes = {
@@ -68,6 +69,7 @@ function BoxBooking(props) {
     const [checkoutNull, setCheckoutNull] = useState(true);
     const [minDate, setMinDate] = useState(null);
     const [maxDate, setMaxDate] = useState(null);
+    const [loadingCounting, setLoadingCounting] = useState(false);
 
     const { loadingListingDetail, listingDetail, reservationDate, blockList, host } = props;
 
@@ -124,6 +126,7 @@ function BoxBooking(props) {
     }
 
     const onChangeCheckin = date => {
+        setLoadingCounting(true);
         setMaxDate(null);
         setMinDate(date);
         setCheckin(date.format("YYYY/MM/DD"));
@@ -153,10 +156,13 @@ function BoxBooking(props) {
     const checkAvailableDate = () => {
 
         if (totalPrice) {
-            return <TotalPrice
+            return loadingCounting ? <PulseLoading colorLoading='#566985' /> : <TotalPrice
                 nights={totalPrice.nights}
                 rentalPrice={totalPrice.rental_price}
                 totalPrice={totalPrice.total_price}
+                discount={totalPrice.discount}
+                discount_weekly={totalPrice.discount_weekly}
+                discount_mothly={totalPrice.discount_mothly}
             />
         }
 
@@ -172,6 +178,7 @@ function BoxBooking(props) {
             }
             await reservationApi.countTotalPrice(params).then(res => {
                 setTotalPrice(res.data.data);
+                setLoadingCounting(false)
             })
         } catch (err) {
             console.log(err.message);
@@ -251,24 +258,28 @@ function BoxBooking(props) {
                 loadingListingDetail ? <Skeleton height={300} borderRadius={12} /> :
                     <>
                         <div id="booking-widget-anchor" className="boxed-widget booking-widget">
-                            <span style={{ marginBottom: "20px" }}>
-                                <span style={{
-                                    fontSize: "30px",
-                                    fontWeight: "600",
-                                    fontFamily: "Roboto",
-                                    color: '#566985',
-                                }}>
-                                    {totalPrice ? parseVNDCurrency(totalPrice.total_price) : parseVNDCurrency(listingDetail.price_per_night_base * nights)
-                                    }
-                                </span>
-                                <span style={{
-                                    fontSize: "16px",
-                                    fontWeight: "400",
-                                    fontFamily: "Roboto",
-                                    color: '#566985',
+                            {
+                                loadingCounting ? <PulseLoading colorLoading='#566985' /> : <span style={{ marginBottom: "20px" }}>
+                                    <span style={{
+                                        fontSize: "30px",
+                                        fontWeight: "600",
+                                        fontFamily: "Roboto",
+                                        color: '#566985',
+                                    }}>
+                                        {totalPrice ? parseVNDCurrency(totalPrice.total_price) : parseVNDCurrency(listingDetail.price_per_night_base * nights)
+                                        }
+                                    </span>
+                                    <span style={{
+                                        fontSize: "16px",
+                                        fontWeight: "400",
+                                        fontFamily: "Roboto",
+                                        color: '#566985',
 
-                                }}> /{totalPrice ? ` ${totalPrice.nights} ` : null}night</span>
-                            </span>
+                                    }}> /{totalPrice ? ` ${totalPrice.nights} ` : null}night</span>
+
+                                </span>
+                            }
+
 
                             <div className="row with-forms margin-top-20">
                                 <div className="col-lg-12">
@@ -349,7 +360,7 @@ function BoxBooking(props) {
                                 checkAvailableDate()
                             }
 
-                            <a onClick={handleBooking} href="#" className="button book-now fullwidth margin-top-5" style={{ borderRadius: "8px", padding: "14px 24px", background: "rgb(46, 63, 110)" }}>{totalPrice ? 'Booking now' : 'Check available'}</a>
+                            <a onClick={handleBooking} href="#" className="button book-now fullwidth margin-top-5" style={{ borderRadius: "8px", padding: "14px 24px", background: "rgb(46, 63, 110)" }}>{(totalPrice && !loadingCounting) ? 'Booking now' : 'Check available'}</a>
                         </div>
 
                         <div className="fl-wrap block_box" style={{ marginTop: 20 }}>
@@ -385,26 +396,31 @@ TotalPrice.defaultProps = {
     nights: '',
     rentalPrice: '',
     servicePrice: '',
-    totalPrice: '',
+    totalPrice: 0,
+    discount: 0,
+    discount_weekly: false,
+    discount_mothly: false,
 }
 
 function TotalPrice(props) {
-    const { nights, rentalPrice, servicePrice, totalPrice } = props;
+    const { nights, rentalPrice, servicePrice, totalPrice, discount, discount_weekly, discount_mothly } = props;
     return (
         <div className="mb--12">
             <div className="checkup__price fadeIn border-1">
-                <div className="is-flex middle-xs between-xs cart-list">
+                {/* <div className="is-flex middle-xs between-xs cart-list">
                     <div className="is-flex align-center">
                         <span className="pr--6">Giá thuê {nights} night</span>
                     </div>
                     <span>{parseVNDCurrency(rentalPrice)}</span>
-                </div>
-                {/* <div className="is-flex middle-xs between-xs cart-list">
-                    <div className="is-relative">
-                        <span>Phí dịch vụ</span>
-                    </div>
-                    <span>{servicePrice}</span>
                 </div> */}
+                <Item
+                    title={`Giá thuê ${nights} night`}
+                    content={parseVNDCurrency(rentalPrice)}
+                />
+                {(discount_weekly || discount_mothly) && <Item
+                    title={'Discount'}
+                    content={`-${parseVNDCurrency(discount)}`}
+                />}
                 <div className="is-flex middle-xs between-xs cart-list">
                     <div>
                         <span className="extra-bold">Total cost</span>
@@ -412,6 +428,18 @@ function TotalPrice(props) {
                     <span className="extra-bold">{parseVNDCurrency(totalPrice)}</span>
                 </div>
             </div>
+        </div>
+    )
+}
+
+function Item(props) {
+    const { title, content } = props;
+    return (
+        <div className="is-flex middle-xs between-xs cart-list">
+            <div className="is-flex align-center">
+                <span className="pr--6">{title}</span>
+            </div>
+            <span>{content}</span>
         </div>
     )
 }

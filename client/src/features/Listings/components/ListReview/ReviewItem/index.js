@@ -3,6 +3,8 @@ import PropTypes from 'prop-types';
 import './styles.scss';
 import { toCssValue } from 'jss';
 import AvatarPlaceholder from '../../../../../components/Placeholder/AvatarPlaceholder/AvatarPlaceholder';
+import Rating from 'react-rating';
+import { MdStarOutline, MdStar } from 'react-icons/md';
 
 ReviewItem.propTypes = {
 
@@ -37,8 +39,16 @@ function ReviewItem(props) {
             </div>
             <div className="comment-content">
                 <div className="arrow-comment" />
-                <div className="comment-by">{review.name}<span className="date">May 2019</span>
-                    <div className="star-rating" data-rating={4} />
+                <div className="comment-by">{review.name}
+                    <span className="date">May 2019</span>
+                    <div className="star-rating" data-rating={4} >
+                        <Rating
+                            initialRating={review.rating}
+                            emptySymbol={<MdStarOutline size={23} />}
+                            fullSymbol={<MdStar color='#F6C344' size={23} />}
+                            readonly
+                        />
+                    </div>
                 </div>
                 <p style={review_content}>{review.note}</p>
             </div>

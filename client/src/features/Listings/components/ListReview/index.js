@@ -15,7 +15,7 @@ function ListReview(props) {
             <div id="listing-reviews" className="listing-section">
                 <h3 className="listing-desc-headline" style={title}>Reviews</h3>
                 <div className="star-rating" data-rating="3.5">
-                    <h3 className="listing-desc-headline" style={{ fontFamily: "Roboto", fontSize: '18px', }}><span className="star"></span>{rating} <span>({reviews.length} đánh giá)</span></h3>
+                    <h3 className="listing-desc-headline" style={{ fontFamily: "Roboto", fontSize: '18px', }}><span className="star"></span>{rating} <span>({reviews.length} reviews)</span></h3>
                 </div>
 
                 <section className="comments listing-reviews" style={{ padding: 0 }}>

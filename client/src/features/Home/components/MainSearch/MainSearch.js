@@ -66,7 +66,7 @@ function MainSearch(props) {
 
     useEffect(() => {
         var typed = new Typed(el.current, {
-            strings: ["Homestays", "Apartments", "Hotels"],
+            strings: ["Homestays", "Apartments", "Studios"],
             typeSpeed: 80,
             backSpeed: 80,
             backDelay: 4000,

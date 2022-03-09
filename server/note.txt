@@ -32,3 +32,5 @@ Carbon: https://viblo.asia/p/xu-ly-datetime-de-dang-hon-voi-thu-vien-carbon-tron
 Collection: https://viblo.asia/p/nhung-method-thong-dung-cua-collection-trong-laravel-ban-da-su-dung-het-chua-07LKXOzp5V4
 
 refresh migration => php artisan migrate:refresh --path=/database/migrations/fileName.php
+
+gettype == type of in js

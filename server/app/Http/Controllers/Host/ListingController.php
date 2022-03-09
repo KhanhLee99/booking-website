@@ -19,6 +19,7 @@ use App\Http\Controllers\Host\RoomBedTypeController;
 use App\Listing_Amenities;
 use App\Photo_Listing;
 use App\Reservation;
+use App\Review_Listing;
 use Carbon\Carbon;
 use Exception;
 use PhpParser\Node\Expr\List_;
@@ -386,6 +387,8 @@ class ListingController extends Controller
     {
         try {
             $listing = Listing::find($id);
+            // $listing = DB::table('listing')->where('id', 12598)->get();
+            // return $listing;
             if ($listing) {
                 $amenities = $listing->Amenities;
                 $tmp = array();
@@ -398,6 +401,7 @@ class ListingController extends Controller
                 ksort($tmp);
                 foreach ($tmp as $amenity_type_id => $ids) {
                     $output['amenities'][] = array(
+                        'amenity_type_id' => $amenity_type_id,
                         'amenity_type' => $this->amenity_type_controller->get_by_id($amenity_type_id)->name,
                         'amenities' => $this->amenity_controller->get_by_array_id($ids)
                     );
@@ -409,7 +413,7 @@ class ListingController extends Controller
                     ->orderBy('review_listing.id', 'DESC')
                     ->select('review_listing.id', 'review_listing.note', 'review_listing.rating', 'review_listing.created_at', 'users.name', 'users.avatar_url')
                     ->get();
-
+                $output['rating'] = Review_Listing::where('listing_id', $id)->selectRaw('SUM(rating)/COUNT(guest_id) AS avg_rating')->first()->avg_rating;
                 if ($user_login = $request->user('api')) {
                     $favorite = Favorite::where([
                         ["user_id", $user_login->id],

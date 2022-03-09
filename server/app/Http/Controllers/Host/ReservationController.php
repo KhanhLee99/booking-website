@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Helper\TotalDateController;
 use App\Listing;
 use App\Models\Reservation_Timeline;
+use App\Models\Website_Infomation;
 use Illuminate\Http\Request;
 use Exception;
 use App\Reservation;
@@ -244,16 +245,34 @@ class ReservationController extends Controller
                 ->join('users as hosts', 'hosts.id', '=', 'listing.user_id')
                 ->orderBy('reservation.id', 'desc')
                 ->join('reservation_status', 'reservation_status.id', '=', 'reservation.reservation_status_id')
-                ->select('reservation.*', 'listing.name as listing_name', 'listing.street_address', 'listing.avatar_url as thumb_img', 'listing.price_per_night_base',
-                'users.name as user_name', 'users.avatar_url as user_avatar_url', 'users.email as user_email', 'users.phone_number as user_phone_number',
-                'reservation_status.name as status',
-                'hosts.name as host_name', 'hosts.id as host_id', 'hosts.avatar_url as host_avatar_url', 'hosts.phone_number as host_phone_number', 'hosts.email as host_email',
-                'listing_type.name as listing_type', 'listing.price_per_night_base')
+                ->select(
+                    'reservation.*',
+                    'listing.name as listing_name',
+                    'listing.street_address',
+                    'listing.avatar_url as thumb_img',
+                    'listing.price_per_night_base',
+                    'users.name as user_name',
+                    'users.avatar_url as user_avatar_url',
+                    'users.email as user_email',
+                    'users.phone_number as user_phone_number',
+                    'reservation_status.name as status',
+                    'hosts.name as host_name',
+                    'hosts.id as host_id',
+                    'hosts.avatar_url as host_avatar_url',
+                    'hosts.phone_number as host_phone_number',
+                    'hosts.email as host_email',
+                    'listing_type.name as listing_type',
+                    'listing.price_per_night_base'
+                )
                 ->get();
+
+
+
             if ($data) {
                 $this->response = [
                     'status' => 'success',
-                    'data' => $data[0]
+                    'data' => $data[0],
+                    'detail_price' => $this->count_total_price_2(explode(" ", $data[0]->checkin_date)[0], explode(" ", $data[0]->checkout_date)[0], $data[0]->listing_id),
                 ];
                 return response()->json($this->response, $this->success_code);
             }
@@ -290,37 +309,120 @@ class ReservationController extends Controller
     public function count_total_price(Request $request)
     {
         try {
-            $checkin = $request->checkin;
-            $checkout = $request->checkout;
-            // $adults = $request->adults;
-            // $child = $request->child;
-            $listing_id = $request->listing_id;
-            $listing = Listing::where('id', $listing_id)->first();
-            if ($listing) {
-                $price_base = $listing->price_per_night_base;
-                $price_weekend = $listing->price_per_night_weekend;
-
-                $number_normal_days = $this->totalDateController->number_of_working_days($checkin, $checkout);
-                $number_weekend_days = $this->totalDateController->number_of_weekend_days($checkin, $checkout);
-                in_array(date("N", strtotime($checkout)), [6, 7]) ? $number_weekend_days -= 1 : $number_normal_days -= 1;
-
-                $total_price = $number_normal_days * $price_base + $number_weekend_days * $price_weekend;
-                $data = [
-                    'nights' => $number_weekend_days + $number_normal_days,
-                    'rental_price' => $total_price,
-                    'total_price' => $total_price,
-                ];
-
+            $data = $this->count_total_price_2($request->checkin, $request->checkout, $request->listing_id);
+            if ($data) {
                 $this->response = [
                     'status' => 'success',
                     'data' => $data
                 ];
                 return response()->json($this->response, 200);
             }
-            return response()->json($this->response);
+            return response()->json($this->response, 400);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);
         }
+    }
+
+    public function count_total_price_2($checkin, $checkout, $listing_id)
+    {
+        try {
+            $total_week = $this->week_between_two_dates($checkin, $checkout);
+            $total_month = $this->month_between_two_dates($checkin, $checkout);
+            $listing = Listing::where('id', $listing_id)->first();
+
+
+            if ($listing) {
+
+                $price_base = $listing->price_per_night_base;
+                $price_weekend = $listing->price_per_night_weekend;
+                $discount_weekly = $listing->discount_weekly;
+                $discount_monthly = $listing->discount_monthly;
+                $discount = 0;
+
+                $number_normal_days = $this->totalDateController->number_of_working_days($checkin, $checkout);
+                $number_weekend_days = $this->totalDateController->number_of_weekend_days($checkin, $checkout);
+                in_array(date("N", strtotime($checkout)), [6, 7]) ? $number_weekend_days -= 1 : $number_normal_days -= 1;
+
+                $total_price = $number_normal_days * $price_base + $number_weekend_days * $price_weekend;
+
+                $web_info = Website_Infomation::first();
+                $fee_percent = 0;
+                if ($web_info) {
+                    $fee_percent = $web_info->usage_fee_percentage;
+                }
+                $fee = $total_price * $fee_percent / 100;
+
+                $data = [
+                    'nights' => $number_weekend_days + $number_normal_days,
+                    'rental_price' => $total_price,
+                    'discount' => $discount,
+                    'total_price' => $total_price,
+                    'discount_mothly' => false,
+                    'discount_weekly' => false,
+                    'fee' => $fee,
+                    'host_receive' => $total_price - $fee,
+                ];
+
+
+                if ($total_month > 0) {
+                    $discount = $total_price * $discount_monthly / 100;
+                    $fee = ($total_price - $discount) * $fee_percent / 100;
+                    if ($discount > 0) {
+                        $data['discount'] = $discount;
+                        $data['total_price'] = $total_price - $discount;
+                        $data['discount_mothly'] = true;
+                        $data['fee'] = $fee;
+                        $data['host_receive'] = $total_price - $discount - $fee;
+                    }
+                } else if ($total_week > 0) {
+                    $discount = $total_price * $discount_weekly / 100;
+                    $fee = ($total_price - $discount) * $fee_percent / 100;
+
+                    if ($discount > 0) {
+                        $data['discount'] = $discount;
+                        $data['total_price'] = $total_price - $discount;
+                        $data['discount_weekly'] = true;
+                        $data['fee'] = $fee;
+                        $data['host_receive'] = $total_price - $discount - $fee;
+                    }
+                }
+
+                return $data;
+
+                // $this->response = [
+                //     'status' => 'success',
+                //     'data' => $data
+                // ];
+                // return response()->json($this->response, 200);
+            }
+            // return response()->json($this->response);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response);
+        }
+    }
+
+    function week_between_two_dates($date1, $date2)
+    {
+        $first = DateTime::createFromFormat('Y/m/d', str_replace('-', '/', $date1));
+        $second = DateTime::createFromFormat('Y/m/d', str_replace('-', '/', $date2));
+        if ($date1 > $date2) return $this->week_between_two_dates($date2, $date1);
+        return floor($first->diff($second)->days / 7);
+    }
+
+    function month_between_two_dates($date1, $date2)
+    {
+        $ts1 = strtotime($date1);
+        $ts2 = strtotime($date2);
+
+        $year1 = date('Y', $ts1);
+        $year2 = date('Y', $ts2);
+
+        $month1 = date('m', $ts1);
+        $month2 = date('m', $ts2);
+
+        $diff = (($year2 - $year1) * 12) + ($month2 - $month1);
+        return $diff;
     }
 }

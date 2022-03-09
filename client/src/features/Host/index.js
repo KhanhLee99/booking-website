@@ -67,6 +67,7 @@ function HostFeature(props) {
                     exact
                     component={Booking}
                 />
+
                 <Route
                     path={`${match.url}/inbox`}
                     exact

@@ -154,6 +154,9 @@ function Pay(props) {
                                 checkin_date={reservation.checkin_date.split(' ')[0]}
                                 checkout_date={reservation.checkout_date.split(' ')[0]}
                                 defaultValueGuests={defaultValueGuests(reservation.adult_count, reservation.child_count)}
+                                discount={totalPrice.discount}
+                                discount_weekly={totalPrice.discount_weekly}
+                                discount_mothly={totalPrice.discount_mothly}
                             />}
 
                         </div>

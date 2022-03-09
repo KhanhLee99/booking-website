@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Common;
 
 use App\Http\Controllers\Controller;
 use App\Models\Reservation_Timeline;
+use App\Reservation;
 use Exception;
 use Illuminate\Http\Request;
 
@@ -27,6 +28,13 @@ class ReservationTimelineController extends Controller
     {
         try {
             $user_login = $request->user('api');
+            $reservation = Reservation::join('users', 'users.id', 'reservation.guest_id')
+                ->join('listing', 'listing.id', 'reservation.listing_id')
+                ->where('reservation.id', $id)
+                ->select('reservation.created_at as title', 'users.name as cardTitle', 'reservation.reservation_status_id')
+                ->selectRaw('(CASE WHEN users.id = ' . $user_login->id . ' THEN 1 ELSE 0 END) AS is_me')
+                ->selectRaw('(CASE WHEN listing.user_id = users.id THEN 1 ELSE 0 END) AS is_host')
+                ->first();
             $timeline = Reservation_Timeline::where('reservation_id', $id)
                 ->join('users', 'users.id', 'timeline_reservation.user_id')
                 ->join('reservation', 'reservation.id', 'timeline_reservation.reservation_id')
@@ -34,10 +42,12 @@ class ReservationTimelineController extends Controller
                 ->select('users.name as cardTitle', 'timeline_reservation.reservation_status_id', 'timeline_reservation.created_at as title')
                 ->selectRaw('(CASE WHEN users.id = ' . $user_login->id . ' THEN 1 ELSE 0 END) AS is_me')
                 ->selectRaw('(CASE WHEN listing.user_id = timeline_reservation.user_id THEN 1 ELSE 0 END) AS is_host')
-                ->get();
+                ->get()
+                ->toArray();
+            array_unshift($timeline, $reservation);
             $this->response = [
                 'status' => true,
-                'data' => $timeline,
+                'data' => $timeline
             ];
             return response()->json($this->response, $this->success_code);
         } catch (Exception $e) {

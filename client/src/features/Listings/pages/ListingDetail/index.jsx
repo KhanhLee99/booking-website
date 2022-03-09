@@ -53,6 +53,7 @@ function ListingDetail(props) {
     const [showChat, setShowChat] = useState(false);
     const [conversation, setConversation] = useState([]);
     const [currentConversationId, setCurrentConversationId] = useState(null);
+    const [rating, setRating] = useState(0);
 
     const handleSave = async () => {
         if (isLoggedIn) {
@@ -147,6 +148,7 @@ function ListingDetail(props) {
                 setPhotos(res.data.data.photos);
                 setReviews(res.data.data.reviews);
                 setSaved(res.data.data.saved);
+                setRating(res.data.data.rating);
                 setLoadingListingDetail(false)
             });
         }
@@ -296,7 +298,7 @@ function ListingDetail(props) {
                                 {/* Reviews */}
                                 <ListReview
                                     reviews={reviews}
-                                    rating={listingDetail.rating}
+                                    rating={rating}
                                     title={title}
                                 />
                             </>

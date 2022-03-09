@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import './DetailReservation.scss';
 import Header from '../../../../components/Header';
@@ -23,6 +23,7 @@ function DetailReservation(props) {
     const [reservation, setReservation] = useState({ id: 0 });
     const [loading, setLoading] = useState(true);
     const [timeline, setTimeline] = useState([]);
+    const [detailPrice, setDetailPrice] = useState();
 
     const { height } = useWindowDimensions();
     const heightSection = height - 100;
@@ -32,6 +33,7 @@ function DetailReservation(props) {
             try {
                 await reservationApi.getDetailReservation(id).then(res => {
                     setReservation(res.data.data);
+                    setDetailPrice(res.data.detail_price);
                 })
             } catch (err) {
                 console.log(err.message)
@@ -53,10 +55,10 @@ function DetailReservation(props) {
     }, []);
 
     useEffect(() => {
-        if (reservation.id > 0) {
+        if (reservation.id > 0 && detailPrice) {
             setLoading(false);
         }
-    }, [reservation])
+    }, [reservation, detailPrice])
 
     return (
         <div className='reservation-detail-container' style={{ background: '#f6f6f6' }}>
@@ -65,13 +67,24 @@ function DetailReservation(props) {
             {
                 (reservation.id > 0) && <section className="gray-bg main-dashboard-sec" id="sec1">
                     <div className="container" style={{ minHeight: heightSection }}>
-                        <div className='col-md-12 reservation-timeline-container'>
-                            <div className='reservation-timeline fl-wrap block_box'>
-                                <Chrono items={timeline} mode="VERTICAL"
-                                    disableNavOnKey
-                                />
+                        <div className='col-md-12 reservation-timeline-container' style={{ height: 'auto' }}>
+                            <div className='reservation-timeline fl-wrap block_box' style={{ height: '100%' }}>
+                                <div className='col-md-8' style={{ borderRight: '1px solid #e5e7f2' }}>
+                                    <Chrono items={timeline} mode="VERTICAL"
+                                        disableNavOnKey
+                                    />
+                                </div>
+
+                                <div className='col-md-4' style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                                    <button
+                                        className="logout_btn color2-bg"
+                                        style={{ marginLeft: 0, marginBottom: 10 }}
+                                        onClick={() => history.push(`/listing/${reservation.listing_id}`)}
+                                    >Booking listing again <i className="fas fa-sign-out" /></button>
+                                </div>
                             </div>
                         </div>
+
                         <div className='col-xl-8 col-md-12'>
                             <ReservationInfo
                                 checkin={reservation.checkin_date.split(' ')[0]}
@@ -82,7 +95,6 @@ function DetailReservation(props) {
                             />
                         </div>
                         <div className='col-xl-4 col-md-12'>
-
                             <Owner
                                 host_phone_number={reservation.host_phone_number}
                                 host_email={reservation.host_email}
@@ -95,13 +107,18 @@ function DetailReservation(props) {
 
                             <div className='fl-wrap'>
                                 <div className="cart-details-item-header bb-none mb-0">
-                                    <h3>CHI TIẾT CHỖ Ở</h3>
+                                    <h3>Price</h3>
                                 </div>
                                 <div className='block_box reservation-info'>
-                                    <TotalPrice
+                                    {(reservation && detailPrice) && <TotalPrice
                                         price_per_night={reservation.price_per_night_base}
-                                        total_price={reservation.total_price}
-                                    />
+                                        total_price={detailPrice.total_price}
+                                        nights={detailPrice.nights}
+                                        rental_price={detailPrice.rental_price}
+                                        discount_mothly={detailPrice.discount_mothly}
+                                        discount_weekly={detailPrice.discount_weekly}
+                                        discount={detailPrice.discount}
+                                    />}
                                 </div>
                             </div>
                         </div>
@@ -114,12 +131,9 @@ function DetailReservation(props) {
                                 listing_type={reservation.listing_type}
                             />
                         </div>
+
                         <div className='col-md-12'>
-                            <button
-                                className="logout_btn color2-bg"
-                                style={{ marginLeft: 0, marginBottom: 10 }}
-                                onClick={() => history.push(`/listing/${reservation.listing_id}`)}
-                            >Booking listing again <i className="fas fa-sign-out" /></button>
+                            <div className='h-20' />
                         </div>
 
                     </div>
@@ -139,7 +153,7 @@ function Listing(props) {
     return (
         <>
             <div className="cart-details-item-header bb-none mb-0">
-                <h3>CHI TIẾT CHỖ Ở</h3>
+                <h3>Detail Listing</h3>
             </div>
             <div id="booking-widget-anchor" className="boxed-widget booking-widget" style={{ padding: '18px 18px 0' }}>
                 <div className="with-forms">
@@ -164,7 +178,7 @@ function Owner(props) {
     return (
         <>
             <div className="cart-details-item-header bb-none mb-0">
-                <h3>CHI TIẾT CHỖ Ở</h3>
+                <h3>Owner</h3>
             </div>
             <div className="fl-wrap block_box">
                 <div>
@@ -190,7 +204,7 @@ function Owner(props) {
 }
 
 function TotalPrice(props) {
-    const { nights, rentalPrice, servicePrice, total_price, price_per_night } = props;
+    const { nights, rental_price, discount, total_price, price_per_night, discount_weekly, discount_monthly } = props;
     return (
         <div>
             <div className="checkup__price fadeIn border-1">
@@ -200,12 +214,16 @@ function TotalPrice(props) {
                 />
                 <PriceItem
                     title={'Nights'}
-                    content={3}
+                    content={nights}
                 />
                 <PriceItem
-                    title={'Giá thuê 3 đêm'}
-                    content={parseVNDCurrency(total_price)}
+                    title={`Giá thuê ${nights} đêm`}
+                    content={parseVNDCurrency(rental_price)}
                 />
+                {(discount_weekly || discount_monthly) && <PriceItem
+                    title={'Discount'}
+                    content={`-${parseVNDCurrency(discount)}`}
+                />}
                 <PriceItem
                     title={'Payment Method'}
                     content={'PayPal'}
@@ -224,7 +242,7 @@ function ReservationInfo(props) {
     return (
         <div className='fl-wrap'>
             <div className="cart-details-item-header bb-none mb-0">
-                <h3>CHI TIẾT CHỖ Ở</h3>
+                <h3>Reservation</h3>
             </div>
             <div className='block_box reservation-info' style={{ padding: 10 }}>
                 <h3 style={{ fontSize: 22, padding: '5px 0', color: 'rgba(0, 0, 0, 0.85)', fontWeight: 500 }}>{user_name}</h3>
@@ -257,9 +275,9 @@ function PriceItem(props) {
     return (
         <div className="is-flex middle-xs between-xs cart-list pt-5 pb-5 pl-5 pr-5">
             <div className="is-flex align-center">
-                <span style={{ color: '#555', fontSize: 16 }}>{title}</span>
+                <span style={{ color: '#566985', fontSize: 16 }}>{title}</span>
             </div>
-            <span style={{ color: '#555', fontSize: 16 }}>{content}</span>
+            <span style={{ color: '#566985', fontSize: 16 }}>{content}</span>
         </div>
     )
 }

@@ -97,33 +97,23 @@ function App() {
         limit: 5,
         page: 1,
       }));
-      // setTimeout(() => {
-      //   setShow(false);
-      // }, 2000);
       console.log(payload);
     })
     .catch((err) => console.log("failed: ", err));
 
+  useEffect(() => {
+    if (show) setShow(false);
+  }, [show]);
+
   return (
-    // <Select options={options} styles={customStyles} />
-
-    // <AdminPayment />
-
     <>
-      {show ? (
-        // <ReactNotificationComponent
-        //   title={notification.title}
-        //   body={notification.body}
-        //   id={notification.id}
-        //   status={NotificationStattus.SUCCESS}
-        // />
-        enqueueSnackbar(<span dangerouslySetInnerHTML={{ __html: notification.body }} />, { variant: "success" })
-      ) : (
-        <></>
-      )}
       {loading ? <Loading /> :
         <Suspense fallback={<div>Loading ...</div>}>
           <BrowserRouter>
+            {
+              show &&
+              enqueueSnackbar(<span dangerouslySetInnerHTML={{ __html: notification.body }} />, { variant: "success" })
+            }
             <Switch>
               <Route path="/" exact component={Home} />
               <Route path="/admin/login" component={AdminLogin} />
@@ -143,7 +133,7 @@ function App() {
               {/* <Redirect exact from='/' to='/login' /> */}
               {/* <PrivateRoute path='/guest' component={GuestFeauture} /> */}
               {/* <Route path="/error" component={MainErrorPage} /> */}
-              <Route path="/not-found" component={NotFoundPage} />
+              <Route path="/error" component={NotFoundPage} />
             </Switch>
           </BrowserRouter>
         </Suspense>
