@@ -20,7 +20,7 @@ class AdminBookingController extends Controller
         try {
             $data = Reservation::join('listing', 'listing.id', '=', 'reservation.listing_id')
                 ->join('users', 'users.id', '=', 'reservation.guest_id')
-                ->orderBy('reservation.created_at', 'desc')
+                ->orderBy('reservation.id', 'desc')
                 ->select('reservation.*', 'listing.name as listing_name', 'listing.avatar_url as listing_thumb', 'listing.id as listing_id', 'listing.street_address', 'users.name as user_name', 'users.email as user_email', 'users.avatar_url as user_avatar', 'users.id as user_id')
                 ->paginate($request->limit);
             $this->response = [

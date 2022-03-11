@@ -24,7 +24,12 @@ class AdminListingController extends Controller
     public function get_listing_pending(Request $request)
     {
         try {
-            $listing_pending = Listing::where('is_verified', 0)->orderBy('id', 'desc')->paginate($request->limit);
+            $listing_pending = Listing::where('is_verified', 0)
+                ->where('is_public', 1)
+                ->join('users', 'users.id', '=', 'listing.user_id')
+                ->orderBy('id', 'desc')
+                ->select('listing.*', 'users.id as host_id', 'users.name as host_name', 'users.email as host_email', 'users.avatar_url as host_avatar_url')
+                ->paginate($request->limit);
             if ($listing_pending) {
                 $this->response = [
                     'status' => true,
@@ -42,7 +47,11 @@ class AdminListingController extends Controller
     public function get_listing_active(Request $request)
     {
         try {
-            $listing_active = Listing::where('is_verified', 1)->orderBy('id', 'desc')->paginate($request->limit);
+            $listing_active = Listing::where('is_verified', 1)
+                ->join('users', 'users.id', '=', 'listing.user_id')
+                ->orderBy('id', 'desc')
+                ->select('listing.*', 'users.id as host_id', 'users.name as host_name', 'users.email as host_email', 'users.avatar_url as host_avatar_url')
+                ->paginate($request->limit);
             if ($listing_active) {
                 $this->response = [
                     'status' => true,
@@ -104,9 +113,16 @@ class AdminListingController extends Controller
         //     }, range(1, 12));
         // }
         try {
+            $data = [];
+            $data = [
+                'total_pending' => Listing::where('is_verified', 0)->where('is_public', 1)->count(),
+                'total_active' => Listing::where('is_verified', 1)->count(),
+            ];
+            return $data;
+
+
             $counts = Listing::select('is_verified', DB::raw('count(*) as total'))->groupBy('is_verified')
                 ->get();
-            $data = [];
             foreach ($counts as $item) {
                 if ($item->is_verified == 0) {
                     $data['total_pending'] = $item->total;

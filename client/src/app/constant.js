@@ -29,6 +29,12 @@ export const ReservationStatus = {
     REVIEWED: { id: 8, name: 'reviewed', color: '#50596e' },
 }
 
+// export const TitleTimeline = {
+//     1: {
+
+//     }
+// }
+
 export const AdminTab = {
     DASHBOARD: 'dashboard',
     PAYOUT: 'payout',

@@ -15,6 +15,10 @@ DetailReservation.propTypes = {
 
 };
 
+const scroll_nav = {
+    float: 'left',
+}
+
 function DetailReservation(props) {
 
     const { id } = useParams();
@@ -43,7 +47,40 @@ function DetailReservation(props) {
         const getTimeline = async () => {
             try {
                 await reservationApi.getTimeline(id).then(res => {
-                    setTimeline(res.data.data);
+                    let tmp_timeline = res.data.data;
+                    tmp_timeline.forEach((item, index) => {
+                        let user_name = item.is_me ? 'You' : 'The host';
+                        switch (item.reservation_status_id) {
+                            case 1: // REQUEST
+                                item.cardTitle = `${user_name} have created a reservation`
+                                break;
+                            case 2: // ACCEPT
+                                item.cardTitle = `${user_name} has accepted your reservation`
+                                break;
+                            case 3: // PAID
+                                item.cardTitle = `${user_name} have paid your reservation`
+                                if (index == 0) {
+                                    item.cardTitle = `${user_name} have created and paid a reservation`
+                                }
+                                break;
+                            case 4: // CANCEL
+                                item.cardTitle = `${user_name} have cancel your reservation`
+                                break;
+                            case 5: // CHECKIN
+                                item.cardTitle = `${user_name} confirms that you have checked in`
+                                break;
+                            case 6: // CHECKOUT
+                                item.cardTitle = `${user_name} checked out`
+                                break;
+                            case 7: // DECLINE
+                                item.cardTitle = `${user_name} has decline your reservation`
+                                break;
+                            case 8: // REVIEW
+                                item.cardTitle = `${user_name} reviewed`
+                                break;
+                        }
+                    })
+                    setTimeline(tmp_timeline);
                 })
             } catch (err) {
                 console.log(err.message);
@@ -67,11 +104,15 @@ function DetailReservation(props) {
             {
                 (reservation.id > 0) && <section className="gray-bg main-dashboard-sec" id="sec1">
                     <div className="container" style={{ minHeight: heightSection }}>
+                        <div className='col-md-12'>
+                            <h3 className='h3_title' style={scroll_nav}>Reservation Detail</h3>
+                        </div>
                         <div className='col-md-12 reservation-timeline-container' style={{ height: 'auto' }}>
                             <div className='reservation-timeline fl-wrap block_box' style={{ height: '100%' }}>
                                 <div className='col-md-8' style={{ borderRight: '1px solid #e5e7f2' }}>
                                     <Chrono items={timeline} mode="VERTICAL"
                                         disableNavOnKey
+                                        color={'red'}
                                     />
                                 </div>
 

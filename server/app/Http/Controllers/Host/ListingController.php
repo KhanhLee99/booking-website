@@ -156,7 +156,8 @@ class ListingController extends Controller
             $query = DB::table('listing')
                 ->whereNull('deleted_at')
                 ->join('listing_type', 'listing.listing_type_id', '=', 'listing_type.id')->where('listing.user_id', $user->id)
-                ->where('status', '!=', 'block_activity');
+                // ->where('status', '!=', 'block_activity')
+            ;
             // $query = User::find($user->id)->Listings();
             switch ($status) {
                 case 'all':
@@ -164,9 +165,12 @@ class ListingController extends Controller
                 case 'unverified':
                     $query->where('listing.is_verified', 0);
                     break;
-                default:
-                    $query->where('listing.status', $status);
+                case 'active':
+                    $query->where('listing.is_verified', 1);
                     break;
+                    // default:
+                    //     $query->where('listing.status', $status);
+                    //     break;
             }
             $listings = $query->orderBy('listing.id', 'desc')
                 ->select('listing.*', 'listing_type.name as type')
