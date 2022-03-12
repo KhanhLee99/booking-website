@@ -210,6 +210,7 @@ export function Contact(props) {
         <a className="chat-contacts-item" href="#" onClick={(e) => { handleClickConversation(e, lastMessage.conversation_id) }}>
             <div className="dashboard-message-avatar">
                 <img src={lastMessage.receiver.avatar} alt="" />
+                {lastMessage.is_read == 0 && <div className="message-counter">1</div>}
             </div>
             <div className="chat-contacts-item-text">
                 <h4>{lastMessage.receiver.name}</h4>

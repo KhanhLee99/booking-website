@@ -130,7 +130,6 @@ function ListingDetail(props) {
                     isMe: 1,
                 }
                 setConversation(oldState => [...oldState, newMessage]);
-                // setConversation(conversation.push(newMessage));
                 resetForm();
             });
         } catch (err) {

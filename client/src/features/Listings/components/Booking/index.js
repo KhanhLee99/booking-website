@@ -420,7 +420,7 @@ export function LeftSide(props) {
                             />
 
                             <Item
-                                title={`Giá thuê ${nights ? ` ${nights}` : 1} night`}
+                                title={`Total cost ${nights ? ` ${nights}` : 1} night`}
                                 content={rental_price ? parseVNDCurrency(rental_price) : ''}
                             />
 

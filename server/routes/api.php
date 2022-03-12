@@ -235,6 +235,7 @@ Route::get('admin/host/all', 'Admin\AdminUserController@get_all_host');
 // Test
 Route::get('city/all', 'TestController@read_file_json');
 Route::get('test2', 'TestController@test_2');
+Route::get('test3', 'TestController@delete_migration');
 
 // ReservationTimelineController
 Route::get('timeline/{id}', 'Common\ReservationTimelineController@get_timeline_by_reservation_id');

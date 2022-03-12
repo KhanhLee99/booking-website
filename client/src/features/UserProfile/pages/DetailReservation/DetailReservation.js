@@ -250,7 +250,7 @@ function TotalPrice(props) {
         <div>
             <div className="checkup__price fadeIn border-1">
                 <PriceItem
-                    title={'Giá thuê 1 night'}
+                    title={'Total cost 1 night'}
                     content={parseVNDCurrency(price_per_night)}
                 />
                 <PriceItem
@@ -258,7 +258,7 @@ function TotalPrice(props) {
                     content={nights}
                 />
                 <PriceItem
-                    title={`Giá thuê ${nights} đêm`}
+                    title={`Total cost ${nights} đêm`}
                     content={parseVNDCurrency(rental_price)}
                 />
                 {(discount_weekly || discount_monthly) && <PriceItem

@@ -50,6 +50,11 @@ class TestController extends Controller
 
         return $result;
     }
+
+    public function delete_migration(Request $request)
+    {
+        return DB::table('migrations')->where('id', $request->id)->delete();
+    }
 }
 
 // (AB) ngang !-- (A ngang + B ngang) ngang

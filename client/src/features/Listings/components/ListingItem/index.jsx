@@ -419,7 +419,9 @@ function ListingItem(props) {
 
                     <div className="k-geodir-category-opt" style={geodir_category_opt}>
                         <div className="k-listing-rating-count-wrap">
-                            <div className="k-review-score" style={review_score}>{listing.rating.toFixed(1)}</div>
+                            {/* <div className="k-review-score" style={review_score}>{listing.rating.toFixed(1)}</div> */}
+                            {/* fix-heroku */}
+                            <div className="k-review-score" style={review_score}>{listing.rating}</div>
                             <div data-starrating2={5} style={listing_rating} >
                                 <i className='fas fa-star' style={{ color: '#facc39' }} />
                             </div>

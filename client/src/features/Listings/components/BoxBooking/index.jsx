@@ -407,14 +407,8 @@ function TotalPrice(props) {
     return (
         <div className="mb--12">
             <div className="checkup__price fadeIn border-1">
-                {/* <div className="is-flex middle-xs between-xs cart-list">
-                    <div className="is-flex align-center">
-                        <span className="pr--6">Giá thuê {nights} night</span>
-                    </div>
-                    <span>{parseVNDCurrency(rentalPrice)}</span>
-                </div> */}
                 <Item
-                    title={`Giá thuê ${nights} night`}
+                    title={`Total cost ${nights} night`}
                     content={parseVNDCurrency(rentalPrice)}
                 />
                 {(discount_weekly || discount_mothly) && <Item

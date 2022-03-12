@@ -72,11 +72,11 @@ class ConversationController extends Controller
                         'conversation_id' => $conversation->id,
                         'receiver' => [
                             'name' => $conversation->users[0]->name,
-                            'avatar' => $conversation->users[0]->avatar_url
+                            'avatar' => $conversation->users[0]->avatar_url,
                         ],
                         'message' => $last_message['message'],
                         'time' => $last_message['created_at'],
-                        'is_read' => $last_message['sender_id'] === $user->id ? 0 : $last_message['is_read']
+                        'is_read' => $last_message['sender_id'] === $user->id ? 1 : $last_message['is_read'],
                     ];
                 }
             }

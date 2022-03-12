@@ -19,6 +19,11 @@ class MessageController extends Controller
         'status' => 'fail'
     ];
 
+    public function __construct()
+    {
+        $this->notificationController = new NotificationController();
+    }
+
     public function get_conversation_two_person(Request $request)
     {
         try {
@@ -74,17 +79,26 @@ class MessageController extends Controller
             $conversation_id = $request->conversation_id;
 
             if ($user->Conversations->contains($conversation_id)) {
+
                 $new_message = $user->Messages()->create([
                     'message' => $request->message,
                     'conversation_id' => $conversation_id
                 ]);
                 if ($new_message) {
+                    $arr_user_id = Conversation::find($conversation_id)->Users->pluck('id')->toArray();
+                    if (count($arr_user_id) > 0) {
+                        foreach ($arr_user_id as $id) {
+                            if ($id != $user->id) {
+                                $this->notificationController->push_notification('New Message', 'New Message', $id);
+                            }
+                        }
+                    }
                     $this->response['status'] = 'success';
                     return response()->json($this->response, $this->success_code);
                 }
             }
 
-            $this->response['errorMessage'] = "User ko thuoc this conversation";
+            $this->response['errorMessage'] = "User ko thuoc cuoc tro chuyen";
             return response()->json($this->response);
             // event(new Message($request->message, $request->username));
 
@@ -98,7 +112,8 @@ class MessageController extends Controller
     {
         try {
             $user = $request->user('api');
-            $last_message = ModelsMessage::orderBy('id', 'desc')->where('conversation_id', $request->conversation_id)->first();
+            $last_message = ModelsMessage::orderBy('id', 'desc')
+                ->where('conversation_id', $request->conversation_id)->first();
             if ($last_message && $last_message['sender_id'] != $user->id) {
                 $last_message->update([
                     'is_read' => 1

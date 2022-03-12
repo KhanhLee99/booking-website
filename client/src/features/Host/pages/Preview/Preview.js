@@ -116,7 +116,7 @@ function Preview(props) {
 
                                     {/* Amenities */}
                                     <h3 className="listing-desc-headline" style={title}>Amenities</h3>
-                                    <p className='listing-overview'>Giới thiệu về các tiện nghi và dịch vụ tại nơi lưu trú</p>
+                                    <p className='listing-overview'>About the property's amenities and services.</p>
                                     {
                                         amenities.map((item, index) => {
                                             return (
@@ -135,34 +135,26 @@ function Preview(props) {
                                 {/* Food Menu */}
                                 <div id="listing-pricing-list" className="listing-section">
                                     <h3 className="listing-desc-headline" style={title}>Pricing</h3>
-                                    <p className='listing-overview'>Giá có thể tăng vào cuối tuần hoặc ngày lễ</p>
+                                    <p className='listing-overview'>Prices may increase on weekends or holidays.</p>
                                     <div className="pricing-list-container">
                                         {/* Food List */}
                                         <ul>
                                             <li>
-                                                <p>Thứ hai - Thứ năm</p>
+                                                <p>Monday - Friday</p>
                                                 <span>{parseVNDCurrency(listingDetail.price_per_night_base)}</span>
                                             </li>
                                             <li>
-                                                <p>Thứ sáu - Chủ nhật</p>
+                                                <p>Saturday - Sunday</p>
                                                 <span>{parseVNDCurrency(listingDetail.price_per_night_weekend)}</span>
                                             </li>
-                                            {/* <li>
-                                                    <p>Phí trẻ em tăng thêm</p>
-                                                    <span>125,000₫ (sau 2 khách)</span>
-                                                </li> */}
-                                            <li>
-                                                <p>Thuê theo tháng</p>
+                                            {parseFloat(listingDetail.discount_monthly) > 0 && <li>
+                                                <p>Monthly Discount</p>
                                                 <span>-{listingDetail.discount_monthly} %</span>
-                                            </li>
-                                            <li>
-                                                <p>Số đêm tối thiểu</p>
-                                                <span>1 đêm</span>
-                                            </li>
-                                            <li>
-                                                <p>Số đêm tối đa</p>
-                                                <span>90 đêm</span>
-                                            </li>
+                                            </li>}
+                                            {parseFloat(listingDetail.discount_weekly) > 0 && <li>
+                                                <p>Weekly Discount</p>
+                                                <span>-{listingDetail.discount_weekly} %</span>
+                                            </li>}
                                         </ul>
                                     </div>
                                 </div>
