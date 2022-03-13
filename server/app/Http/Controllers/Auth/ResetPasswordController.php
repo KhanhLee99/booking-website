@@ -60,6 +60,7 @@ class ResetPasswordController extends Controller
     public function reset(Request $request)
     {
         $passwordReset = PasswordReset::where('token', $request->token)->firstOrFail();
+
         if (Carbon::parse($passwordReset->updated_at)->addMinutes(720)->isPast()) {
             $passwordReset->delete();
 

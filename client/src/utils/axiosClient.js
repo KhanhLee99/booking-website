@@ -6,7 +6,7 @@ import queryString from 'query-string';
 
 
 const axiosClient = axios.create({
-	baseURL: process.env.REACT_APP_API_URL_LIVE_API,
+	baseURL: process.env.REACT_APP_API_URL,
 	headers: {
 		'Content-Type': 'application/json',
 		Authorization: `Bearer ${localStorage.getItem('access_token')}`,
@@ -58,7 +58,7 @@ axiosClient.interceptors.response.use(
 			}
 		} catch (ex) {
 			console.log('error', ex);
-			window.location.href = '/error';
+			// window.location.href = '/error';
 		}
 		return Promise.reject(error);
 	}

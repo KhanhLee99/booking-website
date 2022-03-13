@@ -172,6 +172,9 @@ class ListingController extends Controller
                     //     $query->where('listing.status', $status);
                     //     break;
             }
+            if ($request->listing_id) {
+                $query->where('listing.id', $request->listing_id);
+            }
             $listings = $query->orderBy('listing.id', 'desc')
                 ->select('listing.*', 'listing_type.name as type')
                 ->paginate($request->limit);
@@ -602,5 +605,9 @@ class ListingController extends Controller
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);
         }
+    }
+
+    public function find_host_listing_by_id($id)
+    {
     }
 }

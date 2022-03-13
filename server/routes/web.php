@@ -18,6 +18,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+// Route::get('/reset-password', function () {
+//     return view('reset-password');
+// });
+
+// Route::post('/reset-password', 'Auth\ResetPasswordController@reset');
+
 Auth::routes(['verify' => true]);
 
 Route::get('/home', 'HomeController@index')->name('home');

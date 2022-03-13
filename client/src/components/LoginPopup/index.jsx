@@ -210,6 +210,7 @@ function LoginPopup(props) {
     const dispatch = useDispatch();
     const history = useHistory();
 
+
     const uiConfig = {
         signInFlow: 'popup',
         signInSuccessUrl: '/guest/page1',
@@ -302,9 +303,16 @@ function LoginPopup(props) {
             };
             setLoading(true);
             await userApi.register(params).then(res => {
-                console.log(res);
                 setLoading(false);
-                resetForm();
+                if (res.data.status == 'success') {
+                    resetForm();
+                    enqueueSnackbar(res.data.message, { variant: "success" });
+                } else {
+                    enqueueSnackbar('Register Error', { variant: "error" });
+                }
+            }).catch(err => {
+                setLoading(false);
+                enqueueSnackbar('Email Already Exits', { variant: "error" });
             })
         } catch (err) {
             console.log(err.message);

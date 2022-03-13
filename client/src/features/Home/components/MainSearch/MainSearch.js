@@ -110,7 +110,7 @@ function MainSearch(props) {
                                     fontWeight: 600,
                                     zIndex: 7,
                                     opacity: 1,
-                                }}>Expolore top-rated attractions, activities and more</h4>
+                                }}>Explore top-rated attractions, activities and more</h4>
                             </div>
                             <div className='fl-wrap'
                                 style={{

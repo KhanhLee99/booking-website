@@ -14,8 +14,7 @@ function HowItWork(props) {
                     <h2>How it works</h2>
                     <div className="section-subtitle">Discover &amp; Connect </div>
                     <span className="section-separator" />
-                    <p>Morbi varius, nulla sit amet rutrum elementum, est elit finibus tellus, ut tristique elit
-                        risus at metus.</p>
+                    <p>Discover how this system works and you'll want to learn more.</p>
                 </div>
                 <div className="process-wrap fl-wrap">
                     <ul className="no-list-style">
@@ -23,16 +22,19 @@ function HowItWork(props) {
                             title={'Find Interesting Place'}
                             icon={'fal fa-map-marker-alt'}
                             number={'01'}
+                            content={'Search where you want to go and you will see interesting things.'}
                         />
                         <Item
                             title={'Contact a Few Owners'}
                             icon={'fal fa-mail-bulk'}
                             number={'02'}
+                            content={'View accommodation details and contact the host with questions.'}
                         />
                         <Item
                             title={'Make a Listing'}
                             icon={'fal fa-layer-plus'}
                             number={'03'}
+                            content={'You can also become a homeowner to increase your monthly income.'}
                         />
                         {/* <li>
                             <div className="process-item">
@@ -75,15 +77,14 @@ function HowItWork(props) {
 export default HowItWork;
 
 function Item(props) {
-    const { title, icon, number } = props;
+    const { title, icon, number, content } = props;
     return (
         <li>
             <div className="process-item">
                 <span className="process-count">{number}</span>
                 <div className="time-line-icon"><i className={icon} /></div>
                 <h4>{title}</h4>
-                <p>Maecenas pulvinar, risus in facilisis dignissim, quam nisi hendrerit nulla,
-                    id vestibulum metus nullam viverra porta.</p>
+                <p>{content}</p>
             </div>
         </li>
     )

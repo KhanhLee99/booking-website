@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import Header from '../Header';
 import useWindowDimensions from '../../@use/useWindowDimensions';
 import { UserProfileTab } from '../../app/constant';
+import Footer from '../Footer';
 
 CommonUserProfile.propTypes = {
 
@@ -53,6 +54,7 @@ function CommonUserProfile(props) {
                 </div>
             </section>
             <div className="limit-box fl-wrap" />
+            <Footer />
         </div>
     );
 }

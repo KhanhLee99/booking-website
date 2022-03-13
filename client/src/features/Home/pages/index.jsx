@@ -93,6 +93,7 @@ function Home(props) {
                 <StatisticalSection />
                 <HowItWork />
             </main>
+            <Footer />
         </div>
     );
 }

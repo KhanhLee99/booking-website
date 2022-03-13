@@ -192,7 +192,6 @@ class ReservationController extends Controller
                 $this->notificationController->send_notify_user_booking($request->guest_id, $request->listing_id);
                 $this->notificationController->send_notify_booking_success($request->guest_id, $request->listing_id);
                 $last = Reservation::where('guest_id', $request->user('api')->id)->orderBy('id', 'desc')->first();
-                // return $last;
                 if ($last) {
                     Reservation_Timeline::create([
                         'reservation_id' => $last->id,

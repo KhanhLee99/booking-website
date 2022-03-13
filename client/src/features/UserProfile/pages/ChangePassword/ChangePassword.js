@@ -43,7 +43,7 @@ function ChangePassword(props) {
         setLoading(true);
         await userProfileApi.changePassword(params).then(res => {
             if (res.data.status === 200) {
-                setMessageSuccess('Cập nhật mật khẩu thành công');
+                setMessageSuccess('Update Success');
                 setLoading(false);
                 resetForm();
             }
@@ -70,14 +70,14 @@ function ChangePassword(props) {
 
                             validationSchema={
                                 Yup.object({
-                                    old_password: Yup.string().required('Vui lòng nhập Mật khẩu hiện tại'),
+                                    old_password: Yup.string().required('Password is required'),
                                     new_password: Yup.string()
-                                        .min(6, 'Vui lòng nhập Mật khẩu mới')
+                                        .min(6, 'Password must be least 6 characters')
                                         .required('Password is required'),
                                     confirm_password: Yup.string()
-                                        .min(6, 'Vui lòng nhập Xác nhận mật khẩu mới')
+                                        .min(6, 'Password must be least 6 characters')
                                         .required('Password is required')
-                                        .oneOf([Yup.ref('new_password'), null], 'Xác nhận mật khẩu mới khác với Mật khẩu mới')
+                                        .oneOf([Yup.ref('new_password'), null], 'Please make sure your passwords match')
                                 })}
                             onSubmit={(values, { resetForm }) => {
                                 handleChangePassword(values, resetForm);
@@ -85,7 +85,7 @@ function ChangePassword(props) {
                         >
                             {formik => (
                                 <form onSubmit={formik.handleSubmit}>
-                                    <label className='custom_form_label'>Mật khẩu hiện tại</label>
+                                    <label className='custom_form_label'>Current Password</label>
 
                                     <input
                                         type="password"
@@ -98,7 +98,7 @@ function ChangePassword(props) {
                                         <label className='custom_form_label' style={{ color: 'red', marginTop: '-20px' }}>{formik.errors.old_password}</label>
                                     ) : null}
 
-                                    <label className='custom_form_label'>Mật khẩu mới</label>
+                                    <label className='custom_form_label'>New Password</label>
 
                                     <input
                                         type="password"
@@ -111,7 +111,7 @@ function ChangePassword(props) {
                                         <label className='custom_form_label' style={{ color: 'red', marginTop: '-20px' }}>{formik.errors.new_password}</label>
                                     ) : null}
 
-                                    <label className='custom_form_label'>Xác nhận mật khẩu mới</label>
+                                    <label className='custom_form_label'>Confirm New Password</label>
 
                                     <input
                                         type="password"
@@ -124,7 +124,7 @@ function ChangePassword(props) {
                                         <label className='custom_form_label' style={{ color: 'red', marginTop: '-20px' }}>{formik.errors.confirm_password}</label>
                                     ) : null}
 
-                                    <button type='submit' className="logout_btn color2-bg" style={{ marginLeft: 0 }}>{loading ? <PulseLoading /> : 'Cập nhật'}</button>
+                                    <button type='submit' className="logout_btn color2-bg" style={{ marginLeft: 0 }}>{loading ? <PulseLoading /> : 'Update'}</button>
                                     {messageSuccess && <label className='custom_form_label' style={{ color: 'red', marginTop: '10px' }}>{messageSuccess}</label>}
                                 </form>
                             )}

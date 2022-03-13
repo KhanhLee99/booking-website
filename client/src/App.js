@@ -31,6 +31,7 @@ import AdminPayment from './features/Admin/pages/AdminPayment/AdminPayment';
 import Select from 'react-select';
 import { useSnackbar } from 'notistack';
 import NotFoundPage from './features/Error/NotFoundPage';
+import ResetPassword from './features/ResetPassword/ResetPassword';
 
 // import { getToken } from "./firebase";
 // Lazy load - Code splitting
@@ -128,6 +129,8 @@ function App() {
 
               <Route path="/listing/:id" component={ListingDetail} />
               <Route path="/location/:id" exact component={ListingsLocation} />
+
+              <Route path="/reset-password" component={ResetPassword} />
 
               {/* <Route path="/login" component={Login} /> */}
               {/* <Redirect exact from='/' to='/login' /> */}

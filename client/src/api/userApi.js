@@ -55,6 +55,11 @@ const userApi = {
     sendMailResetPassword: (params) => {
         const url = '/reset-password';
         return axiosClient.post(url, params);
+    },
+
+    resetPassword: (params) => {
+        const url = '/reset-password';
+        return axiosClient.put(url, params);
     }
 }
 

@@ -14,6 +14,7 @@ import './style.scss';
 import queryString from 'query-string';
 import Loading from '../../../components/Loading/Loading';
 import { listing_types, UserListingFilter } from '../../../app/constant';
+import Footer from '../../../components/Footer';
 
 
 
@@ -290,6 +291,7 @@ function ListingsLocation(props) {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 }

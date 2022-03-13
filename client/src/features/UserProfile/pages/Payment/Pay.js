@@ -10,6 +10,7 @@ import { useSelector } from 'react-redux';
 import { ReservationStatus } from '../../../../app/constant';
 import moment from 'moment';
 import adminPaymentApi from '../../../../api/adminPaymentApi';
+import Footer from '../../../../components/Footer';
 
 Pay.propTypes = {
 
@@ -163,6 +164,7 @@ function Pay(props) {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 }

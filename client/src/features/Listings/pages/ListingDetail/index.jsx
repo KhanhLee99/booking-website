@@ -9,6 +9,7 @@ import blockBookingApi from '../../../../api/blockBookingApi';
 import conversationApi from '../../../../api/conversationApi';
 import listingApi from '../../../../api/listingApi';
 import reservationApi from '../../../../api/reservationApi';
+import Footer from '../../../../components/Footer';
 import Header from '../../../../components/Header';
 import Loading from '../../../../components/Loading/Loading';
 import AmenityDetail from '../../components/AmenityDetail/AmenityDetail';
@@ -304,6 +305,7 @@ function ListingDetail(props) {
                 style={{ display: showChat ? 'block' : 'none' }}
                 ref={messagesEndRef}
             />
+            <Footer />
         </div>
     );
 }

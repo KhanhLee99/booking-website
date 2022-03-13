@@ -65,14 +65,14 @@ function EditProfile(props) {
                     setLoading(false);
                     setAvatarImg(null);
                     setFile(new FormData());
-                    setMessageSuccess('Cập nhật thành công');
+                    setMessageSuccess('Update Success');
                 }).catch(err => {
                     console.log(err.message)
                     setLoading(false)
                 })
             } else {
                 setLoading(false)
-                setMessageSuccess('Cập nhật thành công');
+                setMessageSuccess('Update Success');
             }
         }).catch(err => {
             console.log(err.message)
@@ -98,7 +98,7 @@ function EditProfile(props) {
 
                             validationSchema={
                                 Yup.object({
-                                    name: Yup.string().required('Vui lòng nhập Tên của bạn'),
+                                    name: Yup.string().required('Please input your name.'),
                                 })}
                             onSubmit={(values) => {
                                 handleEditProfile(values);
@@ -130,7 +130,7 @@ function EditProfile(props) {
                                         </div>
                                     </div>
 
-                                    <label className='custom_form_label'>Tên</label>
+                                    <label className='custom_form_label'>Name</label>
 
                                     <input
                                         type="text"
@@ -153,7 +153,7 @@ function EditProfile(props) {
                                         defaultValue={loggedInUser.email}
                                     />
 
-                                    <label className='custom_form_label'>Số điện thoại</label>
+                                    <label className='custom_form_label'>Phone Number</label>
 
                                     <input
                                         type="text"
@@ -162,15 +162,15 @@ function EditProfile(props) {
                                         defaultValue={loggedInUser.phone_number}
                                     />
 
-                                    <label className='custom_form_label'>Địa chỉ</label>
+                                    {/* <label className='custom_form_label'>Địa chỉ</label>
 
                                     <input
                                         type="text"
                                         placeholder=""
                                         style={custom_form_input}
-                                    />
+                                    /> */}
 
-                                    <button type='submit' className="logout_btn color2-bg" style={{ marginLeft: 0 }}>{loading ? <PulseLoading /> : 'Cập nhật'}</button>
+                                    <button type='submit' className="logout_btn color2-bg" style={{ marginLeft: 0 }}>{loading ? <PulseLoading /> : 'Update'}</button>
 
                                     {messageSuccess && <label className='custom_form_label' style={{ color: 'red', marginTop: '10px' }}>{messageSuccess}</label>}
                                 </form>

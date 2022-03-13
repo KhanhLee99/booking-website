@@ -10,6 +10,7 @@ import data from "../../../../app/data/timeline_data";
 import reservationApi from '../../../../api/reservationApi';
 import Loading from '../../../../components/Loading/Loading';
 import AvatarPlaceholder from '../../../../components/Placeholder/AvatarPlaceholder/AvatarPlaceholder'
+import Footer from '../../../../components/Footer';
 
 DetailReservation.propTypes = {
 
@@ -105,7 +106,7 @@ function DetailReservation(props) {
                 (reservation.id > 0) && <section className="gray-bg main-dashboard-sec" id="sec1">
                     <div className="container" style={{ minHeight: heightSection }}>
                         <div className='col-md-12'>
-                            <h3 className='h3_title' style={scroll_nav}>Reservation Detail</h3>
+                            <h3 className='h3_title' style={scroll_nav}>Reservation Infomation</h3>
                         </div>
                         <div className='col-md-12 reservation-timeline-container' style={{ height: 'auto' }}>
                             <div className='reservation-timeline fl-wrap block_box' style={{ height: '100%' }}>
@@ -180,7 +181,7 @@ function DetailReservation(props) {
                     </div>
                 </section>
             }
-
+            <Footer />
         </div>
     );
 }
@@ -258,7 +259,7 @@ function TotalPrice(props) {
                     content={nights}
                 />
                 <PriceItem
-                    title={`Total cost ${nights} đêm`}
+                    title={`Total cost ${nights} nights`}
                     content={parseVNDCurrency(rental_price)}
                 />
                 {(discount_weekly || discount_monthly) && <PriceItem
@@ -283,7 +284,7 @@ function ReservationInfo(props) {
     return (
         <div className='fl-wrap'>
             <div className="cart-details-item-header bb-none mb-0">
-                <h3>Reservation</h3>
+                <h3>Reservation Detail</h3>
             </div>
             <div className='block_box reservation-info' style={{ padding: 10 }}>
                 <h3 style={{ fontSize: 22, padding: '5px 0', color: 'rgba(0, 0, 0, 0.85)', fontWeight: 500 }}>{user_name}</h3>

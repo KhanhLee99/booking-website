@@ -17,6 +17,7 @@ import LoginModal from '../../../../components/LoginModal/LoginModal';
 import Loading from '../../../../components/Loading/Loading';
 import adminPaymentApi from '../../../../api/adminPaymentApi';
 import { PersonPinCircleSharp } from '@material-ui/icons';
+import Footer from '../../../../components/Footer';
 
 Booking.propTypes = {
 
@@ -240,6 +241,7 @@ function Booking(props) {
                     </div>
                 </div>
             </div>
+            <Footer />
         </div>
     );
 }

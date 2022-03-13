@@ -23,7 +23,7 @@ function BestCity(props) {
                     <h2>Explore Best Cities</h2>
                     <div className="section-subtitle">Catalog of Categories</div>
                     <span className="section-separator" />
-                    <p>In ut odio libero, at vulputate urna. Nulla tristique mi a massa convallis cursus.</p>
+                    <p style={{ textAlign: 'center' }}>Discover top-rated attractions, activities, and more.</p>
                 </div>
                 <div className="listing-item-grid_container fl-wrap">
                     {/* <div className="row"> */}
