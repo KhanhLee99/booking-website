@@ -38,11 +38,11 @@ class NotificationController extends Controller
         $listing = Listing::find($listing_id);
         try {
             $title = 'Booking success';
-            $message = "Your reservation at <a href='#'>" . $listing->name . "</a> success";
+            $message = "Your reservation at <b>" . $listing->name . "</b> success";
             $this->send_notification($title, $message, $guest_id);
             // Notification::create([
             //     'title' => 'Booking success',
-            //     'message' => "Your reservation at <a href='#'>" . $listing->name . "</a> success",
+            //     'message' => "Your reservation at <b>" . $listing->name . "</b> success",
             //     'receiver_id' => $guest_id,
             // ]);
         } catch (Exception $e) {
@@ -67,9 +67,9 @@ class NotificationController extends Controller
                     break;
                 case 2: // Accept
                     $title_host = 'Accept Reservation';
-                    $message_host = "Reservation at <a href='#'>" . $listing->name . "</a> accepted";
+                    $message_host = "Reservation at <b>" . $listing->name . "</b> accepted";
                     $title_user = 'Accept Reservation';
-                    $message_user = "Reservation at <a href='#'>" . $listing->name . "</a> accepted";
+                    $message_user = "Reservation at <b>" . $listing->name . "</b> accepted";
 
                     break;
                 case 3: // Paid
@@ -80,9 +80,9 @@ class NotificationController extends Controller
                     break;
                 case 4: // Cancel
                     $title_host = 'Cancel Reservation';
-                    $message_host = "Reservation at <a href='#'>" . $listing->name . "</a> cancelled";
+                    $message_host = "Reservation at <b>" . $listing->name . "</b> cancelled";
                     $title_user = 'Cancel Reservation';
-                    $message_user = "Reservation at <a href='#'>" . $listing->name . "</a> cancelled";
+                    $message_user = "Reservation at <b>" . $listing->name . "</b> cancelled";
                     break;
                 case 5: //  Checkin
                     $title_host = '';
@@ -98,9 +98,9 @@ class NotificationController extends Controller
                     break;
                 case 7: // Decline
                     $title_host = 'Decline Reservation';
-                    $message_host = "Reservation at <a href='#'>" . $listing->name . "</a> declined";
+                    $message_host = "Reservation at <b>" . $listing->name . "</b> declined";
                     $title_user = 'Decline Reservation';
-                    $message_user = "Reservation at <a href='#'>" . $listing->name . "</a> declined";
+                    $message_user = "Reservation at <b>" . $listing->name . "</b> declined";
                     break;
                 default:
                     break;
@@ -135,11 +135,11 @@ class NotificationController extends Controller
         try {
             $listing = Listing::find($listing_id);
             $title = 'Active Listing';
-            $message = "Listing <a href='#'>" . $listing->name . "actived";
+            $message = "Listing <b>" . $listing->name . "actived";
             $this->send_notification($title, $message, $listing->user_id);
             // Notification::create([
             //     'title' => 'Active Listing',
-            //     'message' => "Listing <a href='#'>" . $listing->name . "actived",
+            //     'message' => "Listing <b>" . $listing->name . "actived",
             //     'receiver_id' => $listing->user_id,
             // ]);
         } catch (Exception $e) {
@@ -154,11 +154,11 @@ class NotificationController extends Controller
         try {
             $listing = Listing::find($listing_id);
             $title = 'New Review';
-            $message = "Listing <a href='#'>" . $listing->name . "has new review";
+            $message = "Listing <b>" . $listing->name . "has new review";
             $this->send_notification($title, $message, $listing->user_id);
             // Notification::create([
             //     'title' => 'New Review',
-            //     'message' => "Listing <a href='#'>" . $listing->name . "has new review",
+            //     'message' => "Listing <b>" . $listing->name . "has new review",
             //     'receiver_id' => $listing->user_id,
             // ]);
         } catch (Exception $e) {
@@ -174,7 +174,7 @@ class NotificationController extends Controller
             $listing = Listing::find($listing_id);
             $listing;
             $title = 'New Listing';
-            $message = "Listing <a href='#'>" . $listing->name . "need to verify";
+            $message = "Listing <b>" . $listing->name . "need to verify";
             $this->send_notification($title, $message, 2);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();

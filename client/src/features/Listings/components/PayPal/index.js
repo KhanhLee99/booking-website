@@ -5,6 +5,10 @@ PayPal.propTypes = {
 
 };
 
+PayPal.defaultProps = {
+    total_usd: 0.01
+}
+
 function PayPal(props) {
     const paypal = useRef();
 

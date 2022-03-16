@@ -24,17 +24,17 @@ class ReservationSeeder extends Seeder
     public function run()
     {
         $faker = Faker\Factory::create();
-        $limit = 8000;
+        $limit = 5000;
         //
         for ($i = 0; $i < $limit; $i++) {
-            if ($i > 7300) {
+            if ($i > 4000) {
                 $checkin_date = $faker->dateTimeBetween($startDate = 'now', $endDate = '+1 months', $timezone = null)->format('Y-m-d H:i:s');
             } else {
                 $checkin_date = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null)->format('Y-m-d H:i:s');
             }
             $nights = rand(2, 10);
             $checkout_date = Carbon::createFromFormat('Y-m-d H:i:s', $checkin_date)->addDays($nights);
-            $listing_id = rand(1, 12000);
+            $listing_id = rand(1, 2000);
             $total_price = $this->count_total_price($checkin_date, $checkout_date, $listing_id);
             $created_at = Carbon::createFromFormat('Y-m-d H:i:s', $checkin_date)->subDays($nights);
             $guest_id = rand(3, 20);

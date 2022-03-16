@@ -3,7 +3,7 @@ import { MdArrowBackIosNew, MdArrowForwardIos } from "react-icons/md";
 import ReactPaginate from 'react-paginate';
 import { useSelector } from 'react-redux';
 import { useParams } from 'react-router';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useRouteMatch } from 'react-router-dom';
 import useQuery from '../../../@use/useQuery';
 import listingApi from '../../../api/listingApi';
 import Header from '../../../components/Header';
@@ -52,6 +52,8 @@ function ListingsLocation(props) {
         { id: 5, name: '5 stars', value: 'star-5' },
     ];
 
+    const match = useRouteMatch();
+
     const history = useHistory();
     const { id } = useParams();
     const qs = queryString.parse(props.location.search);
@@ -66,6 +68,7 @@ function ListingsLocation(props) {
     const [totalListing, setTotalListing] = useState(0);
     const [listings, setListings] = useState([]);
     const [city, setCity] = useState();
+    const [cityId, setCityId] = useState();
     const [sort, setSort] = useState(() => {
         let s = null;
         if (qs.sort) {
@@ -148,7 +151,7 @@ function ListingsLocation(props) {
     const filterListing = async (rate, list_type_id, sort = '', page = 1) => {
         try {
             const params = {
-                city_id: id,
+                city_id: cityId || id,
                 limit: postsPerPage,
                 rate: rate,
                 list_type_id: list_type_id,
@@ -162,6 +165,7 @@ function ListingsLocation(props) {
                 setListings(res.data.data.data)
                 setTotalPages(res.data.data.last_page);
                 setTotalListing(res.data.data.total);
+                setCity(res.data.city);
                 window.scrollTo(0, 0);
                 setLoading(false);
             })
@@ -210,21 +214,21 @@ function ListingsLocation(props) {
         }
     }
 
-    useEffect(() => {
-        const getNameCity = () => {
-            try {
-                listingApi.getNameCity(id).then(res => setCity(res.data.data));
-            } catch (err) {
-                console.log(err.message);
-            }
-        }
+    // useEffect(() => {
+    //     const getNameCity = () => {
+    //         try {
+    //             listingApi.getNameCity(id).then(res => setCity(res.data.data));
+    //         } catch (err) {
+    //             console.log(err.message);
+    //         }
+    //     }
 
-        getNameCity();
+    //     getNameCity();
 
-        return () => {
-            setCity(null);
-        }
-    }, []);
+    //     return () => {
+    //         setCity(null);
+    //     }
+    // }, [cityId]);
 
     useEffect(() => {
         filterListing(filterStar, filterType, sort, query.get('page'));
@@ -237,7 +241,14 @@ function ListingsLocation(props) {
     return (
         <div className="k-main" style={main}>
             {loading && <Loading />}
-            <Header />
+            <Header
+                path={match.path}
+                historyReplace={historyReplace}
+                filterListing={filterListing}
+                set_checkin_date={set_checkin_date}
+                set_checkout_date={set_checkout_date}
+                setCityId={setCityId}
+            />
             <div className="container" style={{ marginTop: '80px', paddingTop: '20px' }}>
                 <div className="row">
                     <div className="col-md-4">

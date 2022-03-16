@@ -38,6 +38,8 @@ const ava_size = {
     height: '120px'
 }
 
+export const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+
 function EditProfile(props) {
 
     const [loading, setLoading] = useState(false);
@@ -50,7 +52,8 @@ function EditProfile(props) {
 
     const handleEditProfile = async (values) => {
         const params = {
-            name: values.name
+            name: values.name,
+            phone_number: values.phone_number,
         }
         setLoading(true)
         if (avatarImg) {
@@ -94,11 +97,13 @@ function EditProfile(props) {
 
                     <div className="col-md-12">
                         <Formik
-                            initialValues={{ name: loggedInUser.name }}
+                            initialValues={{ name: loggedInUser.name, phone_number: loggedInUser.phone_number || '' }}
 
                             validationSchema={
                                 Yup.object({
                                     name: Yup.string().required('Please input your name.'),
+                                    phone_number: Yup.string().matches(phoneRegExp, 'Phone number is not valid')
+                                        .required('Please input your phone number.'),
                                 })}
                             onSubmit={(values) => {
                                 handleEditProfile(values);
@@ -139,8 +144,8 @@ function EditProfile(props) {
                                         {...formik.getFieldProps('name')}
                                     />
 
-                                    {formik.touched.old_password && formik.errors.name ? (
-                                        <label className='custom_form_label' style={{ color: 'red', marginTop: '-20px' }}>{formik.errors.old_password}</label>
+                                    {formik.errors.name ? (
+                                        <label className='custom_form_label' style={{ color: 'red', marginTop: '-20px' }}>{formik.errors.name}</label>
                                     ) : null}
 
                                     <label className='custom_form_label'>Email</label>
@@ -159,8 +164,12 @@ function EditProfile(props) {
                                         type="text"
                                         placeholder=""
                                         style={custom_form_input}
-                                        defaultValue={loggedInUser.phone_number}
+                                        {...formik.getFieldProps('phone_number')}
                                     />
+
+                                    {formik.errors.phone_number ? (
+                                        <label className='custom_form_label' style={{ color: 'red', marginTop: '-20px' }}>{formik.errors.phone_number}</label>
+                                    ) : null}
 
                                     {/* <label className='custom_form_label'>Địa chỉ</label>
 

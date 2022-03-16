@@ -7,6 +7,7 @@ use App\Http\Controllers\Common\ReservationTimelineController;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Helper\TotalDateController;
 use App\Listing;
+use App\Models\Payment;
 use App\Models\Reservation_Timeline;
 use App\Models\Website_Infomation;
 use Illuminate\Http\Request;
@@ -433,5 +434,42 @@ class ReservationController extends Controller
 
         $diff = (($year2 - $year1) * 12) + ($month2 - $month1);
         return $diff;
+    }
+
+    public function check_reservation_free(Request $request)
+    {
+        try {
+            $list = Reservation::where([
+                ['listing_id', '=', $request->listing_id],
+                ['checkin_date', '<', $request->checkout_date],
+                ['checkout_date', '>', $request->checkin_date],
+                ['checkout_date', '>', Carbon::now()],
+            ])->get();
+
+            if (count($list) > 0) {
+                return response()->json($this->response, 400);
+            }
+            $this->response['status'] = 'success';
+            return response()->json($this->response, $this->success_code);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response, 400);
+        }
+    }
+
+    public function check_payment(Request $request, $id)
+    {
+        try {
+            $user = $request->user('api');
+            $reservation = Reservation::find($id);
+            if ($reservation && $reservation->reservation_status_id == 2 && $reservation->guest_id == $user->id) {
+                $this->response['status'] = 'success';
+                return response()->json($this->response, $this->success_code);
+            }
+            return response()->json($this->response, 400);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response, 400);
+        }
     }
 }

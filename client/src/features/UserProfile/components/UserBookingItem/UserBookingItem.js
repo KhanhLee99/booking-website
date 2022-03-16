@@ -172,7 +172,7 @@ function UserBookingItem(props) {
 
                         <div className='review-btn fl-wrap'>
                             <Popup
-                                trigger={<a href='#' onClick={e => e.preventDefault()}>Đánh giá</a>}
+                                trigger={<a href='#' onClick={e => e.preventDefault()}>Review</a>}
                                 position="center"
                                 modal
                                 nested
@@ -200,6 +200,7 @@ function UserBookingItem(props) {
 
     return (
         <div className="dashboard-list fl-wrap" style={{ border: '1px solid #e5e7f2', marginBottom: '20px' }}>
+
             <div className='fl-wrap reservation-head'>
                 <div className='host-info'>
                     <AvatarPlaceholder
@@ -218,6 +219,13 @@ function UserBookingItem(props) {
 
             <div className='fl-wrap'>
                 <span className="fw-separator"></span>
+            </div>
+
+            <div className='fl-wrap' style={{ marginBottom: 6 }}>
+                <Link to={`/me/reservation/detail/${reservation.id}`} style={{
+                    color: '#566985', fontSize: '16px',
+                    fontWeight: 600,
+                }}>Reservation <h3 className='badge badge-warning'>#{reservation.id}</h3></Link>
             </div>
 
             <div className="dashboard-message user-booking">

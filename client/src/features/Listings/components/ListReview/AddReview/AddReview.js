@@ -66,21 +66,21 @@ function AddReview(props) {
 
     return (
         <div className='add-review-box'>
-            <h3>Hãy để lại đánh giá về trải nghiệm ở của bạn <span className='listing-name'>{name}</span></h3>
+            <h3>Please leave a review of your experience at <span className='listing-name'>{name}</span></h3>
             <Rating
                 initialRating={rating}
                 emptySymbol={<MdStarOutline size={33} />}
                 fullSymbol={<MdStar color='#F6C344' size={33} />}
                 onChange={value => setRating(value)}
             />
-            {isRated && <p className='text-error'> Vui lòng đánh giá sao</p>}
+            {isRated && <p className='text-error'> Please rate stars </p>}
             <textarea
                 placeholder='Your Review:'
                 style={{ resize: 'none' }}
                 ref={textRef}
             />
 
-            {isEmpty && <p className='text-error'> Vui lòng nhập đánh giá </p>}
+            {isEmpty && <p className='text-error'> Please input review </p>}
 
             <button onClick={() => addReview()} className="btn color2-bg float-btn" style={custom_form_button}>Submit Reviewd <i className="fal fa-paper-plane" style={btn_i} /></button>
         </div>

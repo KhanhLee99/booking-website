@@ -220,19 +220,10 @@ class DetailListingController extends Controller
             $sort = $request->sort;
             $user_login = $request->user('api');
 
-            // $checkin_date = Carbon::createFromFormat('Y-m-d', $request->checkin_date)->addDay();
-            // $checkout_date = $request->checkout_date;
-            // if (count($rate) > 0 && count($list_type_id) == 0) {
-            //     return $this->filter_by_star($request);
-            // } else if (count($rate) == 0 && count($list_type_id) > 0) {
-            //     return $this->filter_by_listing_type($request);
-            // } else if (count($rate) == 0 && count($list_type_id) == 0) {
-            //     return $this->get_litings_location($request);
-            // } else {
-            // }
-
             $query = DB::table('listing')
                 ->where('city_id', $request->city_id)
+                ->where('is_verified', 1)
+                ->where('is_public', 1)
                 ->join('listing_type', 'listing.listing_type_id', '=', 'listing_type.id')
                 ->select('listing.id as listing_id', 'listing.name', 'listing.street_address', 'listing.avatar_url as listing_img', 'listing.bedroom_count', 'listing.price_per_night_base as price_per_night', 'listing.rating', 'listing_type.name as listing_type');
 
@@ -356,8 +347,13 @@ class DetailListingController extends Controller
 
             $this->response = [
                 'status' => 'success',
-                'data' => $data
+                'data' => $data,
+
             ];
+
+            if ($city = City::find($request->city_id)) {
+                $this->response['city'] = $city->name;
+            }
             return response()->json($this->response, $this->success_code);
         } catch (Exception $e) {
             $this->response['errorMessage'] = $e->getMessage();

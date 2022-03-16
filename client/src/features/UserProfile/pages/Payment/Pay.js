@@ -60,6 +60,17 @@ function Pay(props) {
     }
 
     useEffect(() => {
+        const checkPayment = async () => {
+            try {
+                await reservationApi.checkPayment(id).then(res => {
+
+                }).catch(err => {
+                    history.push('/error');
+                })
+            } catch (err) {
+                console.log(err.message);
+            }
+        }
         const fetchReservation = async () => {
             try {
                 setLoading(true);
@@ -76,8 +87,8 @@ function Pay(props) {
         const countPrice = async (checkin, checkout, listing_id) => {
             try {
                 const params = {
-                    checkin: checkin,
-                    checkout: checkout,
+                    checkin: checkin.split(' ')[0],
+                    checkout: checkout.split(' ')[0],
                     listing_id: listing_id
                 }
                 await reservationApi.countTotalPrice(params).then(res => {
@@ -88,7 +99,7 @@ function Pay(props) {
             }
         }
 
-
+        checkPayment();
         fetchReservation();
     }, [])
 

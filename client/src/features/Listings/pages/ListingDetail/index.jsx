@@ -19,6 +19,7 @@ import ListReview from '../../components/ListReview';
 import Photos from '../../components/Photos';
 import TabHorizontal from '../../components/TabHorizontal';
 import './styles.scss';
+import { useHistory } from 'react-router-dom';
 
 ListingDetail.propTypes = {
 
@@ -36,6 +37,7 @@ export const title = {
 
 function ListingDetail(props) {
     const { id } = useParams();
+    const history = useHistory();
 
     const messagesEndRef = useRef(null);
 
@@ -139,6 +141,17 @@ function ListingDetail(props) {
     }
 
     useEffect(() => {
+        const checkListing = async () => {
+            try {
+                await listingApi.checkListing(id).then(res => {
+
+                }).catch(err => {
+                    history.push('/error');
+                })
+            } catch (err) {
+                console.log(err.message);
+            }
+        }
         const fetchListingDetail = async () => {
             setLoadingListingDetail(true)
             await listingApi.getListingById(id).then(res => {
@@ -153,12 +166,12 @@ function ListingDetail(props) {
             });
         }
 
+        checkListing();
         fetchListingDetail();
         fetchReservation();
         getBlockInMonth();
 
         window.scrollTo(0, 0)
-
 
         return () => {
             setReservationDate([]);

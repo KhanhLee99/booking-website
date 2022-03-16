@@ -34,7 +34,17 @@ const reservationApi = {
     getTimeline: (id) => {
         const url = `/timeline/${id}`;
         return axiosClient.get(url);
-    }
+    },
+
+    checkReservation: (params) => {
+        const url = '/reservation-check';
+        return axiosClient.post(url, params);
+    },
+
+    checkPayment: (id) => {
+        const url = `/reservation-check-payment/${id}`;
+        return axiosClient.post(url);
+    },
 }
 
 export default reservationApi;

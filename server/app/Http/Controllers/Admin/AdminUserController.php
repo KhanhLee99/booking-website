@@ -20,9 +20,12 @@ class AdminUserController extends Controller
     public function get_all_user(Request $request)
     {
         try {
-            $data = User::where('role_id', '!=', 1)
-                ->orderBy('created_at', 'desc')
-                ->paginate($request->limit);
+            $query = User::where('role_id', '!=', 1)
+                ->orderBy('created_at', 'desc');
+            if ($name = $request->name) {
+                $query->where('name', 'like', "%{$name}%");
+            }
+            $data = $query->paginate($request->limit);
             $this->response = [
                 'status' => true,
                 'data' => $data,
@@ -38,12 +41,15 @@ class AdminUserController extends Controller
     {
         try {
 
-            $data = DB::table('listing')
+            $query = DB::table('listing')
                 ->join('users', 'users.id', '=', 'listing.user_id')
                 ->groupBy('listing.user_id')
-                ->select('users.*', DB::raw('count(users.id) as total_listing'))
-                ->paginate($request->limit);
+                ->select('users.*', DB::raw('count(users.id) as total_listing'));
 
+            if ($name = $request->name) {
+                $query->where('users.name', 'like', "%{$name}%");
+            }
+            $data = $query->paginate($request->limit);
             $this->response = [
                 'status' => true,
                 'data' => $data,

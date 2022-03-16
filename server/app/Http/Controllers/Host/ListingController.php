@@ -413,6 +413,7 @@ class ListingController extends Controller
                         'amenities' => $this->amenity_controller->get_by_array_id($ids)
                     );
                 }
+
                 $output['photos'] = Photo_Listing::where('listing_id', '=', $id)->get();
                 $output['reviews'] = DB::table('review_listing')
                     ->where('listing_id', '=', $id)
@@ -420,7 +421,10 @@ class ListingController extends Controller
                     ->orderBy('review_listing.id', 'DESC')
                     ->select('review_listing.id', 'review_listing.note', 'review_listing.rating', 'review_listing.created_at', 'users.name', 'users.avatar_url')
                     ->get();
-                $output['rating'] = Review_Listing::where('listing_id', $id)->selectRaw('SUM(rating)/COUNT(guest_id) AS avg_rating')->first()->avg_rating;
+
+                $rating = Review_Listing::where('listing_id', $id)->selectRaw('SUM(rating)/COUNT(guest_id) AS avg_rating')->first()->avg_rating;
+                $output['rating'] = round($rating, 1);
+
                 if ($user_login = $request->user('api')) {
                     $favorite = Favorite::where([
                         ["user_id", $user_login->id],
@@ -444,6 +448,12 @@ class ListingController extends Controller
             $this->response['errorMessage'] = $e->getMessage();
             return response()->json($this->response);
         }
+    }
+
+    public function update_rating_listing($id)
+    {
+        $rating = Review_Listing::where('listing_id', $id)->selectRaw('SUM(rating)/COUNT(guest_id) AS avg_rating')->first()->avg_rating;
+        Listing::find($id)->update(['rating' => round($rating, 2)]);
     }
 
     public function get_listing_preview(Request $request, $id)
@@ -607,7 +617,18 @@ class ListingController extends Controller
         }
     }
 
-    public function find_host_listing_by_id($id)
+    public function check_listing_verify($id)
     {
+        try {
+            $listing = Listing::find($id);
+            if ($listing && $listing->is_verified == 1 && $listing->is_public == 1) {
+                $this->response['status'] = 'success';
+                return response()->json($this->response, $this->success_code);
+            }
+            return response()->json($this->response, 400);
+        } catch (Exception $e) {
+            $this->response['errorMessage'] = $e->getMessage();
+            return response()->json($this->response, 400);
+        }
     }
 }

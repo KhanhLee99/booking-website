@@ -62,33 +62,7 @@ const options = [
 
 function ListingSort(props) {
     const { totalListing, handleChange, sort, city } = props;
-    // const checkOption = () => {
-    //     if (sort == 'desc') {
-    //         return (
-    //             <>
-    //                 <option>Select</option>
-    //                 <option value='asc'>Price: low to high</option>
-    //                 <option value='desc' selected>Price: high to low</option>
-    //             </>
-    //         )
-    //     } else if (sort == 'asc') {
-    //         return (
-    //             <>
-    //                 <option>Select</option>
-    //                 <option value='asc' selected>Price: low to high</option>
-    //                 <option value='desc'>Price: high to low</option>
-    //             </>
-    //         )
-    //     } else {
-    //         return (
-    //             <>
-    //                 <option>Select</option>
-    //                 <option value='asc'>Price: low to high</option>
-    //                 <option value='desc'>Price: high to low</option>
-    //             </>
-    //         )
-    //     }
-    // }
+    
     return (
         <div className="wrap-title-header fl-wrap">
             <div className="list-main-wrap-title" style={list_main_wrap_title}>

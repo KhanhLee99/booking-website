@@ -106,7 +106,7 @@ function DetailReservation(props) {
                 (reservation.id > 0) && <section className="gray-bg main-dashboard-sec" id="sec1">
                     <div className="container" style={{ minHeight: heightSection }}>
                         <div className='col-md-12'>
-                            <h3 className='h3_title' style={scroll_nav}>Reservation Infomation</h3>
+                            <h3 className='h3_title' style={scroll_nav}>Reservation <h3 className='badge badge-warning'>#{reservation.id}</h3></h3>
                         </div>
                         <div className='col-md-12 reservation-timeline-container' style={{ height: 'auto' }}>
                             <div className='reservation-timeline fl-wrap block_box' style={{ height: '100%' }}>

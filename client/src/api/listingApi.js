@@ -84,6 +84,11 @@ const listingApi = {
     getOptionListingType: () => {
         const url = '/option-listing-type';
         return axiosClient.get(url);
+    },
+
+    checkListing: (id) => {
+        const url = `listing/check/${id}`;
+        return axiosClient.post(url);
     }
 }
 

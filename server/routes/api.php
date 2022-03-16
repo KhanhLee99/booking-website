@@ -152,6 +152,8 @@ Route::get('reservation/me', 'Host\ReservationController@get_my_reservation');
 Route::get('reservation/{id}', 'Host\ReservationController@get_detail_reservation');
 Route::put('reservation/edit-status/{id}', 'Host\ReservationController@edit_status');
 Route::post('reservation/count-total-price', 'Host\ReservationController@count_total_price');
+Route::post('reservation-check', 'Host\ReservationController@check_reservation_free');
+Route::post('reservation-check-payment/{id}', 'Host\ReservationController@check_payment');
 
 // Conversation
 Route::post('conversation/add', 'Common\ConversationController@create_conversation');
@@ -181,6 +183,7 @@ Route::post('listing/filter', 'Common\DetailListingController@filter_listing');
 
 Route::get('listing/{id}', 'Host\ListingController@get_listing_by_id');
 Route::get('listing/{id}/preview', 'Host\ListingController@get_listing_preview');
+Route::post('listing/check/{id}', 'Host\ListingController@check_listing_verify');
 
 Route::get('/greeting', function () {
     return DB::table('users')->get();

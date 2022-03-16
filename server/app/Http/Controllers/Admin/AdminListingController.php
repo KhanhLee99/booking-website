@@ -24,12 +24,15 @@ class AdminListingController extends Controller
     public function get_listing_pending(Request $request)
     {
         try {
-            $listing_pending = Listing::where('is_verified', 0)
+            $query = Listing::where('is_verified', 0)
                 ->where('is_public', 1)
                 ->join('users', 'users.id', '=', 'listing.user_id')
                 ->orderBy('id', 'desc')
-                ->select('listing.*', 'users.id as host_id', 'users.name as host_name', 'users.email as host_email', 'users.avatar_url as host_avatar_url')
-                ->paginate($request->limit);
+                ->select('listing.*', 'users.id as host_id', 'users.name as host_name', 'users.email as host_email', 'users.avatar_url as host_avatar_url');
+            if ($id = $request->id) {
+                $query->where('listing.id', $id);
+            }
+            $listing_pending = $query->paginate($request->limit);
             if ($listing_pending) {
                 $this->response = [
                     'status' => true,
@@ -47,11 +50,14 @@ class AdminListingController extends Controller
     public function get_listing_active(Request $request)
     {
         try {
-            $listing_active = Listing::where('is_verified', 1)
+            $query = Listing::where('is_verified', 1)
                 ->join('users', 'users.id', '=', 'listing.user_id')
                 ->orderBy('id', 'desc')
-                ->select('listing.*', 'users.id as host_id', 'users.name as host_name', 'users.email as host_email', 'users.avatar_url as host_avatar_url')
-                ->paginate($request->limit);
+                ->select('listing.*', 'users.id as host_id', 'users.name as host_name', 'users.email as host_email', 'users.avatar_url as host_avatar_url');
+            if ($id = $request->id) {
+                $query->where('listing.id', $id);
+            }
+            $listing_active = $query->paginate($request->limit);
             if ($listing_active) {
                 $this->response = [
                     'status' => true,

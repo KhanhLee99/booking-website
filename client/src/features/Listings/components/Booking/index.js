@@ -7,7 +7,7 @@ import reservationApi from '../../../../api/reservationApi';
 import { PayPalButton } from "react-paypal-button-v2";
 import TestPaypal from '../../../../components/Test/TestPaypal';
 import PayPal from '../PayPal';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import notificationApi from '../../../../api/notificationApi';
 import Header from '../../../../components/Header';
 import useQuery from '../../../../@use/useQuery';
@@ -18,6 +18,12 @@ import Loading from '../../../../components/Loading/Loading';
 import adminPaymentApi from '../../../../api/adminPaymentApi';
 import { PersonPinCircleSharp } from '@material-ui/icons';
 import Footer from '../../../../components/Footer';
+import { Formik, getIn } from 'formik';
+import * as Yup from 'yup';
+import { phoneRegExp } from '../../../UserProfile/pages/EditProfile/EditProfile';
+import userProfileApi from '../../../../api/userProfileApi';
+import { updateProfile } from '../../../../app/reducer/userSlice';
+import { useSnackbar } from 'notistack';
 
 Booking.propTypes = {
 
@@ -45,6 +51,7 @@ function Booking(props) {
     const query = useQuery();
     const loggedInUser = useSelector((state) => state.userSlice.current);
     const isLoggedIn = !!loggedInUser.id;
+    const dispatch = useDispatch();
 
     const { id } = useParams();
     const [listing, setListing] = useState({});
@@ -55,7 +62,7 @@ function Booking(props) {
     const [activeConfirm, setActiveConfirm] = useState(false);
     const [currentForm, setCurrentForm] = useState(CURRENT_FORM.BOOKING_INFO);
     const [loading, setLoading] = useState(true);
-
+    const [reservationError, setReservationError] = useState(false);
 
     const handlePay = async () => {
         const params = {
@@ -95,12 +102,30 @@ function Booking(props) {
         }).catch(err => console.log(err.message));
     }
 
-    const personalFormSubmit = () => {
-        if (listing && listing.reservation_form == 'quick') {
-            setActivePayment(true);
-            setCurrentForm(CURRENT_FORM.PAYMENT);
-        } else {
-            handleSendRequest();
+    const handleEditProfile = async (values) => {
+        const params = {
+            phone_number: values.phone_number,
+        }
+        setLoading(true)
+
+        await userProfileApi.editProfile(params).then(res => {
+            dispatch(updateProfile(res.data.data));
+            setLoading(false)
+        }).catch(err => {
+            console.log(err.message)
+            setLoading(false)
+        })
+    }
+
+    const personalFormSubmit = (values) => {
+        if (values.phone_number) {
+            handleEditProfile(values)
+            if (listing && listing.reservation_form == 'quick') {
+                setActivePayment(true);
+                setCurrentForm(CURRENT_FORM.PAYMENT);
+            } else {
+                handleSendRequest();
+            }
         }
     }
 
@@ -111,6 +136,25 @@ function Booking(props) {
     }
 
     useEffect(() => {
+
+        const checkReservation = async () => {
+            try {
+                const params = {
+                    checkin_date: query.get('checkin'),
+                    checkout_date: query.get('checkout'),
+                    listing_id: id
+                }
+                await reservationApi.checkReservation(params).then(res => {
+
+                }).catch(err => {
+                    // history.push('/error');
+                    setReservationError(true);
+                })
+            } catch (err) {
+                console.log(err.message);
+            }
+        }
+
         const getListing = async () => {
             try {
                 await listingApi.getBaseInfoListing(id).then(res => {
@@ -139,6 +183,7 @@ function Booking(props) {
             }
         }
         window.scrollTo(0, 0);
+        checkReservation();
         getListing();
         countPrice();
 
@@ -152,8 +197,7 @@ function Booking(props) {
         <div id="wrapper" className='gray-bg'>
             {loading && <Loading />}
             <Header />
-
-            <div className="container" style={{ marginTop: '150px' }}>
+            {!reservationError ? <div className="container" style={{ marginTop: '150px' }}>
                 <div className="breadcrumbs inline-breadcrumbs fl-wrap block-breadcrumbs">
                     <h2 style={h2_header}>Booking form for : <span style={{ color: '#4DB7FE' }}>{listing.name}</span></h2>
                 </div>
@@ -214,6 +258,7 @@ function Booking(props) {
                                             <Confirmation
                                                 currentForm={currentForm}
                                                 handleNext={() => history.push('/')}
+                                                reservation_form={listing.reservation_form}
                                             />
                                         </div>
                                     </div>
@@ -240,7 +285,26 @@ function Booking(props) {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> : <div id="wrapper-not-found-page">
+                {/* content*/}
+                <div className="content">
+                    {/*  section  */}
+                    <section className="parallax-section small-par" data-scrollax-parent="true" style={{ marginTop: 0 }}>
+                        <div className="bg" data-bg="https://www.youtube.com/watch?v=zq0TuNqV0Ew&t=469s" data-scrollax="properties: { translateY: '30%' }" style={{}} />
+                        <div className="overlay op7" />
+                        <div className="container">
+                            <div className="error-wrap">
+                                <div className="bubbles">
+                                    <h2>Sorry</h2>
+                                </div>
+                                <p>We're sorry, data not found</p>
+
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>}
+
             <Footer />
         </div>
     );
@@ -304,36 +368,62 @@ export function BookingInfo(props) {
 }
 
 export function PersonalInfo(props) {
+    const { enqueueSnackbar } = useSnackbar();
+
     const { loggedInUser, currentForm, handleBack, handleNext } = props;
     return (
-        <fieldset className="fl-wrap" style={{ display: currentForm == CURRENT_FORM.PERSONAL_INFO ? 'block' : 'none' }}>
-            <div className="list-single-main-item-title fl-wrap">
-                <h3>Your personal Information</h3>
-            </div>
+        <Formik
+            initialValues={{ phone_number: loggedInUser.phone_number || '' }}
+            validationSchema={
+                Yup.object({
+                    phone_number: Yup.string().matches(phoneRegExp, 'Phone number is not valid')
+                        .required('Please input your phone number.'),
+                })}
+            onSubmit={(values) => {
+                // handleRegister(values, resetForm);
+                handleNext(values)
+            }}
+        >
+            {formik => (
+                <form onSubmit={formik.handleSubmit}>
+                    <fieldset className="fl-wrap" style={{ display: currentForm == CURRENT_FORM.PERSONAL_INFO ? 'block' : 'none' }}>
+                        <div className="list-single-main-item-title fl-wrap">
+                            <h3>Your personal Information</h3>
+                        </div>
 
-            <div className="row">
-                <div className="col-sm-12">
-                    <label className="vis-label">Full Name <i className="far fa-user" /></label>
-                    <input type="text" placeholder="Your Name" defaultValue={loggedInUser.name} disabled style={{ height: 51 }} />
-                </div>
+                        <div className="row">
+                            <div className="col-sm-12">
+                                <label className="vis-label">Full Name <i className="far fa-user" /></label>
+                                <input type="text" placeholder="Your Name" defaultValue={loggedInUser.name} disabled style={{ height: 51 }} />
+                            </div>
 
-                <div className="col-sm-6">
-                    <label className="vis-label">Email Address<i className="far fa-envelope" /></label>
-                    <input type="text" placeholder="yourmail@domain.com" defaultValue={loggedInUser.email} disabled style={{ height: 51 }} />
-                </div>
+                            <div className="col-sm-6">
+                                <label className="vis-label">Email Address<i className="far fa-envelope" /></label>
+                                <input type="text" placeholder="yourmail@domain.com" defaultValue={loggedInUser.email} disabled style={{ height: 51 }} />
+                            </div>
 
-                <div className="col-sm-6">
-                    <label className="vis-label">Phone<i className="far fa-phone" /></label>
-                    <input type="text" placeholder={'Your Phone Number'} defaultValue={loggedInUser.phone_number} style={{ height: 51 }} />
-                </div>
-            </div>
+                            <div className="col-sm-6">
+                                <label className="vis-label">Phone<i className="far fa-phone" /></label>
+                                <input type="text" placeholder={'Your Phone Number'}
+                                    {...formik.getFieldProps('phone_number')}
+                                    style={{ height: 51 }} />
+                                {formik.errors.phone_number ? (
+                                    <label className='custom_form_label' style={{ color: 'red', marginTop: '-20px' }}>{formik.errors.phone_number}</label>
+                                ) : null}
 
-            <span className="fw-separator" />
+                                {/* {formik.errors.phone_number && enqueueSnackbar(formik.errors.phone_number, { variant: "error" })} */}
+                            </div>
+                        </div>
 
-            <div className="clearfix"></div>
-            <a href="#" className="previous-form action-button back-form color2-bg" onClick={handleBack}>Back</a>
-            <a href="#" className="next-form action-button color-bg" onClick={handleNext}>Confirm</a>
-        </fieldset>
+                        <span className="fw-separator" />
+
+                        <div className="clearfix"></div>
+                        <a href="#" className="previous-form action-button back-form color2-bg" onClick={handleBack}>Back</a>
+                        <button type='submit' className="next-form action-button color-bg" onClick={() => handleNext(formik.values)}>Confirm</button>
+                    </fieldset>
+                </form>
+            )}
+        </Formik>
     )
 }
 
@@ -359,7 +449,7 @@ export function Payment(props) {
 }
 
 export function Confirmation(props) {
-    const { currentForm, handleNext } = props;
+    const { currentForm, handleNext, reservation_form } = props;
     return (
         <fieldset className="fl-wrap" style={{ display: currentForm == CURRENT_FORM.CONFIRM ? 'block' : 'none', left: '0%', opacity: 1, position: 'relative' }}>
             <div className="list-single-main-item-title fl-wrap">
@@ -370,7 +460,7 @@ export function Confirmation(props) {
                     <i className="fal fa-check-circle decsth" />
                     <h4>Thank you. Your reservation has been received.</h4>
                     <div className="clearfix" />
-                    <p>Your payment has been processed successfully.</p>
+                    <p>Your {reservation_form == 'quick' ? 'payment' : 'reservation'} has been processed successfully.</p>
                     <Link to="/me/bookings" target="_blank">View Your Bookings</Link>
                 </div>
             </div>
@@ -399,7 +489,7 @@ export function LeftSide(props) {
                             <div className="widget-posts-descr">
                                 <h4><Link to={`/listing/${id}`}>{name}</Link></h4>
                                 <div className="geodir-category-location fl-wrap"><a href="#">{street_address}</a></div>
-                                <div className="widget-posts-descr-link"><a href="listing.html">Restaurants </a></div>
+                                <div className="widget-posts-descr-link"><a href="listing.html">Homestay </a></div>
                             </div>
                         </div>
                     </div>

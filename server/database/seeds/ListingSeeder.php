@@ -18,7 +18,7 @@ class ListingSeeder extends Seeder
 
         $faker = Faker\Factory::create();
 
-        $limit = 200;
+        $limit = 100;
 
         for ($i = 1; $i <= 63; $i++) {
             $this->create_listing($faker, $limit, $i);
@@ -28,6 +28,9 @@ class ListingSeeder extends Seeder
     function create_listing($faker, $limit, $city_id)
     {
         for ($i = 0; $i < $limit; $i++) {
+            $verified = rand(0, 1);
+            $discount_weekly = $faker->randomFloat($nbMaxDecimals = 1, $min = 1, $max = 3);
+            $discount_monthly = $discount_weekly + 0.5;
             DB::table('listing')->insert([
                 'name' => $faker->text($maxNbChars = 60),
                 'description' => $faker->text($maxNbChars = 1500),
@@ -44,9 +47,12 @@ class ListingSeeder extends Seeder
                 'avatar_url' => "https://picsum.photos/id/" . rand(1, 1000) . "/400/300",
                 'rental_form' => $faker->randomElement(['entire_place', 'private_room', 'shared_room']),
                 'reservation_form' => $faker->randomElement(['quick', 'request']),
-                'is_verified' => rand(0, 1),
+                'is_verified' => $verified,
+                'is_public' => $verified == 1 ? 1 : NULL,
                 'status' => $faker->randomElement(['active', 'stop_public', 'block_activity']),
-                'rating' => $faker->randomFloat($nbMaxDecimals = 1, $min = 1, $max = 5)
+                'rating' => $faker->randomFloat($nbMaxDecimals = 1, $min = 1, $max = 5),
+                'discount_weekly' => $discount_weekly,
+                'discount_monthly' => $discount_monthly,
             ]);
 
             $last_listing = Listing::orderBy('id', 'desc')->first();

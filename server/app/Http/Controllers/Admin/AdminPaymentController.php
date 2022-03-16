@@ -61,11 +61,15 @@ class AdminPaymentController extends Controller
     {
         try {
 
-            $data = Payment::join('reservation', 'reservation.id', '=', 'payment.reservation_id')
+            $query = Payment::join('reservation', 'reservation.id', '=', 'payment.reservation_id')
                 ->join('users', 'users.id', '=', 'reservation.guest_id')
                 ->orderBy('payment.created_at', 'desc')
-                ->select('payment.*', 'users.name as user_name', 'users.email as user_email', 'users.avatar_url as user_avatar')
-                ->paginate($request->limit);
+                ->select('payment.*', 'users.name as user_name', 'users.email as user_email', 'users.avatar_url as user_avatar');
+            if ($id = $request->id) {
+                $query->where('payment.reservation_id', $id);
+            }
+
+            $data = $query->paginate($request->limit);
 
             $this->response = [
                 'status' => true,

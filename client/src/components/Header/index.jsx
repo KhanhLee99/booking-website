@@ -18,6 +18,7 @@ import { refreshPage } from '../../@helper/helper';
 import Select from 'react-select';
 import { useHistory } from 'react-router-dom';
 import listingApi from '../../api/listingApi';
+import moment from 'moment';
 
 export const main_header = {
     position: 'fixed',
@@ -198,6 +199,10 @@ const styleSlectHeader = {
 
 const { RangePicker } = DatePicker;
 
+Header.defaulProps = {
+    path: ''
+}
+
 function Header(props) {
     const history = useHistory();
 
@@ -246,37 +251,62 @@ function Header(props) {
         dispatch(nextPage());
     }
 
+    const disabledDate = current => {
+        if (current && current < moment().endOf('day')) return true;
+        return false;
+    }
+
     const handleChangeDebut = range => {
-        const startDate = range[0].format("YYYY/MM/DD");
-        const endDate = range[1].format("YYYY/MM/DD");
-        setCheckin(startDate);
-        setCheckout(endDate);
+        if (range) {
+            const startDate = range[0].format("YYYY/MM/DD");
+            const endDate = range[1].format("YYYY/MM/DD");
+            setCheckin(startDate);
+            setCheckout(endDate);
+            if (path == '/location/:id') {
+                set_checkin_date(startDate.replaceAll('/', '-'))
+                set_checkout_date(endDate.replaceAll('/', '-'))
+            }
+        }
     }
 
     const handleSearch = () => {
-        if (city_id) {
+        if (city_id || path == '/location/:id') {
             let searchParams = '';
             let tmpStr = '';
             if (listing_type.length > 0) {
                 listing_type.map(item => tmpStr += `&pt=${item}`);
             }
             if (checkin && checkout && listing_type.length > 0) {
+
                 searchParams += `?checkin_date=${checkin.replaceAll('/', '-')}&checkout_date=${checkout.replaceAll('/', '-')}${tmpStr}`;
                 history.push(`/location/${city_id}${searchParams}`);
+                if (path == '/location/:id') {
+                    filterListing();
+                }
             } else if (checkin && checkout) {
                 searchParams += `?checkin_date=${checkin.replaceAll('/', '-')}&checkout_date=${checkout.replaceAll('/', '-')}`;
                 history.push(`/location/${city_id}${searchParams}`);
+                if (path == '/location/:id') {
+                    filterListing();
+                }
             } else if (listing_type.length > 0) {
                 history.push(`/location/${city_id}/?checkin_date&checkout_date${tmpStr}`)
+                if (path == '/location/:id') {
+                    filterListing();
+                }
             } else {
                 history.push(`/location/${city_id}`);
+                if (path == '/location/:id') {
+                    filterListing();
+                }
             }
+            setShowPopupSearch(!showPopupSearch);
         } else {
             alert('Select Location');
         }
     }
 
-    // const { customStyles, options, listingType } = props;
+    const { path, historyReplace, filterListing, set_checkin_date, set_checkout_date, setCityId } = props;
 
     useEffect(() => {
         if (isLoggedIn) {
@@ -345,63 +375,69 @@ function Header(props) {
                 // boxShadow: 'rgb(255 255 255 / 20%) 0px 0px 0px 2px',
             }} /></Link>
 
-            <OutsideAlerter closePopup={() => setShowPopupSearch(false)} ref={refSearch}>
-                <div
-                    className="k-header-search_btn show-search-button"
-                    style={header_search_btn}
-                    onClick={() => setShowPopupSearch(!showPopupSearch)}
-                >
-                    <i className="fal fa-search" style={{ color: '#4DB7FE', marginRight: '30px' }} /> <span style={{ position: 'relative' }}>Search</span>
-                </div>
+            {/* <OutsideAlerter closePopup={() => setShowPopupSearch(false)} ref={refSearch}> */}
+            <div
+                className="k-header-search_btn show-search-button"
+                style={header_search_btn}
+                onClick={() => setShowPopupSearch(!showPopupSearch)}
+            >
+                <i className="fal fa-search" style={{ color: '#4DB7FE', marginRight: '30px' }} /> <span style={{ position: 'relative' }}>Search</span>
+            </div>
 
 
-                <div className={showPopupSearch ? "k-header-search_container vis-head-search" : "k-header-search_container"}>
-                    <div className="container small-container" style={{ maxWidth: '1024px', width: '92%', margin: '0 auto', position: 'relative', zIndex: 5 }}>
-                        <div className="header-search-input-wrap fl-wrap" style={{ padding: '0 199px 0 0' }}>
-                            <div className="k-header-search-input" style={header_search_input}>
-                                <Select
-                                    isMulti
-                                    isSearchable={false}
-                                    options={listingType}
-                                    name="listing_type"
-                                    styles={styleSlectHeader}
-                                    placeholder='What are you looking for?'
-                                    onChange={option => {
-                                        set_listing_type(option.map(item => item.value));
-                                    }}
-                                />
-                            </div>
-
-                            <div className="k-header-search-input location autocomplete-container" style={header_search_input}>
-                                <Select
-                                    options={citiesOption}
-                                    name="city"
-                                    styles={styleSlectHeader}
-                                    placeholder='Location'
-                                    onChange={option => set_city_id(option.value)}
-                                />
-                            </div>
-
-
-
-                            <div className="k-header-search-input" style={header_search_input}>
-                                <label style={header_search_input_label}><i className="fal fa-keyboard" style={{ color: '#4DB7FE' }} /></label>
-                                <RangePicker
-                                    format="DD/MM/YYYY"
-                                    placeholder={['Checkin', 'Checkout']}
-                                    suffixIcon
-                                    onChange={handleChangeDebut}
-                                    style={header_search_input_input}
-                                    inputReadOnly
-                                />
-                            </div>
-
-                            <button className="header-search-button green-bg" onClick={handleSearch}><i className="far fa-search" /> Search </button>
+            <div className={showPopupSearch ? "k-header-search_container vis-head-search" : "k-header-search_container"}>
+                <div className="container small-container" style={{ maxWidth: '1024px', width: '92%', margin: '0 auto', position: 'relative', zIndex: 5 }}>
+                    <div className="header-search-input-wrap fl-wrap" style={{ padding: '0 199px 0 0' }}>
+                        <div className="k-header-search-input" style={header_search_input}>
+                            <Select
+                                isMulti
+                                isSearchable={false}
+                                options={listingType}
+                                name="listing_type"
+                                styles={styleSlectHeader}
+                                placeholder='What are you looking for?'
+                                onChange={option => {
+                                    set_listing_type(option.map(item => item.value));
+                                }}
+                            />
                         </div>
+
+                        <div className="k-header-search-input location autocomplete-container" style={header_search_input}>
+                            <Select
+                                options={citiesOption}
+                                name="city"
+                                styles={styleSlectHeader}
+                                placeholder='Location'
+                                onChange={option => {
+                                    set_city_id(option.value);
+                                    if (path == '/location/:id') {
+                                        setCityId(option.value)
+                                    }
+                                }}
+                            />
+                        </div>
+
+
+
+                        <div className="k-header-search-input" style={header_search_input}>
+                            <label style={header_search_input_label}><i className="fal fa-keyboard" style={{ color: '#4DB7FE' }} /></label>
+                            <RangePicker
+                                disabledDate={disabledDate}
+                                format="DD/MM/YYYY"
+                                placeholder={['Checkin', 'Checkout']}
+                                suffixIcon
+                                onChange={handleChangeDebut}
+                                style={header_search_input_input}
+                                inputReadOnly
+                            />
+                        </div>
+
+                        <button className="header-search-button green-bg" onClick={handleSearch}><i className="far fa-search" /> Search </button>
                     </div>
                 </div>
+            </div>
 
-            </OutsideAlerter>
+            {/* </OutsideAlerter> */}
 
             {
                 isLoggedIn ? <>

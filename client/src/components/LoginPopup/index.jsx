@@ -196,7 +196,7 @@ const log_separator_span = {
     textAlign: 'center'
 }
 
-const errorLogin = { color: 'red', margin: '-12px 0 0', fontSize: '12px' }
+export const errorLogin = { color: 'red', margin: '-12px 0 0', fontSize: '12px' }
 
 function LoginPopup(props) {
     const deviceToken = useSelector(state => state.userSlice.deviceToken);

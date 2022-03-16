@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 
 class UsersTableSeeder extends Seeder
@@ -19,12 +20,12 @@ class UsersTableSeeder extends Seeder
         $limit = 400;
 
         $list_user = [
-            [
-                'name' => 'khanh',
-                'email' => 'levietkhanh99@gmail.com',
-                'password' => Hash::make('khanh'),
-                'role_id' => 3
-            ],
+            // [
+            //     'name' => 'khanh',
+            //     'email' => 'levietkhanh99@gmail.com',
+            //     'password' => Hash::make('khanh'),
+            //     'role_id' => 3
+            // ],
 
             [
                 'name' => 'admin',
@@ -42,10 +43,12 @@ class UsersTableSeeder extends Seeder
                 'role_id' => $user['role_id'],
                 'phone_number' => $faker->phoneNumber,
                 'avatar_url' => "https://picsum.photos/id/" . rand(1, 1000) . "/400/300",
+                'email_verified_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null)->format('Y-m-d H:i:s'),
             ]);
         }
 
         for ($i = 0; $i < $limit / 2; $i++) {
+            $date_time = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null)->format('Y-m-d H:i:s');
             DB::table('users')->insert([
                 'name' => $faker->name,
                 'email' => $faker->unique()->email,
@@ -53,11 +56,13 @@ class UsersTableSeeder extends Seeder
                 'password' => Hash::make('khanh'),
                 'role_id' => 3,
                 'avatar_url' => "https://picsum.photos/id/" . rand(1, 1000) . "/400/300",
-                'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null)->format('Y-m-d H:i:s')
+                'created_at' => $date_time,
+                'email_verified_at' => $date_time,
             ]);
         }
 
         for ($i = 0; $i < $limit; $i++) {
+            $date_time = $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null)->format('Y-m-d H:i:s');
             DB::table('users')->insert([
                 'name' => $faker->name,
                 'email' => $faker->unique()->email,
@@ -65,7 +70,8 @@ class UsersTableSeeder extends Seeder
                 'password' => Hash::make('khanh'),
                 'role_id' => 2,
                 'avatar_url' => "https://picsum.photos/id/" . rand(1, 1000) . "/400/300",
-                'created_at' => $faker->dateTimeBetween($startDate = '-1 years', $endDate = 'now', $timezone = null)->format('Y-m-d H:i:s')
+                'created_at' => $date_time,
+                'email_verified_at' => $date_time,
             ]);
         }
     }
